@@ -73,7 +73,7 @@ Khóa học dùng **PostgreSQL 16**. Toàn bộ ví dụ chạy trên một data
 
 Dùng một database duy nhất cho cả 51 bài là cố ý: bạn không phải làm quen bối cảnh mới mỗi bài, và tới Cấp 4 thì chính cái database bạn đã quen được đem ra mổ xẻ, đánh index, rồi chia nhỏ.
 
-Cách cài đặt và nạp dữ liệu nằm ở **Bài 5 — Cài PostgreSQL**.
+Cách cài đặt và nạp dữ liệu nằm ở [Bài 5 — Cài đặt PostgreSQL](cap-0-nhap-mon/05-cai-dat-postgresql.md).
 
 ## Bắt đầu
 

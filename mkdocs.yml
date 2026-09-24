@@ -84,5 +84,9 @@ nav:
   - Trang chủ: index.md
   - "Cấp 0 — Nhập môn":
       - "Bài 1 — Dữ liệu, thông tin và tại sao phải lưu trữ": cap-0-nhap-mon/01-du-lieu-va-thong-tin.md
+      - "Bài 2 — Từ sổ giấy đến Excel": cap-0-nhap-mon/02-tu-so-giay-den-excel.md
+      - "Bài 3 — DBMS là gì": cap-0-nhap-mon/03-dbms-la-gi.md
+      - "Bài 4 — Các mô hình dữ liệu": cap-0-nhap-mon/04-cac-mo-hinh-du-lieu.md
+      - "Bài 5 — Cài đặt PostgreSQL": cap-0-nhap-mon/05-cai-dat-postgresql.md
   - "Database mẫu": dataset.md
   - "Bảng thuật ngữ": glossary.md
