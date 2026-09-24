@@ -5,7 +5,7 @@
     - Giải thích chính xác khác biệt giữa `COUNT(*)`, `COUNT(cột)` và `COUNT(DISTINCT cột)`
     - Gom dòng theo một hoặc nhiều cột bằng `GROUP BY`, và lọc **nhóm** bằng `HAVING`
     - Trả lời được câu hỏi kinh điển *"khi nào `WHERE`, khi nào `HAVING`"* bằng **thứ tự thực thi logic**
-    - Viết được `FILTER (WHERE ...)` để đếm nhiều điều kiện trong một lượt, và dựng báo cáo có dòng tổng bằng `ROLLUP`, `CUBE`, `GROUPING SETS`
+    - Viết được `FILTER (WHERE ...)` và **biểu thức điều kiện** `CASE WHEN` để đếm nhiều điều kiện trong một lượt, và dựng báo cáo có dòng tổng bằng `ROLLUP`, `CUBE`, `GROUPING SETS`
 
 ## 🧠 Câu chuyện mở đầu
 
@@ -71,6 +71,24 @@ Quy tắc sắt của `GROUP BY`: **mọi cột xuất hiện trong `SELECT` mà
 
 Vì sao? Vì một nhóm gồm nhiều dòng. Nếu bạn viết `SELECT ma_lop, ho_ten, count(*) FROM hoc_sinh GROUP BY ma_lop`, thì nhóm `L01` có 6 học sinh với 6 cái `ho_ten` khác nhau — máy phải in cái nào? Không có câu trả lời, nên PostgreSQL từ chối.
 
+!!! danger "`GROUP BY` gom **mọi** `NULL` vào CÙNG MỘT nhóm"
+    [Bài 24](24-select-where-order-by.md) đã nêu ngoại lệ này cho `DISTINCT`; `GROUP BY` cư xử **y như vậy**, và lý do cũng y như vậy: nó không dùng phép so sánh `=`, nó dùng quan hệ *không phân biệt được*.
+
+    Nên `NULL` **không** bị bỏ đi, và cũng **không** tách thành mỗi dòng một nhóm. Mọi dòng rỗng chụm lại thành **đúng một** nhóm, và nhóm đó mang khoá là `NULL`:
+
+    ```sql
+    -- KỲ VỌNG: 27 dòng
+    -- KỲ VỌNG: so_luot = 12
+    SELECT ngay_tra_thuc_te, count(*) AS so_luot
+    FROM muon_sach
+    GROUP BY ngay_tra_thuc_te
+    ORDER BY so_luot DESC, ngay_tra_thuc_te NULLS FIRST;
+    ```
+
+    **27 nhóm** — 26 ngày trả khác nhau, cộng **một** nhóm cho cả 12 lượt chưa trả. Và nhóm `NULL` chính là nhóm lớn nhất với 12 lượt, nên nó đứng đầu khi sắp theo số lượt giảm dần.
+
+    Hệ quả thực tế: một báo cáo *"số lượt mượn theo ngày trả"* sẽ có một dòng với ô ngày **để trống** mang con số lớn nhất bảng. Đừng tưởng đó là lỗi dữ liệu — đó là 12 cuốn chưa ai mang trả, và `GROUP BY` đã gom chúng lại giúp bạn. Muốn loại chúng thì phải nói rõ bằng `WHERE ngay_tra_thuc_te IS NOT NULL`.
+
 ### `HAVING`
 
 **`HAVING`** lọc **nhóm**, giống như `WHERE` lọc **dòng**.
@@ -81,6 +99,34 @@ Vì sao? Vì một nhóm gồm nhiều dòng. Nếu bạn viết `SELECT ma_lop,
 | Chạy khi nào | **Trước** `GROUP BY` | **Sau** `GROUP BY` |
 | Dùng được hàm tổng hợp? | **Không** | **Có** |
 | Dùng được cột không gom? | Có | Không |
+| Bắt buộc phải có `GROUP BY`? | Không liên quan | **Không** — xem ngay dưới đây |
+
+!!! info "`HAVING` **không** đòi phải có `GROUP BY`"
+    Dòng "Chạy **sau** `GROUP BY`" ở bảng trên dễ làm bạn tưởng `HAVING` chỉ dùng được khi có `GROUP BY`. Không phải.
+
+    Khi **không** có `GROUP BY`, toàn bộ bảng (sau khi `WHERE` lọc xong) được coi là **đúng một nhóm duy nhất**. Đó chính là điều đã xảy ra ở mọi câu `SELECT count(*) FROM ...` bạn viết từ đầu bài: chúng đều có một nhóm, nên trả về một dòng. Và `HAVING` lọc **cái nhóm duy nhất đó** — giữ nó hoặc bỏ nó, tức là kết quả có 1 dòng hoặc 0 dòng.
+
+    ```sql
+    -- KỲ VỌNG: 1 dòng
+    SELECT count(*) AS tong_so_diem
+    FROM diem
+    HAVING count(*) > 100;
+    ```
+
+    Bảng `diem` có 480 dòng, `480 > 100` đúng, nên nhóm duy nhất được giữ và ta nhận **1 dòng**.
+
+    Đổi ngưỡng cho nhóm đó **không** thoả, thì kết quả là **rỗng hoàn toàn** — chứ không phải một dòng chứa số 0:
+
+    ```sql
+    -- KỲ VỌNG: 0 dòng
+    SELECT count(*) AS tong_so_diem
+    FROM diem
+    HAVING count(*) > 1000;
+    ```
+
+    Đọc kỹ chỗ này, vì nó là một trong những chỗ gây bối rối nhất của SQL: cùng một câu `SELECT count(*)`, **có** `HAVING` không thoả thì ra **0 dòng**, còn **không có** `HAVING` mà `WHERE` không thoả thì vẫn ra **1 dòng chứa số 0**. Bạn đã thấy trường hợp thứ hai ở phần thực hành với `WHERE hoc_ky = 2`.
+
+    Khác biệt nằm ở chỗ: `WHERE` bỏ **dòng**, còn nhóm duy nhất vẫn tồn tại để mà đếm ra 0; `HAVING` bỏ **cả nhóm**, nên không còn gì để in.
 
 ### Thứ tự thực thi logic — chìa khoá của cả bài
 
@@ -116,12 +162,49 @@ Bảng này giải thích **mọi** thắc mắc mà người mới có về `GR
 
 Nó cực kỳ hữu ích khi bạn cần **nhiều con số với nhiều điều kiện khác nhau trong cùng một lượt đọc bảng**: số học sinh nam, số học sinh nữ, số bạn sinh năm 2012 — tất cả trong một câu lệnh, một lần quét bảng.
 
-Không có `FILTER`, bạn phải viết `count(*)` lồng với `CASE WHEN`, dài và khó đọc hơn. Hai cách tương đương nhau về kết quả:
+`FILTER` là cú pháp của chuẩn SQL nhưng khá mới, nên bạn sẽ gặp rất nhiều mã cũ làm cùng việc đó bằng một thứ khác: **biểu thức điều kiện** (*CASE expression*).
+
+#### `CASE WHEN` — cái "nếu… thì…" của SQL
+
+`CASE` là cách viết một phép chọn **ngay trong biểu thức**, thay vì trong `WHERE`. Dạng đầy đủ:
 
 ```
-count(*) FILTER (WHERE gioi_tinh = 'Nữ')
-count(CASE WHEN gioi_tinh = 'Nữ' THEN 1 END)
+CASE WHEN <điều kiện> THEN <giá trị nếu đúng>
+     ELSE <giá trị nếu sai>
+END
 ```
+
+Hai điều về `CASE` phải biết trước khi đọc tiếp, vì mẹo ở dưới dựa hẳn vào chúng:
+
+1. **Bỏ `ELSE` thì `CASE` trả về `NULL`** khi không nhánh nào khớp. Không phải `0`, không phải chuỗi rỗng — mà `NULL`.
+2. **`count(cột)` bỏ qua `NULL`** — điều bạn đã học ở đầu bài này.
+
+Ghép hai điều đó lại thì ra một mẹo cũ mà bạn sẽ thấy khắp nơi: `count(CASE WHEN đk THEN 1 END)` đếm **đúng số dòng thoả `đk`**, vì những dòng không thoả cho `NULL` và bị `count` bỏ qua. Nó tương đương hoàn toàn với `count(*) FILTER (WHERE đk)`:
+
+```sql
+-- KỲ VỌNG: dung_filter = 20
+-- KỲ VỌNG: dung_case = 20
+-- KỲ VỌNG: case_thieu_else_tra_null = 20
+-- KỲ VỌNG: case_co_else_dem_het = 40
+SELECT count(*) FILTER (WHERE gioi_tinh = 'Nữ')          AS dung_filter,
+       count(CASE WHEN gioi_tinh = 'Nữ' THEN 1 END)      AS dung_case,
+       count(CASE WHEN gioi_tinh = 'Nữ' THEN 1 END)      AS case_thieu_else_tra_null,
+       count(CASE WHEN gioi_tinh = 'Nữ' THEN 1 ELSE 0 END) AS case_co_else_dem_het
+FROM hoc_sinh;
+```
+
+Ba cột đầu ra **20**, cột cuối ra **40** — và chênh lệch đó chứng minh cả hai điều ở trên cùng một lúc. Thêm `ELSE 0` vào là mọi dòng đều có giá trị **không rỗng**, nên `count` đếm hết 40 dòng và con số trở thành vô nghĩa.
+
+Đây là cái bẫy kinh điển của mẹo này: **`ELSE 0` phá hỏng phép đếm**. Với `SUM` thì ngược lại — `sum(CASE WHEN đk THEN 1 ELSE 0 END)` lại đúng, vì `SUM` cộng chứ không đếm.
+
+`CASE` còn dùng được ở mọi chỗ nhận một biểu thức, không riêng trong hàm tổng hợp — bạn sẽ thấy nó lần nữa ở mục `GROUPING()` cuối bài, dùng để dán nhãn cho các dòng tổng.
+
+!!! tip "Nên viết `FILTER` hay `CASE`?"
+    **`FILTER`** khi bạn đang lọc cho một **hàm tổng hợp** — nó nói đúng ý định, ngắn hơn, và không có bẫy `ELSE 0`.
+
+    **`CASE`** khi bạn cần một giá trị **tuỳ điều kiện** ở chỗ không phải hàm tổng hợp: dán nhãn, xếp loại, đổi mã thành chữ.
+
+    Biết cả hai là cần thiết: `FILTER` chỉ PostgreSQL và vài DBMS mới có, còn `CASE` thì chạy ở mọi nơi — nên mã cũ và mã đa nền tảng gần như luôn dùng `CASE`.
 
 ### `ROLLUP`, `CUBE`, `GROUPING SETS`
 
@@ -142,6 +225,7 @@ Ba mệnh đề này giải quyết một nhu cầu rất thực tế: **báo c�
 | Lọc nhóm | *HAVING* | Lọc trên **nhóm** sau khi đã gom, nên dùng được hàm tổng hợp |
 | Thứ tự thực thi logic | *logical query processing order* | Trình tự ngữ nghĩa `FROM` → `WHERE` → `GROUP BY` → `HAVING` → `SELECT` → `DISTINCT` → `ORDER BY` → `LIMIT`, khác thứ tự viết |
 | Lọc riêng cho một hàm | *FILTER* | Mệnh đề `FILTER (WHERE ...)` cho một hàm tổng hợp chỉ nhìn phần dòng nó cần |
+| Biểu thức điều kiện | *CASE expression* | Cách viết "nếu… thì…" ngay trong biểu thức; **bỏ `ELSE` thì trả `NULL`**, nên `count(CASE WHEN đk THEN 1 END)` đếm đúng số dòng thoả `đk` |
 | Gom theo thứ bậc | *ROLLUP* | Sinh thêm dòng tổng theo thứ bậc cha–con, ví dụ lớp → khối → toàn trường |
 | Gom theo mọi tổ hợp | *CUBE* | Sinh thêm dòng tổng cho mọi tổ hợp của các cột gom |
 | Tập gom tự chọn | *GROUPING SETS* | Tự liệt kê chính xác các tổ hợp gom cần thiết — dạng tổng quát của `ROLLUP` và `CUBE` |
@@ -186,7 +270,6 @@ flowchart LR
         R3["HS007 · L02"]
         R4["HS013 · L03"]
         R5["… 36 dòng nữa"]
-        R1 --- R2 --- R3 --- R4 --- R5
     end
 
     GB{{"GROUP BY ma_lop<br/>+ count(*)"}}
@@ -197,7 +280,6 @@ flowchart LR
         G2["L02 · 6 học sinh"]
         G3["L03 · 8 học sinh"]
         G4["L04 · 6 · L05 · 7 · L06 · 7"]
-        G1 --- G2 --- G3 --- G4
     end
 
     T --> GB --> S
@@ -377,14 +459,18 @@ ORDER BY ma_lop;
 
 Hai lớp: `L03` và `L06`, mỗi lớp 4 bạn nữ. Các lớp khác chỉ có 3 bạn nữ nên bị `HAVING` loại.
 
-Đọc lại theo thứ tự thực thi logic để thấy vì sao nó đúng:
+Đọc lại theo thứ tự thực thi logic để thấy vì sao nó đúng. Chú ý hai bước bị bỏ qua — câu lệnh này không có `DISTINCT` và không có `LIMIT`:
 
-1. `FROM hoc_sinh` → 40 dòng.
-2. `WHERE gioi_tinh = 'Nữ'` → còn 20 dòng.
-3. `GROUP BY ma_lop` → gom thành 6 nhóm với số lượng 3, 3, 4, 3, 3, 4.
-4. `HAVING count(*) >= 4` → còn 2 nhóm.
-5. `SELECT` → tính `count(*)`, đặt bí danh `so_hoc_sinh_nu`.
-7. `ORDER BY ma_lop` → sắp xếp.
+| Bước | Mệnh đề | Kết quả sau bước đó |
+|---|---|---|
+| **1** | `FROM hoc_sinh` | 40 dòng |
+| **2** | `WHERE gioi_tinh = 'Nữ'` | còn 20 dòng |
+| **3** | `GROUP BY ma_lop` | 6 nhóm, số lượng 3 · 3 · 4 · 3 · 3 · 4 |
+| **4** | `HAVING count(*) >= 4` | còn **2 nhóm** |
+| **5** | `SELECT` | tính `count(*)`, đặt bí danh `so_hoc_sinh_nu` |
+| 6 | *(không có `DISTINCT`)* | — |
+| **7** | `ORDER BY ma_lop` | sắp theo mã lớp |
+| 8 | *(không có `LIMIT`)* | — |
 
 ### Điểm trung bình từng môn từng lớp
 

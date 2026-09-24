@@ -99,33 +99,37 @@ flowchart TB
     subgraph I["1 · INNER JOIN — chỉ phần chung"]
         direction LR
         I1["A riêng<br/>❌ bỏ"]
-        I2["<b>A ∩ B<br/>✅ giữ</b>"]
+        I2["<b>A ∩ B</b>"]
         I3["B riêng<br/>❌ bỏ"]
-        I1 --- I2 --- I3
+        I2 --> IR["<b>KẾT QUẢ</b>"]
     end
 
     subgraph L["2 · LEFT OUTER JOIN — cả A"]
         direction LR
-        L1["<b>A riêng<br/>✅ giữ · B = NULL</b>"]
-        L2["<b>A ∩ B<br/>✅ giữ</b>"]
+        L1["<b>A riêng</b><br/>cột B = NULL"]
+        L2["<b>A ∩ B</b>"]
         L3["B riêng<br/>❌ bỏ"]
-        L1 --- L2 --- L3
+        L1 --> LR2["<b>KẾT QUẢ</b>"]
+        L2 --> LR2
     end
 
     subgraph R["3 · RIGHT OUTER JOIN — cả B"]
         direction LR
         R1["A riêng<br/>❌ bỏ"]
-        R2["<b>A ∩ B<br/>✅ giữ</b>"]
-        R3["<b>B riêng<br/>✅ giữ · A = NULL</b>"]
-        R1 --- R2 --- R3
+        R2["<b>A ∩ B</b>"]
+        R3["<b>B riêng</b><br/>cột A = NULL"]
+        R2 --> RR["<b>KẾT QUẢ</b>"]
+        R3 --> RR
     end
 
     subgraph F["4 · FULL OUTER JOIN — cả hai"]
         direction LR
-        F1["<b>A riêng<br/>✅ giữ</b>"]
-        F2["<b>A ∩ B<br/>✅ giữ</b>"]
-        F3["<b>B riêng<br/>✅ giữ</b>"]
-        F1 --- F2 --- F3
+        F1["<b>A riêng</b><br/>cột B = NULL"]
+        F2["<b>A ∩ B</b>"]
+        F3["<b>B riêng</b><br/>cột A = NULL"]
+        F1 --> FR["<b>KẾT QUẢ</b>"]
+        F2 --> FR
+        F3 --> FR
     end
 
     style I2 fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px
@@ -140,7 +144,22 @@ flowchart TB
     style I3 fill:#ffcdd2,stroke:#c62828
     style L3 fill:#ffcdd2,stroke:#c62828
     style R1 fill:#ffcdd2,stroke:#c62828
+    style IR fill:#e8eaf6,stroke:#3949ab,stroke-width:2px
+    style LR2 fill:#e8eaf6,stroke:#3949ab,stroke-width:2px
+    style RR fill:#e8eaf6,stroke:#3949ab,stroke-width:2px
+    style FR fill:#e8eaf6,stroke:#3949ab,stroke-width:2px
 ```
+
+Ba vùng **A riêng**, **A ∩ B**, **B riêng** là ba phần rời nhau của dữ liệu — không có quan hệ nào giữa chúng, nên sơ đồ cố ý không nối chúng với nhau. Mũi tên duy nhất trong mỗi khung có một nghĩa rõ ràng: **vùng nào đi được vào kết quả**. Nói gọn hết bằng một bảng:
+
+| | Dòng **chỉ có ở A** | Dòng **khớp** A ∩ B | Dòng **chỉ có ở B** |
+|---|---|---|---|
+| `INNER JOIN` | ❌ bỏ | ✅ giữ | ❌ bỏ |
+| `LEFT OUTER JOIN` | ✅ giữ, cột B = `NULL` | ✅ giữ | ❌ bỏ |
+| `RIGHT OUTER JOIN` | ❌ bỏ | ✅ giữ | ✅ giữ, cột A = `NULL` |
+| `FULL OUTER JOIN` | ✅ giữ, cột B = `NULL` | ✅ giữ | ✅ giữ, cột A = `NULL` |
+
+Bốn dòng của bảng này là **toàn bộ** nội dung cần nhớ về bốn loại `JOIN` đầu tiên.
 
 Hai loại còn lại không nói bằng tập hợp được, vì chúng khác về bản chất:
 
@@ -329,7 +348,31 @@ JOIN hoc_sinh b
 ORDER BY a.ma_hs, b.ma_hs;
 ```
 
-**Không cặp nào.** Bốn mươi học sinh của trường có 40 ngày sinh khác nhau hoàn toàn. Đây là một kết quả rất đáng giá về mặt học tập: truy vấn của bạn **đúng**, dữ liệu chỉ đơn giản là không có trường hợp nào thoả. Đừng vội nghĩ mình viết sai.
+**Không cặp nào.** Bốn mươi học sinh của trường có 40 ngày sinh khác nhau hoàn toàn. Đây là một kết quả rất đáng giá về mặt học tập: truy vấn của bạn **đúng**, dữ liệu chỉ đơn giản là không có trường hợp nào thoả.
+
+!!! tip "Kết quả rỗng: làm sao biết mình viết sai hay dữ liệu không có?"
+    Đây là tình huống bạn sẽ gặp hàng tuần khi đi làm, và có một kỹ thuật cụ thể để xử lý — **nới dần từng điều kiện cho tới khi có dòng**.
+
+    Cách làm: bỏ (hoặc làm yếu đi) **một** điều kiện, chạy lại, xem có dòng chưa. Lặp lại cho tới khi kết quả khác rỗng. Điều kiện cuối cùng bạn vừa bỏ chính là chỗ chặn mọi thứ — và lúc đó bạn đọc lại nó để quyết định: *nó sai*, hay *dữ liệu thật sự không có*.
+
+    Áp vào đúng truy vấn trên. Điều kiện gắt nhất là `a.ngay_sinh = b.ngay_sinh`; nới nó thành "cùng **tháng** sinh":
+
+    ```sql
+    -- KỲ VỌNG: so_cap_cung_thang = 48
+    -- KỲ VỌNG: so_cap_cung_ngay = 0
+    SELECT count(*)                                                        AS so_cap_cung_thang,
+           count(*) FILTER (WHERE a.ngay_sinh = b.ngay_sinh)                AS so_cap_cung_ngay
+    FROM hoc_sinh a
+    JOIN hoc_sinh b
+      ON EXTRACT(MONTH FROM a.ngay_sinh) = EXTRACT(MONTH FROM b.ngay_sinh)
+     AND a.ma_hs < b.ma_hs;
+    ```
+
+    Nới một bậc thì có ngay **48** cặp. Vậy phần khung của truy vấn — `JOIN`, bí danh, điều kiện `a.ma_hs < b.ma_hs` — **chạy đúng**. Chỉ điều kiện "cùng đúng ngày" là không có dữ liệu nào thoả, và cột thứ hai khẳng định lại con số **0** đó trên cùng một lượt chạy.
+
+    Kết luận: **truy vấn đúng, dữ liệu không có trường hợp nào.** Nếu ngược lại — nới hết mọi điều kiện mà vẫn rỗng — thì lỗi nằm ở phần khung, thường là sai tên cột trong `ON` hoặc ghép sai cặp bảng.
+
+    Một mẹo nữa dùng được ngay: đếm riêng hai bảng đầu vào trước khi ghép. Nếu một bên đã rỗng thì mọi `INNER JOIN` với nó đều rỗng, và chuyện chẳng liên quan gì tới mệnh đề `ON` của bạn cả.
 
 Hai chi tiết trong mệnh đề `ON` cần giải thích:
 
@@ -444,6 +487,27 @@ FROM hoc_sinh NATURAL JOIN giao_vien;
 **Không dòng nào.** Hai bảng này trùng nhau tới **ba** cột: `ho_ten`, `ngay_sinh`, `gioi_tinh`. `NATURAL JOIN` lặng lẽ ghép theo cả ba, tức là nó đang đi tìm *"những người vừa là học sinh vừa là giáo viên, cùng tên, cùng ngày sinh, cùng giới tính"*. Đương nhiên không có ai.
 
 Và đây mới là điều đáng sợ: **không có thông báo lỗi nào.** Bạn nhận về một bảng rỗng và phải tự đoán vì sao.
+
+`NATURAL JOIN` còn có một kiểu hỏng **ngược lại và phá hoại hơn nhiều**: nếu hai bảng **không có cột nào trùng tên**, nó không báo lỗi mà **thoái hoá thành `CROSS JOIN`** — đúng cái tích Descartes bùng nổ ở mục trên.
+
+```sql
+-- KỲ VỌNG: natural_khong_cot_trung = 120
+-- KỲ VỌNG: cross_join = 120
+SELECT (SELECT count(*) FROM lop NATURAL JOIN sach) AS natural_khong_cot_trung,
+       (SELECT count(*) FROM lop CROSS JOIN sach)   AS cross_join;
+```
+
+`lop` và `sach` không chia sẻ tên cột nào, nên `NATURAL JOIN` không có điều kiện nào để ghép và trả về **120 dòng** — bằng đúng `6 × 20`, y hệt `CROSS JOIN`.
+
+Hãy ghép hai kiểu hỏng lại để thấy `NATURAL JOIN` tệ tới mức nào:
+
+| Số cột trùng tên | `NATURAL JOIN` làm gì | Hậu quả |
+|---|---|---|
+| **0 cột** | Thoái hoá thành `CROSS JOIN` | **Tích Descartes bùng nổ** — trên bảng lớn là treo máy |
+| Đúng cột bạn muốn | Làm đúng ý | Chạy được, nhưng vẫn dễ vỡ khi ai đó đổi tên cột |
+| **Nhiều hơn bạn muốn** | Ghép theo cả những cột bạn không nghĩ tới | **Âm thầm 0 dòng**, hoặc tệ hơn là thiếu dòng mà vẫn trông hợp lý |
+
+Cả ba hàng đều **không báo lỗi**. Đó là lý do quy tắc ở đây dứt khoát: **đừng dùng `NATURAL JOIN` trong mã thật.**
 
 Nếu viết bằng `ON`, ý định của bạn hiện rõ trên mặt câu lệnh và không có gì ngầm hiểu:
 
