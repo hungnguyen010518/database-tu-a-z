@@ -42,21 +42,38 @@ Hai khác biệt lớn nhất so với [ký hiệu Chen](10-bieu-do-er-ky-hieu-c
 
 Mỗi đầu đường nối là **hai ký tự ghép lại**, và **mỗi ký tự trả lời một câu hỏi khác nhau**:
 
-| Nửa | Vị trí | Trả lời câu hỏi | Bài đã học |
+| Nửa | Nằm ở đâu | Trả lời câu hỏi | Bài đã học |
 |---|---|---|---|
-| Nửa **ngoài** (xa thực thể) | sát thực thể | **Tối thiểu bao nhiêu?** → ràng buộc tham gia | [Bài 9](09-participation-va-thuc-the-yeu.md) |
-| Nửa **trong** (gần đường) | phía đường nối | **Tối đa bao nhiêu?** → bản số | [Bài 8](08-moi-quan-he-va-cardinality.md) |
+| Nửa **trong** | ký tự **sát thực thể** | **Tối đa bao nhiêu?** → bản số | [Bài 8](08-moi-quan-he-va-cardinality.md) |
+| Nửa **ngoài** | ký tự **xa thực thể hơn**, phía đường nối | **Tối thiểu bao nhiêu?** → ràng buộc tham gia | [Bài 9](09-participation-va-thuc-the-yeu.md) |
 
-Đúng hai câu hỏi mà [Bài 9](09-participation-va-thuc-the-yeu.md) đã dạy: *giới hạn dưới* và *giới hạn trên*. Crow's Foot chỉ làm một việc: gói cả hai vào một ký hiệu duy nhất.
+Đúng hai câu hỏi mà [Bài 9](09-participation-va-thuc-the-yeu.md) đã dạy: *giới hạn trên* và *giới hạn dưới*. Crow's Foot chỉ làm một việc: gói cả hai vào một ký hiệu duy nhất.
+
+Xem tận mắt trên một ví dụ. Lấy `giao_vien |o--o| lop` và tách từng ký tự ra:
+
+```
+giao_vien  |  o  --  o  |  lop
+           │  │      │  │
+           │  │      │  └── sát lop     → nửa TRONG  → tối đa 1 lớp
+           │  │      └───── xa lop hơn  → nửa NGOÀI  → tối thiểu 0
+           │  └──────────── xa GV hơn   → nửa NGOÀI  → tối thiểu 0
+           └─────────────── sát GV      → nửa TRONG  → tối đa 1 giáo viên
+```
+
+Nhìn theo hình: **ký tự chạm vào hình chữ nhật cho biết "nhiều nhất bao nhiêu"**, ký tự lùi vào trong đường nối cho biết **"ít nhất bao nhiêu"**.
 
 Bảng tra bốn ký hiệu, viết theo cú pháp Mermaid:
 
-| Mermaid | Hình vẽ thật | Nửa "tối thiểu" | Nửa "tối đa" | Đọc là |
+Mermaid viết cùng một ký hiệu theo **hai chiều**, tuỳ nó nằm bên trái hay bên phải dấu `--`. Hai cột đầu của bảng dưới đây là **cùng một hình vẽ**, chỉ lật gương:
+
+| Viết ở **bên trái** | Viết ở **bên phải** | Nửa **trong** (sát thực thể) → tối đa | Nửa **ngoài** (phía đường) → tối thiểu | Đọc là |
 |---|---|---|---|---|
-| <code>&#124;&#124;</code> | hai vạch thẳng | vạch <code>&#124;</code> = **tối thiểu 1** | vạch <code>&#124;</code> = **tối đa 1** | **đúng một** |
-| <code>o&#124;</code> | vòng tròn + vạch | vòng tròn `o` = **tối thiểu 0** | vạch <code>&#124;</code> = **tối đa 1** | **không hoặc một** |
-| <code>}&#124;</code> | chân quạ + vạch | vạch <code>&#124;</code> = **tối thiểu 1** | chân quạ `}` = **tối đa nhiều** | **một hoặc nhiều** |
-| `}o` | chân quạ + vòng tròn | vòng tròn `o` = **tối thiểu 0** | chân quạ `}` = **tối đa nhiều** | **không hoặc nhiều** |
+| <code>&#124;&#124;</code> | <code>&#124;&#124;</code> | vạch <code>&#124;</code> = **tối đa 1** | vạch <code>&#124;</code> = **tối thiểu 1** | **đúng một** |
+| <code>&#124;o</code> | <code>o&#124;</code> | vạch <code>&#124;</code> = **tối đa 1** | vòng tròn `o` = **tối thiểu 0** | **không hoặc một** |
+| <code>}&#124;</code> | <code>&#124;{</code> | chân quạ `}` `{` = **tối đa nhiều** | vạch <code>&#124;</code> = **tối thiểu 1** | **một hoặc nhiều** |
+| `}o` | `o{` | chân quạ `}` `{` = **tối đa nhiều** | vòng tròn `o` = **tối thiểu 0** | **không hoặc nhiều** |
+
+Mẹo gõ cho khỏi sai: **chân quạ luôn toẽ về phía hình chữ nhật**, nên nó là `}` khi nằm bên trái và `{` khi nằm bên phải.
 
 Mẹo nhớ gọn trong hai dòng:
 
@@ -311,7 +328,7 @@ Năm điều đáng chú ý khi đọc sơ đồ này:
 
 ### Suy ra ký hiệu Crow's Foot từ chính lược đồ
 
-Điều hay nhất của Crow's Foot: **mọi ký hiệu đều đọc được ra từ database**, không cần đoán. Quy tắc đúng ba dòng:
+Điều hay nhất của Crow's Foot: **mọi ký hiệu đều đọc được ra từ database**, không cần đoán. Quy tắc gọn trong hai dòng:
 
 | Muốn biết | Nhìn vào | Kết quả |
 |---|---|---|
@@ -429,7 +446,7 @@ Ba bảng hiện ra: `phan_cong_day` (3 khoá ngoại), `diem` (2) và `muon_sac
     Cách đọc chống sai: đặt ngón tay lên một ký hiệu, rồi hỏi *"ứng với **một** thực thể ở đầu kia, có bao nhiêu thực thể ở đầu **này**?"*
 
 !!! warning "Lỗi 2: Quên nửa 'tối thiểu'"
-    Vẽ `lop |{--o{ hoc_sinh` rồi bảo *"xong, 1:N đấy"*. Nhưng `|{` nghĩa là *"một hoặc nhiều lớp cho mỗi học sinh"* — tức là một học sinh học **nhiều lớp cùng lúc**.
+    Vẽ `lop }|--o{ hoc_sinh` rồi bảo *"xong, 1:N đấy"*. Nhưng `}|` nghĩa là *"một hoặc nhiều lớp cho mỗi học sinh"* — tức là một học sinh học **nhiều lớp cùng lúc**. Chân quạ `}` sát `lop` đã nói "tối đa nhiều" rồi.
 
     Mỗi ký hiệu có **hai** ký tự và cả hai đều mang nghĩa. Bỏ qua một nửa là mô tả sai lược đồ.
 

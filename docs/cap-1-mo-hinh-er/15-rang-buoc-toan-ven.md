@@ -13,7 +13,7 @@ Chiều thứ Sáu, cô văn thư nhập điểm kiểm tra học kỳ.
 
 Bàn phím số bị kẹt, và thay vì `8.5` cô gõ thành `85`. Cô không để ý, bấm Lưu.
 
-Tuần sau, phần mềm in bảng tổng kết. Điểm trung bình của lớp 8A1 là **14.2**. Cô hiệu trưởng nhìn tờ giấy, ngẩng lên: *"Thang điểm 10 mà trung bình 14 à?"*
+Tuần sau, phần mềm in phiếu tổng kết từng học sinh. Phiếu của bạn Nguyễn Văn An ghi điểm trung bình **13.4** — cao hơn cả điểm tối đa của thang điểm 10. Cô hiệu trưởng nhìn tờ giấy, ngẩng lên: *"Thang điểm 10 mà trung bình 13 à?"*
 
 Cả buổi chiều hôm ấy trôi qua trong việc dò lại 480 con điểm để tìm con số sai.
 
@@ -54,7 +54,7 @@ Ba loại đầu là **ràng buộc chung của mô hình quan hệ** — bất 
 
 ### Toàn vẹn miền
 
-**Miền giá trị** (*domain*) đã được [Bài 6](06-mo-hinh-quan-he.md) định nghĩa: tập hợp mọi giá trị hợp lệ của một cột.
+**Miền giá trị** đã được [Bài 6](06-mo-hinh-quan-he.md) định nghĩa: tập hợp mọi giá trị hợp lệ của một cột.
 
 Toàn vẹn miền được cưỡng chế bằng bốn tầng, từ thô tới tinh:
 
@@ -142,7 +142,7 @@ Khi một dòng cha bị xoá (hoặc khoá chính của nó bị đổi) mà v�
 
     Sự khác biệt này rất thật. Với `NO ACTION` hoãn, bạn được phép xoá dòng cha **trước**, rồi sửa các dòng con **sau**, miễn là mọi thứ ổn thoả trước khi `COMMIT`. Với `RESTRICT` thì câu `DELETE` hỏng ngay tại chỗ, không có cơ hội sửa.
 
-    Đây gọi là **ràng buộc hoãn** (*deferrable constraint*), và phần Thực hành sẽ chạy thật cả hai để bạn thấy khác biệt.
+    Đây gọi là **ràng buộc hoãn** — thuật ngữ [Bài 11](11-bieu-do-er-crows-foot.md) đã nhắc tới — và phần Thực hành sẽ chạy thật cả hai để bạn thấy khác biệt.
 
     Nếu bạn không viết gì cả, chuẩn SQL quy định mặc định là **`NO ACTION`**.
 
@@ -178,12 +178,18 @@ Ba mức độ, tuỳ luật khó tới đâu:
     | Luật | Vì sao `CHECK` không làm được |
     |---|---|
     | *"Mỗi lớp phải có ít nhất một học sinh"* | Cần đếm dòng ở **bảng khác** |
-    | *"Mỗi lớp mỗi môn chỉ một giáo viên dạy"* | Cần so sánh với **các dòng khác** cùng bảng |
+    | *"Một học sinh không mượn quá 3 cuốn cùng lúc"* | Cần đếm **các dòng khác** cùng bảng |
+    | *"Tổng số tiết dạy của một giáo viên không quá 20 mỗi tuần"* | Cần cộng qua **nhiều dòng, nhiều bảng** |
     | *"Mọi người trong trường phải thuộc một lớp con"* | Cần nhìn nhiều bảng cùng lúc |
 
     Lý do chung: `CHECK` trong PostgreSQL chỉ được nhìn **đúng dòng đang xét**. Muốn vượt ra ngoài phải dùng trigger.
 
     Điều cần làm ngay bây giờ: **ghi những luật này vào tài liệu thiết kế**. Ràng buộc không được ghi lại là ràng buộc sẽ bị vi phạm.
+
+!!! tip "Đừng vội xếp mọi luật nghiệp vụ vào nhóm 'phải dùng trigger'"
+    Luật *"mỗi lớp, mỗi môn, mỗi học kỳ chỉ một giáo viên dạy"* **không** nằm trong bảng trên, dù trông rất giống. Nó cưỡng chế được trọn vẹn bằng SQL thuần — chỉ cần `UNIQUE (ma_mon, ma_lop, hoc_ky)` trên `phan_cong_day`, như [Bài 14](14-chuyen-er-sang-bang.md) đã phân tích.
+
+    Phép thử: **luật này có diễn đạt được thành 'tổ hợp cột X không bao giờ trùng' không?** Nếu có, `UNIQUE` là đủ. Chỉ khi luật cần **đếm** hoặc **cộng** qua nhiều dòng thì mới phải dùng trigger.
 
 ### Bảng thuật ngữ
 
@@ -344,10 +350,19 @@ Thử tiếp một vi phạm miền kiểu khác — giá trị ngoài danh sác
 <!-- sql:co-y-loi -->
 ```sql
 INSERT INTO giao_vien (ma_gv, ho_ten, ngay_sinh, gioi_tinh, mon_chuyen_mon, email, luong)
-VALUES ('GV98', 'Thử Giới Tính', '1990-01-01', 'Khác', 'Toán', 'thu98@thcs.edu.vn', 10000000);
+VALUES ('GV98', 'Thử Giới Tính', '1990-01-01', 'Nu', 'Toán', 'thu98@thcs.edu.vn', 10000000);
 ```
 
-Bị chặn bởi `giao_vien_gioi_tinh_check`, vì lược đồ khai `CHECK (gioi_tinh IN ('Nam', 'Nữ'))`.
+Bị chặn bởi `giao_vien_gioi_tinh_check`, vì lược đồ khai `CHECK (gioi_tinh IN ('Nam', 'Nữ'))` — mà `'Nu'` không dấu thì không nằm trong danh sách.
+
+!!! tip "Vì sao ví dụ trên dùng `'Nu'` chứ không dùng `'Khác'` cho dễ hiểu?"
+    Vì **hai tầng của toàn vẹn miền chặn theo thứ tự**, và tầng thô chặn trước.
+
+    Cột khai `gioi_tinh VARCHAR(3)`. Chuỗi `'Khác'` dài **4 ký tự**, nên PostgreSQL từ chối ngay ở bước **ép kiểu** với `ERROR: value too long for type character varying(3)` — `CHECK` còn chưa được chạy tới.
+
+    Muốn dạy `CHECK` thì phải chọn một giá trị **hợp lệ về kiểu nhưng sai về nội dung**. `'Nu'` dài 2 ký tự nên lọt qua tầng kiểu, rồi mới đụng `CHECK`.
+
+    Đây là điều đáng nhớ khi đọc thông báo lỗi: **lỗi bạn nhận được là lỗi của tầng gần nhất**, không nhất thiết là lỗi bạn đang nghĩ tới.
 
 ### Toàn vẹn thực thể — khoá chính không được `NULL`
 
@@ -608,7 +623,11 @@ ORDER BY conname;
 
 Hai dòng, ứng với hai luật nghiệp vụ: *"ngày trả dự kiến không được trước ngày mượn"* và *"ngày trả thực tế, nếu có, không được trước ngày mượn"*.
 
-Chú ý vế `ngay_tra_thuc_te IS NULL OR ...` trong ràng buộc thứ hai. Không có vế đó thì mọi lượt mượn **chưa trả** đều bị chặn — vì trong SQL, so sánh với `NULL` không cho ra `true`.
+Chú ý vế `ngay_tra_thuc_te IS NULL OR ...` trong ràng buộc thứ hai — và hãy đọc kỹ, vì chỗ này rất dễ hiểu ngược.
+
+Vế đó **không** phải để cho lượt mượn chưa trả lọt qua. Bỏ nó đi thì lượt mượn chưa trả **vẫn được nhận**, vì `CHECK` chỉ từ chối khi biểu thức cho ra `false`; gặp `NULL` thì biểu thức cho ra `UNKNOWN`, và `CHECK` **chấp nhận**.
+
+Vế đó ở đó để **nói rõ ý định** cho người đọc lược đồ: *"trường hợp chưa trả là hợp lệ, tôi đã nghĩ tới nó rồi."* Phần Lỗi thường gặp sẽ quay lại điểm này, và **Bài 24** sẽ dạy kỹ logic ba giá trị.
 
 Thử vi phạm:
 
@@ -686,12 +705,14 @@ UNION ALL SELECT 'diem',      count(*) FROM diem;
 
     Dùng `SET DEFAULT` thì **luôn phải tạo sẵn dòng mặc định** ở bảng cha trước.
 
-!!! warning "Lỗi 5: Quên vế `IS NULL` trong `CHECK`"
-    Viết `CHECK (ngay_tra_thuc_te >= ngay_muon)` cho `muon_sach`.
+!!! warning "Lỗi 5: Tưởng `CHECK` chặn được giá trị `NULL`"
+    Khai `dia_chi VARCHAR(120) CHECK (length(dia_chi) >= 5)` rồi yên tâm rằng cột này không thể để trống.
 
-    Trông đúng, nhưng nó chặn luôn mọi lượt mượn **chưa trả**. Vì khi `ngay_tra_thuc_te` là `NULL`, phép so sánh cho ra `NULL` chứ không phải `true`.
+    Không đúng. **`CHECK` chỉ từ chối khi biểu thức cho ra `false`.** Khi cột là `NULL`, biểu thức cho ra `UNKNOWN`, và `CHECK` **chấp nhận** dòng đó. Muốn cấm trống thì phải khai thêm `NOT NULL` — hai ràng buộc riêng biệt, lo hai việc khác nhau.
 
-    Thực ra `CHECK` coi kết quả `NULL` là **chấp nhận được** — nên câu trên vẫn chạy. Nhưng đừng dựa vào hành vi tinh tế đó: hãy viết rõ `CHECK (ngay_tra_thuc_te IS NULL OR ngay_tra_thuc_te >= ngay_muon)` như lược đồ mẫu, để người đọc sau hiểu ngay ý định của bạn. **Bài 24** sẽ dạy kỹ logic ba giá trị.
+    Hệ quả ngược lại cũng đúng, và nó giải thích lược đồ của `muon_sach`: câu `CHECK (ngay_tra_thuc_te >= ngay_muon)` **không** chặn lượt mượn chưa trả, vì `NULL >= ngày` cho ra `UNKNOWN`. Vế `ngay_tra_thuc_te IS NULL OR ...` trong lược đồ mẫu **không làm thay đổi hành vi** — nó chỉ ghi rõ ý định cho người đọc, và đó vẫn là cách viết nên theo.
+
+    Nhớ một câu: **`NOT NULL` chặn ô trống, `CHECK` chặn ô sai.** **Bài 24** sẽ dạy kỹ logic ba giá trị.
 
 !!! warning "Lỗi 6: Thêm ràng buộc vào bảng đang có dữ liệu sai"
     Chạy `ALTER TABLE lop ALTER COLUMN ma_gvcn SET NOT NULL` trong khi lớp 9A3 đang để trống.
