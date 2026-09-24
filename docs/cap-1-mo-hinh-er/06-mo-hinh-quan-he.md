@@ -183,28 +183,27 @@ Bạn đã nạp xong `dataset/02-chuan-hoa.sql` ở Bài 5. Mở `psql` và là
 
 ### Xem lược đồ bằng lệnh `\d`
 
-`\d` là **lệnh riêng của psql**, không phải SQL. Nó in ra lược đồ của một bảng:
+`\d` là **lệnh riêng của psql**, không phải SQL. Gõ vào dấu nhắc `psql`:
 
 ```text
 truong_hoc=# \d hoc_sinh
-                        Table "public.hoc_sinh"
-  Column   |          Type          | Nullable |
------------+------------------------+----------+
- ma_hs     | character(5)           | not null |
- ho_ten    | character varying(60)  | not null |
- ngay_sinh | date                   | not null |
- gioi_tinh | character varying(3)   | not null |
- dia_chi   | character varying(120) |          |
- ma_lop    | character(3)           | not null |
-Indexes:
-    "hoc_sinh_pkey" PRIMARY KEY, btree (ma_hs)
-Check constraints:
-    "hoc_sinh_gioi_tinh_check" CHECK (gioi_tinh::text = ANY (ARRAY['Nam'::character varying, 'Nữ'::character varying]::text[]))
-Foreign-key constraints:
-    "hoc_sinh_ma_lop_fkey" FOREIGN KEY (ma_lop) REFERENCES lop(ma_lop) ON DELETE RESTRICT
 ```
 
-Toàn bộ thứ bạn vừa nhìn thấy **là lược đồ**. Chưa có một dòng dữ liệu nào cả.
+psql in ra một bảng mô tả gồm các phần sau — hãy đối chiếu ngay với những khái niệm vừa học:
+
+| Phần psql in ra | Khái niệm của bài này |
+|---|---|
+| Danh sách tên cột | Danh sách **thuộc tính** |
+| Cột `Type` (`character(5)`, `date`, ...) | **Miền giá trị**, tầng kiểu dữ liệu |
+| Cột `Nullable` (`not null` hay để trống) | Cột này có được phép rỗng không |
+| Cột `Default` | Giá trị mặc định khi không nhập |
+| Mục `Indexes` với `hoc_sinh_pkey` | Ràng buộc định danh — **Bài 12** gọi là khoá chính |
+| Mục `Check constraints` | **Miền giá trị**, tầng thu hẹp thêm |
+| Mục `Foreign-key constraints` | Liên kết sang bảng khác — **Bài 12** |
+
+Đếm số dòng trong phần danh sách cột, bạn được **6** — đó là **bậc** của quan hệ `hoc_sinh`.
+
+Điều quan trọng nhất: **toàn bộ những gì `\d` in ra đều là lược đồ.** Không có một dòng dữ liệu học sinh nào cả.
 
 ### Xem thể hiện
 
@@ -317,7 +316,7 @@ Kết quả: `40` và `40`. Hai số bằng nhau nghĩa là không có mã nào 
     - **Lực lượng = 3** — ba bộ, ứng với thứ Hai, thứ Ba, thứ Tư.
     - **Miền giá trị của `Thứ`**: tập 7 giá trị `{Hai, Ba, Tư, Năm, Sáu, Bảy, Chủ nhật}`. Trong PostgreSQL có thể diễn đạt bằng `VARCHAR(10) CHECK (thu IN ('Hai','Ba','Tư','Năm','Sáu','Bảy','Chủ nhật'))`.
 
-        (Miền giá trị của ba cột còn lại là "tên học sinh trong lớp" — chặt chẽ hơn nữa thì đó phải là một **khoá ngoại** trỏ về bảng `hoc_sinh`, thứ bạn sẽ học ở Bài 8 và Bài 15.)
+        (Miền giá trị của ba cột còn lại là "tên học sinh trong lớp" — chặt chẽ hơn nữa thì đó phải là một **khoá ngoại** trỏ về bảng `hoc_sinh`, thứ bạn sẽ học ở **Bài 12**.)
 
     **Câu 2.**
     Lược đồ: `mon_hoc(ma_mon, ten_mon, so_tiet_tuan)`
@@ -358,8 +357,8 @@ Kết quả: `40` và `40`. Hai số bằng nhau nghĩa là không có mã nào 
 
 ## 🔑 Tóm tắt
 
-1. **Quan hệ** (*relation*) là tên học thuật của "bảng"; mỗi hàng là một **bộ** (*tuple*), mỗi cột là một **thuộc tính** (*attribute*).
-2. **Miền giá trị** (*domain*) là tập mọi giá trị hợp lệ của một cột, gồm hai tầng: kiểu dữ liệu và ràng buộc thu hẹp thêm.
+1. **Quan hệ** là tên học thuật của "bảng"; mỗi hàng là một **bộ**, mỗi cột là một **thuộc tính**.
+2. **Miền giá trị** là tập mọi giá trị hợp lệ của một cột, gồm hai tầng: kiểu dữ liệu và ràng buộc thu hẹp thêm.
 3. **Bậc** là số cột, **lực lượng** là số dòng — bậc gần như không đổi, lực lượng đổi liên tục.
 4. **Lược đồ** là cái khung, **thể hiện** là dữ liệu đang nằm trong khung; một lược đồ ứng với vô số thể hiện theo thời gian.
 5. Quan hệ là một tập hợp nên: không có bộ trùng lặp, thứ tự bộ không mang ý nghĩa, và mỗi ô chỉ chứa **một** giá trị đơn.

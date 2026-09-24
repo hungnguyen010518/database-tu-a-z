@@ -3,7 +3,7 @@
 !!! abstract "🎯 Học xong bài này, bạn sẽ"
     - Phân biệt **ràng buộc tham gia** với **bản số** — giới hạn dưới và giới hạn trên
     - Đọc được **tham gia toàn phần** và **tham gia bộ phận** từ lược đồ, chỉ bằng cách nhìn `NOT NULL`
-    - Nhận ra **thực thể yếu**, **thực thể chủ**, **quan hệ nhận diện** và **khoá bộ phận**
+    - Nhận ra **thực thể yếu**, **thực thể chủ**, **quan hệ nhận diện** và **khoá bộ phận** — và kiểm tra được một khoá bộ phận có hợp lệ hay không
     - Chứng minh từng khái niệm trên bằng dữ liệu thật của `truong_hoc`
     - Biết vì sao phụ huynh phải "biến mất" khi học sinh bị xoá
 
@@ -62,10 +62,13 @@ Tham gia toàn phần còn được gọi là **ràng buộc tồn tại** (*exi
 | Cột | Khai báo | Ràng buộc tham gia |
 |---|---|---|
 | `hoc_sinh.ma_lop` | `NOT NULL REFERENCES lop` | HỌC SINH tham gia **toàn phần** — không thể có học sinh không lớp |
-| `lop.ma_gvcn` | `REFERENCES giao_vien` (cho phép `NULL`) | LỚP tham gia **bộ phận** — lớp có thể chưa có chủ nhiệm |
+| `lop.ma_gvcn` | `UNIQUE REFERENCES giao_vien` — cho phép `NULL` | LỚP tham gia **bộ phận** — lớp có thể chưa có chủ nhiệm |
 | `phu_huynh.ma_hs` | `NOT NULL REFERENCES hoc_sinh` | PHỤ HUYNH tham gia **toàn phần** — không có phụ huynh "mồ côi" |
 
 Hai lời dặn của cô văn thư ở đầu bài đã được ghi thẳng vào lược đồ, bằng đúng hai từ `NOT NULL`.
+
+!!! note "`UNIQUE` trên `lop.ma_gvcn` nói chuyện khác"
+    Trong dòng thứ hai của bảng, `UNIQUE` **không** liên quan gì tới ràng buộc tham gia — nó là thứ ép **bản số 1:1** mà [Bài 8](08-moi-quan-he-va-cardinality.md) đã phân tích. Nhắc lại cho khỏi lẫn: `UNIQUE` lo **giới hạn trên**, `NOT NULL` lo **giới hạn dưới**. Cùng nằm trên một dòng khai báo, nhưng trả lời hai câu hỏi khác nhau.
 
 !!! warning "Phía 'nhiều' thì SQL không ép được"
     Câu *"mỗi lớp phải có ít nhất một học sinh"* **không** diễn đạt nổi bằng `NOT NULL`, vì nó là ràng buộc trên phía *nhiều*. Trong `truong_hoc` cả 6 lớp đều có học sinh, nhưng đó là do dữ liệu, không do lược đồ cưỡng chế.
@@ -89,13 +92,18 @@ Trong `truong_hoc`, PHỤ HUYNH chính là thực thể yếu điển hình:
 | Thực thể yếu | PHỤ HUYNH |
 | Thực thể chủ | HỌC SINH |
 | Quan hệ nhận diện | *"là phụ huynh của"* |
-| Khoá bộ phận | `quan_he` — Bố / Mẹ / Ông / Bà / Khác |
-| Khoá đầy đủ trên lý thuyết | `(ma_hs, quan_he)` |
+| Ứng viên khoá bộ phận | `quan_he` — Bố / Mẹ / Ông / Bà / Khác |
+| Khoá đầy đủ nếu ứng viên đó hợp lệ | `(ma_hs, quan_he)` |
 
 Đọc theo lời của cô văn thư: *"tờ khai phụ huynh không tự đứng một mình được"*. Nói *"Bố"* thì chẳng ai biết bố của ai. Phải nói *"Bố của HS001"* mới định danh được.
 
+!!! warning "Chữ 'ứng viên' trong bảng trên là có chủ ý"
+    `quan_he` **trông** giống khoá bộ phận, nhưng ở phần Thực hành bạn sẽ tự chạy một câu SQL và thấy nó **không** phân biệt được: học sinh `HS029` có **hai** người cùng ghi `Bố`.
+
+    Một khoá bộ phận phải phân biệt được **mọi** thực thể yếu cùng chủ. Không làm được điều đó thì nó **không phải** khoá bộ phận hợp lệ — chứ không phải chỉ là "hơi bất tiện". Mục *"Một điều trung thực về `phu_huynh`"* ở dưới sẽ nói cái gì mới đúng.
+
 !!! note "Ba dấu hiệu nhận ra thực thể yếu"
-    1. **Không tự định danh được** nếu thiếu thực thể chủ.
+    1. **Không có thuộc tính khoá tự nhiên** — tức là ở mức ý niệm, không có đặc điểm nào của bản thân nó đủ sức định danh nó khi thiếu thực thể chủ.
     2. **Luôn tham gia toàn phần** vào quan hệ nhận diện — đây là hệ quả tất yếu, không phải lựa chọn.
     3. **Chết theo chủ**: xoá thực thể chủ thì thực thể yếu cũng phải biến mất, vì nó không còn ý nghĩa gì. Trong SQL, điều này được viết là `ON DELETE CASCADE`.
 
@@ -109,25 +117,58 @@ ma_hs CHAR(5) NOT NULL REFERENCES hoc_sinh(ma_hs) ON DELETE CASCADE
 
 ### Thực thể yếu khác thực thể mạnh thế nào
 
-**Thực thể mạnh** (*strong entity*, hay *regular entity*) là thực thể có khoá riêng, tự đứng được. HỌC SINH, GIÁO VIÊN, LỚP, MÔN HỌC, SÁCH đều là thực thể mạnh.
+**Thực thể mạnh** (*strong entity*, hay *regular entity*) là thực thể có **thuộc tính khoá tự nhiên**, tự đứng được. HỌC SINH, GIÁO VIÊN, LỚP, MÔN HỌC, SÁCH đều là thực thể mạnh.
 
 | | Thực thể mạnh | Thực thể yếu |
 |---|---|---|
-| Có khoá riêng | Có | Không — phải mượn |
+| Có thuộc tính khoá tự nhiên (mức ý niệm) | Có | Không — phải mượn khoá chủ |
 | Ký hiệu Chen | Hình chữ nhật đơn | Hình chữ nhật **đôi** |
 | Quan hệ nhận diện | Không cần | Bắt buộc, vẽ hình thoi **đôi** |
 | Tham gia vào quan hệ nhận diện | — | Luôn **toàn phần** |
 | Khi chủ bị xoá | Không ảnh hưởng | Bị xoá theo |
 
+### Một khoá bộ phận HỢP LỆ trông như thế nào
+
+Trước khi bàn chỗ trục trặc của `phu_huynh`, hãy xem một thực thể yếu thứ hai trong `truong_hoc` mà mọi thứ khớp hoàn hảo: **BUỔI ĐIỂM DANH**.
+
+Một buổi điểm danh là *"ngày 15/09, bạn An có mặt"*. Nói trống không *"ngày 15/09"* thì chưa định danh được buổi nào — phải kèm học sinh. Vậy nó là thực thể yếu.
+
+| Thành phần | Trong `truong_hoc` |
+|---|---|
+| Thực thể yếu | BUỔI ĐIỂM DANH |
+| Thực thể chủ | HỌC SINH |
+| Quan hệ nhận diện | *"được điểm danh"* |
+| Khoá bộ phận | `ngay` |
+| Khoá đầy đủ | `(ma_hs, ngay)` |
+
+Và lần này khoá bộ phận **được lược đồ cưỡng chế thật**, bằng ràng buộc `UNIQUE (ma_hs, ngay)` trong `dataset/02-chuan-hoa.sql`. Đúng nghĩa *"trong phạm vi một học sinh, ngày phân biệt được mọi buổi điểm danh"*.
+
+!!! note "NGÀY không phải một tập thực thể"
+    Đừng vẽ một hình chữ nhật `NGÀY` rồi nối `HỌC SINH` với nó. Trường không lưu dữ liệu gì về bản thân ngày 15/09/2026 cả — không tên, không mô tả, không gì hết. `ngay` chỉ là một **thuộc tính**. Bài 10 sẽ vẽ BUỔI ĐIỂM DANH đúng cách.
+
 ### Một điều trung thực về `phu_huynh`
 
-Trên lý thuyết ER, khoá của PHỤ HUYNH phải là `(ma_hs, quan_he)`. Nhưng bảng thật lại có cột `ma_ph` làm khoá chính, và **không** có ràng buộc `UNIQUE (ma_hs, quan_he)`.
+Bây giờ quay lại `phu_huynh`, nơi mọi thứ **không** khớp đẹp như vậy.
 
-Vì sao? Vì thực tế không sạch như lý thuyết: một học sinh hoàn toàn có thể có **hai người đều ghi quan hệ là "Bố"** — bố đẻ và bố dượng chẳng hạn. Khi đó `quan_he` không còn đủ sức phân biệt.
+Nếu `quan_he` là khoá bộ phận hợp lệ thì khoá của PHỤ HUYNH sẽ là `(ma_hs, quan_he)`, và lược đồ sẽ phải có `UNIQUE (ma_hs, quan_he)` — đúng như `diem_danh` có `UNIQUE (ma_hs, ngay)`. Nhưng bảng thật **không** có ràng buộc đó, mà lại có một cột `ma_ph` làm khoá chính.
 
-Bạn sẽ **tự kiểm chứng trường hợp này bằng dữ liệu thật** ở phần Thực hành. Cách xử lý mà lược đồ mẫu chọn là dùng một mã tự sinh `ma_ph` — Bài 12 sẽ gọi đó là **khoá nhân tạo** (*surrogate key*).
+Vì sao? Vì thực tế không sạch như lý thuyết: một học sinh hoàn toàn có thể có **hai người đều ghi quan hệ là "Bố"** — bố đẻ và bố dượng chẳng hạn. Bạn sẽ **tự kiểm chứng bằng dữ liệu thật** ở phần Thực hành.
 
-Điều này **không** làm PHỤ HUYNH hết là thực thể yếu. Nó vẫn phụ thuộc tồn tại vào HỌC SINH, vẫn `NOT NULL`, vẫn `ON DELETE CASCADE`. Chỉ là người thiết kế đã thay khoá bộ phận bằng một mã nhân tạo cho chắc ăn — một lựa chọn rất phổ biến trong hệ thống thật.
+Kết luận thẳng thắn: **`quan_he` KHÔNG phải khoá bộ phận hợp lệ của PHỤ HUYNH.** Có hai cách chữa đúng:
+
+| Cách | Khoá bộ phận | Khoá đầy đủ |
+|---|---|---|
+| **1. Thêm một số thứ tự** trong phạm vi từng học sinh | `so_thu_tu` — 1, 2, 3... | `(ma_hs, so_thu_tu)` |
+| **2. Dùng khoá nhân tạo** cho cả bảng | không còn khoá bộ phận | `ma_ph` |
+
+Lược đồ mẫu chọn **cách 2**. Bài 12 sẽ gọi `ma_ph` là **khoá nhân tạo** (*surrogate key*).
+
+!!! danger "`ma_ph` KHÔNG phải một thuộc tính trong biểu đồ ER"
+    Đây là chỗ rất dễ nhầm, và nó quyết định cách bạn trả lời câu *"PHỤ HUYNH mạnh hay yếu?"*.
+
+    `ma_ph` là một cột được **thêm vào ở bước chuyển ER sang bảng** (Bài 14), không phải một đặc điểm có thật ngoài đời của người phụ huynh. Ngoài đời, bố mẹ học sinh không mang theo mã số nào cả. Vì vậy ở **mức ý niệm**, PHỤ HUYNH vẫn **không có thuộc tính khoá tự nhiên** — nó vẫn là **thực thể yếu**.
+
+    Cái thay đổi chỉ là ở **mức bảng**: thay vì ghép khoá chủ với khoá bộ phận, người thiết kế phát sinh một mã mới. Sự phụ thuộc tồn tại thì vẫn còn nguyên trong `NOT NULL` và `ON DELETE CASCADE`.
 
 ### Bảng thuật ngữ
 
@@ -136,8 +177,8 @@ Bạn sẽ **tự kiểm chứng trường hợp này bằng dữ liệu thật*
 | Ràng buộc tham gia | *participation constraint* | Có bắt buộc tham gia mối quan hệ hay không |
 | Tham gia toàn phần | *total participation* | Mọi thực thể đều phải tham gia — vẽ đường đôi |
 | Tham gia bộ phận | *partial participation* | Được phép không tham gia — vẽ đường đơn |
-| Thực thể mạnh | *strong entity* | Có khoá riêng, tự đứng được |
-| Thực thể yếu | *weak entity* | Không có khoá riêng, phải mượn khoá của chủ |
+| Thực thể mạnh | *strong entity* | Có thuộc tính khoá tự nhiên, tự đứng được |
+| Thực thể yếu | *weak entity* | Không có thuộc tính khoá tự nhiên, phải mượn khoá của chủ |
 | Thực thể chủ | *owner entity* | Thực thể cho mượn khoá |
 | Quan hệ nhận diện | *identifying relationship* | Mối quan hệ nối thực thể yếu với chủ của nó |
 | Khoá bộ phận | *partial key / discriminator* | Phần riêng của thực thể yếu, ghép với khoá chủ mới đủ |
@@ -181,23 +222,25 @@ flowchart LR
     style N4 fill:#e8f5e9,stroke:#2e7d32
 ```
 
-Còn đây là thực thể yếu. Hình chữ nhật đôi được mô phỏng bằng `[[ ]]`, hình thoi đôi bằng hình lục giác `{{ }}`:
+Còn đây là thực thể yếu. Hình chữ nhật đôi được mô phỏng bằng `[[ ]]`, hình thoi đôi bằng hình lục giác `{{ }}`.
+
+Ví dụ được chọn là **BUỔI ĐIỂM DANH** chứ không phải PHỤ HUYNH, vì đây là thực thể yếu duy nhất trong `truong_hoc` có khoá bộ phận **hợp lệ và được lược đồ cưỡng chế**:
 
 ```mermaid
 flowchart LR
-    HS["<b>HỌC SINH</b><br/>thực thể mạnh · thực thể chủ<br/>khoá riêng ma_hs"]
-    R{{"<b>LÀ PHỤ HUYNH CỦA</b><br/>quan hệ nhận diện"}}
-    PH[["<b>PHỤ HUYNH</b><br/>thực thể yếu<br/>không có khoá riêng"]]
+    HS["<b>HỌC SINH</b><br/>thực thể mạnh · thực thể chủ<br/>thuộc tính khoá ma_hs"]
+    R{{"<b>ĐƯỢC ĐIỂM DANH</b><br/>quan hệ nhận diện"}}
+    PH[["<b>BUỔI ĐIỂM DANH</b><br/>thực thể yếu<br/>không có thuộc tính khoá tự nhiên"]]
 
-    K1(["ma_hs<br/>khoá chính"])
-    K2(["quan_he<br/>khoá bộ phận"])
+    K1(["ma_hs<br/>thuộc tính khoá của chủ"])
+    K2(["ngay<br/>khoá bộ phận"])
 
     HS --- K1
     HS --- R
     R === PH
     PH --- K2
 
-    KQ["Khoá đầy đủ của PHỤ HUYNH<br/>= ma_hs của chủ + quan_he<br/>= <b>ma_hs + quan_he</b>"]
+    KQ["Khoá đầy đủ của BUỔI ĐIỂM DANH<br/>= khoá chủ + khoá bộ phận<br/>= <b>ma_hs + ngay</b><br/>lược đồ ép bằng UNIQUE ma_hs ngay"]
     K2 -.-> KQ
     K1 -.-> KQ
 
@@ -208,6 +251,11 @@ flowchart LR
     style K2 fill:#fff3e0,stroke:#ef6c00
     style KQ fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
 ```
+
+!!! warning "Vẽ PHỤ HUYNH theo đúng khuôn này thì sẽ SAI ở một chỗ"
+    Hình dạng thì giống hệt: chữ nhật đôi `PHỤ HUYNH`, thoi đôi `LÀ PHỤ HUYNH CỦA`, đường đôi, thực thể chủ `HỌC SINH`.
+
+    Chỗ khác duy nhất nằm ở ô khoá bộ phận. Nếu bạn điền `quan_he` vào đó thì ô "khoá đầy đủ" sẽ ghi `(ma_hs, quan_he)` — và điều đó **không đúng**, vì cặp ấy không phân biệt được (phần Thực hành sẽ chứng minh). Khoá bộ phận hợp lệ phải là một **số thứ tự trong phạm vi từng học sinh**, hoặc bảng phải chuyển sang dùng khoá nhân tạo như `ma_ph`.
 
 ## 💻 Thực hành
 
@@ -313,9 +361,21 @@ Bạn Đinh Thị Vân (`HS040`) là học sinh hợp lệ, có lớp, có đi�
 
 Đây chính là cặp ví dụ đẹp nhất của bài: **cùng một mối quan hệ, hai phía hai luật khác nhau**.
 
-### Khoá bộ phận có thật sự đủ để phân biệt không?
+### Khoá bộ phận hợp lệ — kiểm chứng trên `diem_danh`
 
-Lý thuyết nói khoá của PHỤ HUYNH là `(ma_hs, quan_he)`. Hãy tự kiểm tra trên dữ liệu thật:
+Với BUỔI ĐIỂM DANH, khoá bộ phận `ngay` được lược đồ cưỡng chế thật:
+
+```sql
+SELECT conname, contype
+FROM pg_constraint
+WHERE conrelid = 'diem_danh'::regclass AND contype = 'u';
+```
+
+Một dòng: `diem_danh_ma_hs_ngay_key` với `contype = 'u'` — đó là `UNIQUE (ma_hs, ngay)`. Nhờ nó, cặp `(ma_hs, ngay)` **không thể** trùng, dù dữ liệu tương lai có thế nào đi nữa.
+
+### Còn `quan_he` thì KHÔNG hợp lệ — và đây là bằng chứng
+
+Nếu `quan_he` là khoá bộ phận đúng, câu lệnh sau phải trả về **0 dòng**:
 
 ```sql
 SELECT ma_hs, quan_he, count(*) AS so_dong
@@ -327,9 +387,20 @@ ORDER BY ma_hs;
 
 Kết quả: đúng **1 dòng** — `HS029` | `Bố` | `2`.
 
-Học sinh `HS029` có **hai** người cùng ghi quan hệ là *Bố*. Nghĩa là cặp `(ma_hs, quan_he)` **không đủ** để phân biệt trong dữ liệu thật, đúng như đã cảnh báo ở phần khái niệm.
+Học sinh `HS029` có **hai** người cùng ghi quan hệ là *Bố*. Vậy cặp `(ma_hs, quan_he)` **không phân biệt được** mọi phụ huynh của cùng một học sinh.
 
-Đó là lý do bảng thật dùng `ma_ph` làm khoá chính:
+Kết luận theo đúng định nghĩa: **`quan_he` không phải khoá bộ phận hợp lệ của PHỤ HUYNH.** Đây không phải chuyện "hơi bất tiện" mà là sai định nghĩa — một khoá bộ phận bắt buộc phải phân biệt được **mọi** thực thể yếu cùng chủ.
+
+So sánh hai thực thể yếu của bài để thấy rõ:
+
+| | BUỔI ĐIỂM DANH | PHỤ HUYNH |
+|---|---|---|
+| Ứng viên khoá bộ phận | `ngay` | `quan_he` |
+| Lược đồ có ép duy nhất không | **Có** — `UNIQUE (ma_hs, ngay)` | **Không** |
+| Dữ liệu thật có trùng không | Không | **Có** — `HS029` hai lần `Bố` |
+| Kết luận | Khoá bộ phận **hợp lệ** | **Không hợp lệ** |
+
+Vì không có khoá bộ phận hợp lệ, bảng `phu_huynh` chuyển sang dùng khoá nhân tạo:
 
 ```sql
 SELECT count(*) AS tong_so_dong, count(DISTINCT ma_ph) AS so_ma_ph_khac_nhau
@@ -380,26 +451,44 @@ WHERE conrelid = 'hoc_sinh'::regclass AND contype = 'f';
 
     **Tham gia toàn phần trên giấy phải thành `NOT NULL` trong SQL.** Không có ngoại lệ.
 
-!!! warning "Lỗi 3: Cho thực thể yếu một khoá riêng rồi quên mất nó là thực thể yếu"
-    Thêm `ma_ph` làm khoá chính là hợp lý. Nhưng nhiều người làm xong thì bỏ luôn `NOT NULL` và `ON DELETE CASCADE`, nghĩ rằng "đã có khoá riêng rồi thì nó mạnh rồi".
+!!! warning "Lỗi 3: Cho thực thể yếu một khoá nhân tạo rồi quên mất nó là thực thể yếu"
+    Thêm `ma_ph` làm khoá chính là hợp lý. Nhưng nhiều người làm xong thì bỏ luôn `NOT NULL` và `ON DELETE CASCADE`, nghĩ rằng "đã có khoá chính rồi thì nó mạnh rồi".
 
     Hậu quả: xoá một học sinh xong, hồ sơ phụ huynh vẫn nằm lại trong bảng, trỏ vào một mã học sinh không còn tồn tại — hoặc tệ hơn, `ma_hs` bị để `NULL` và không ai biết đó là phụ huynh của ai nữa. Dữ liệu rác kiểu này gần như không dọn được về sau.
 
 !!! warning "Lỗi 4: Coi mọi bảng có khoá ngoại đều là thực thể yếu"
     `hoc_sinh` có khoá ngoại `ma_lop`, `NOT NULL` hẳn hoi. Vậy HỌC SINH có phải thực thể yếu của LỚP không? **Không.**
 
-    Phép thử: *thực thể này có khoá của riêng nó không?* HỌC SINH có `ma_hs`, tự định danh được, không cần biết lớp nào. Vậy nó **mạnh**.
+    Phép thử đúng — và hãy đọc kỹ từng chữ:
 
-    Còn PHỤ HUYNH thì nói *"Bố"* không định danh nổi ai — phải mượn `ma_hs`. Vậy nó **yếu**.
+    > *Ở **mức ý niệm**, thực thể này có **thuộc tính khoá tự nhiên** không? Tức là ngoài đời, bản thân nó có sẵn đặc điểm nào đủ sức định danh nó mà không cần nhắc tới thực thể khác?*
 
-    Khoá ngoại nói về **liên kết**; thực thể yếu nói về **khả năng tự định danh**. Hai chuyện khác nhau.
+    - **HỌC SINH**: có. Nhà trường cấp cho mỗi bạn một mã học sinh, và mã đó tồn tại độc lập với việc bạn ấy học lớp nào — chuyển lớp thì mã vẫn thế. → **mạnh**.
+    - **PHỤ HUYNH**: không. Ngoài đời người phụ huynh không mang theo mã số nào cả; nói *"Bố"* thì không định danh nổi ai. → **yếu**.
+    - **BUỔI ĐIỂM DANH**: không. *"Ngày 15/09"* trống không thì chưa là buổi điểm danh của ai. → **yếu**.
+
+!!! warning "Lỗi 5: Dùng 'bảng này có khoá chính riêng không' làm phép thử"
+    Đây là biến thể tinh vi hơn của Lỗi 4, và nó **phá đúng ví dụ trung tâm của bài**.
+
+    Bảng `phu_huynh` có khoá chính `ma_ph` của riêng nó. Áp phép thử sai này thì ra kết luận *"PHỤ HUYNH là thực thể mạnh"* — trái ngược hoàn toàn với mọi thứ bài vừa dạy.
+
+    Sai ở đâu? Ở chỗ trộn **hai mức** vào nhau:
+
+    | Mức | Câu hỏi | Trả lời cho PHỤ HUYNH |
+    |---|---|---|
+    | **Ý niệm** (biểu đồ ER) | Có thuộc tính khoá tự nhiên không? | **Không** → thực thể **yếu** |
+    | **Bảng** (sau Bài 14) | Bảng có cột khoá chính không? | Có — `ma_ph`, một mã **được thêm vào lúc chuyển đổi** |
+
+    `ma_ph` không phải một thuộc tính trong biểu đồ ER. Nó là sản phẩm của bước chuyển ER sang bảng, chọn ra vì `quan_he` không làm nổi khoá bộ phận.
+
+    Dấu hiệu nhận ra sự phụ thuộc vẫn còn nguyên trong lược đồ: `ma_hs NOT NULL` và `ON DELETE CASCADE`.
 
 ## ✍️ Bài tập
 
 1. Với mỗi mối quan hệ dưới đây trong `truong_hoc`, hãy nói ràng buộc tham gia ở **cả hai phía** và chỉ ra bằng chứng trong lược đồ hoặc dữ liệu:
 
     a. HỌC SINH — *mượn* — SÁCH
-    b. HỌC SINH — *được điểm danh* — (bảng `diem_danh`)
+    b. HỌC SINH — *được điểm danh* — BUỔI ĐIỂM DANH
 
 2. Trường mở thêm hệ thống quản lý **phòng học**, và ghi lại **thiết bị** trong từng phòng: *"máy chiếu số 1 của phòng A101"*, *"máy chiếu số 1 của phòng A102"*. Thiết bị chỉ được đánh số trong phạm vi từng phòng. Hãy xác định: thực thể yếu, thực thể chủ, quan hệ nhận diện, khoá bộ phận, và khoá đầy đủ.
 
@@ -423,8 +512,8 @@ WHERE conrelid = 'hoc_sinh'::regclass AND contype = 'f';
 
     | Phía | Tham gia | Bằng chứng |
     |---|---|---|
-    | HỌC SINH | **Bộ phận** về mặt lược đồ | Không có gì ép mỗi học sinh phải có ít nhất một dòng điểm danh. Dữ liệu mẫu tình cờ đủ cả 40 bạn × 5 ngày = 200 dòng, nhưng đó là do dữ liệu, không do ràng buộc |
-    | Dòng `diem_danh` | **Toàn phần** | `diem_danh.ma_hs` là `NOT NULL` |
+    | HỌC SINH | **Bộ phận** về mặt lược đồ | Không có gì ép mỗi học sinh phải có ít nhất một buổi điểm danh. Dữ liệu mẫu tình cờ đủ cả 40 bạn × 5 ngày = 200 dòng, nhưng đó là do dữ liệu, không do ràng buộc |
+    | BUỔI ĐIỂM DANH | **Toàn phần** | `diem_danh.ma_hs` là `NOT NULL` — và bắt buộc phải vậy, vì đây là **thực thể yếu**, tham gia toàn phần vào quan hệ nhận diện là hệ quả tất yếu |
 
     **Câu 2.**
 
@@ -475,9 +564,9 @@ WHERE conrelid = 'hoc_sinh'::regclass AND contype = 'f';
     Muốn thành công phải xử lý dữ liệu cũ trước — phân công một giáo viên cho lớp 9A3 — rồi mới `ALTER`. Đây là bài học rất thật: **đổi ràng buộc trên một database đang chạy luôn phải dọn dữ liệu cũ trước.**
 
     **Câu 5.**
-    Vì định nghĩa của thực thể yếu là *"không có khoá riêng, phải mượn khoá của thực thể chủ"*.
+    Vì định nghĩa của thực thể yếu là *"không có thuộc tính khoá tự nhiên, phải mượn khoá của thực thể chủ"*.
 
-    Giả sử có một thực thể yếu **không** tham gia quan hệ nhận diện — tức là không có chủ. Khi đó nó không mượn được khoá của ai, mà bản thân nó lại không có khoá riêng. Kết quả: **không cách nào định danh nó**, nên nó không thể là một dòng hợp lệ trong bất kỳ bảng nào.
+    Giả sử có một thực thể yếu **không** tham gia quan hệ nhận diện — tức là không có chủ. Khi đó nó không mượn được khoá của ai, mà bản thân nó lại không có thuộc tính khoá nào. Kết quả: **không cách nào định danh nó**, nên nó không thể là một thực thể hợp lệ.
 
     Suy ra tham gia toàn phần không phải là một lựa chọn thiết kế, mà là **hệ quả logic bắt buộc**. Không có ngoại lệ.
 
@@ -488,8 +577,8 @@ WHERE conrelid = 'hoc_sinh'::regclass AND contype = 'f';
 1. **Ràng buộc tham gia** trả lời *"tối thiểu bao nhiêu"*, còn **bản số** trả lời *"tối đa bao nhiêu"* — hai câu hỏi độc lập, phải hỏi cho cả hai phía.
 2. **Tham gia toàn phần** nghĩa là mọi thực thể đều phải tham gia; trong SQL nó chính là `NOT NULL` trên cột khoá ngoại.
 3. **Tham gia bộ phận** cho phép đứng ngoài — lớp 9A3 chưa có chủ nhiệm và học sinh `HS040` chưa có phụ huynh đều hợp lệ.
-4. **Thực thể yếu** không có khoá riêng, phải ghép **khoá chủ + khoá bộ phận**; nó luôn tham gia toàn phần vào **quan hệ nhận diện** và bị xoá theo chủ bằng `ON DELETE CASCADE`.
-5. Khi khoá bộ phận không chắc đủ phân biệt — như `quan_he` của `HS029` — người ta thay bằng **khoá nhân tạo**, nhưng bản chất thực thể yếu thì vẫn giữ nguyên.
+4. **Thực thể yếu** không có thuộc tính khoá tự nhiên, phải ghép **khoá chủ + khoá bộ phận**; nó luôn tham gia toàn phần vào **quan hệ nhận diện** và bị xoá theo chủ bằng `ON DELETE CASCADE`.
+5. Khoá bộ phận phải phân biệt được **mọi** thực thể yếu cùng chủ: `ngay` của BUỔI ĐIỂM DANH đạt (có `UNIQUE`), `quan_he` của PHỤ HUYNH **không** đạt — nên bảng phải dùng **khoá nhân tạo** `ma_ph`, một cột chỉ tồn tại ở mức bảng chứ không có trong biểu đồ ER.
 
 ---
 

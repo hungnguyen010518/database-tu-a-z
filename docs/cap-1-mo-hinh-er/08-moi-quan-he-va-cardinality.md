@@ -96,7 +96,20 @@ Mỗi lớp có tối đa một giáo viên chủ nhiệm, và mỗi giáo viên
 
 Chữ **tối đa** rất quan trọng: lớp 9A3 hiện **chưa có** chủ nhiệm, và ba thầy cô hiện **chưa** chủ nhiệm lớp nào. Bản số chỉ nói về **giới hạn trên**. Còn chuyện "có bắt buộc phải có ít nhất một hay không" là một ràng buộc **khác hẳn**, tên là **ràng buộc tham gia** — toàn bộ [Bài 9](09-participation-va-thuc-the-yeu.md) dành cho nó.
 
-Khi lên database, 1:1 được hiện thực bằng cách **nhúng khoá ngoại vào một trong hai bảng**. Ở đây là cột `lop.ma_gvcn`.
+Khi lên database, 1:1 được hiện thực bằng **khoá ngoại cộng với ràng buộc `UNIQUE`** đặt lên chính cột khoá ngoại đó. Trong `truong_hoc` là cột `lop.ma_gvcn` (`dataset/02-chuan-hoa.sql`, dòng 48):
+
+```
+ma_gvcn   CHAR(4)     UNIQUE REFERENCES giao_vien(ma_gv) ON DELETE SET NULL
+```
+
+Hai nửa của dòng này làm hai việc khác nhau, và **thiếu nửa nào cũng hỏng**:
+
+| Phần | Ép được điều gì |
+|---|---|
+| `REFERENCES giao_vien(ma_gv)` | Mỗi lớp trỏ tới **tối đa một** giáo viên — vì một ô chỉ chứa một giá trị |
+| `UNIQUE` | Mỗi giáo viên xuất hiện ở **tối đa một** lớp — không ai ôm hai lớp |
+
+Bỏ chữ `UNIQUE` đi thì cột này trở thành hiện thực của **1:N**, chứ không còn là 1:1. Đây chính là điểm khác nhau duy nhất giữa hai cách hiện thực ở mức bảng, nên đừng bỏ sót. Bài 14 sẽ đưa nó vào **Bước 3** của thuật toán chuyển ER sang bảng.
 
 #### 1:N — một–nhiều
 
@@ -272,15 +285,33 @@ FROM lop;
 
 Kết quả: `6`, `5`, `5`.
 
-Hai con số sau bằng nhau chính là bằng chứng của bản số **1:1**: 5 lớp có chủ nhiệm và có đúng 5 giáo viên khác nhau làm chủ nhiệm — không thầy cô nào ôm hai lớp.
-
 !!! note "`count(*)` và `count(ma_gvcn)` khác nhau chỗ nào?"
     `count(*)` đếm **mọi dòng**. `count(ten_cot)` chỉ đếm những dòng mà cột đó **khác `NULL`**. Chênh lệch `6 − 5 = 1` chính là lớp 9A3 chưa có chủ nhiệm. **Bài 24** sẽ đào sâu hành vi này của `NULL`.
 
-!!! warning "Lược đồ hiện tại chưa ép được 1:1 theo cả hai chiều"
-    Cột `lop.ma_gvcn` bảo đảm *"mỗi lớp tối đa một chủ nhiệm"*. Nhưng nó **không** cấm hai lớp cùng ghi `GV01`. Muốn ép nốt chiều còn lại, phải thêm ràng buộc `UNIQUE` lên cột `ma_gvcn`.
+!!! danger "Ba con số này KHÔNG chứng minh bản số là 1:1"
+    Rất dễ lập luận: *"5 lớp có chủ nhiệm, mà đúng 5 giáo viên khác nhau làm chủ nhiệm — vậy là 1:1"*. **Sai lầm y hệt** lỗi mà [Bài 7](07-thuc-the-va-thuoc-tinh.md) đã cảnh báo với `ho_ten`: dữ liệu hiện tại không trùng thì chưa nói lên điều gì về **mọi thể hiện tương lai**.
 
-    Đây là ví dụ đầu tiên bạn gặp về khoảng cách giữa **quy tắc nghiệp vụ** và **ràng buộc thực sự được cài đặt**. Đúng 1:1 hiện đang do dữ liệu mẫu tuân thủ chứ chưa do lược đồ cưỡng chế — nên trang [Database mẫu](../dataset.md) vẽ mối quan hệ này ở dạng lỏng hơn. Bài 15 sẽ nói kỹ về việc bịt những khe hở kiểu này.
+    Bản số là một tuyên bố của **lược đồ**, nên bằng chứng phải lấy từ lược đồ.
+
+Bằng chứng thật nằm ở đây:
+
+```sql
+SELECT conname, contype
+FROM pg_constraint
+WHERE conrelid = 'lop'::regclass AND contype = 'u'
+ORDER BY conname;
+```
+
+Hai dòng, trong đó có `lop_ma_gvcn_key` — ràng buộc `UNIQUE` trên cột `ma_gvcn` (dòng còn lại, `lop_ten_lop_key`, là `UNIQUE` trên `ten_lop`). Chính ràng buộc này, chứ không phải con số `5`, là thứ **cấm** hai lớp cùng ghi một `ma_gvcn`.
+
+Muốn thấy rõ hơn nữa thì thử đặt cô Lan (`GV01`) làm chủ nhiệm thêm lớp 9A3:
+
+<!-- sql:co-y-loi -->
+```sql
+UPDATE lop SET ma_gvcn = 'GV01' WHERE ma_lop = 'L06';
+```
+
+PostgreSQL sẽ từ chối vì vi phạm ràng buộc duy nhất `lop_ma_gvcn_key`. Không phải người nhập liệu cẩn thận, mà là database **không cho phép** làm sai.
 
 ### M:N — học sinh và môn học
 
@@ -371,7 +402,7 @@ Giải thích: 8 giáo viên, mỗi người dạy đúng môn chuyên môn củ
 
     a. HỌC SINH — *mượn* — SÁCH
     b. HỌC SINH — *có* — PHỤ HUYNH
-    c. HỌC SINH — *được điểm danh vào* — NGÀY
+    c. HỌC SINH — *có* — BUỔI ĐIỂM DANH
 
 2. Nhà trường ra quy định mới: *"Từ năm sau, mỗi lớp có thêm một giáo viên chủ nhiệm phụ."* Bản số của mối quan hệ LỚP — GIÁO VIÊN CHỦ NHIỆM đổi thành gì? Lược đồ phải sửa thế nào?
 
@@ -391,7 +422,9 @@ Giải thích: 8 giáo viên, mỗi người dạy đúng môn chuyên môn củ
     |---|---|---|---|
     | a. HỌC SINH — mượn — SÁCH | 2 | **M:N** | Bảng trung gian `muon_sach`, mang thêm `ngay_muon`, `ngay_tra_du_kien`, `ngay_tra_thuc_te` |
     | b. HỌC SINH — có — PHỤ HUYNH | 2 | **1:N** | Khoá ngoại `phu_huynh.ma_hs` — đặt ở phía "nhiều" |
-    | c. HỌC SINH — được điểm danh vào — NGÀY | 2 | **M:N** | Bảng `diem_danh`, có thêm `UNIQUE (ma_hs, ngay)` để một bạn chỉ được điểm danh một lần mỗi ngày |
+    | c. HỌC SINH — có — BUỔI ĐIỂM DANH | 2 | **1:N** | Khoá ngoại `diem_danh.ma_hs` — đặt ở phía "nhiều" |
+
+    Lưu ý c: **NGÀY không phải một tập thực thể**. Trường không lưu dữ liệu gì về bản thân ngày 15/09/2026 cả; `ngay` chỉ là một **thuộc tính** của buổi điểm danh. Còn ràng buộc `UNIQUE (ma_hs, ngay)` nói rằng trong phạm vi một học sinh, `ngay` phân biệt được các buổi điểm danh với nhau — [Bài 9](09-participation-va-thuc-the-yeu.md) sẽ gọi BUỔI ĐIỂM DANH là một **thực thể yếu** và gọi `ngay` là **khoá bộ phận** của nó.
 
     Lưu ý b: một học sinh có nhiều phụ huynh, nhưng ở đây mỗi dòng phụ huynh chỉ gắn với **một** học sinh — nên là 1:N chứ không phải M:N. Thiết kế này không mô tả được trường hợp hai anh em ruột học cùng trường dùng chung một người bố; muốn vậy phải chuyển sang M:N với một bảng trung gian.
 
@@ -448,10 +481,10 @@ Giải thích: 8 giáo viên, mỗi người dạy đúng môn chuyên môn củ
 
 ## 🔑 Tóm tắt
 
-1. **Mối quan hệ** (*relationship*) là liên kết giữa các thực thể — khác hẳn **quan hệ** (*relation*) của Bài 6, vốn nghĩa là cái bảng.
+1. **Mối quan hệ** là liên kết giữa các thực thể — khác hẳn **quan hệ** của Bài 6, vốn nghĩa là cái bảng.
 2. **Bậc của mối quan hệ** là số tập thực thể tham gia: một ngôi, hai ngôi, ba ngôi; bậc hai chiếm đại đa số.
 3. **Bản số** trả lời *"tối đa bao nhiêu"* và chỉ có ba giá trị: **1:1**, **1:N**, **M:N**.
-4. Hiện thực: 1:1 nhúng khoá ngoại vào một bên, 1:N đặt khoá ngoại ở phía "nhiều", còn **M:N luôn phải sinh ra một bảng thứ ba**.
+4. Hiện thực: 1:1 là khoá ngoại **cộng `UNIQUE`**, 1:N là khoá ngoại đặt ở phía "nhiều" (không `UNIQUE`), còn **M:N luôn phải sinh ra một bảng thứ ba**.
 5. Mối quan hệ bậc ba là thật khi **tách ra thì mất thông tin** — `phan_cong_day` là ví dụ, với khoá chính gồm 4 cột.
 
 ---
