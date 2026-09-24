@@ -15,8 +15,18 @@ import os
 import re
 import sys
 
-# **tiếng Việt** (*english*)  — cho phép khoảng trắng linh hoạt giữa hai phần
-THUAT_NGU = re.compile(r"\*\*([^*\n]{1,60}?)\*\*\s*\(\s*\*([^*\n]{1,60}?)\*\s*\)")
+# Quy ước của khoá học: thuật ngữ lần đầu viết `**tiếng Việt** (*english*)`.
+# Thực tế bài học dùng nhiều biến thể hợp lệ, và bản regex đầu tiên bỏ sót 45 thuật ngữ
+# — gồm TOÀN BỘ các dạng chuẩn 1NF–6NF và BCNF — nên con số "còn thiếu" lúc đó là giả.
+# Các dạng phải nhận được:
+#     **tiếng Việt** (*english*)
+#     **tiếng Việt** (*english*, viết tắt **1NF**)      -> lấy cả cụm đầy đủ lẫn viết tắt
+#     **tiếng Việt** (*Enhanced ER* / *Extended ER*)    -> lấy cụm đầu
+# Loại trừ: phần trong ngoặc là câu ví dụ tiếng Việt trong dấu nháy, không phải thuật ngữ.
+THUAT_NGU = re.compile(r"\*\*([^*\n]{1,60}?)\*\*\s*\(\s*\*([^*\n]{1,80}?)\*")
+VIET_TAT = re.compile(r"viết tắt[^*\n]{0,10}\*\*([^*\n]{1,20}?)\*\*")
+# Đuôi còn lại sau cụm tiếng Anh đầu tiên, để tìm "viết tắt **X**"
+DAU_NHAY = ('"', "\u201c", "\u201d", "'", "\u2018", "\u2019")
 
 
 def sap_xep_bai(duong: str) -> tuple:
@@ -40,10 +50,22 @@ def main() -> int:
         with open(duong, encoding="utf-8") as f:
             noi_dung = f.read()
         ten_bai = os.path.relpath(duong, os.path.join(goc, "docs"))
-        for viet, eng in THUAT_NGU.findall(noi_dung):
-            khoa = eng.strip().lower()
+        for khop in THUAT_NGU.finditer(noi_dung):
+            viet, eng = khop.group(1).strip(), khop.group(2).strip()
+            # Bỏ qua khi phần trong ngoặc là câu ví dụ tiếng Việt, không phải thuật ngữ
+            if any(d in eng for d in DAU_NHAY):
+                continue
+            khoa = eng.lower()
             if khoa not in lan_dau:
-                lan_dau[khoa] = (viet.strip(), eng.strip(), ten_bai)
+                lan_dau[khoa] = (viet, eng, ten_bai)
+
+            # "(*first normal form*, viết tắt **1NF**)" -> đăng ký thêm chính chữ viết tắt
+            duoi = noi_dung[khop.end():khop.end() + 80]
+            kh_vt = VIET_TAT.search(duoi)
+            if kh_vt:
+                vt = kh_vt.group(1).strip()
+                if vt.lower() not in lan_dau:
+                    lan_dau[vt.lower()] = (viet, vt, ten_bai)
 
     trong_glossary = ""
     if os.path.exists(duong_glossary):
