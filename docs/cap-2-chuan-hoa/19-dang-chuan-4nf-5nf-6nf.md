@@ -50,6 +50,15 @@ Hai tính chất cần nhớ:
 
 `X ↠ Y` là **tầm thường** khi `Y ⊆ X`, hoặc khi `X ∪ Y` là toàn bộ bảng.
 
+!!! important "Phụ thuộc đa trị cần ÍT NHẤT BA thuộc tính mới có nghĩa"
+    Đây là điểm dễ hiểu sai nhất về MVD, và nó suy thẳng ra từ định nghĩa "tầm thường" ở trên.
+
+    Trên một bảng chỉ có hai cột `R(A, B)`, mọi phụ thuộc đa trị đều **tầm thường**: `A ↠ B` có `A ∪ B` = toàn bộ bảng, còn `A ↠ A` thì `A ⊆ A`. Không còn chỗ cho cái gì khác.
+
+    Lý do sâu xa: `X ↠ Y` nói rằng tập `Y` **độc lập với phần còn lại**. Bảng hai cột thì không có "phần còn lại" nào để mà độc lập.
+
+    Hệ quả thực dụng: **bảng hai cột luôn ở 4NF.** Và đó cũng chính là lý do tách 4NF ở mục 2 phần Thực hành lại hiệu quả đến vậy — nó biến một bảng ba cột thành hai bảng hai cột.
+
 !!! tip "Cách nhận ra MVD chỉ bằng mắt"
     Nhìn số dòng. Nếu một thực thể có `m` giá trị ở cột này và `n` giá trị ở cột kia, mà bảng lại chứa đúng **`m × n`** dòng, thì gần như chắc chắn bạn đang nhìn một phụ thuộc đa trị.
 
@@ -225,6 +234,7 @@ INSERT INTO b19_phan_cong_bet VALUES
 ('Bùi Anh Khoa', 'Vật lý',  'CLB Bóng rổ'),
 ('Vũ Minh Tuấn', 'Lịch sử', 'CLB Báo tường');
 
+-- KỲ VỌNG: 2 dòng
 SELECT ten_gv,
        count(DISTINCT mon_day) AS so_mon,
        count(DISTINCT clb)     AS so_clb,
@@ -247,9 +257,10 @@ Hai dòng:
 
 **Nhưng nó có ở 4NF không?** Không. Phụ thuộc đa trị `ten_gv ↠ mon_day` là không tầm thường, mà `ten_gv` **không** phải siêu khoá.
 
-Chứng minh MVD đang thật sự chi phối dữ liệu — mọi tổ hợp đều phải có mặt:
+Bây giờ **dò tìm phản ví dụ**: nếu `ten_gv ↠ mon_day` đúng thì mọi tổ hợp *"môn của thầy X"* × *"câu lạc bộ của thầy X"* đều phải có mặt trong bảng. Câu dưới đây đếm số tổ hợp **còn thiếu**:
 
 ```sql
+-- KỲ VỌNG: 1 dòng
 SELECT count(*) AS to_hop_con_thieu
 FROM (
     SELECT DISTINCT a.ten_gv, a.mon_day, b.clb
@@ -260,7 +271,16 @@ FROM (
 ) t;
 ```
 
-Kết quả `0`: mọi tổ hợp *"môn của thầy X"* × *"câu lạc bộ của thầy X"* đều đã nằm trong bảng. Đó đúng là định nghĩa của `ten_gv ↠ mon_day`.
+Kết quả `0`: **chưa tìm thấy tổ hợp nào thiếu.** Chỉ có thế thôi.
+
+Hãy đọc con số này cho thật đúng, y như [Bài 16](16-phu-thuoc-ham.md) mục 2 đã làm với phụ thuộc hàm:
+
+| Nếu kết quả là | Kết luận được phép rút ra |
+|---|---|
+| Lớn hơn `0` | `ten_gv ↠ mon_day` **sai**. Chắc chắn, không cãi được — đã tìm ra phản ví dụ |
+| Bằng `0` | **Không kết luận gì cả.** Phải đi hỏi nghiệp vụ |
+
+Căn cứ để tin `ten_gv ↠ mon_day` là **luật nghiệp vụ** — *"việc dạy môn và việc phụ trách câu lạc bộ là hai việc độc lập nhau"* — chứ không phải con số `0` này. Mục 2 sẽ nói kỹ hơn vì sao điều đó quan trọng.
 
 Và đây là bất thường: thầy Khoa nhận thêm CLB Âm nhạc thì phải ghi **hai** dòng, không phải một. Quên một dòng là bảng tự mâu thuẫn với luật *"hai việc độc lập nhau"*.
 
@@ -278,6 +298,7 @@ SELECT DISTINCT ten_gv, mon_day FROM b19_phan_cong_bet;
 CREATE TABLE b19_gv_clb AS
 SELECT DISTINCT ten_gv, clb FROM b19_phan_cong_bet;
 
+-- KỲ VỌNG: 2 dòng
 SELECT 'b19_gv_mon' AS bang, count(*) AS so_dong FROM b19_gv_mon
 UNION ALL SELECT 'b19_gv_clb', count(*) FROM b19_gv_clb;
 ```
@@ -287,6 +308,7 @@ Ba dòng và ba dòng — thay vì năm.
 Kiểm phép tách không mất mát:
 
 ```sql
+-- KỲ VỌNG: 1 dòng
 SELECT (SELECT count(*) FROM b19_phan_cong_bet) AS goc,
        (SELECT count(*) FROM b19_gv_mon m
           JOIN b19_gv_clb c ON c.ten_gv = m.ten_gv) AS noi_lai,
@@ -335,6 +357,7 @@ INSERT INTO b19_day_hoc VALUES
 ('Nguyễn Thị Lan', 'Ngữ văn', '8A1'),
 ('Trần Văn Hùng',  'Toán',    '8A1');
 
+-- KỲ VỌNG: 4 dòng
 SELECT * FROM b19_day_hoc ORDER BY ten_gv, ten_mon, ten_lop;
 ```
 
@@ -351,6 +374,7 @@ CREATE TABLE b19_gv_monhoc AS SELECT DISTINCT ten_gv, ten_mon  FROM b19_day_hoc;
 CREATE TABLE b19_mon_lop   AS SELECT DISTINCT ten_mon, ten_lop FROM b19_day_hoc;
 CREATE TABLE b19_lop_gv    AS SELECT DISTINCT ten_lop, ten_gv  FROM b19_day_hoc;
 
+-- KỲ VỌNG: 3 dòng
 SELECT 'b19_gv_monhoc' AS bang, count(*) AS so_dong FROM b19_gv_monhoc
 UNION ALL SELECT 'b19_mon_lop', count(*) FROM b19_mon_lop
 UNION ALL SELECT 'b19_lop_gv',  count(*) FROM b19_lop_gv;
@@ -361,6 +385,7 @@ Ba dòng, mỗi bảng **3** dòng.
 **Thử nối chỉ hai mảnh:**
 
 ```sql
+-- KỲ VỌNG: 5 dòng
 SELECT gm.ten_gv, gm.ten_mon, ml.ten_lop
 FROM b19_gv_monhoc gm
 JOIN b19_mon_lop ml ON ml.ten_mon = gm.ten_mon
@@ -370,6 +395,7 @@ ORDER BY gm.ten_gv, gm.ten_mon, ml.ten_lop;
 **Năm** dòng — thừa một dòng so với bảng gốc. Dòng thừa là:
 
 ```sql
+-- KỲ VỌNG: 1 dòng
 SELECT gm.ten_gv, gm.ten_mon, ml.ten_lop
 FROM b19_gv_monhoc gm
 JOIN b19_mon_lop ml ON ml.ten_mon = gm.ten_mon
@@ -382,6 +408,7 @@ Một dòng: `Trần Văn Hùng | Toán | 8A2`. Đây là **dòng ma** — thầ
 **Bây giờ nối đủ ba mảnh:**
 
 ```sql
+-- KỲ VỌNG: 1 dòng
 SELECT count(*) AS so_dong_sau_khi_noi_ba_manh
 FROM b19_gv_monhoc gm
 JOIN b19_mon_lop ml ON ml.ten_mon = gm.ten_mon
@@ -393,6 +420,7 @@ JOIN b19_lop_gv  lg ON lg.ten_lop = ml.ten_lop AND lg.ten_gv = gm.ten_gv;
 Kiểm cho chắc, không thiếu cũng không thừa:
 
 ```sql
+-- KỲ VỌNG: 1 dòng
 SELECT (SELECT count(*) FROM (
             SELECT gm.ten_gv, gm.ten_mon, ml.ten_lop
             FROM b19_gv_monhoc gm
@@ -428,6 +456,7 @@ CREATE TABLE b19_day_hoc_2 AS SELECT * FROM b19_day_hoc;
 
 INSERT INTO b19_day_hoc_2 VALUES ('Trần Văn Hùng', 'Ngữ văn', '8A2');
 
+-- KỲ VỌNG: 1 dòng
 SELECT (SELECT count(*) FROM b19_day_hoc_2) AS goc,
        (SELECT count(*) FROM (
             SELECT DISTINCT a.ten_gv, b.ten_mon, c.ten_lop
@@ -441,6 +470,7 @@ SELECT (SELECT count(*) FROM b19_day_hoc_2) AS goc,
 `goc = 5`, `sau_khi_tach_ba = 8`. Nối cả **ba** mảnh vẫn đẻ ra **3 dòng ma**:
 
 ```sql
+-- KỲ VỌNG: 3 dòng
 SELECT DISTINCT a.ten_gv, b.ten_mon, c.ten_lop
 FROM (SELECT DISTINCT ten_gv, ten_mon  FROM b19_day_hoc_2) a
 JOIN (SELECT DISTINCT ten_mon, ten_lop FROM b19_day_hoc_2) b
@@ -464,7 +494,8 @@ Cùng một phép tách, cùng một cấu trúc bảng — chỉ khác **luật
     Bây giờ là chỗ rất đáng chú ý. Thử phép kiểm trên dữ liệu thật:
 
     ```sql
-    SELECT (SELECT count(*) FROM phan_cong_day WHERE hoc_ky = 1) AS goc,
+    -- KỲ VỌNG: 1 dòng
+SELECT (SELECT count(*) FROM phan_cong_day WHERE hoc_ky = 1) AS goc,
            (SELECT count(*) FROM (
                 SELECT DISTINCT a.ma_gv, b.ma_mon, c.ma_lop
                 FROM (SELECT DISTINCT ma_gv, ma_mon FROM phan_cong_day WHERE hoc_ky = 1) a
@@ -472,7 +503,7 @@ Cùng một phép tách, cùng một cấu trúc bảng — chỉ khác **luật
                   ON b.ma_mon = a.ma_mon
                 JOIN (SELECT DISTINCT ma_lop, ma_gv FROM phan_cong_day WHERE hoc_ky = 1) c
                   ON c.ma_lop = b.ma_lop AND c.ma_gv = a.ma_gv) t) AS sau_khi_tach_ba;
-    ```
+```
 
     Kết quả: `goc = 32` và `sau_khi_tach_ba = 32`. **Bằng nhau!** Dữ liệu hiện tại tách ba chiều được mà không sinh dòng ma nào.
 
@@ -523,6 +554,7 @@ INSERT INTO b19_hs_diachi VALUES
 Bây giờ hỏi được câu mà bảng thường không trả lời nổi: *"ngày 1 tháng 2 năm 2026, bạn HS001 học lớp nào và ở đâu?"*
 
 ```sql
+-- KỲ VỌNG: 1 dòng
 SELECT l.ma_hs, l.ten_lop, d.dia_chi
 FROM b19_hs_lop l
 JOIN b19_hs_diachi d ON d.ma_hs = l.ma_hs
@@ -532,7 +564,21 @@ WHERE DATE '2026-02-01' BETWEEN l.tu_ngay AND coalesce(l.den_ngay, DATE '9999-12
 
 Một dòng: `HS001 | 8A2 | 12 Lê Lợi, Hà Nội` — đã chuyển lớp nhưng chưa chuyển nhà.
 
-Mỗi bảng chỉ có **khoá cộng đúng một thuộc tính**, nên không phụ thuộc kết nối không tầm thường nào tồn tại → cả hai bảng ở **6NF**.
+!!! question "Đếm cột thì thấy BA cột ngoài `ma_hs` — sao vẫn gọi là 6NF?"
+    Định nghĩa ở khối 📖 nói *"khoá cộng **tối đa một** thuộc tính không khoá"*. Nhưng `b19_hs_lop` có `ma_hs`, `tu_ngay`, `den_ngay` **và** `ten_lop` — bốn cột. Mâu thuẫn?
+
+    Không, vì trong mô hình temporal, `tu_ngay` và `den_ngay` **không phải hai thuộc tính riêng**. Chúng là hai đầu của **một** giá trị duy nhất: **khoảng thời gian có hiệu lực** (*valid-time period*).
+
+    | Cách đọc | `b19_hs_lop` gồm |
+    |---|---|
+    | Đếm cột SQL | 4 cột: `ma_hs`, `tu_ngay`, `den_ngay`, `ten_lop` |
+    | Đọc theo temporal | Khoá = `(ma_hs, khoảng thời gian)` · thuộc tính không khoá = **`ten_lop`**, đúng một cái |
+
+    Đọc theo cách thứ hai thì điều kiện 6NF thoả đúng nghĩa đen. PostgreSQL từ phiên bản 9.2 còn có hẳn kiểu **khoảng** (`daterange`) để diễn đạt chuyện này bằng **một** cột thật sự — nhưng bài này dùng hai cột `DATE` cho dễ đọc với người mới.
+
+    Bài học chung: các dạng chuẩn được phát biểu trên **thuộc tính ở mức ý niệm**, không phải trên **số cột trong `CREATE TABLE`**. Đếm cột là cách kiểm nhanh, không phải định nghĩa.
+
+Với cách đọc đó, mỗi bảng chỉ còn **khoá cộng đúng một thuộc tính không khoá**, nên không phụ thuộc kết nối không tầm thường nào tồn tại → cả hai bảng ở **6NF**.
 
 | | Một bảng có `tu_ngay` | Tách 6NF |
 |---|---|---|
@@ -572,7 +618,9 @@ DROP TABLE IF EXISTS b19_phan_cong_bet CASCADE;
 
     Bảng bậc ba **mặc định đã ở 5NF**. Chỉ khi nghiệp vụ có **luật vòng** — *"A liên quan B, B liên quan C, A liên quan C thì cả ba cùng liên quan"* — thì phụ thuộc kết nối mới tồn tại.
 
-    Mục 3 đã kiểm trên `phan_cong_day` thật: tách ba chiều sinh thêm dòng ma. Trước khi tách, hãy chạy đúng phép kiểm ấy.
+    Và đừng dùng **dữ liệu** để quyết định. Mục 4 đã chạy phép kiểm tách ba chiều trên `phan_cong_day` thật: kết quả ra `32 = 32`, tức là dữ liệu hiện tại **cho phép** tách mà không sinh dòng ma nào. Vậy mà câu trả lời đúng vẫn là **không tách** — vì con số đẹp ấy đến từ một phụ thuộc hàm tình cờ của dữ liệu mẫu, không đến từ luật nghiệp vụ.
+
+    Câu hỏi phải hỏi người dùng là: *"Nếu thầy G dạy môn M, và môn M có được dạy ở lớp L, và thầy G có dạy ở lớp L — thì có chắc chắn thầy G dạy môn M cho lớp L không?"* Trả lời "không chắc" → **không có phụ thuộc kết nối** → không tách.
 
 !!! warning "Lỗi 3: Tưởng 'dạng chuẩn cao hơn thì tốt hơn'"
     4NF, 5NF, 6NF không xếp hạng chất lượng thiết kế. Chúng là **thuốc đặc trị**.

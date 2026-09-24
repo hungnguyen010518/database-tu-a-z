@@ -65,7 +65,7 @@ Một câu duy nhất cần nhớ:
 !!! quote "Định nghĩa BCNF trong một câu"
     **Mọi định thức đều phải là siêu khoá.**
 
-Nhắc lại từ [Bài 16](16-phu-thuoc-ham.md): **định thức** (*determinant*) là vế trái của một phụ thuộc hàm. BCNF nói rằng bất cứ thứ gì có quyền *"xác định"* một thứ khác thì bản thân nó phải đủ sức phân biệt mọi dòng.
+Nhắc lại [Bài 16](16-phu-thuoc-ham.md): định thức là vế trái của một phụ thuộc hàm. BCNF nói rằng bất cứ thứ gì có quyền *"xác định"* một thứ khác thì bản thân nó phải đủ sức phân biệt mọi dòng.
 
 Quan hệ bao hàm:
 
@@ -125,7 +125,7 @@ Hai định lý cần thuộc lòng:
 | Định thức | *determinant* | Vế trái của một phụ thuộc hàm |
 | Phân rã không mất mát | *lossless-join decomposition* | Nối hai bảng con lại ra đúng bảng gốc, không thiếu và không thừa dòng |
 | Dòng ma | *spurious tuple* | Dòng do phép nối sinh ra nhưng chưa từng có trong bảng gốc |
-| Bảo toàn phụ thuộc | *dependency preservation* | Mọi phụ thuộc hàm vẫn kiểm tra được trên từng bảng con riêng lẻ |
+| Bảo toàn phụ thuộc | *dependency preservation* | Gom các phụ thuộc hàm kiểm được trên từng bảng con lại thì suy ra được toàn bộ `F⁺` |
 | Thuật toán tổng hợp 3NF | *3NF synthesis* | Dựng lược đồ 3NF từ phủ tối thiểu, bảo đảm cả hai tính chất trên |
 
 ## 🖼️ Sơ đồ
@@ -211,6 +211,7 @@ Bốn PTH cuối **hỏng cả hai vế (a) và (b)** → bảng **không** ở 
 Đo mức dư thừa:
 
 ```sql
+-- KỲ VỌNG: 5 dòng
 SELECT gvcn, email_gvcn, count(*) AS so_ban_sao
 FROM b17_hoc_sinh
 GROUP BY gvcn, email_gvcn
@@ -255,6 +256,7 @@ SELECT 'GV' || lpad((row_number() OVER (ORDER BY ten_lop))::text, 2, '0') AS ma_
        email_gvcn AS email
 FROM b18_gvcn_tam;
 
+-- KỲ VỌNG: 5 dòng
 SELECT * FROM b18_giao_vien ORDER BY ma_gv;
 ```
 
@@ -287,6 +289,7 @@ SELECT 'L' || lpad((row_number() OVER (ORDER BY t.ten_lop))::text, 2, '0') AS ma
 FROM b18_gvcn_tam t
 JOIN b18_giao_vien g ON g.ho_ten = t.gvcn;
 
+-- KỲ VỌNG: 5 dòng
 SELECT * FROM b18_lop ORDER BY ma_lop;
 ```
 
@@ -310,6 +313,7 @@ SELECT h.ma_hs,
 FROM b17_hoc_sinh h
 JOIN b18_lop l ON l.ten_lop = h.ten_lop;
 
+-- KỲ VỌNG: 3 dòng
 SELECT 'b18_giao_vien' AS bang, count(*) AS so_dong FROM b18_giao_vien
 UNION ALL SELECT 'b18_lop',       count(*) FROM b18_lop
 UNION ALL SELECT 'b18_hoc_sinh',  count(*) FROM b18_hoc_sinh;
@@ -331,6 +335,7 @@ Kết quả: `5`, `5`, `30`.
 Đây là phép thử quyết định: ba bảng ta vừa tự tay dựng ra từ `bang_bet` phải khớp với ba bảng thật trong `dataset/02-chuan-hoa.sql`.
 
 ```sql
+-- KỲ VỌNG: 1 dòng
 SELECT (SELECT count(*) FROM b18_giao_vien b JOIN giao_vien r
           ON r.ma_gv = b.ma_gv AND r.ho_ten = b.ho_ten AND r.email = b.email)
            AS giao_vien_khop,
@@ -349,6 +354,7 @@ Một dòng: `5`, `5`, `30`. Khớp hoàn toàn — cả mã, cả tên, cả li
 Còn `dia_chi` thì không khớp tuyệt đối:
 
 ```sql
+-- KỲ VỌNG: 4 dòng
 SELECT b.ma_hs,
        b.dia_chi AS trong_bang_bet,
        r.dia_chi AS trong_luoc_do_dich
@@ -382,16 +388,28 @@ Bốn dòng — `HS017`, `HS022`, `HS024`, `HS025` — đều thiếu đuôi `',
 | `b18_hoc_sinh` | `ma_hs → ho_ten, ngay_sinh, dia_chi, ma_lop` | ✅ `ma_hs` là khoá chính | ✅ |
 | `b18_lop` | `ma_lop → ten_lop, khoi, nam_hoc, ma_gvcn` | ✅ khoá chính | ✅ |
 | | `ten_lop → ma_lop, khoi, nam_hoc, ma_gvcn` | ✅ `ten_lop` là khoá dự tuyển (`UNIQUE`) | ✅ |
-| | `ma_gvcn → ma_lop, ten_lop, khoi, nam_hoc` | ✅ `ma_gvcn` là khoá dự tuyển (`UNIQUE`, quan hệ 1:1) | ✅ |
+| | `ma_gvcn → ma_lop, ten_lop, khoi, nam_hoc` | ⚠️ Không — nhưng `ma_gvcn` cũng **không** phải định thức. Xem hộp dưới | ✅ |
 | `b18_giao_vien` | `ma_gv → ho_ten, email` | ✅ khoá chính | ✅ |
 | | `email → ma_gv, ho_ten` | ✅ `email` là khoá thay thế (`UNIQUE`) | ✅ |
 
-Cả ba bảng đều **đạt BCNF**. Đây là chuyện may mắn thường gặp: khi mọi định thức tình cờ đều đã được khai `PRIMARY KEY` hoặc `UNIQUE`, thì 3NF và BCNF trùng nhau.
+Cả ba bảng đều **đạt BCNF**. Đây là chuyện may mắn thường gặp: khi mọi định thức đều đã được khai `PRIMARY KEY` hoặc `UNIQUE`, thì 3NF và BCNF trùng nhau.
 
-!!! note "Chú ý `ma_gvcn` cho phép `NULL`"
-    Lớp `9A3` (`L06`) chưa có chủ nhiệm nên `ma_gvcn IS NULL`. Điều này **không** phá BCNF.
+!!! danger "`ma_gvcn` KHÔNG phải khoá dự tuyển — và đó chính là lý do bảng vẫn ở BCNF"
+    Nhìn thoáng qua rất dễ nói: *"`ma_gvcn` có `UNIQUE` thì nó là khoá dự tuyển, nên nó là siêu khoá, nên xong."* **Sai** — và [Bài 12](../cap-1-mo-hinh-er/12-bay-loai-khoa.md) đã chốt dứt khoát chuyện này:
 
-    Lý do: phụ thuộc hàm chỉ ràng buộc các cặp dòng **cùng có giá trị** trên vế trái. Trong SQL, `NULL` không bằng `NULL`, nên hai lớp cùng để trống chủ nhiệm không hề vi phạm `UNIQUE`. Đúng như [Bài 15](../cap-1-mo-hinh-er/15-rang-buoc-toan-ven.md) đã chỉ ra: `UNIQUE` cho phép `NULL`, `PRIMARY KEY` thì không.
+    > `lop.ma_gvcn` có `UNIQUE` nhưng **không** phải khoá thay thế, vì nó cho phép `NULL`. Một khoá dự tuyển không bao giờ được phép `NULL`.
+
+    Lập luận đúng phải đi đường khác, và nó thú vị hơn nhiều:
+
+    1. Lược đồ cho phép **nhiều** lớp cùng có `ma_gvcn IS NULL` — vì trong SQL, `NULL` không bằng `NULL` nên `UNIQUE` không chặn. Lớp `9A3` (`L06`) hiện là lớp duy nhất như vậy, nhưng mai mở thêm lớp `9A4` chưa có chủ nhiệm là thành hai.
+    2. Khi đó có hai dòng "giống nhau" ở `ma_gvcn` mà khác nhau ở `ma_lop`. Vậy **`ma_gvcn → ma_lop` không phải là một phụ thuộc hàm** trên lược đồ `lop`.
+    3. Không phải phụ thuộc hàm thì `ma_gvcn` **không phải định thức**. Mà BCNF chỉ đòi hỏi ở **định thức**.
+    4. → `lop` vẫn ở BCNF, nhưng **không phải vì `ma_gvcn` là siêu khoá** — mà vì nó không hề xác định thứ gì cả.
+
+    Hai chú ý đi kèm:
+
+    - Phụ thuộc hàm `gvcn → ten_lop` trong tập `F_bet` của [Bài 16](16-phu-thuoc-ham.md) vẫn đúng như đã viết, vì nó nói về **giáo viên chủ nhiệm có thật**. Nó chỉ im lặng về trường hợp *"chưa có chủ nhiệm"* — mà lý thuyết chuẩn hoá cổ điển vốn giả định không có `NULL`.
+    - Bảng nháp `b18_lop` chỉ có 5 dòng và không dòng nào `NULL`, nên trên **dữ liệu ấy** thì `ma_gvcn` trông y hệt một khoá. Đúng cái bẫy **Quy tắc vàng** một lần nữa: kết luận phải đến từ **lược đồ và luật nghiệp vụ**, không đến từ 5 dòng đang có.
 
 ### 5. Ví dụ kinh điển: 3NF nhưng KHÔNG BCNF
 
@@ -448,6 +466,7 @@ INSERT INTO b18_phu_dao VALUES
 ('HS004', 'Tin học',  'Bùi Anh Khoa'),
 ('HS005', 'Ngữ văn',  'Trần Văn Hùng');
 
+-- KỲ VỌNG: 3 dòng
 SELECT ten_gv, ten_mon, count(*) AS so_ban_sao
 FROM b18_phu_dao
 GROUP BY ten_gv, ten_mon
@@ -485,6 +504,7 @@ SELECT DISTINCT ten_gv, ten_mon FROM b18_phu_dao;
 INSERT INTO b18_hs_gv
 SELECT DISTINCT ma_hs, ten_gv FROM b18_phu_dao;
 
+-- KỲ VỌNG: 2 dòng
 SELECT 'b18_gv_mon' AS bang, count(*) AS so_dong FROM b18_gv_mon
 UNION ALL SELECT 'b18_hs_gv', count(*) FROM b18_hs_gv;
 ```
@@ -494,6 +514,7 @@ Ba dòng và sáu dòng. Bây giờ *"thầy Khoa dạy Tin học"* chỉ còn *
 **Phép tách này có không mất mát không?** Phần chung là `{ten_gv}`, và `ten_gv → ten_mon` nghĩa là `{ten_gv}` xác định toàn bộ `b18_gv_mon`. Điều kiện thoả → **không mất mát**. Kiểm bằng SQL:
 
 ```sql
+-- KỲ VỌNG: 1 dòng
 SELECT (SELECT count(*) FROM b18_phu_dao) AS goc,
        (SELECT count(*) FROM (
             SELECT g.ma_hs, m.ten_mon, g.ten_gv
@@ -521,6 +542,7 @@ Nghĩa là: **không ràng buộc nào của PostgreSQL ngăn được một h�
 INSERT INTO b18_gv_mon VALUES ('Vũ Minh Tuấn', 'Toán');
 INSERT INTO b18_hs_gv  VALUES ('HS001', 'Vũ Minh Tuấn');
 
+-- KỲ VỌNG: 1 dòng
 SELECT g.ma_hs, m.ten_mon,
        count(*)                                  AS so_giao_vien,
        string_agg(g.ten_gv, ' + ' ORDER BY g.ten_gv) AS danh_sach
@@ -555,6 +577,7 @@ Mọi phép tách ở trên đều không mất mát. Bây giờ hãy tách sai 
 Tách `b17_hoc_sinh` thành `(ho_ten_hs, ten_lop)` và `(ten_lop, dia_chi)`. Phần chung là `{ten_lop}` — mà `ten_lop` **không** xác định được bảng nào trong hai bảng con. Điều kiện không mất mát **hỏng**.
 
 ```sql
+-- KỲ VỌNG: 1 dòng
 SELECT (SELECT count(*) FROM b17_hoc_sinh)  AS goc,
        (SELECT count(*)
         FROM (SELECT DISTINCT ho_ten_hs, ten_lop FROM b17_hoc_sinh) a
@@ -567,6 +590,7 @@ SELECT (SELECT count(*) FROM b17_hoc_sinh)  AS goc,
 Từ 30 dòng thật, phép nối đẻ ra **188** dòng. Xem một dòng ma cụ thể:
 
 ```sql
+-- KỲ VỌNG: 6 dòng
 SELECT a.ho_ten_hs, b.dia_chi
 FROM (SELECT DISTINCT ho_ten_hs, ten_lop FROM b17_hoc_sinh) a
 JOIN (SELECT DISTINCT ten_lop, dia_chi FROM b17_hoc_sinh) b
@@ -599,6 +623,7 @@ SELECT d.ma_hs,
        d.diem_so
 FROM b17_diem d;
 
+-- KỲ VỌNG: 3 dòng
 SELECT m.ten_mon, count(*) AS so_con_diem
 FROM b18_diem b JOIN mon_hoc m ON m.ma_mon = b.ma_mon
 GROUP BY m.ten_mon
@@ -726,7 +751,7 @@ DROP TABLE IF EXISTS b17_phu_huynh CASCADE;
     - **3NF?** Xét `gvcn → email_gvcn`: `gvcn` không phải siêu khoá, và `email_gvcn` không nằm trong khoá dự tuyển nào → hỏng cả (a) lẫn (b) → **không** ở 3NF.
     - **BCNF?** Không ở 3NF thì đương nhiên không ở BCNF.
 
-    (Nếu nghiệp vụ bổ sung luật 1:1 `gvcn → ma_lop` như trong `truong_hoc` thật, thì `{gvcn}` và `{email_gvcn}` cũng thành khoá dự tuyển, và lúc đó `R` đạt luôn BCNF — đúng như bảng `b18_lop` ở mục 4.)
+    (Nếu nghiệp vụ bổ sung luật 1:1 `gvcn → ma_lop` **và** bắt `gvcn` phải `NOT NULL` — tức là mọi lớp đều đã có chủ nhiệm — thì `{gvcn}` và `{email_gvcn}` cũng thành khoá dự tuyển, và `R` đạt luôn BCNF. Lược đồ `truong_hoc` thật **không** làm vậy: `lop.ma_gvcn` cho phép `NULL`, nên nó ở BCNF vì một lý do khác hẳn — xem hộp `!!! danger` ở mục 4.)
 
     **3.** Tách theo PTH vi phạm `gvcn → email_gvcn`:
 

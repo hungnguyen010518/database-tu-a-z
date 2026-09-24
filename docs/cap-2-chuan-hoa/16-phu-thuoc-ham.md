@@ -167,7 +167,45 @@ Bao đóng thuộc tính trả lời được hai câu hỏi lớn chỉ bằng 
 | Câu hỏi | Cách trả lời bằng bao đóng |
 |---|---|
 | `X → Y` có suy ra được từ `F` không? | Đúng khi và chỉ khi `Y ⊆ X⁺` |
-| `X` có phải **siêu khoá** không? | Đúng khi và chỉ khi `X⁺` = toàn bộ thuộc tính của bảng |
+| `X` có phải **siêu khoá** ([Bài 12](../cap-1-mo-hinh-er/12-bay-loai-khoa.md) mục 1) không? | Đúng khi và chỉ khi `X⁺` = toàn bộ thuộc tính của bảng |
+
+### Thuật toán tính bao đóng
+
+Đây là thuật toán bạn sẽ dùng đi dùng lại suốt Cấp 2. Nó chỉ có **9 bước**:
+
+```text
+THUẬT TOÁN: BAO-DONG(X, F)
+  Vào : X — một tập thuộc tính của lược đồ
+        F — tập phụ thuộc hàm
+  Ra  : X⁺ — bao đóng của X đối với F
+
+  Bước 1.  KQ ← X
+  Bước 2.  Lặp lại:
+  Bước 3.      thay_doi ← sai
+  Bước 4.      Với mỗi phụ thuộc hàm (VT → VP) trong F:
+  Bước 5.          Nếu VT ⊆ KQ và VP ⊄ KQ thì
+  Bước 6.              KQ ← KQ ∪ VP
+  Bước 7.              thay_doi ← đúng
+  Bước 8.  Cho tới khi thay_doi = sai
+  Bước 9.  Trả về KQ
+```
+
+Đọc từng bước thành lời:
+
+| Bước | Ý nghĩa |
+|---|---|
+| 1 | Bắt đầu với đúng những gì đã biết: chính `X` |
+| **2** và **8** | Một vòng lặp *"lặp lại … cho tới khi"*: quét trọn `F` một **lượt**, rồi hỏi lượt đó có thêm được gì không. Có thì quét lại từ đầu |
+| 3 | Đầu mỗi lượt, giả định lượt này sẽ không thêm được gì |
+| 4 | Duyệt **mọi** phụ thuộc hàm, không bỏ sót cái nào |
+| 5 | Điều kiện kép: vế trái đã biết hết (`VT ⊆ KQ`), **và** vế phải còn có cái mới (`VP ⊄ KQ`) |
+| 6–7 | Thu nạp vế phải, và đánh dấu là lượt này có thay đổi |
+| 9 | Khi một lượt trọn vẹn không thêm được gì nữa thì `KQ` chính là `X⁺` |
+
+Hai điều bảo đảm thuật toán luôn dừng và luôn đúng:
+
+- **Luôn dừng**: `KQ` chỉ có lớn lên, không bao giờ nhỏ đi, mà nó bị chặn trên bởi tập toàn bộ thuộc tính. Nên số lượt lặp nhiều nhất bằng số thuộc tính.
+- **Luôn đúng**: mỗi lần thêm ở Bước 6 chính là một lần dùng **tiên đề bắc cầu**; và khi dừng thì không còn tiên đề nào áp được nữa, nên không sót thuộc tính nào.
 
 ### Thuộc tính khoá và không khoá
 
@@ -200,7 +238,7 @@ Phủ tối thiểu là *bản rút gọn hết cỡ* của luật nghiệp vụ
 | Phụ thuộc hàm tầm thường | *trivial dependency* | `X → Y` với `Y ⊆ X` — luôn đúng nên vô dụng |
 | Phụ thuộc đầy đủ | *full dependency* | `X → Y` mà bỏ bất kỳ thuộc tính nào khỏi X là luật hỏng |
 | Phụ thuộc bộ phận | *partial dependency* | `X → Y` mà chỉ cần một phần của X đã đủ xác định Y — vế trái thừa cột |
-| Phụ thuộc bắc cầu | *transitive dependency* | `X → Y → Z` mà X phải đi vòng qua trạm trung gian Y, và Y **không** xác định ngược lại X |
+| Phụ thuộc bắc cầu | *transitive dependency* | `X → Y` và `Y → Z` mà `Y ↛ X`, và `Z` không nằm trong `X ∪ Y` — X phải đi vòng qua trạm trung gian Y |
 | Tiên đề Armstrong | *Armstrong's axioms* | Ba luật phản xạ, tăng trưởng, bắc cầu — đủ để suy ra mọi phụ thuộc hàm |
 | Phản xạ | *reflexivity* | `Y ⊆ X ⟹ X → Y` |
 | Tăng trưởng | *augmentation* | `X → Y ⟹ XZ → YZ` |
@@ -213,7 +251,7 @@ Phủ tối thiểu là *bản rút gọn hết cỡ* của luật nghiệp vụ
 
 ## 🖼️ Sơ đồ
 
-Thuật toán tính bao đóng là một vòng lặp rất đơn giản — cứ quét đi quét lại tập PTH cho tới khi không thêm được gì nữa:
+Chín bước giả mã ở khối 📖 vẽ thành hình thì như sau. Số bước trong hình khớp đúng với số bước trong giả mã; vòng **Bước 2 ↔ Bước 8** chính là cái vòng *"lặp lại … cho tới khi"*:
 
 ```mermaid
 flowchart TB
@@ -288,6 +326,13 @@ Ba ô tô màu vàng và đỏ là ba "trạm trung gian": từ `stt` muốn t�
 
 ## 💻 Thực hành
 
+!!! info "Dòng `-- KỲ VỌNG: N dòng` trong các khối SQL là gì?"
+    Từ Cấp 2 trở đi, nhiều khối SQL mở đầu bằng một dòng chú thích như `-- KỲ VỌNG: 5 dòng`.
+
+    Nó nói cho bạn biết **truy vấn phải trả về bao nhiêu dòng**. Chạy ra khác là bạn gõ nhầm ở đâu đó — hoặc dữ liệu của bạn đã bị sửa.
+
+    Dòng này cũng được máy chủ kiểm thử của khóa học đọc: mỗi lần bài học được cập nhật, nó chạy lại toàn bộ truy vấn trên một PostgreSQL thật và **báo lỗi nếu số dòng không khớp**. Nhờ vậy những con số bạn đọc trong bài không bao giờ là con số bịa.
+
 ### 1. Tập phụ thuộc hàm của `bang_bet`
 
 Trước khi tính gì, phải **viết luật nghiệp vụ ra giấy**. Đây là tập `F_bet` gồm 5 phụ thuộc hàm, kèm nguồn gốc nghiệp vụ của từng cái:
@@ -307,6 +352,7 @@ Không có PTH nào khác. Đặc biệt **không** có `ho_ten_hs → ngay_sinh
 Ta không chứng minh được PTH bằng SQL, nhưng ta **săn phản ví dụ** được. Mẫu truy vấn: gom nhóm theo vế trái, rồi đếm xem trong một nhóm có mấy giá trị vế phải khác nhau.
 
 ```sql
+-- KỲ VỌNG: 5 dòng
 SELECT 'ten_lop -> gvcn'      AS phu_thuoc_ham,
        count(*)               AS so_nhom_vi_pham
 FROM  (SELECT ten_lop FROM bang_bet
@@ -341,6 +387,7 @@ Bốn dòng đầu ra `0`, dòng cuối ra `5`.
 Vì `email_gvcn` phụ thuộc bắc cầu vào khoá, nó bị chép lại y nguyên rất nhiều lần:
 
 ```sql
+-- KỲ VỌNG: 5 dòng
 SELECT gvcn, email_gvcn, count(*) AS so_dong_bi_chep_lai
 FROM bang_bet
 GROUP BY gvcn, email_gvcn
@@ -431,6 +478,7 @@ BEGIN
     END LOOP;
 END $$;
 
+-- KỲ VỌNG: 3 dòng
 SELECT buoc, ap_dung, array_to_string(kq, ', ') AS bao_dong
 FROM b16_ket_qua
 ORDER BY buoc;
@@ -483,6 +531,7 @@ BEGIN
     END LOOP;
 END $$;
 
+-- KỲ VỌNG: 5 dòng
 SELECT buoc, ap_dung,
        cardinality(kq)                AS so_thuoc_tinh,
        array_to_string(kq, ', ')      AS bao_dong
@@ -536,14 +585,41 @@ Suy ra luôn:
 - **Bước 4** — `{stt}⁺`: PTH f1 kéo ngay 11 thuộc tính còn lại vào → đủ 12.
 - → **`{stt}` là khoá dự tuyển duy nhất** của `bang_bet`. Mọi thuộc tính khác đều là thuộc tính không khoá.
 
+**Áp dụng cho một lược đồ có NHIỀU khoá dự tuyển** — lần này Bước 4 không cứu được, phải dùng tới Bước 5–7.
+
+Bối cảnh: lớp phụ đạo. Mỗi học sinh học một môn với đúng một giáo viên phụ đạo, và mỗi giáo viên phụ đạo chỉ dạy một môn. Lược đồ `R(ma_hs, ten_mon, ten_gv)` với hai PTH:
+
+```text
+p1:  (ma_hs, ten_mon) → ten_gv
+p2:  ten_gv → ten_mon
+```
+
+- **Bước 1** — `ma_hs` xuất hiện ở vế trái (p1) và không bao giờ ở vế phải → `L = {ma_hs}`.
+- **Bước 2** — `ten_gv` có mặt cả hai vế (phải ở p1, trái ở p2); `ten_mon` cũng vậy → `R = ∅`.
+- **Bước 4** — `{ma_hs}⁺ = {ma_hs}`: không PTH nào có vế trái nằm gọn trong `{ma_hs}`. Chưa phủ hết `U` → **không dừng được**, phải sang Bước 5.
+- **Bước 5** — duyệt các tập con của `U − L − R = {ten_mon, ten_gv}`, theo kích thước tăng dần:
+
+| Kích thước | `S` | `(L ∪ S)⁺` | Kết luận |
+|---|---|---|---|
+| 1 | `{ten_mon}` | `{ma_hs, ten_mon}` rồi p1 thêm `ten_gv` → `U` | ✅ **Khoá dự tuyển** |
+| 1 | `{ten_gv}` | `{ma_hs, ten_gv}` rồi p2 thêm `ten_mon` → `U` | ✅ **Khoá dự tuyển** |
+| 2 | `{ten_mon, ten_gv}` | `U` — nhưng nó **chứa** hai khoá vừa tìm được | ❌ Bước 6 loại: chỉ là siêu khoá, không tối giản |
+
+Kết quả: `R` có **hai** khoá dự tuyển là `{ma_hs, ten_mon}` và `{ma_hs, ten_gv}`.
+
+Hệ quả rất đáng chú ý: cả ba thuộc tính đều góp mặt trong ít nhất một khoá dự tuyển → **cả ba đều là thuộc tính khoá**, và lược đồ **không có thuộc tính không khoá nào**.
+
+[Bài 18](18-dang-chuan-3nf-bcnf.md) sẽ quay lại đúng lược đồ này: chính vì hai khoá dự tuyển **chồng lấn nhau** ở `ma_hs` mà nó trở thành phản ví dụ kinh điển *"ở 3NF nhưng không ở BCNF"*.
+
 !!! danger "Ghi nhớ: `ho_ten_hs` KHÔNG phải khoá, dù 30 dòng đang có 30 tên khác nhau"
     Câu SQL dưới đây đếm số họ tên khác nhau:
 
     ```sql
-    SELECT count(*) AS so_dong,
+    -- KỲ VỌNG: 1 dòng
+SELECT count(*) AS so_dong,
            count(DISTINCT ho_ten_hs) AS so_ho_ten_khac_nhau
     FROM bang_bet;
-    ```
+```
 
     Kết quả `30` và `30`. Y hệt cái bẫy của [Bài 12](../cap-1-mo-hinh-er/12-bay-loai-khoa.md): con số này **không** biến `ho_ten_hs` thành khoá. Lược đồ `bang_bet` không hề có `UNIQUE (ho_ten_hs)`, và nghiệp vụ thì cho phép hai bạn trùng tên.
 
@@ -679,11 +755,12 @@ DROP TABLE IF EXISTS b16_pth CASCADE;
     **5.**
 
     ```sql
-    SELECT ngay_sinh_hs, count(DISTINCT ten_lop) AS so_lop
+    -- KỲ VỌNG: 0 dòng
+SELECT ngay_sinh_hs, count(DISTINCT ten_lop) AS so_lop
     FROM bang_bet
     GROUP BY ngay_sinh_hs
     HAVING count(DISTINCT ten_lop) > 1;
-    ```
+```
 
     Truy vấn trả về **0 dòng** — vì 30 học sinh trong `bang_bet` có 30 ngày sinh khác nhau, nên mỗi nhóm chỉ có một dòng.
 
