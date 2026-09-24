@@ -1,0 +1,2006 @@
+
+<!doctype html>
+<html lang="vi" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Khóa học cơ sở dữ liệu tiếng Việt, từ con số 0 tới mức siêu nâng cao — giải thích để học sinh cấp 2 cũng hiểu được.">
+      
+      
+      
+        <link rel="canonical" href="https://hungnguyen010518.github.io/database-tu-a-z/cap-1-mo-hinh-er/10-bieu-do-er-ky-hieu-chen/">
+      
+      
+        <link rel="prev" href="../09-participation-va-thuc-the-yeu/">
+      
+      
+        <link rel="next" href="../../dataset/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.39">
+    
+    
+      
+        <title>Bài 10 — Biểu đồ ER — ký hiệu Chen - Database từ A-Z</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.8c3ca2c6.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#bai-10-bieu-o-er-ky-hieu-chen" class="md-skip">
+          Bỏ qua
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Đầu trang">
+    <a href="../.." title="Database từ A-Z" class="md-header__button md-logo" aria-label="Database từ A-Z" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3C7.58 3 4 4.79 4 7s3.58 4 8 4 8-1.79 8-4-3.58-4-8-4M4 9v3c0 2.21 3.58 4 8 4s8-1.79 8-4V9c0 2.21-3.58 4-8 4s-8-1.79-8-4m0 5v3c0 2.21 3.58 4 8 4s8-1.79 8-4v-3c0 2.21-3.58 4-8 4s-8-1.79-8-4"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Database từ A-Z
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Bài 10 — Biểu đồ ER — ký hiệu Chen
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Chuyển sang chế độ tối"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Chuyển sang chế độ tối" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Chuyển sang chế độ sáng"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Chuyển sang chế độ sáng" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Tìm kiếm" placeholder="Tìm kiếm" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Tìm kiếm">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Xoá" aria-label="Xoá" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/hungnguyen010518/database-tu-a-z" title="Xem mã nguồn" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    database-tu-a-z
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Thanh điều hướng" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Database từ A-Z" class="md-nav__button md-logo" aria-label="Database từ A-Z" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3C7.58 3 4 4.79 4 7s3.58 4 8 4 8-1.79 8-4-3.58-4-8-4M4 9v3c0 2.21 3.58 4 8 4s8-1.79 8-4V9c0 2.21-3.58 4-8 4s-8-1.79-8-4m0 5v3c0 2.21 3.58 4 8 4s8-1.79 8-4v-3c0 2.21-3.58 4-8 4s-8-1.79-8-4"/></svg>
+
+    </a>
+    Database từ A-Z
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/hungnguyen010518/database-tu-a-z" title="Xem mã nguồn" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    database-tu-a-z
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Trang chủ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Cấp 0 — Nhập môn
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Cấp 0 — Nhập môn
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-0-nhap-mon/01-du-lieu-va-thong-tin/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 1 — Dữ liệu, thông tin và tại sao phải lưu trữ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-0-nhap-mon/02-tu-so-giay-den-excel/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 2 — Từ sổ giấy đến Excel
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-0-nhap-mon/03-dbms-la-gi/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 3 — DBMS là gì
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-0-nhap-mon/04-cac-mo-hinh-du-lieu/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 4 — Các mô hình dữ liệu
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-0-nhap-mon/05-cai-dat-postgresql/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 5 — Cài đặt PostgreSQL
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Cấp 1 — Mô hình quan hệ & Biểu đồ ER
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Cấp 1 — Mô hình quan hệ & Biểu đồ ER
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-mo-hinh-quan-he/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 6 — Mô hình quan hệ: bảng, dòng, cột, miền giá trị, lược đồ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-thuc-the-va-thuoc-tinh/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 7 — Thực thể và các loại thuộc tính
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08-moi-quan-he-va-cardinality/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 8 — Mối quan hệ, bậc và bản số (Cardinality)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09-participation-va-thuc-the-yeu/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 9 — Ràng buộc tham gia và Thực thể yếu
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Bài 10 — Biểu đồ ER — ký hiệu Chen
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Bài 10 — Biểu đồ ER — ký hiệu Chen
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Mục lục">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Mục lục
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#cau-chuyen-mo-au" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧠 Câu chuyện mở đầu
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#khai-niem-thuat-ngu" class="md-nav__link">
+    <span class="md-ellipsis">
+      📖 Khái niệm &amp; thuật ngữ
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📖 Khái niệm & thuật ngữ">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bieu-o-er-va-ky-hieu-chen" class="md-nav__link">
+    <span class="md-ellipsis">
+      Biểu đồ ER và ký hiệu Chen
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bang-tra-ky-hieu-chen" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bảng tra ký hiệu Chen
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bon-quy-tac-at-ten" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bốn quy tắc đặt tên
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mermaid-chi-mo-phong-chen-oc-ky-cho-nay" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mermaid chỉ mô phỏng Chen — đọc kỹ chỗ này
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bang-thuat-ngu" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bảng thuật ngữ
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#so-o" class="md-nav__link">
+    <span class="md-ellipsis">
+      🖼️ Sơ đồ
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🖼️ Sơ đồ">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#so-o-1-u-chin-ky-hieu-tren-mot-hinh" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sơ đồ 1 — Đủ chín ký hiệu trên một hình
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#so-o-2-toan-bo-truong_hoc-theo-ky-hieu-chen" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sơ đồ 2 — Toàn bộ truong_hoc theo ký hiệu Chen
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bieu-o-er-dung-e-lam-gi" class="md-nav__link">
+    <span class="md-ellipsis">
+      Biểu đồ ER dùng để làm gì
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#thuc-hanh" class="md-nav__link">
+    <span class="md-ellipsis">
+      💻 Thực hành
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="💻 Thực hành">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sau-thuc-the-va-bon-hinh-thoi-a-hoa-bang" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sáu thực thể và bốn hình thoi đã hoá bảng
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#chu-nhat-oi-hien-ra-trong-luoc-o-nhu-the-nao" class="md-nav__link">
+    <span class="md-ellipsis">
+      Chữ nhật đôi hiện ra trong lược đồ như thế nào
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#thuoc-tinh-cua-moi-quan-he-hien-ra-o-au" class="md-nav__link">
+    <span class="md-ellipsis">
+      Thuộc tính của mối quan hệ hiện ra ở đâu
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bac-ba-hien-ra-bang-khoa-chinh-bon-cot" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bậc ba hiện ra bằng khoá chính bốn cột
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#thuoc-tinh-dan-xuat-thi-khong-co-trong-bang" class="md-nav__link">
+    <span class="md-ellipsis">
+      Thuộc tính dẫn xuất thì không có trong bảng
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#loi-thuong-gap" class="md-nav__link">
+    <span class="md-ellipsis">
+      ⚠️ Lỗi thường gặp
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bai-tap" class="md-nav__link">
+    <span class="md-ellipsis">
+      ✍️ Bài tập
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tom-tat" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔑 Tóm tắt
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../dataset/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Database mẫu
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../glossary/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bảng thuật ngữ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Mục lục">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Mục lục
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#cau-chuyen-mo-au" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧠 Câu chuyện mở đầu
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#khai-niem-thuat-ngu" class="md-nav__link">
+    <span class="md-ellipsis">
+      📖 Khái niệm &amp; thuật ngữ
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📖 Khái niệm & thuật ngữ">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bieu-o-er-va-ky-hieu-chen" class="md-nav__link">
+    <span class="md-ellipsis">
+      Biểu đồ ER và ký hiệu Chen
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bang-tra-ky-hieu-chen" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bảng tra ký hiệu Chen
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bon-quy-tac-at-ten" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bốn quy tắc đặt tên
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mermaid-chi-mo-phong-chen-oc-ky-cho-nay" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mermaid chỉ mô phỏng Chen — đọc kỹ chỗ này
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bang-thuat-ngu" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bảng thuật ngữ
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#so-o" class="md-nav__link">
+    <span class="md-ellipsis">
+      🖼️ Sơ đồ
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🖼️ Sơ đồ">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#so-o-1-u-chin-ky-hieu-tren-mot-hinh" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sơ đồ 1 — Đủ chín ký hiệu trên một hình
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#so-o-2-toan-bo-truong_hoc-theo-ky-hieu-chen" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sơ đồ 2 — Toàn bộ truong_hoc theo ký hiệu Chen
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bieu-o-er-dung-e-lam-gi" class="md-nav__link">
+    <span class="md-ellipsis">
+      Biểu đồ ER dùng để làm gì
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#thuc-hanh" class="md-nav__link">
+    <span class="md-ellipsis">
+      💻 Thực hành
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="💻 Thực hành">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sau-thuc-the-va-bon-hinh-thoi-a-hoa-bang" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sáu thực thể và bốn hình thoi đã hoá bảng
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#chu-nhat-oi-hien-ra-trong-luoc-o-nhu-the-nao" class="md-nav__link">
+    <span class="md-ellipsis">
+      Chữ nhật đôi hiện ra trong lược đồ như thế nào
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#thuoc-tinh-cua-moi-quan-he-hien-ra-o-au" class="md-nav__link">
+    <span class="md-ellipsis">
+      Thuộc tính của mối quan hệ hiện ra ở đâu
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bac-ba-hien-ra-bang-khoa-chinh-bon-cot" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bậc ba hiện ra bằng khoá chính bốn cột
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#thuoc-tinh-dan-xuat-thi-khong-co-trong-bang" class="md-nav__link">
+    <span class="md-ellipsis">
+      Thuộc tính dẫn xuất thì không có trong bảng
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#loi-thuong-gap" class="md-nav__link">
+    <span class="md-ellipsis">
+      ⚠️ Lỗi thường gặp
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bai-tap" class="md-nav__link">
+    <span class="md-ellipsis">
+      ✍️ Bài tập
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tom-tat" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔑 Tóm tắt
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="bai-10-bieu-o-er-ky-hieu-chen">Bài 10 — Biểu đồ ER — ký hiệu Chen<a class="headerlink" href="#bai-10-bieu-o-er-ky-hieu-chen" title="Permanent link">&para;</a></h1>
+<div class="admonition abstract">
+<p class="admonition-title">🎯 Học xong bài này, bạn sẽ</p>
+<ul>
+<li>Đọc được <strong>bảng tra ký hiệu Chen</strong> đầy đủ: 9 hình vẽ và ý nghĩa từng hình</li>
+<li>Tự vẽ được một biểu đồ ER cho một tình huống đời thường</li>
+<li>Đọc được biểu đồ ER đầy đủ của database <code>truong_hoc</code></li>
+<li>Hiểu rõ Mermaid <strong>mô phỏng</strong> hình dạng Chen chứ không vẽ đúng chuẩn, và đâu là chỗ khác</li>
+<li>Biết biểu đồ ER dùng để làm gì trong một dự án thật</li>
+</ul>
+</div>
+<h2 id="cau-chuyen-mo-au">🧠 Câu chuyện mở đầu<a class="headerlink" href="#cau-chuyen-mo-au" title="Permanent link">&para;</a></h2>
+<p>Trường bạn sắp làm phần mềm quản lý học sinh. Cô hiệu trưởng ngồi họp với một anh lập trình viên.</p>
+<p>Cô nói: <em>"Trường có học sinh, có lớp. Mỗi bạn học một lớp. Mỗi lớp có cô chủ nhiệm, nhưng lớp 9A3 thì chưa có. Phụ huynh thì gắn với học sinh, bạn nào chuyển trường là bỏ luôn. À, còn thư viện nữa, học sinh mượn sách..."</em></p>
+<p>Anh lập trình viên ghi chép, rồi hỏi lại: <em>"Một cuốn sách có thể được nhiều bạn mượn đúng không ạ? Thế còn một bạn mượn nhiều cuốn?"</em> Cô gật. Anh ghi tiếp.</p>
+<p>Nửa tiếng sau, hai người đã nói tới hơn hai chục câu như thế. Và đây là vấn đề: <strong>không ai chắc mình còn nhớ đủ</strong>. Cô thì không biết SQL. Anh thì không thể bắt cô đọc <code>CREATE TABLE</code>.</p>
+<p>Rồi anh lật sang trang giấy trắng, vẽ mấy hình chữ nhật, nối chúng bằng những hình thoi, ghi số <code>1</code> và chữ <code>N</code> lên các đường nối. Anh xoay tờ giấy về phía cô: <em>"Cô xem em hiểu đúng chưa ạ?"</em></p>
+<p>Cô nhìn khoảng mười giây, rồi chỉ vào một chỗ: <em>"Chỗ này sai rồi. Một bạn có thể có cả bố lẫn mẹ, không phải một người đâu."</em></p>
+<p>Tờ giấy đó là một <strong>biểu đồ ER</strong>. Nó vừa làm được điều mà nửa tiếng nói chuyện không làm nổi: biến một mớ quy tắc rời rạc thành một bức tranh mà <strong>cả hai bên cùng kiểm tra được</strong>.</p>
+<p>Vậy bộ hình vẽ đó gồm những gì, và quy tắc vẽ ra sao?</p>
+<h2 id="khai-niem-thuat-ngu">📖 Khái niệm &amp; thuật ngữ<a class="headerlink" href="#khai-niem-thuat-ngu" title="Permanent link">&para;</a></h2>
+<h3 id="bieu-o-er-va-ky-hieu-chen">Biểu đồ ER và ký hiệu Chen<a class="headerlink" href="#bieu-o-er-va-ky-hieu-chen" title="Permanent link">&para;</a></h3>
+<p><strong>Biểu đồ ER</strong> (<em>Entity–Relationship Diagram</em>, viết tắt <strong>ERD</strong>) là bản vẽ mô tả <strong>các tập thực thể, thuộc tính của chúng, và các mối quan hệ giữa chúng</strong>.</p>
+<p><strong>Ký hiệu Chen</strong> (<em>Chen notation</em>) là bộ ký hiệu gốc, do Peter Chen công bố năm 1976 trong bài báo khai sinh ra mô hình ER. Đặc điểm nhận dạng: <strong>mọi thứ đều có hình riêng</strong> — thực thể là hình chữ nhật, mối quan hệ là hình thoi, và <strong>từng thuộc tính được vẽ thành một hình elip treo ra ngoài</strong>.</p>
+<p>Có nhiều bộ ký hiệu khác, phổ biến nhất là <strong>Crow's Foot</strong> — gọn hơn, hay dùng trong công cụ phần mềm, và là chủ đề của <strong>Bài 11</strong>. Bài này chỉ học Chen.</p>
+<div class="admonition question">
+<p class="admonition-title">Học Chen làm gì nếu thực tế hay dùng Crow's Foot?</p>
+<p>Vì Chen là bộ ký hiệu <strong>đầy đủ nhất</strong>. Nó phân biệt được thuộc tính đa trị, thuộc tính dẫn xuất, thuộc tính phức hợp, quan hệ nhận diện — những thứ Crow's Foot gộp lại hoặc bỏ qua.</p>
+<p>Học Chen trước rồi mới học Crow's Foot thì bạn hiểu <strong>mình đang đánh đổi cái gì để lấy sự gọn gàng</strong>. Học ngược lại thì rất dễ tưởng rằng những khái niệm đó không tồn tại.</p>
+<p>Ngoài ra, Chen là ký hiệu chuẩn trong hầu hết giáo trình đại học và đề thi ở Việt Nam.</p>
+</div>
+<h3 id="bang-tra-ky-hieu-chen">Bảng tra ký hiệu Chen<a class="headerlink" href="#bang-tra-ky-hieu-chen" title="Permanent link">&para;</a></h3>
+<p>Đây là bảng bạn sẽ quay lại tra nhiều lần. Chín ký hiệu, chia ba nhóm:</p>
+<table>
+<thead>
+<tr>
+<th>Nhóm</th>
+<th>Hình vẽ chuẩn Chen</th>
+<th>Nghĩa</th>
+<th>Ví dụ trong <code>truong_hoc</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Thực thể</strong></td>
+<td>Hình chữ nhật</td>
+<td>Tập thực thể mạnh</td>
+<td><code>HỌC SINH</code>, <code>LỚP</code>, <code>SÁCH</code></td>
+</tr>
+<tr>
+<td></td>
+<td>Hình chữ nhật <strong>đôi</strong></td>
+<td>Tập thực thể yếu</td>
+<td><code>PHỤ HUYNH</code></td>
+</tr>
+<tr>
+<td><strong>Thuộc tính</strong></td>
+<td>Hình elip</td>
+<td>Thuộc tính thường</td>
+<td><code>ho_ten</code>, <code>ngay_sinh</code></td>
+</tr>
+<tr>
+<td></td>
+<td>Elip có nội dung <strong>gạch chân</strong></td>
+<td>Thuộc tính khoá</td>
+<td><code>ma_hs</code>, <code>ma_gv</code></td>
+</tr>
+<tr>
+<td></td>
+<td>Elip <strong>đôi</strong></td>
+<td>Thuộc tính đa trị</td>
+<td>số điện thoại liên lạc</td>
+</tr>
+<tr>
+<td></td>
+<td>Elip <strong>nét đứt</strong></td>
+<td>Thuộc tính dẫn xuất</td>
+<td><code>tuoi</code>, điểm trung bình</td>
+</tr>
+<tr>
+<td></td>
+<td>Elip nối vào elip khác</td>
+<td>Thuộc tính phức hợp và các thành phần con</td>
+<td><code>ho_ten</code> → <code>ho</code> + <code>ten_dem</code> + <code>ten</code></td>
+</tr>
+<tr>
+<td><strong>Mối quan hệ</strong></td>
+<td>Hình thoi</td>
+<td>Tập mối quan hệ</td>
+<td><code>HỌC TẠI</code>, <code>CHỦ NHIỆM</code></td>
+</tr>
+<tr>
+<td></td>
+<td>Hình thoi <strong>đôi</strong></td>
+<td>Quan hệ nhận diện</td>
+<td><code>LÀ PHỤ HUYNH CỦA</code></td>
+</tr>
+</tbody>
+</table>
+<p>Và ba quy ước trên <strong>đường nối</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Trên đường nối</th>
+<th>Nghĩa</th>
+<th>Bài đã học</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Ghi <code>1</code>, <code>N</code> hoặc <code>M</code> ở đầu đường</td>
+<td>Bản số của phía đó</td>
+<td>Bài 8</td>
+</tr>
+<tr>
+<td>Đường <strong>đơn</strong></td>
+<td>Tham gia bộ phận</td>
+<td>Bài 9</td>
+</tr>
+<tr>
+<td>Đường <strong>đôi</strong></td>
+<td>Tham gia toàn phần</td>
+<td>Bài 9</td>
+</tr>
+</tbody>
+</table>
+<p>Mẹo nhớ nhanh: <strong>cái gì "đôi" thì đều mạnh hơn, chặt hơn</strong>. Chữ nhật đôi = phụ thuộc chặt vào chủ. Thoi đôi = quan hệ nhận diện. Đường đôi = bắt buộc tham gia. Elip đôi là ngoại lệ duy nhất — nó nghĩa là "nhiều giá trị".</p>
+<h3 id="bon-quy-tac-at-ten">Bốn quy tắc đặt tên<a class="headerlink" href="#bon-quy-tac-at-ten" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Tập thực thể</strong>: danh từ, <strong>số ít</strong>, viết in hoa. <code>HỌC SINH</code>, không phải <code>CÁC HỌC SINH</code>.</li>
+<li><strong>Mối quan hệ</strong>: <strong>động từ</strong>, đọc từ trái sang phải phải thành câu. <code>HỌC SINH</code> — <em>HỌC TẠI</em> — <code>LỚP</code>.</li>
+<li><strong>Thuộc tính</strong>: danh từ, viết thường, nên trùng với tên cột sẽ đặt sau này.</li>
+<li><strong>Thuộc tính khoá</strong>: gạch chân. Với thực thể yếu, <strong>khoá bộ phận gạch chân nét đứt</strong>.</li>
+</ol>
+<h3 id="mermaid-chi-mo-phong-chen-oc-ky-cho-nay">Mermaid chỉ mô phỏng Chen — đọc kỹ chỗ này<a class="headerlink" href="#mermaid-chi-mo-phong-chen-oc-ky-cho-nay" title="Permanent link">&para;</a></h3>
+<p>Mermaid <strong>không có</strong> kiểu sơ đồ Chen. Nó có <code>erDiagram</code>, nhưng đó là Crow's Foot (Bài 11). Vì vậy các sơ đồ dưới đây được vẽ bằng <code>flowchart</code> và <strong>mô phỏng</strong> hình dạng Chen bằng những hình gần giống nhất mà Mermaid có.</p>
+<p>Bảng ánh xạ — hãy đọc trước khi xem sơ đồ:</p>
+<table>
+<thead>
+<tr>
+<th>Ký hiệu Chen chuẩn</th>
+<th>Mermaid mô phỏng bằng</th>
+<th>Cú pháp</th>
+<th>Khác biệt cần lưu ý</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Hình chữ nhật</td>
+<td>Hình chữ nhật</td>
+<td><code>A["HỌC SINH"]</code></td>
+<td>Giống hệt</td>
+</tr>
+<tr>
+<td>Hình chữ nhật đôi</td>
+<td>Hình chữ nhật có hai vạch dọc</td>
+<td><code>A[["PHỤ HUYNH"]]</code></td>
+<td>Chen vẽ viền đôi bao quanh, Mermaid vẽ hai vạch ở hai bên</td>
+</tr>
+<tr>
+<td>Hình elip</td>
+<td>Hình bo tròn hai đầu</td>
+<td><code>A(["ho_ten"])</code></td>
+<td>Gần giống, không phải elip toán học</td>
+</tr>
+<tr>
+<td>Elip gạch chân</td>
+<td>Bo tròn + thẻ <code>&lt;u&gt;</code></td>
+<td><code>A(["&lt;u&gt;ma_hs&lt;/u&gt;"])</code></td>
+<td>Giống</td>
+</tr>
+<tr>
+<td>Elip đôi</td>
+<td>Hình tròn</td>
+<td><code>A(("số điện thoại"))</code></td>
+<td><strong>Khác rõ</strong> — hình tròn, không phải elip đôi</td>
+</tr>
+<tr>
+<td>Elip nét đứt</td>
+<td>Bo góc, tô <strong>màu đỏ nhạt</strong></td>
+<td><code>A("tuoi")</code></td>
+<td><strong>Khác rõ</strong> — Mermaid không vẽ nét đứt ổn định, nên ở đây dùng màu</td>
+</tr>
+<tr>
+<td>Hình thoi</td>
+<td>Hình thoi</td>
+<td><code>A{"HỌC TẠI"}</code></td>
+<td>Giống hệt</td>
+</tr>
+<tr>
+<td>Hình thoi đôi</td>
+<td>Hình lục giác</td>
+<td><code>A{{"LÀ PHỤ HUYNH CỦA"}}</code></td>
+<td><strong>Khác rõ</strong> — lục giác thay cho thoi đôi</td>
+</tr>
+<tr>
+<td>Đường đôi</td>
+<td>Đường <strong>nét đậm</strong></td>
+<td><code>A === B</code></td>
+<td>Đậm thay cho đôi</td>
+</tr>
+<tr>
+<td>Đường đơn</td>
+<td>Đường thường</td>
+<td><code>A --- B</code></td>
+<td>Giống</td>
+</tr>
+<tr>
+<td><code>1</code> / <code>N</code> / <code>M</code> trên đường nối</td>
+<td>Ghi <strong>bên trong hình thoi</strong></td>
+<td><code>A{"HỌC TẠI&lt;br/&gt;1 — N"}</code></td>
+<td>Chen ghi trên đường, ở đây ghi trong thoi cho gọn</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition warning">
+<p class="admonition-title">Khi làm bài thi hay bài tập trên giấy, hãy vẽ đúng chuẩn Chen</p>
+<p>Bảng trên chỉ là cách xoay xở để hiển thị được trên website. Ba chỗ khác biệt lớn cần nhớ: <strong>elip đôi</strong> (đa trị) thành hình tròn, <strong>elip nét đứt</strong> (dẫn xuất) thành hình tô màu, và <strong>hình thoi đôi</strong> (quan hệ nhận diện) thành lục giác.</p>
+<p>Trên giấy thì cứ vẽ đúng hình dạng thật — vẽ tay dễ hơn nhiều so với ép một thư viện sơ đồ làm chuyện nó không được thiết kế để làm.</p>
+</div>
+<h3 id="bang-thuat-ngu">Bảng thuật ngữ<a class="headerlink" href="#bang-thuat-ngu" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Tiếng Việt</th>
+<th>English</th>
+<th>Nghĩa dễ hiểu</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Biểu đồ ER</td>
+<td><em>Entity–Relationship Diagram / ERD</em></td>
+<td>Bản vẽ mô tả thực thể, thuộc tính và mối quan hệ</td>
+</tr>
+<tr>
+<td>Ký hiệu Chen</td>
+<td><em>Chen notation</em></td>
+<td>Bộ ký hiệu gốc năm 1976 — mỗi thứ một hình riêng</td>
+</tr>
+<tr>
+<td>Ký hiệu Crow's Foot</td>
+<td><em>Crow's Foot notation</em></td>
+<td>Bộ ký hiệu gọn hơn, học ở Bài 11</td>
+</tr>
+<tr>
+<td>Mức ý niệm</td>
+<td><em>conceptual level</em></td>
+<td>Mức mô tả thế giới thực, chưa nói tới bảng hay kiểu dữ liệu</td>
+</tr>
+</tbody>
+</table>
+<h2 id="so-o">🖼️ Sơ đồ<a class="headerlink" href="#so-o" title="Permanent link">&para;</a></h2>
+<h3 id="so-o-1-u-chin-ky-hieu-tren-mot-hinh">Sơ đồ 1 — Đủ chín ký hiệu trên một hình<a class="headerlink" href="#so-o-1-u-chin-ky-hieu-tren-mot-hinh" title="Permanent link">&para;</a></h3>
+<p>Sơ đồ này cố ý gom <strong>mọi ký hiệu Chen</strong> vào một chỗ, quanh ba tập thực thể <code>HỌC SINH</code>, <code>LỚP</code>, <code>PHỤ HUYNH</code>. Đọc kèm bảng ánh xạ ở trên.</p>
+<pre class="mermaid"><code>flowchart TB
+    HS["&lt;b&gt;HỌC SINH&lt;/b&gt;"]
+    L["&lt;b&gt;LỚP&lt;/b&gt;"]
+    PH[["&lt;b&gt;PHỤ HUYNH&lt;/b&gt;"]]
+
+    R1{"&lt;b&gt;HỌC TẠI&lt;/b&gt;&lt;br/&gt;N — 1"}
+    R2{{"&lt;b&gt;LÀ PHỤ HUYNH CỦA&lt;/b&gt;&lt;br/&gt;1 — N"}}
+
+    A1(["&lt;u&gt;ma_hs&lt;/u&gt;"])
+    A2(["ho_ten"])
+    A2a(["ho"])
+    A2b(["ten_dem"])
+    A2c(["ten"])
+    A3(["ngay_sinh"])
+    A4("tuoi")
+    A5(("so_dien_thoai_lien_lac"))
+
+    B1(["&lt;u&gt;ma_lop&lt;/u&gt;"])
+    B2(["ten_lop"])
+    B3(["khoi"])
+
+    C1(["quan_he"])
+    C2(["ho_ten"])
+
+    A1 --- HS
+    A2 --- HS
+    A3 --- HS
+    A4 --- HS
+    A5 --- HS
+    A2 --- A2a
+    A2 --- A2b
+    A2 --- A2c
+
+    B1 --- L
+    B2 --- L
+    B3 --- L
+
+    C1 --- PH
+    C2 --- PH
+
+    HS === R1
+    R1 --- L
+    HS --- R2
+    R2 === PH
+
+    style HS fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
+    style L fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
+    style PH fill:#e3f2fd,stroke:#1565c0,stroke-width:4px
+    style R1 fill:#fff8e1,stroke:#f9a825,stroke-width:2px
+    style R2 fill:#fff8e1,stroke:#f9a825,stroke-width:4px
+    style A1 fill:#fff3e0,stroke:#ef6c00,stroke-width:2px
+    style B1 fill:#fff3e0,stroke:#ef6c00,stroke-width:2px
+    style A4 fill:#ffebee,stroke:#c62828,stroke-width:2px
+    style A5 fill:#f3e5f5,stroke:#6a1b9a,stroke-width:3px</code></pre>
+<p>Đọc sơ đồ theo bảng tra:</p>
+<table>
+<thead>
+<tr>
+<th>Thấy gì</th>
+<th>Hiểu là</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>HỌC SINH</code> hình chữ nhật đơn</td>
+<td>Thực thể mạnh</td>
+</tr>
+<tr>
+<td><code>PHỤ HUYNH</code> hình chữ nhật có hai vạch dọc</td>
+<td>Thực thể <strong>yếu</strong></td>
+</tr>
+<tr>
+<td><code>ma_hs</code> và <code>ma_lop</code> được gạch chân, tô cam</td>
+<td>Thuộc tính <strong>khoá</strong></td>
+</tr>
+<tr>
+<td><code>ho_ten</code> có ba elip con treo bên dưới</td>
+<td>Thuộc tính <strong>phức hợp</strong></td>
+</tr>
+<tr>
+<td><code>tuoi</code> tô đỏ nhạt</td>
+<td>Thuộc tính <strong>dẫn xuất</strong> — không lưu vào bảng</td>
+</tr>
+<tr>
+<td><code>so_dien_thoai_lien_lac</code> là hình tròn tím</td>
+<td>Thuộc tính <strong>đa trị</strong> — phải tách bảng riêng</td>
+</tr>
+<tr>
+<td><code>HỌC TẠI</code> hình thoi đơn</td>
+<td>Mối quan hệ thường</td>
+</tr>
+<tr>
+<td><code>LÀ PHỤ HUYNH CỦA</code> hình lục giác</td>
+<td>Quan hệ <strong>nhận diện</strong></td>
+</tr>
+<tr>
+<td>Đường từ <code>HỌC SINH</code> tới <code>HỌC TẠI</code> <strong>đậm</strong></td>
+<td>HỌC SINH tham gia <strong>toàn phần</strong></td>
+</tr>
+<tr>
+<td>Đường từ <code>LỚP</code> tới <code>HỌC TẠI</code> <strong>mảnh</strong></td>
+<td>LỚP tham gia <strong>bộ phận</strong></td>
+</tr>
+<tr>
+<td>Đường từ <code>LÀ PHỤ HUYNH CỦA</code> tới <code>PHỤ HUYNH</code> <strong>đậm</strong></td>
+<td>PHỤ HUYNH tham gia <strong>toàn phần</strong> — bắt buộc, vì nó yếu</td>
+</tr>
+</tbody>
+</table>
+<p>Chú ý <code>so_dien_thoai_lien_lac</code>: sơ đồ ER <strong>được phép</strong> có thuộc tính đa trị, vì nó mô tả thế giới thực. Chỉ khi chuyển sang bảng thì nó mới buộc phải tách ra — và trong <code>truong_hoc</code> nó đã tách thành bảng <code>phu_huynh</code>. <strong>Bài 14</strong> dạy phép chuyển đổi này.</p>
+<h3 id="so-o-2-toan-bo-truong_hoc-theo-ky-hieu-chen">Sơ đồ 2 — Toàn bộ <code>truong_hoc</code> theo ký hiệu Chen<a class="headerlink" href="#so-o-2-toan-bo-truong_hoc-theo-ky-hieu-chen" title="Permanent link">&para;</a></h3>
+<p>Vẽ đủ cả thuộc tính của 10 bảng thì sơ đồ sẽ không đọc nổi. Nên ở đây chỉ vẽ <strong>thực thể và mối quan hệ</strong>; thuộc tính tra ở trang <a href="../../dataset/">Database mẫu</a>.</p>
+<pre class="mermaid"><code>flowchart TB
+    GV["&lt;b&gt;GIÁO VIÊN&lt;/b&gt;"]
+    L["&lt;b&gt;LỚP&lt;/b&gt;"]
+    HS["&lt;b&gt;HỌC SINH&lt;/b&gt;"]
+    PH[["&lt;b&gt;PHỤ HUYNH&lt;/b&gt;"]]
+    MH["&lt;b&gt;MÔN HỌC&lt;/b&gt;"]
+    S["&lt;b&gt;SÁCH&lt;/b&gt;"]
+
+    RCN{"&lt;b&gt;CHỦ NHIỆM&lt;/b&gt;&lt;br/&gt;1 — 1"}
+    RHT{"&lt;b&gt;HỌC TẠI&lt;/b&gt;&lt;br/&gt;N — 1"}
+    RPH{{"&lt;b&gt;LÀ PHỤ HUYNH CỦA&lt;/b&gt;&lt;br/&gt;1 — N"}}
+    RPC{"&lt;b&gt;PHÂN CÔNG DẠY&lt;/b&gt;&lt;br/&gt;bậc 3 · M — N — P"}
+    RD{"&lt;b&gt;CÓ ĐIỂM&lt;/b&gt;&lt;br/&gt;M — N"}
+    RM{"&lt;b&gt;MƯỢN&lt;/b&gt;&lt;br/&gt;M — N"}
+    RDD{"&lt;b&gt;ĐƯỢC ĐIỂM DANH&lt;/b&gt;&lt;br/&gt;1 — N"}
+
+    HKY(["hoc_ky"])
+    DSO(["diem_so"])
+    LDI(["loai_diem"])
+    NMU(["ngay_muon"])
+    NTR(["ngay_tra_thuc_te"])
+    NGA(["ngay"])
+    TTH(["trang_thai"])
+
+    GV --- RCN
+    RCN --- L
+
+    HS === RHT
+    RHT --- L
+
+    HS --- RPH
+    RPH === PH
+
+    GV --- RPC
+    MH --- RPC
+    L --- RPC
+    RPC --- HKY
+
+    HS --- RD
+    MH --- RD
+    RD --- DSO
+    RD --- LDI
+
+    HS --- RM
+    S --- RM
+    RM --- NMU
+    RM --- NTR
+
+    HS --- RDD
+    RDD --- NGA
+    RDD --- TTH
+
+    style GV fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
+    style L fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
+    style HS fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
+    style MH fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
+    style S fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
+    style PH fill:#e3f2fd,stroke:#1565c0,stroke-width:4px
+    style RCN fill:#fff8e1,stroke:#f9a825,stroke-width:2px
+    style RHT fill:#fff8e1,stroke:#f9a825,stroke-width:2px
+    style RPC fill:#ffe0b2,stroke:#ef6c00,stroke-width:3px
+    style RD fill:#fff8e1,stroke:#f9a825,stroke-width:2px
+    style RM fill:#fff8e1,stroke:#f9a825,stroke-width:2px
+    style RDD fill:#fff8e1,stroke:#f9a825,stroke-width:2px
+    style RPH fill:#fff8e1,stroke:#f9a825,stroke-width:4px</code></pre>
+<p>Vài điểm đáng chú ý khi đọc sơ đồ này:</p>
+<ul>
+<li><strong><code>PHÂN CÔNG DẠY</code> nối vào ba hình chữ nhật</strong> — đó là mối quan hệ <strong>bậc ba</strong> của Bài 8. Ký hiệu Chen vẽ được điều này rất tự nhiên; Crow's Foot ở Bài 11 thì không.</li>
+<li><strong><code>hoc_ky</code>, <code>diem_so</code>, <code>ngay_muon</code>... treo vào hình thoi chứ không treo vào hình chữ nhật.</strong> Đó là <strong>thuộc tính của mối quan hệ</strong> — chúng chỉ có nghĩa khi cả hai (hoặc ba) phía đã được xác định.</li>
+<li><strong><code>ĐƯỢC ĐIỂM DANH</code> là 1:N</strong>, vì mỗi buổi điểm danh gắn với đúng một học sinh. Ràng buộc <code>UNIQUE (ma_hs, ngay)</code> là cách bảng bảo đảm một bạn chỉ được điểm danh một lần mỗi ngày.</li>
+<li>Sơ đồ có <strong>6 hình chữ nhật</strong> nhưng database có <strong>10 bảng</strong>. Bốn bảng chênh lệch — <code>phan_cong_day</code>, <code>diem</code>, <code>muon_sach</code>, <code>diem_danh</code> — chính là các <strong>hình thoi đã hoá thành bảng</strong>. Đây là điều quan trọng nhất của toàn bộ Cấp 1, và Bài 14 sẽ biến nó thành thuật toán 7 bước.</li>
+</ul>
+<h3 id="bieu-o-er-dung-e-lam-gi">Biểu đồ ER dùng để làm gì<a class="headerlink" href="#bieu-o-er-dung-e-lam-gi" title="Permanent link">&para;</a></h3>
+<p>Biểu đồ ER là bản vẽ ở <strong>mức ý niệm</strong> (<em>conceptual level</em>) — mức mà bạn đã gặp trong kiến trúc ba mức ở <a href="../../cap-0-nhap-mon/03-dbms-la-gi/">Bài 3</a>. Nó cố tình <strong>không</strong> nói tới kiểu dữ liệu, chỉ mục hay hệ quản trị nào.</p>
+<p>Trong một dự án thật, nó phục vụ ba việc:</p>
+<ol>
+<li><strong>Xác nhận với người dùng.</strong> Đúng như cô hiệu trưởng ở đầu bài — cô không đọc được SQL, nhưng nhìn hình là thấy ngay chỗ sai.</li>
+<li><strong>Làm bản thiết kế để sinh ra bảng.</strong> Có ER rồi thì việc viết <code>CREATE TABLE</code> gần như máy móc (Bài 14).</li>
+<li><strong>Làm tài liệu sống.</strong> Sáu tháng sau, người mới vào dự án nhìn một trang ER hiểu nhanh hơn đọc 500 dòng SQL.</li>
+</ol>
+<h2 id="thuc-hanh">💻 Thực hành<a class="headerlink" href="#thuc-hanh" title="Permanent link">&para;</a></h2>
+<p>Biểu đồ ER là bản vẽ, không phải SQL. Nhưng ta <strong>đối chiếu</strong> được nó với database thật để xem bản vẽ và hiện thực có khớp không.</p>
+<h3 id="sau-thuc-the-va-bon-hinh-thoi-a-hoa-bang">Sáu thực thể và bốn hình thoi đã hoá bảng<a class="headerlink" href="#sau-thuc-the-va-bon-hinh-thoi-a-hoa-bang" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">table_name</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="k">FROM</span><span class="w"> </span><span class="n">information_schema</span><span class="p">.</span><span class="n">tables</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">table_schema</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'public'</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span><span class="k">AND</span><span class="w"> </span><span class="k">table_name</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="p">(</span><span class="s1">'giao_vien'</span><span class="p">,</span><span class="w"> </span><span class="s1">'lop'</span><span class="p">,</span><span class="w"> </span><span class="s1">'hoc_sinh'</span><span class="p">,</span><span class="w"> </span><span class="s1">'phu_huynh'</span><span class="p">,</span><span class="w"> </span><span class="s1">'mon_hoc'</span><span class="p">,</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">                     </span><span class="s1">'sach'</span><span class="p">,</span><span class="w"> </span><span class="s1">'phan_cong_day'</span><span class="p">,</span><span class="w"> </span><span class="s1">'diem'</span><span class="p">,</span><span class="w"> </span><span class="s1">'muon_sach'</span><span class="p">,</span><span class="w"> </span><span class="s1">'diem_danh'</span><span class="p">)</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="k">table_name</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Kết quả đúng <strong>10 dòng</strong>. Đối chiếu với sơ đồ 2:</p>
+<table>
+<thead>
+<tr>
+<th>Trong sơ đồ ER</th>
+<th>Thành bảng</th>
+<th>Loại</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GIÁO VIÊN</code> (chữ nhật)</td>
+<td><code>giao_vien</code></td>
+<td>Thực thể mạnh</td>
+</tr>
+<tr>
+<td><code>LỚP</code> (chữ nhật)</td>
+<td><code>lop</code></td>
+<td>Thực thể mạnh</td>
+</tr>
+<tr>
+<td><code>HỌC SINH</code> (chữ nhật)</td>
+<td><code>hoc_sinh</code></td>
+<td>Thực thể mạnh</td>
+</tr>
+<tr>
+<td><code>MÔN HỌC</code> (chữ nhật)</td>
+<td><code>mon_hoc</code></td>
+<td>Thực thể mạnh</td>
+</tr>
+<tr>
+<td><code>SÁCH</code> (chữ nhật)</td>
+<td><code>sach</code></td>
+<td>Thực thể mạnh</td>
+</tr>
+<tr>
+<td><code>PHỤ HUYNH</code> (chữ nhật đôi)</td>
+<td><code>phu_huynh</code></td>
+<td>Thực thể <strong>yếu</strong></td>
+</tr>
+<tr>
+<td><code>PHÂN CÔNG DẠY</code> (thoi, bậc 3)</td>
+<td><code>phan_cong_day</code></td>
+<td>Mối quan hệ hoá bảng</td>
+</tr>
+<tr>
+<td><code>CÓ ĐIỂM</code> (thoi, M:N)</td>
+<td><code>diem</code></td>
+<td>Mối quan hệ hoá bảng</td>
+</tr>
+<tr>
+<td><code>MƯỢN</code> (thoi, M:N)</td>
+<td><code>muon_sach</code></td>
+<td>Mối quan hệ hoá bảng</td>
+</tr>
+<tr>
+<td><code>ĐƯỢC ĐIỂM DANH</code> (thoi, 1:N)</td>
+<td><code>diem_danh</code></td>
+<td>Mối quan hệ hoá bảng</td>
+</tr>
+</tbody>
+</table>
+<p>Còn <code>CHỦ NHIỆM</code> và <code>HỌC TẠI</code> thì <strong>không</strong> thành bảng — chúng chỉ là một cột khoá ngoại, vì bản số của chúng là 1:1 và 1:N.</p>
+<h3 id="chu-nhat-oi-hien-ra-trong-luoc-o-nhu-the-nao">Chữ nhật đôi hiện ra trong lược đồ như thế nào<a class="headerlink" href="#chu-nhat-oi-hien-ra-trong-luoc-o-nhu-the-nao" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">column_name</span><span class="p">,</span><span class="w"> </span><span class="n">is_nullable</span><span class="p">,</span><span class="w"> </span><span class="n">data_type</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="k">FROM</span><span class="w"> </span><span class="n">information_schema</span><span class="p">.</span><span class="n">columns</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">table_schema</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'public'</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="k">table_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'phu_huynh'</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">ordinal_position</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Năm dòng. Chú ý <code>ma_hs</code> có <code>is_nullable = NO</code> — đường đôi nối <code>LÀ PHỤ HUYNH CỦA</code> với <code>PHỤ HUYNH</code> trong sơ đồ chính là dòng này.</p>
+<h3 id="thuoc-tinh-cua-moi-quan-he-hien-ra-o-au">Thuộc tính của mối quan hệ hiện ra ở đâu<a class="headerlink" href="#thuoc-tinh-cua-moi-quan-he-hien-ra-o-au" title="Permanent link">&para;</a></h3>
+<p>Các elip treo vào hình thoi <code>CÓ ĐIỂM</code> nằm trong chính bảng <code>diem</code>:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">column_name</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="k">FROM</span><span class="w"> </span><span class="n">information_schema</span><span class="p">.</span><span class="n">columns</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">table_schema</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'public'</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="k">table_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'diem'</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">ordinal_position</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Bảy cột. Trong đó <code>ma_hs</code> và <code>ma_mon</code> là <strong>hai phía của mối quan hệ</strong>, còn <code>hoc_ky</code>, <code>loai_diem</code>, <code>diem_so</code>, <code>ngay_nhap</code> là <strong>thuộc tính của chính mối quan hệ</strong> — đúng các elip đã vẽ. Cột <code>ma_diem</code> không có trong sơ đồ ER: nó là khoá nhân tạo do người thiết kế thêm vào lúc chuyển sang bảng (Bài 12).</p>
+<h3 id="bac-ba-hien-ra-bang-khoa-chinh-bon-cot">Bậc ba hiện ra bằng khoá chính bốn cột<a class="headerlink" href="#bac-ba-hien-ra-bang-khoa-chinh-bon-cot" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">attname</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">cot_trong_khoa_chinh</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="k">FROM</span><span class="w"> </span><span class="n">pg_constraint</span><span class="w"> </span><span class="k">c</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="k">JOIN</span><span class="w"> </span><span class="n">pg_attribute</span><span class="w"> </span><span class="n">a</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span><span class="k">ON</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">attrelid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">c</span><span class="p">.</span><span class="n">conrelid</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">attnum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ANY</span><span class="w"> </span><span class="p">(</span><span class="k">c</span><span class="p">.</span><span class="n">conkey</span><span class="p">)</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="k">WHERE</span><span class="w"> </span><span class="k">c</span><span class="p">.</span><span class="n">conrelid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'phan_cong_day'</span><span class="p">::</span><span class="n">regclass</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="k">c</span><span class="p">.</span><span class="n">contype</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'p'</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">attnum</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Bốn dòng: <code>ma_gv</code>, <code>ma_mon</code>, <code>ma_lop</code>, <code>hoc_ky</code>. Ba cột đầu là ba phía của hình thoi bậc ba, cột thứ tư là thuộc tính <code>hoc_ky</code> treo trên hình thoi. Bản vẽ và hiện thực khớp nhau hoàn toàn.</p>
+<h3 id="thuoc-tinh-dan-xuat-thi-khong-co-trong-bang">Thuộc tính dẫn xuất thì không có trong bảng<a class="headerlink" href="#thuoc-tinh-dan-xuat-thi-khong-co-trong-bang" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_cot_ten_tuoi</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="k">FROM</span><span class="w"> </span><span class="n">information_schema</span><span class="p">.</span><span class="n">columns</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">table_schema</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'public'</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="k">table_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'hoc_sinh'</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="k">column_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'tuoi'</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Kết quả <code>0</code>, đúng như sơ đồ đã báo trước bằng elip nét đứt: <strong>dẫn xuất thì không lưu</strong>.</p>
+<h2 id="loi-thuong-gap">⚠️ Lỗi thường gặp<a class="headerlink" href="#loi-thuong-gap" title="Permanent link">&para;</a></h2>
+<div class="admonition warning">
+<p class="admonition-title">Lỗi 1: Đặt tên mối quan hệ bằng danh từ</p>
+<p>Vẽ hình thoi rồi ghi <code>ĐIỂM</code> hoặc <code>DANH SÁCH LỚP</code>. Người đọc không biết nên đọc câu đó theo chiều nào.</p>
+<p>Mối quan hệ phải là <strong>động từ</strong>, và ghép với hai đầu phải thành câu tiếng Việt xuôi: <code>HỌC SINH — HỌC TẠI — LỚP</code>, <code>HỌC SINH — MƯỢN — SÁCH</code>.</p>
+<p>Phép thử nhanh: đọc to biểu đồ từ trái sang phải. Nếu nghe không ra câu thì tên đặt sai.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Lỗi 2: Vẽ khoá ngoại thành một elip</p>
+<p>Đây là lỗi phổ biến nhất của người vừa biết SQL rồi mới học ER: vẽ <code>HỌC SINH</code> với một elip <code>ma_lop</code> treo bên cạnh.</p>
+<p>Sai, vì <code>ma_lop</code> <strong>không phải thuộc tính của HỌC SINH</strong> — nó là dấu vết của mối quan hệ <em>HỌC TẠI</em>. Ở mức ý niệm, mối quan hệ được vẽ bằng <strong>hình thoi nối sang <code>LỚP</code></strong>, không phải bằng một elip.</p>
+<p>Khoá ngoại chỉ xuất hiện khi bạn <strong>chuyển</strong> ER sang bảng, tức ở Bài 14. Trong biểu đồ ER thì không có khái niệm khoá ngoại.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Lỗi 3: Vẽ bảng trung gian thành một hình chữ nhật</p>
+<p>Vẽ <code>HỌC SINH</code> — <code>ĐIỂM</code> — <code>MÔN HỌC</code> với <code>ĐIỂM</code> là hình chữ nhật.</p>
+<p>Ở mức ý niệm, <code>CÓ ĐIỂM</code> là một <strong>mối quan hệ M:N</strong>, nên phải là <strong>hình thoi</strong>. Việc nó biến thành bảng <code>diem</code> là chuyện xảy ra ở bước chuyển đổi, không phải ở bản vẽ ER.</p>
+<p>Vẽ sẵn thành hình chữ nhật là bạn đã nhảy cóc sang mức bảng và làm mất thông tin <em>"đây vốn là một mối quan hệ"</em>.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Lỗi 4: Quên ghi bản số, hoặc ghi mà không ghi ràng buộc tham gia</p>
+<p>Một đường nối không có <code>1</code>/<code>N</code>/<code>M</code> thì biểu đồ mất gần hết giá trị — người đọc không biết một lớp có một hay nhiều học sinh.</p>
+<p>Ghi bản số rồi mà quên đường đơn/đường đôi cũng mất một nửa thông tin. Nhớ lại Bài 9: bản số là <strong>giới hạn trên</strong>, ràng buộc tham gia là <strong>giới hạn dưới</strong>. Thiếu một trong hai là mô tả chưa đủ.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Lỗi 5: Nhét kiểu dữ liệu vào biểu đồ ER</p>
+<p>Ghi <code>ma_hs: CHAR(5)</code> vào elip. Không sai chết người, nhưng lệch mục đích.</p>
+<p>Biểu đồ ER ở <strong>mức ý niệm</strong> — nó tồn tại để nói chuyện được với cô hiệu trưởng. Cô không cần biết <code>CHAR(5)</code> hay <code>VARCHAR(10)</code>. Kiểu dữ liệu thuộc về mức logic và mức vật lý, và là chuyện của Bài 14 trở đi.</p>
+</div>
+<h2 id="bai-tap">✍️ Bài tập<a class="headerlink" href="#bai-tap" title="Permanent link">&para;</a></h2>
+<ol>
+<li>
+<p>Với mỗi mô tả sau, cho biết ký hiệu Chen nào được dùng:</p>
+<p>a. Một học sinh có thể có nhiều địa chỉ email.
+b. Mọi lượt mượn sách đều phải gắn với một học sinh.
+c. Điểm trung bình học kỳ của một học sinh.
+d. Một tiết học chỉ định danh được khi biết nó thuộc thời khoá biểu của lớp nào.</p>
+</li>
+<li>
+<p>Vẽ (mô tả bằng lời cũng được) biểu đồ ER theo ký hiệu Chen cho tình huống <strong>thư viện</strong> trong <code>truong_hoc</code>: <code>HỌC SINH</code>, <code>SÁCH</code>, mối quan hệ <code>MƯỢN</code> với các thuộc tính <code>ngay_muon</code>, <code>ngay_tra_du_kien</code>, <code>ngay_tra_thuc_te</code>. Ghi rõ bản số và ràng buộc tham gia cả hai phía.</p>
+</li>
+<li>
+<p>Nhìn Sơ đồ 2 và trả lời: vì sao <code>CHỦ NHIỆM</code> không trở thành một bảng riêng, trong khi <code>CÓ ĐIỂM</code> thì có? Quy tắc chung ở đây là gì?</p>
+</li>
+<li>
+<p>Một bạn vẽ biểu đồ ER cho hệ thống căng tin như sau:</p>
+<blockquote>
+<p>Hình chữ nhật <code>HỌC SINH</code> với các elip <code>ma_hs</code>, <code>ho_ten</code>, <code>ma_mon_an</code>, <code>ngay_mua</code>.</p>
+</blockquote>
+<p>Hãy chỉ ra <strong>hai</strong> lỗi và vẽ lại cho đúng.</p>
+</li>
+<li>
+<p>Viết câu SQL liệt kê <strong>mọi cột khoá ngoại</strong> của 10 bảng trong <code>truong_hoc</code> kèm thông tin cột đó có <code>NOT NULL</code> hay không. Đọc kết quả đó ra thành ràng buộc tham gia trên Sơ đồ 2.</p>
+</li>
+</ol>
+<details class="success">
+<summary>Đáp án</summary>
+<p><strong>Câu 1.</strong></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Mô tả</th>
+<th>Ký hiệu Chen</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>a</td>
+<td>Nhiều địa chỉ email</td>
+<td><strong>Elip đôi</strong> — thuộc tính đa trị</td>
+</tr>
+<tr>
+<td>b</td>
+<td>Lượt mượn phải gắn học sinh</td>
+<td><strong>Đường đôi</strong> — tham gia toàn phần</td>
+</tr>
+<tr>
+<td>c</td>
+<td>Điểm trung bình học kỳ</td>
+<td><strong>Elip nét đứt</strong> — thuộc tính dẫn xuất</td>
+</tr>
+<tr>
+<td>d</td>
+<td>Tiết học cần thời khoá biểu của lớp</td>
+<td><strong>Hình chữ nhật đôi</strong> cho TIẾT HỌC, nối bằng <strong>hình thoi đôi</strong> tới THỜI KHOÁ BIỂU — thực thể yếu và quan hệ nhận diện</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Câu 2.</strong></p>
+<p>Cần vẽ đúng 9 hình:</p>
+<table>
+<thead>
+<tr>
+<th>Hình</th>
+<th>Nội dung</th>
+<th>Nối vào</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Chữ nhật</td>
+<td><code>HỌC SINH</code></td>
+<td>hình thoi <code>MƯỢN</code></td>
+</tr>
+<tr>
+<td>Chữ nhật</td>
+<td><code>SÁCH</code></td>
+<td>hình thoi <code>MƯỢN</code></td>
+</tr>
+<tr>
+<td>Thoi</td>
+<td><code>MƯỢN</code></td>
+<td>hai hình chữ nhật trên</td>
+</tr>
+<tr>
+<td>Elip gạch chân</td>
+<td><code>ma_hs</code></td>
+<td><code>HỌC SINH</code></td>
+</tr>
+<tr>
+<td>Elip</td>
+<td><code>ho_ten</code></td>
+<td><code>HỌC SINH</code></td>
+</tr>
+<tr>
+<td>Elip gạch chân</td>
+<td><code>ma_sach</code></td>
+<td><code>SÁCH</code></td>
+</tr>
+<tr>
+<td>Elip</td>
+<td><code>ten_sach</code></td>
+<td><code>SÁCH</code></td>
+</tr>
+<tr>
+<td>Elip</td>
+<td><code>ngay_muon</code>, <code>ngay_tra_du_kien</code>, <code>ngay_tra_thuc_te</code></td>
+<td><strong>hình thoi</strong> <code>MƯỢN</code></td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>Bản số</strong>: <code>M — N</code>. Một học sinh mượn nhiều cuốn, một cuốn được nhiều bạn mượn.</li>
+<li><strong>Ràng buộc tham gia</strong>: <strong>bộ phận ở cả hai phía</strong>, nên vẽ <strong>đường đơn</strong> hai bên. Có học sinh chưa mượn cuốn nào (<code>HS026</code>–<code>HS040</code>), và có sách chưa ai mượn.</li>
+<li>Ba thuộc tính ngày tháng treo vào <strong>hình thoi</strong>, không treo vào hình chữ nhật nào — vì chúng mô tả <em>lượt mượn</em>, không mô tả học sinh cũng không mô tả sách.</li>
+</ul>
+<p><strong>Câu 3.</strong>
+Quy tắc chung: <strong>chỉ mối quan hệ M:N (và mọi mối quan hệ bậc từ 3 trở lên) mới bắt buộc thành bảng riêng.</strong> Mối quan hệ 1:1 và 1:N thì chỉ cần một cột khoá ngoại là đủ.</p>
+<ul>
+<li><code>CHỦ NHIỆM</code> là <strong>1:1</strong> → nhúng khoá ngoại <code>ma_gvcn</code> vào bảng <code>lop</code>. Một cột là xong.</li>
+<li><code>CÓ ĐIỂM</code> là <strong>M:N</strong> → không có chỗ nào nhét nổi khoá ngoại (Bài 8 đã phân tích), nên buộc phải sinh bảng <code>diem</code>.</li>
+</ul>
+<p><code>HỌC TẠI</code> là 1:N cũng vậy — chỉ cần cột <code>hoc_sinh.ma_lop</code>. Bài 14 sẽ viết quy tắc này thành các bước 3, 4, 5, 7 của thuật toán chuyển đổi.</p>
+<p><strong>Câu 4.</strong>
+Hai lỗi:</p>
+<ol>
+<li><strong><code>ma_mon_an</code> là khoá ngoại bị vẽ thành elip.</strong> Ở mức ý niệm phải có một tập thực thể <code>MÓN ĂN</code> riêng, nối với <code>HỌC SINH</code> bằng một hình thoi.</li>
+<li><strong><code>ngay_mua</code> bị treo nhầm vào <code>HỌC SINH</code>.</strong> Nó không mô tả học sinh — bạn An không có "ngày mua"; chỉ có <em>lần mua của bạn An</em> mới có ngày. Nó là <strong>thuộc tính của mối quan hệ</strong>, phải treo vào hình thoi.</li>
+</ol>
+<p>(Còn một điểm đáng bàn thứ ba: với thiết kế này, một học sinh chỉ mua được một món một lần. Nếu cần lưu nhiều lần mua thì phải đưa <code>ngay_mua</code> vào khoá của mối quan hệ, hoặc dựng hẳn một thực thể <code>LẦN MUA</code>.)</p>
+<p>Vẽ lại:</p>
+<table>
+<thead>
+<tr>
+<th>Hình</th>
+<th>Nội dung</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Chữ nhật <code>HỌC SINH</code></td>
+<td>elip gạch chân <code>ma_hs</code>, elip <code>ho_ten</code></td>
+</tr>
+<tr>
+<td>Chữ nhật <code>MÓN ĂN</code></td>
+<td>elip gạch chân <code>ma_mon_an</code>, elip <code>ten_mon_an</code>, elip <code>gia</code></td>
+</tr>
+<tr>
+<td>Thoi <code>MUA</code> bản số <code>M — N</code></td>
+<td>nối <code>HỌC SINH</code> với <code>MÓN ĂN</code>, mang elip <code>ngay_mua</code> và <code>so_luong</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Câu 5.</strong></p>
+<div class="highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">c</span><span class="p">.</span><span class="n">conrelid</span><span class="p">::</span><span class="n">regclass</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">bang</span><span class="p">,</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">       </span><span class="n">a</span><span class="p">.</span><span class="n">attname</span><span class="w">            </span><span class="k">AS</span><span class="w"> </span><span class="n">cot_khoa_ngoai</span><span class="p">,</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">       </span><span class="n">a</span><span class="p">.</span><span class="n">attnotnull</span><span class="w">         </span><span class="k">AS</span><span class="w"> </span><span class="n">la_not_null</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="k">FROM</span><span class="w"> </span><span class="n">pg_constraint</span><span class="w"> </span><span class="k">c</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="k">JOIN</span><span class="w"> </span><span class="n">pg_attribute</span><span class="w"> </span><span class="n">a</span>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">  </span><span class="k">ON</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">attrelid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">c</span><span class="p">.</span><span class="n">conrelid</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">attnum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ANY</span><span class="w"> </span><span class="p">(</span><span class="k">c</span><span class="p">.</span><span class="n">conkey</span><span class="p">)</span>
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="k">WHERE</span><span class="w"> </span><span class="k">c</span><span class="p">.</span><span class="n">contype</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'f'</span>
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">  </span><span class="k">AND</span><span class="w"> </span><span class="k">c</span><span class="p">.</span><span class="n">conrelid</span><span class="p">::</span><span class="n">regclass</span><span class="p">::</span><span class="nb">text</span><span class="w"> </span><span class="k">IN</span>
+</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">      </span><span class="p">(</span><span class="s1">'lop'</span><span class="p">,</span><span class="w"> </span><span class="s1">'hoc_sinh'</span><span class="p">,</span><span class="w"> </span><span class="s1">'phu_huynh'</span><span class="p">,</span><span class="w"> </span><span class="s1">'phan_cong_day'</span><span class="p">,</span>
+</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">       </span><span class="s1">'diem'</span><span class="p">,</span><span class="w"> </span><span class="s1">'muon_sach'</span><span class="p">,</span><span class="w"> </span><span class="s1">'diem_danh'</span><span class="p">)</span>
+</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Trong kết quả, <strong>đúng một</strong> dòng có <code>la_not_null</code> bằng <code>f</code>: đó là <code>lop</code> / <code>ma_gvcn</code>.</p>
+<p>Đọc ra Sơ đồ 2:</p>
+<ul>
+<li><code>lop.ma_gvcn</code> cho phép <code>NULL</code> → <code>LỚP</code> nối với <code>CHỦ NHIỆM</code> bằng <strong>đường đơn</strong>, tham gia <strong>bộ phận</strong>. Đúng là lớp 9A3 chưa có chủ nhiệm.</li>
+<li>Mọi khoá ngoại còn lại đều <code>NOT NULL</code> → các đường tương ứng là <strong>đường đôi</strong>, tham gia <strong>toàn phần</strong>. Không có dòng học sinh nào không lớp, không dòng phụ huynh nào không gắn học sinh, không dòng điểm nào không gắn môn.</li>
+</ul>
+<p>Đây là cách nhanh nhất để kiểm tra một biểu đồ ER có khớp với database thật hay không: <strong>soi cột khoá ngoại nào cho phép <code>NULL</code></strong>.</p>
+</details>
+<h2 id="tom-tat">🔑 Tóm tắt<a class="headerlink" href="#tom-tat" title="Permanent link">&para;</a></h2>
+<ol>
+<li><strong>Biểu đồ ER</strong> mô tả thực thể, thuộc tính và mối quan hệ ở <strong>mức ý niệm</strong> — không nói tới bảng, kiểu dữ liệu hay hệ quản trị.</li>
+<li><strong>Ký hiệu Chen</strong> cho mỗi thứ một hình riêng: chữ nhật = thực thể, elip = thuộc tính, thoi = mối quan hệ; cái gì <strong>đôi</strong> thì chặt hơn.</li>
+<li>Mermaid <strong>mô phỏng</strong> Chen chứ không vẽ đúng chuẩn — ba chỗ khác rõ nhất là elip đôi, elip nét đứt và thoi đôi.</li>
+<li>Trong biểu đồ ER <strong>không có khoá ngoại</strong>; mối quan hệ luôn được vẽ bằng hình thoi, và thuộc tính của mối quan hệ treo vào hình thoi đó.</li>
+<li>Sơ đồ <code>truong_hoc</code> có 6 hình chữ nhật nhưng database có 10 bảng — bốn bảng chênh lệch chính là các hình thoi đã hoá thành bảng.</li>
+</ol>
+<hr />
+<p>⬅️ <a href="../09-participation-va-thuc-the-yeu/">Bài 9 — Ràng buộc tham gia và Thực thể yếu</a> · ➡️ <strong>Bài 11 — Crow's Foot và Mermaid</strong> <em>(sắp có)</em></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Trở lại mục lục
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Chân trang" >
+        
+          
+          <a href="../09-participation-va-thuc-the-yeu/" class="md-footer__link md-footer__link--prev" aria-label="Trước: Bài 9 — Ràng buộc tham gia và Thực thể yếu">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Trước
+              </span>
+              <div class="md-ellipsis">
+                Bài 9 — Ràng buộc tham gia và Thực thể yếu
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../../dataset/" class="md-footer__link md-footer__link--next" aria-label="Sau: Database mẫu">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Sau
+              </span>
+              <div class="md-ellipsis">
+                Database mẫu
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Nội dung theo giấy phép CC BY 4.0
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/hungnguyen010518/database-tu-a-z" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.sections", "navigation.top", "navigation.footer", "navigation.indexes", "navigation.tracking", "toc.follow", "content.code.copy", "content.code.annotate", "search.highlight", "search.suggest"], "search": "../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "\u0110\u00e3 sao ch\u00e9p", "clipboard.copy": "Sao ch\u00e9p v\u00e0o b\u1ed9 nh\u1edb t\u1ea1m", "search.result.more.one": "1 t\u1eeb kh\u00e1c trong trang", "search.result.more.other": "# t\u1eeb kh\u00e1c trong trang", "search.result.none": "Kh\u00f4ng t\u00ecm th\u1ea5y t\u00e0i li\u1ec7u li\u00ean quan", "search.result.one": "1 t\u00e0i li\u1ec7u li\u00ean quan", "search.result.other": "# t\u00e0i li\u1ec7u li\u00ean quan", "search.result.placeholder": "Nh\u1eadp \u0111\u1ec3 b\u1eaft \u0111\u1ea7u t\u00ecm ki\u1ebfm", "search.result.term.missing": "Kh\u00f4ng", "select.version": "Ch\u1ecdn phi\u00ean b\u1ea3n"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.525ec568.min.js"></script>
+      
+    
+  </body>
+</html>

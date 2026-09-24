@@ -1,0 +1,1811 @@
+
+<!doctype html>
+<html lang="vi" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Khóa học cơ sở dữ liệu tiếng Việt, từ con số 0 tới mức siêu nâng cao — giải thích để học sinh cấp 2 cũng hiểu được.">
+      
+      
+      
+        <link rel="canonical" href="https://hungnguyen010518.github.io/database-tu-a-z/cap-1-mo-hinh-er/09-participation-va-thuc-the-yeu/">
+      
+      
+        <link rel="prev" href="../08-moi-quan-he-va-cardinality/">
+      
+      
+        <link rel="next" href="../10-bieu-do-er-ky-hieu-chen/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.39">
+    
+    
+      
+        <title>Bài 9 — Ràng buộc tham gia và Thực thể yếu - Database từ A-Z</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.8c3ca2c6.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#bai-9-rang-buoc-tham-gia-va-thuc-the-yeu" class="md-skip">
+          Bỏ qua
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Đầu trang">
+    <a href="../.." title="Database từ A-Z" class="md-header__button md-logo" aria-label="Database từ A-Z" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3C7.58 3 4 4.79 4 7s3.58 4 8 4 8-1.79 8-4-3.58-4-8-4M4 9v3c0 2.21 3.58 4 8 4s8-1.79 8-4V9c0 2.21-3.58 4-8 4s-8-1.79-8-4m0 5v3c0 2.21 3.58 4 8 4s8-1.79 8-4v-3c0 2.21-3.58 4-8 4s-8-1.79-8-4"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Database từ A-Z
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Bài 9 — Ràng buộc tham gia và Thực thể yếu
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Chuyển sang chế độ tối"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Chuyển sang chế độ tối" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Chuyển sang chế độ sáng"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Chuyển sang chế độ sáng" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Tìm kiếm" placeholder="Tìm kiếm" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Tìm kiếm">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Xoá" aria-label="Xoá" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/hungnguyen010518/database-tu-a-z" title="Xem mã nguồn" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    database-tu-a-z
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Thanh điều hướng" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Database từ A-Z" class="md-nav__button md-logo" aria-label="Database từ A-Z" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3C7.58 3 4 4.79 4 7s3.58 4 8 4 8-1.79 8-4-3.58-4-8-4M4 9v3c0 2.21 3.58 4 8 4s8-1.79 8-4V9c0 2.21-3.58 4-8 4s-8-1.79-8-4m0 5v3c0 2.21 3.58 4 8 4s8-1.79 8-4v-3c0 2.21-3.58 4-8 4s-8-1.79-8-4"/></svg>
+
+    </a>
+    Database từ A-Z
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/hungnguyen010518/database-tu-a-z" title="Xem mã nguồn" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    database-tu-a-z
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Trang chủ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Cấp 0 — Nhập môn
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Cấp 0 — Nhập môn
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-0-nhap-mon/01-du-lieu-va-thong-tin/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 1 — Dữ liệu, thông tin và tại sao phải lưu trữ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-0-nhap-mon/02-tu-so-giay-den-excel/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 2 — Từ sổ giấy đến Excel
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-0-nhap-mon/03-dbms-la-gi/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 3 — DBMS là gì
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-0-nhap-mon/04-cac-mo-hinh-du-lieu/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 4 — Các mô hình dữ liệu
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-0-nhap-mon/05-cai-dat-postgresql/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 5 — Cài đặt PostgreSQL
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Cấp 1 — Mô hình quan hệ & Biểu đồ ER
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Cấp 1 — Mô hình quan hệ & Biểu đồ ER
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-mo-hinh-quan-he/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 6 — Mô hình quan hệ: bảng, dòng, cột, miền giá trị, lược đồ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-thuc-the-va-thuoc-tinh/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 7 — Thực thể và các loại thuộc tính
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08-moi-quan-he-va-cardinality/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 8 — Mối quan hệ, bậc và bản số (Cardinality)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Bài 9 — Ràng buộc tham gia và Thực thể yếu
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Bài 9 — Ràng buộc tham gia và Thực thể yếu
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Mục lục">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Mục lục
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#cau-chuyen-mo-au" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧠 Câu chuyện mở đầu
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#khai-niem-thuat-ngu" class="md-nav__link">
+    <span class="md-ellipsis">
+      📖 Khái niệm &amp; thuật ngữ
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📖 Khái niệm & thuật ngữ">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rang-buoc-tham-gia" class="md-nav__link">
+    <span class="md-ellipsis">
+      Ràng buộc tham gia
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nhin-ra-rang-buoc-tham-gia-trong-luoc-o-sql" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nhìn ra ràng buộc tham gia trong lược đồ SQL
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#thuc-the-yeu" class="md-nav__link">
+    <span class="md-ellipsis">
+      Thực thể yếu
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#thuc-the-yeu-khac-thuc-the-manh-the-nao" class="md-nav__link">
+    <span class="md-ellipsis">
+      Thực thể yếu khác thực thể mạnh thế nào
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mot-ieu-trung-thuc-ve-phu_huynh" class="md-nav__link">
+    <span class="md-ellipsis">
+      Một điều trung thực về phu_huynh
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bang-thuat-ngu" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bảng thuật ngữ
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#so-o" class="md-nav__link">
+    <span class="md-ellipsis">
+      🖼️ Sơ đồ
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#thuc-hanh" class="md-nav__link">
+    <span class="md-ellipsis">
+      💻 Thực hành
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="💻 Thực hành">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tham-gia-toan-phan-soat-tap-ho-so-thu-nhat" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tham gia toàn phần — soát tập hồ sơ thứ nhất
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tham-gia-bo-phan-soat-tap-ho-so-thu-hai" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tham gia bộ phận — soát tập hồ sơ thứ hai
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#thuc-the-yeu-phu-huynh-khong-tu-ung-uoc" class="md-nav__link">
+    <span class="md-ellipsis">
+      Thực thể yếu — phụ huynh không tự đứng được
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nhung-phia-hoc-sinh-lai-la-bo-phan-truong-hop-hs040" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nhưng phía học sinh lại là bộ phận — trường hợp HS040
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#khoa-bo-phan-co-that-su-u-e-phan-biet-khong" class="md-nav__link">
+    <span class="md-ellipsis">
+      Khoá bộ phận có thật sự đủ để phân biệt không?
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#chet-theo-chu-kiem-chung-on-delete-cascade-ma-khong-xoa-gi" class="md-nav__link">
+    <span class="md-ellipsis">
+      Chết theo chủ — kiểm chứng ON DELETE CASCADE mà không xoá gì
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#loi-thuong-gap" class="md-nav__link">
+    <span class="md-ellipsis">
+      ⚠️ Lỗi thường gặp
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bai-tap" class="md-nav__link">
+    <span class="md-ellipsis">
+      ✍️ Bài tập
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tom-tat" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔑 Tóm tắt
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10-bieu-do-er-ky-hieu-chen/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 10 — Biểu đồ ER — ký hiệu Chen
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../dataset/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Database mẫu
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../glossary/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bảng thuật ngữ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Mục lục">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Mục lục
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#cau-chuyen-mo-au" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧠 Câu chuyện mở đầu
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#khai-niem-thuat-ngu" class="md-nav__link">
+    <span class="md-ellipsis">
+      📖 Khái niệm &amp; thuật ngữ
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📖 Khái niệm & thuật ngữ">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rang-buoc-tham-gia" class="md-nav__link">
+    <span class="md-ellipsis">
+      Ràng buộc tham gia
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nhin-ra-rang-buoc-tham-gia-trong-luoc-o-sql" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nhìn ra ràng buộc tham gia trong lược đồ SQL
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#thuc-the-yeu" class="md-nav__link">
+    <span class="md-ellipsis">
+      Thực thể yếu
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#thuc-the-yeu-khac-thuc-the-manh-the-nao" class="md-nav__link">
+    <span class="md-ellipsis">
+      Thực thể yếu khác thực thể mạnh thế nào
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mot-ieu-trung-thuc-ve-phu_huynh" class="md-nav__link">
+    <span class="md-ellipsis">
+      Một điều trung thực về phu_huynh
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bang-thuat-ngu" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bảng thuật ngữ
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#so-o" class="md-nav__link">
+    <span class="md-ellipsis">
+      🖼️ Sơ đồ
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#thuc-hanh" class="md-nav__link">
+    <span class="md-ellipsis">
+      💻 Thực hành
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="💻 Thực hành">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tham-gia-toan-phan-soat-tap-ho-so-thu-nhat" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tham gia toàn phần — soát tập hồ sơ thứ nhất
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tham-gia-bo-phan-soat-tap-ho-so-thu-hai" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tham gia bộ phận — soát tập hồ sơ thứ hai
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#thuc-the-yeu-phu-huynh-khong-tu-ung-uoc" class="md-nav__link">
+    <span class="md-ellipsis">
+      Thực thể yếu — phụ huynh không tự đứng được
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nhung-phia-hoc-sinh-lai-la-bo-phan-truong-hop-hs040" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nhưng phía học sinh lại là bộ phận — trường hợp HS040
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#khoa-bo-phan-co-that-su-u-e-phan-biet-khong" class="md-nav__link">
+    <span class="md-ellipsis">
+      Khoá bộ phận có thật sự đủ để phân biệt không?
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#chet-theo-chu-kiem-chung-on-delete-cascade-ma-khong-xoa-gi" class="md-nav__link">
+    <span class="md-ellipsis">
+      Chết theo chủ — kiểm chứng ON DELETE CASCADE mà không xoá gì
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#loi-thuong-gap" class="md-nav__link">
+    <span class="md-ellipsis">
+      ⚠️ Lỗi thường gặp
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bai-tap" class="md-nav__link">
+    <span class="md-ellipsis">
+      ✍️ Bài tập
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tom-tat" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔑 Tóm tắt
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="bai-9-rang-buoc-tham-gia-va-thuc-the-yeu">Bài 9 — Ràng buộc tham gia và Thực thể yếu<a class="headerlink" href="#bai-9-rang-buoc-tham-gia-va-thuc-the-yeu" title="Permanent link">&para;</a></h1>
+<div class="admonition abstract">
+<p class="admonition-title">🎯 Học xong bài này, bạn sẽ</p>
+<ul>
+<li>Phân biệt <strong>ràng buộc tham gia</strong> với <strong>bản số</strong> — giới hạn dưới và giới hạn trên</li>
+<li>Đọc được <strong>tham gia toàn phần</strong> và <strong>tham gia bộ phận</strong> từ lược đồ, chỉ bằng cách nhìn <code>NOT NULL</code></li>
+<li>Nhận ra <strong>thực thể yếu</strong>, <strong>thực thể chủ</strong>, <strong>quan hệ nhận diện</strong> và <strong>khoá bộ phận</strong></li>
+<li>Chứng minh từng khái niệm trên bằng dữ liệu thật của <code>truong_hoc</code></li>
+<li>Biết vì sao phụ huynh phải "biến mất" khi học sinh bị xoá</li>
+</ul>
+</div>
+<h2 id="cau-chuyen-mo-au">🧠 Câu chuyện mở đầu<a class="headerlink" href="#cau-chuyen-mo-au" title="Permanent link">&para;</a></h2>
+<p>Cô văn thư đưa bạn hai tập hồ sơ và nhờ kiểm tra hộ.</p>
+<p><strong>Tập thứ nhất — danh sách học sinh.</strong> Cô dặn: <em>"Em soát xem có bạn nào chưa ghi lớp không. Trường mình không có học sinh nào đứng ngoài lớp cả — nhập học là phải vào một lớp."</em> Bạn soát cả 40 hồ sơ. Không thiếu bạn nào.</p>
+<p><strong>Tập thứ hai — danh sách giáo viên.</strong> Cô dặn ngược lại: <em>"Cái này thì em đừng lo. Trường có 8 thầy cô mà chỉ có 6 lớp, nên đương nhiên vài người không chủ nhiệm lớp nào. Bình thường thôi."</em> Bạn mở ra: đúng thật, có ba thầy cô để trống ô chủ nhiệm. Mà lớp 9A3 thì chưa có ai đứng tên.</p>
+<p>Hai tập hồ sơ, hai luật khác nhau. Tập một: <strong>bắt buộc mọi người phải có</strong>. Tập hai: <strong>có cũng được, không có cũng được</strong>.</p>
+<p>Rồi cô đưa nốt tập thứ ba — <strong>danh sách phụ huynh</strong>. Bạn để ý một điều lạ: mỗi tờ khai phụ huynh đều ghi kèm mã học sinh, và cô nói: <em>"Bạn nào chuyển trường thì em rút luôn tờ phụ huynh của bạn ấy ra. Giữ lại làm gì, nhà trường đâu có liên hệ với phụ huynh của học sinh trường khác."</em></p>
+<p>Ba tình huống, hai câu hỏi. Thứ nhất: làm sao ghi lại được cái luật <em>"bắt buộc phải có"</em> so với <em>"có cũng được"</em>? Thứ hai: một loại hồ sơ mà <strong>không tự đứng một mình được</strong> thì gọi là gì?</p>
+<h2 id="khai-niem-thuat-ngu">📖 Khái niệm &amp; thuật ngữ<a class="headerlink" href="#khai-niem-thuat-ngu" title="Permanent link">&para;</a></h2>
+<h3 id="rang-buoc-tham-gia">Ràng buộc tham gia<a class="headerlink" href="#rang-buoc-tham-gia" title="Permanent link">&para;</a></h3>
+<p><a href="../08-moi-quan-he-va-cardinality/">Bài 8</a> đã trả lời câu hỏi <em>"tối đa bao nhiêu"</em>. Bài này trả lời câu còn lại: <strong>"tối thiểu bao nhiêu"</strong>.</p>
+<p><strong>Ràng buộc tham gia</strong> (<em>participation constraint</em>) quy định: một thực thể ở phía này <strong>có bắt buộc</strong> phải tham gia vào mối quan hệ hay không.</p>
+<p>Chỉ có hai câu trả lời:</p>
+<table>
+<thead>
+<tr>
+<th>Loại</th>
+<th>English</th>
+<th>Nghĩa</th>
+<th>Ký hiệu Chen</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Tham gia toàn phần</strong></td>
+<td><em>total participation</em></td>
+<td><strong>Mọi</strong> thực thể đều phải tham gia — tối thiểu 1</td>
+<td>Đường <strong>đôi</strong></td>
+</tr>
+<tr>
+<td><strong>Tham gia bộ phận</strong></td>
+<td><em>partial participation</em></td>
+<td>Có thể có thực thể không tham gia — tối thiểu 0</td>
+<td>Đường <strong>đơn</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Tham gia toàn phần còn được gọi là <strong>ràng buộc tồn tại</strong> (<em>existence dependency</em>), vì nó nói rằng thực thể không được phép tồn tại nếu thiếu liên kết đó.</p>
+<div class="admonition tip">
+<p class="admonition-title">Hai câu hỏi độc lập nhau</p>
+<p>Với <strong>mỗi phía</strong> của <strong>mỗi</strong> mối quan hệ, luôn phải hỏi đủ hai câu:</p>
+<ol>
+<li><em>Tối đa bao nhiêu?</em> → <strong>bản số</strong> (Bài 8)</li>
+<li><em>Tối thiểu bao nhiêu?</em> → <strong>ràng buộc tham gia</strong> (bài này)</li>
+</ol>
+<p>Hai câu này độc lập, nên có 4 tổ hợp. Ví dụ với mối quan hệ HỌC SINH — <em>học tại</em> — LỚP:</p>
+<table>
+<thead>
+<tr>
+<th>Phía</th>
+<th>Tối đa</th>
+<th>Tối thiểu</th>
+<th>Kết luận</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>HỌC SINH</td>
+<td>1 lớp</td>
+<td>1 lớp</td>
+<td><strong>Toàn phần</strong> — ai cũng phải có lớp</td>
+</tr>
+<tr>
+<td>LỚP</td>
+<td>nhiều học sinh</td>
+<td>0 học sinh</td>
+<td><strong>Bộ phận</strong> — lớp mới lập có thể rỗng</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 id="nhin-ra-rang-buoc-tham-gia-trong-luoc-o-sql">Nhìn ra ràng buộc tham gia trong lược đồ SQL<a class="headerlink" href="#nhin-ra-rang-buoc-tham-gia-trong-luoc-o-sql" title="Permanent link">&para;</a></h3>
+<p>Đây là chỗ lý thuyết ER chạm vào SQL thật, và quy tắc cực kỳ gọn:</p>
+<blockquote>
+<p><strong>Tham gia toàn phần ⇔ cột khoá ngoại được khai <code>NOT NULL</code>.</strong></p>
+</blockquote>
+<p>Đối chiếu với <code>dataset/02-chuan-hoa.sql</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Cột</th>
+<th>Khai báo</th>
+<th>Ràng buộc tham gia</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>hoc_sinh.ma_lop</code></td>
+<td><code>NOT NULL REFERENCES lop</code></td>
+<td>HỌC SINH tham gia <strong>toàn phần</strong> — không thể có học sinh không lớp</td>
+</tr>
+<tr>
+<td><code>lop.ma_gvcn</code></td>
+<td><code>REFERENCES giao_vien</code> (cho phép <code>NULL</code>)</td>
+<td>LỚP tham gia <strong>bộ phận</strong> — lớp có thể chưa có chủ nhiệm</td>
+</tr>
+<tr>
+<td><code>phu_huynh.ma_hs</code></td>
+<td><code>NOT NULL REFERENCES hoc_sinh</code></td>
+<td>PHỤ HUYNH tham gia <strong>toàn phần</strong> — không có phụ huynh "mồ côi"</td>
+</tr>
+</tbody>
+</table>
+<p>Hai lời dặn của cô văn thư ở đầu bài đã được ghi thẳng vào lược đồ, bằng đúng hai từ <code>NOT NULL</code>.</p>
+<div class="admonition warning">
+<p class="admonition-title">Phía 'nhiều' thì SQL không ép được</p>
+<p>Câu <em>"mỗi lớp phải có ít nhất một học sinh"</em> <strong>không</strong> diễn đạt nổi bằng <code>NOT NULL</code>, vì nó là ràng buộc trên phía <em>nhiều</em>. Trong <code>truong_hoc</code> cả 6 lớp đều có học sinh, nhưng đó là do dữ liệu, không do lược đồ cưỡng chế.</p>
+<p>Muốn ép thật thì cần trigger hoặc kiểm tra ở tầng ứng dụng. Đây là một <strong>giới hạn cố hữu</strong> của mô hình quan hệ so với mô hình ER: ER diễn tả được nhiều ràng buộc hơn số ràng buộc mà bảng cưỡng chế nổi. Bài 14 và Bài 15 sẽ quay lại đúng khoảng cách này.</p>
+</div>
+<h3 id="thuc-the-yeu">Thực thể yếu<a class="headerlink" href="#thuc-the-yeu" title="Permanent link">&para;</a></h3>
+<p><strong>Thực thể yếu</strong> (<em>weak entity</em>) là thực thể <strong>không có thuộc tính khoá của riêng nó</strong>, nên phải mượn khoá của một thực thể khác mới định danh được.</p>
+<p>Thực thể mà nó mượn khoá gọi là <strong>thực thể chủ</strong> (<em>owner entity</em>, hay <em>identifying entity</em>, <em>parent entity</em>).</p>
+<p>Mối quan hệ nối hai bên gọi là <strong>quan hệ nhận diện</strong> (<em>identifying relationship</em>).</p>
+<p>Và cái phần "còn lại" mà bản thân thực thể yếu tự có để phân biệt các anh em cùng chủ, gọi là <strong>khoá bộ phận</strong> (<em>partial key</em>, hay <em>discriminator</em>).</p>
+<p>Trong <code>truong_hoc</code>, PHỤ HUYNH chính là thực thể yếu điển hình:</p>
+<table>
+<thead>
+<tr>
+<th>Thành phần</th>
+<th>Trong <code>truong_hoc</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Thực thể yếu</td>
+<td>PHỤ HUYNH</td>
+</tr>
+<tr>
+<td>Thực thể chủ</td>
+<td>HỌC SINH</td>
+</tr>
+<tr>
+<td>Quan hệ nhận diện</td>
+<td><em>"là phụ huynh của"</em></td>
+</tr>
+<tr>
+<td>Khoá bộ phận</td>
+<td><code>quan_he</code> — Bố / Mẹ / Ông / Bà / Khác</td>
+</tr>
+<tr>
+<td>Khoá đầy đủ trên lý thuyết</td>
+<td><code>(ma_hs, quan_he)</code></td>
+</tr>
+</tbody>
+</table>
+<p>Đọc theo lời của cô văn thư: <em>"tờ khai phụ huynh không tự đứng một mình được"</em>. Nói <em>"Bố"</em> thì chẳng ai biết bố của ai. Phải nói <em>"Bố của HS001"</em> mới định danh được.</p>
+<div class="admonition note">
+<p class="admonition-title">Ba dấu hiệu nhận ra thực thể yếu</p>
+<ol>
+<li><strong>Không tự định danh được</strong> nếu thiếu thực thể chủ.</li>
+<li><strong>Luôn tham gia toàn phần</strong> vào quan hệ nhận diện — đây là hệ quả tất yếu, không phải lựa chọn.</li>
+<li><strong>Chết theo chủ</strong>: xoá thực thể chủ thì thực thể yếu cũng phải biến mất, vì nó không còn ý nghĩa gì. Trong SQL, điều này được viết là <code>ON DELETE CASCADE</code>.</li>
+</ol>
+</div>
+<p>Đúng là lược đồ mẫu làm như vậy:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ma_hs CHAR(5) NOT NULL REFERENCES hoc_sinh(ma_hs) ON DELETE CASCADE
+</span></code></pre></div>
+<p><code>NOT NULL</code> ⇒ tham gia toàn phần. <code>ON DELETE CASCADE</code> ⇒ chết theo chủ. Hai đặc trưng của thực thể yếu, viết trên đúng một dòng SQL. Bài 15 sẽ so sánh <code>CASCADE</code> với <code>RESTRICT</code> và <code>SET NULL</code>.</p>
+<h3 id="thuc-the-yeu-khac-thuc-the-manh-the-nao">Thực thể yếu khác thực thể mạnh thế nào<a class="headerlink" href="#thuc-the-yeu-khac-thuc-the-manh-the-nao" title="Permanent link">&para;</a></h3>
+<p><strong>Thực thể mạnh</strong> (<em>strong entity</em>, hay <em>regular entity</em>) là thực thể có khoá riêng, tự đứng được. HỌC SINH, GIÁO VIÊN, LỚP, MÔN HỌC, SÁCH đều là thực thể mạnh.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Thực thể mạnh</th>
+<th>Thực thể yếu</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Có khoá riêng</td>
+<td>Có</td>
+<td>Không — phải mượn</td>
+</tr>
+<tr>
+<td>Ký hiệu Chen</td>
+<td>Hình chữ nhật đơn</td>
+<td>Hình chữ nhật <strong>đôi</strong></td>
+</tr>
+<tr>
+<td>Quan hệ nhận diện</td>
+<td>Không cần</td>
+<td>Bắt buộc, vẽ hình thoi <strong>đôi</strong></td>
+</tr>
+<tr>
+<td>Tham gia vào quan hệ nhận diện</td>
+<td>—</td>
+<td>Luôn <strong>toàn phần</strong></td>
+</tr>
+<tr>
+<td>Khi chủ bị xoá</td>
+<td>Không ảnh hưởng</td>
+<td>Bị xoá theo</td>
+</tr>
+</tbody>
+</table>
+<h3 id="mot-ieu-trung-thuc-ve-phu_huynh">Một điều trung thực về <code>phu_huynh</code><a class="headerlink" href="#mot-ieu-trung-thuc-ve-phu_huynh" title="Permanent link">&para;</a></h3>
+<p>Trên lý thuyết ER, khoá của PHỤ HUYNH phải là <code>(ma_hs, quan_he)</code>. Nhưng bảng thật lại có cột <code>ma_ph</code> làm khoá chính, và <strong>không</strong> có ràng buộc <code>UNIQUE (ma_hs, quan_he)</code>.</p>
+<p>Vì sao? Vì thực tế không sạch như lý thuyết: một học sinh hoàn toàn có thể có <strong>hai người đều ghi quan hệ là "Bố"</strong> — bố đẻ và bố dượng chẳng hạn. Khi đó <code>quan_he</code> không còn đủ sức phân biệt.</p>
+<p>Bạn sẽ <strong>tự kiểm chứng trường hợp này bằng dữ liệu thật</strong> ở phần Thực hành. Cách xử lý mà lược đồ mẫu chọn là dùng một mã tự sinh <code>ma_ph</code> — Bài 12 sẽ gọi đó là <strong>khoá nhân tạo</strong> (<em>surrogate key</em>).</p>
+<p>Điều này <strong>không</strong> làm PHỤ HUYNH hết là thực thể yếu. Nó vẫn phụ thuộc tồn tại vào HỌC SINH, vẫn <code>NOT NULL</code>, vẫn <code>ON DELETE CASCADE</code>. Chỉ là người thiết kế đã thay khoá bộ phận bằng một mã nhân tạo cho chắc ăn — một lựa chọn rất phổ biến trong hệ thống thật.</p>
+<h3 id="bang-thuat-ngu">Bảng thuật ngữ<a class="headerlink" href="#bang-thuat-ngu" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Tiếng Việt</th>
+<th>English</th>
+<th>Nghĩa dễ hiểu</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Ràng buộc tham gia</td>
+<td><em>participation constraint</em></td>
+<td>Có bắt buộc tham gia mối quan hệ hay không</td>
+</tr>
+<tr>
+<td>Tham gia toàn phần</td>
+<td><em>total participation</em></td>
+<td>Mọi thực thể đều phải tham gia — vẽ đường đôi</td>
+</tr>
+<tr>
+<td>Tham gia bộ phận</td>
+<td><em>partial participation</em></td>
+<td>Được phép không tham gia — vẽ đường đơn</td>
+</tr>
+<tr>
+<td>Thực thể mạnh</td>
+<td><em>strong entity</em></td>
+<td>Có khoá riêng, tự đứng được</td>
+</tr>
+<tr>
+<td>Thực thể yếu</td>
+<td><em>weak entity</em></td>
+<td>Không có khoá riêng, phải mượn khoá của chủ</td>
+</tr>
+<tr>
+<td>Thực thể chủ</td>
+<td><em>owner entity</em></td>
+<td>Thực thể cho mượn khoá</td>
+</tr>
+<tr>
+<td>Quan hệ nhận diện</td>
+<td><em>identifying relationship</em></td>
+<td>Mối quan hệ nối thực thể yếu với chủ của nó</td>
+</tr>
+<tr>
+<td>Khoá bộ phận</td>
+<td><em>partial key / discriminator</em></td>
+<td>Phần riêng của thực thể yếu, ghép với khoá chủ mới đủ</td>
+</tr>
+</tbody>
+</table>
+<h2 id="so-o">🖼️ Sơ đồ<a class="headerlink" href="#so-o" title="Permanent link">&para;</a></h2>
+<p>Mermaid không vẽ được đường đôi kiểu Chen, nên sơ đồ dưới đây <strong>mô phỏng</strong>: đường <strong>nét đậm</strong> <code>===</code> là tham gia <strong>toàn phần</strong>, đường <strong>nét thường</strong> <code>---</code> là tham gia <strong>bộ phận</strong>. Bài 10 sẽ có bảng chú giải đầy đủ.</p>
+<pre class="mermaid"><code>flowchart LR
+    HS["&lt;b&gt;HỌC SINH&lt;/b&gt;&lt;br/&gt;hoc_sinh"]
+    L["&lt;b&gt;LỚP&lt;/b&gt;&lt;br/&gt;lop"]
+    GV["&lt;b&gt;GIÁO VIÊN&lt;/b&gt;&lt;br/&gt;giao_vien"]
+
+    R1{"học tại"}
+    R2{"chủ nhiệm"}
+
+    HS === R1
+    R1 --- L
+    L --- R2
+    R2 --- GV
+
+    N1["&lt;b&gt;TOÀN PHẦN&lt;/b&gt;&lt;br/&gt;ma_lop là NOT NULL&lt;br/&gt;0 học sinh không có lớp"]
+    N2["&lt;b&gt;BỘ PHẬN&lt;/b&gt;&lt;br/&gt;lớp mới lập có thể chưa có ai"]
+    N3["&lt;b&gt;BỘ PHẬN&lt;/b&gt;&lt;br/&gt;ma_gvcn cho phép NULL&lt;br/&gt;lớp 9A3 chưa có chủ nhiệm"]
+    N4["&lt;b&gt;BỘ PHẬN&lt;/b&gt;&lt;br/&gt;3 thầy cô chưa chủ nhiệm lớp nào"]
+
+    N1 -.-&gt; R1
+    N2 -.-&gt; R1
+    N3 -.-&gt; R2
+    N4 -.-&gt; R2
+
+    style HS fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
+    style L fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
+    style GV fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
+    style R1 fill:#fff8e1,stroke:#f9a825,stroke-width:2px
+    style R2 fill:#fff8e1,stroke:#f9a825,stroke-width:2px
+    style N1 fill:#ffebee,stroke:#c62828,stroke-width:2px
+    style N2 fill:#e8f5e9,stroke:#2e7d32
+    style N3 fill:#e8f5e9,stroke:#2e7d32
+    style N4 fill:#e8f5e9,stroke:#2e7d32</code></pre>
+<p>Còn đây là thực thể yếu. Hình chữ nhật đôi được mô phỏng bằng <code>[[ ]]</code>, hình thoi đôi bằng hình lục giác <code>{{ }}</code>:</p>
+<pre class="mermaid"><code>flowchart LR
+    HS["&lt;b&gt;HỌC SINH&lt;/b&gt;&lt;br/&gt;thực thể mạnh · thực thể chủ&lt;br/&gt;khoá riêng ma_hs"]
+    R{{"&lt;b&gt;LÀ PHỤ HUYNH CỦA&lt;/b&gt;&lt;br/&gt;quan hệ nhận diện"}}
+    PH[["&lt;b&gt;PHỤ HUYNH&lt;/b&gt;&lt;br/&gt;thực thể yếu&lt;br/&gt;không có khoá riêng"]]
+
+    K1(["ma_hs&lt;br/&gt;khoá chính"])
+    K2(["quan_he&lt;br/&gt;khoá bộ phận"])
+
+    HS --- K1
+    HS --- R
+    R === PH
+    PH --- K2
+
+    KQ["Khoá đầy đủ của PHỤ HUYNH&lt;br/&gt;= ma_hs của chủ + quan_he&lt;br/&gt;= &lt;b&gt;ma_hs + quan_he&lt;/b&gt;"]
+    K2 -.-&gt; KQ
+    K1 -.-&gt; KQ
+
+    style HS fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
+    style PH fill:#f3e5f5,stroke:#6a1b9a,stroke-width:4px
+    style R fill:#fff8e1,stroke:#f9a825,stroke-width:4px
+    style K1 fill:#fff3e0,stroke:#ef6c00
+    style K2 fill:#fff3e0,stroke:#ef6c00
+    style KQ fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px</code></pre>
+<h2 id="thuc-hanh">💻 Thực hành<a class="headerlink" href="#thuc-hanh" title="Permanent link">&para;</a></h2>
+<h3 id="tham-gia-toan-phan-soat-tap-ho-so-thu-nhat">Tham gia toàn phần — soát tập hồ sơ thứ nhất<a class="headerlink" href="#tham-gia-toan-phan-soat-tap-ho-so-thu-nhat" title="Permanent link">&para;</a></h3>
+<p>Đúng việc cô văn thư nhờ bạn làm:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_hoc_sinh_khong_co_lop</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">ma_lop</span><span class="w"> </span><span class="k">IS</span><span class="w"> </span><span class="k">NULL</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Kết quả: <code>0</code>.</p>
+<p>Nhưng con số 0 này <strong>không phải may mắn</strong>. Nó là điều duy nhất có thể xảy ra, vì lược đồ khai <code>ma_lop CHAR(3) NOT NULL</code>. Bạn kiểm chứng ngay trong <code>information_schema</code>:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">column_name</span><span class="p">,</span><span class="w"> </span><span class="n">is_nullable</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="k">FROM</span><span class="w"> </span><span class="n">information_schema</span><span class="p">.</span><span class="n">columns</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">table_schema</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'public'</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="k">table_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'hoc_sinh'</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="k">column_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'ma_lop'</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Kết quả: <code>ma_lop</code> | <code>NO</code>. Chữ <code>NO</code> ở cột <code>is_nullable</code> chính là <strong>tham gia toàn phần</strong> viết bằng ngôn ngữ của PostgreSQL.</p>
+<h3 id="tham-gia-bo-phan-soat-tap-ho-so-thu-hai">Tham gia bộ phận — soát tập hồ sơ thứ hai<a class="headerlink" href="#tham-gia-bo-phan-soat-tap-ho-so-thu-hai" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">ma_lop</span><span class="p">,</span><span class="w"> </span><span class="n">ten_lop</span><span class="p">,</span><span class="w"> </span><span class="n">khoi</span><span class="p">,</span><span class="w"> </span><span class="n">ma_gvcn</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="k">FROM</span><span class="w"> </span><span class="n">lop</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">ma_gvcn</span><span class="w"> </span><span class="k">IS</span><span class="w"> </span><span class="k">NULL</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Kết quả đúng <strong>1 dòng</strong>: <code>L06</code> | <code>9A3</code> | <code>9</code> | rỗng.</p>
+<p>Lớp 9A3 tồn tại hợp lệ dù chưa có chủ nhiệm. Đó là <strong>tham gia bộ phận</strong> — và lược đồ cho phép điều đó bằng cách <strong>không</strong> viết <code>NOT NULL</code> lên <code>ma_gvcn</code>.</p>
+<p>Nhìn từ phía giáo viên cũng vậy:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_giao_vien</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">giao_vien</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Kết quả: <code>8</code>.</p>
+<div class="highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="k">DISTINCT</span><span class="w"> </span><span class="n">ma_gvcn</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_giao_vien_dang_lam_gvcn</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">lop</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Kết quả: <code>5</code>. Tám thầy cô nhưng chỉ năm người đang chủ nhiệm — ba người còn lại <strong>không tham gia</strong> mối quan hệ này, mà vẫn là giáo viên hợp lệ. Lại là tham gia bộ phận, lần này ở phía GIÁO VIÊN.</p>
+<p>Bài 8 đã gặp thêm hai trường hợp bộ phận nữa trong <code>phan_cong_day</code>:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="k">DISTINCT</span><span class="w"> </span><span class="n">ma_lop</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_lop_co_lich_day</span><span class="p">,</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">       </span><span class="k">count</span><span class="p">(</span><span class="k">DISTINCT</span><span class="w"> </span><span class="n">ma_mon</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_mon_co_giao_vien</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="k">FROM</span><span class="w"> </span><span class="n">phan_cong_day</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Kết quả: <code>4</code> và <code>8</code>. Trong khi bảng <code>lop</code> có 6 lớp và <code>mon_hoc</code> có 9 môn. Nghĩa là hai lớp chưa có lịch dạy, và môn Địa lý chưa có ai dạy — cả hai phía đều tham gia <strong>bộ phận</strong>.</p>
+<h3 id="thuc-the-yeu-phu-huynh-khong-tu-ung-uoc">Thực thể yếu — phụ huynh không tự đứng được<a class="headerlink" href="#thuc-the-yeu-phu-huynh-khong-tu-ung-uoc" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">ma_ph</span><span class="p">,</span><span class="w"> </span><span class="n">ho_ten</span><span class="p">,</span><span class="w"> </span><span class="n">quan_he</span><span class="p">,</span><span class="w"> </span><span class="n">ma_hs</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="k">FROM</span><span class="w"> </span><span class="n">phu_huynh</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">ma_hs</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="p">(</span><span class="s1">'HS001'</span><span class="p">,</span><span class="w"> </span><span class="s1">'HS003'</span><span class="p">)</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">ma_ph</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Bốn dòng: <code>PH001</code> Nguyễn Văn Thành (Bố, HS001), <code>PH002</code> Lê Thị Hạnh (Mẹ, HS001), <code>PH004</code> Lê Hoàng Sáu (Bố, HS003), <code>PH005</code> Nguyễn Thị Tám (Mẹ, HS003).</p>
+<p>Thử che cột <code>ma_hs</code> đi rồi hỏi <em>"'Bố' là ai?"</em> — có hai dòng cùng ghi <code>Bố</code>. Không phân biệt nổi. Phải ghép <code>ma_hs</code> với <code>quan_he</code> mới ra được một định danh: <em>"Bố của HS001"</em>. Đó chính là <strong>khoá bộ phận cộng khoá chủ</strong>.</p>
+<p>Và mối quan hệ này <strong>toàn phần</strong> ở phía phụ huynh:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_phu_huynh_khong_gan_hoc_sinh</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="k">FROM</span><span class="w"> </span><span class="n">phu_huynh</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">ma_hs</span><span class="w"> </span><span class="k">IS</span><span class="w"> </span><span class="k">NULL</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Kết quả: <code>0</code>, và lại là điều duy nhất có thể, vì <code>ma_hs</code> được khai <code>NOT NULL</code>.</p>
+<h3 id="nhung-phia-hoc-sinh-lai-la-bo-phan-truong-hop-hs040">Nhưng phía học sinh lại là bộ phận — trường hợp HS040<a class="headerlink" href="#nhung-phia-hoc-sinh-lai-la-bo-phan-truong-hop-hs040" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_phu_huynh_cua_hs040</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="k">FROM</span><span class="w"> </span><span class="n">phu_huynh</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">ma_hs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'HS040'</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Kết quả: <code>0</code>.</p>
+<p>Bạn Đinh Thị Vân (<code>HS040</code>) là học sinh hợp lệ, có lớp, có điểm, có điểm danh — nhưng <strong>không có phụ huynh nào</strong> trong hệ thống. Điều này hoàn toàn được phép, vì HỌC SINH tham gia <strong>bộ phận</strong> vào mối quan hệ <em>"có phụ huynh"</em>.</p>
+<p>Đối chiếu hai chiều cho thật rõ:</p>
+<table>
+<thead>
+<tr>
+<th>Phía</th>
+<th>Ràng buộc tham gia</th>
+<th>Vì sao</th>
+<th>Bằng chứng</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PHỤ HUYNH</td>
+<td><strong>Toàn phần</strong></td>
+<td><code>phu_huynh.ma_hs</code> là <code>NOT NULL</code></td>
+<td>0 phụ huynh không gắn học sinh</td>
+</tr>
+<tr>
+<td>HỌC SINH</td>
+<td><strong>Bộ phận</strong></td>
+<td>Không có gì bắt học sinh phải có phụ huynh</td>
+<td><code>HS040</code> có 0 phụ huynh</td>
+</tr>
+</tbody>
+</table>
+<p>Đây chính là cặp ví dụ đẹp nhất của bài: <strong>cùng một mối quan hệ, hai phía hai luật khác nhau</strong>.</p>
+<h3 id="khoa-bo-phan-co-that-su-u-e-phan-biet-khong">Khoá bộ phận có thật sự đủ để phân biệt không?<a class="headerlink" href="#khoa-bo-phan-co-that-su-u-e-phan-biet-khong" title="Permanent link">&para;</a></h3>
+<p>Lý thuyết nói khoá của PHỤ HUYNH là <code>(ma_hs, quan_he)</code>. Hãy tự kiểm tra trên dữ liệu thật:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">ma_hs</span><span class="p">,</span><span class="w"> </span><span class="n">quan_he</span><span class="p">,</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_dong</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="k">FROM</span><span class="w"> </span><span class="n">phu_huynh</span>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">ma_hs</span><span class="p">,</span><span class="w"> </span><span class="n">quan_he</span>
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="k">HAVING</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">1</span>
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">ma_hs</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Kết quả: đúng <strong>1 dòng</strong> — <code>HS029</code> | <code>Bố</code> | <code>2</code>.</p>
+<p>Học sinh <code>HS029</code> có <strong>hai</strong> người cùng ghi quan hệ là <em>Bố</em>. Nghĩa là cặp <code>(ma_hs, quan_he)</code> <strong>không đủ</strong> để phân biệt trong dữ liệu thật, đúng như đã cảnh báo ở phần khái niệm.</p>
+<p>Đó là lý do bảng thật dùng <code>ma_ph</code> làm khoá chính:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">tong_so_dong</span><span class="p">,</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="k">DISTINCT</span><span class="w"> </span><span class="n">ma_ph</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_ma_ph_khac_nhau</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="k">FROM</span><span class="w"> </span><span class="n">phu_huynh</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Kết quả: <code>45</code> và <code>45</code> — mã nhân tạo thì không bao giờ trùng.</p>
+<div class="admonition tip">
+<p class="admonition-title">Bài học thiết kế rút ra</p>
+<p>Khi khoá bộ phận <strong>không chắc chắn</strong> đủ sức phân biệt trong mọi tình huống tương lai, hãy dùng khoá nhân tạo. Nhưng đừng vì thế mà quên bản chất: PHỤ HUYNH <strong>vẫn</strong> là thực thể yếu, và lược đồ vẫn phải giữ <code>NOT NULL</code> cùng <code>ON DELETE CASCADE</code> để phản ánh sự phụ thuộc tồn tại đó. <strong>Bài 12</strong> sẽ bàn kỹ khi nào nên chọn khoá nhân tạo.</p>
+</div>
+<h3 id="chet-theo-chu-kiem-chung-on-delete-cascade-ma-khong-xoa-gi">Chết theo chủ — kiểm chứng <code>ON DELETE CASCADE</code> mà không xoá gì<a class="headerlink" href="#chet-theo-chu-kiem-chung-on-delete-cascade-ma-khong-xoa-gi" title="Permanent link">&para;</a></h3>
+<p>Bạn có thể đọc chính sách xoá này ra từ hệ thống, không cần xoá thật:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">conname</span><span class="p">,</span><span class="w"> </span><span class="n">confdeltype</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="k">FROM</span><span class="w"> </span><span class="n">pg_constraint</span>
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">conrelid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'phu_huynh'</span><span class="p">::</span><span class="n">regclass</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">contype</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'f'</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Kết quả có <code>phu_huynh_ma_hs_fkey</code> với <code>confdeltype = 'c'</code> — chữ <code>c</code> là viết tắt của <strong>cascade</strong>. Xoá một học sinh thì mọi phụ huynh của bạn ấy tự động bị xoá theo, đúng như lời cô văn thư: <em>"bạn nào chuyển trường thì rút luôn tờ phụ huynh của bạn ấy ra"</em>.</p>
+<p>So sánh với bảng <code>hoc_sinh</code>:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">conname</span><span class="p">,</span><span class="w"> </span><span class="n">confdeltype</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="k">FROM</span><span class="w"> </span><span class="n">pg_constraint</span>
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">conrelid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'hoc_sinh'</span><span class="p">::</span><span class="n">regclass</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">contype</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'f'</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Ở đây <code>hoc_sinh_ma_lop_fkey</code> có <code>confdeltype = 'r'</code> — <strong>restrict</strong>, nghĩa là <strong>cấm</strong> xoá một lớp đang có học sinh. Khác hẳn. Lý do: HỌC SINH <strong>không phải</strong> thực thể yếu của LỚP; bạn ấy vẫn là một con người có thật kể cả khi lớp bị giải thể, nên hệ thống bắt bạn xử lý tay thay vì xoá ngầm. <strong>Bài 15</strong> sẽ dạy đủ cả năm hành vi <code>ON DELETE</code>.</p>
+<h2 id="loi-thuong-gap">⚠️ Lỗi thường gặp<a class="headerlink" href="#loi-thuong-gap" title="Permanent link">&para;</a></h2>
+<div class="admonition warning">
+<p class="admonition-title">Lỗi 1: Nhầm ràng buộc tham gia với bản số</p>
+<p>Nói <em>"mối quan hệ này là toàn phần nên nó là 1:1"</em> là trộn hai khái niệm.</p>
+<ul>
+<li><strong>Bản số</strong> = giới hạn <strong>trên</strong> = <em>tối đa bao nhiêu</em>.</li>
+<li><strong>Ràng buộc tham gia</strong> = giới hạn <strong>dưới</strong> = <em>tối thiểu 0 hay tối thiểu 1</em>.</li>
+</ul>
+<p>Một mối quan hệ 1:N hoàn toàn có thể toàn phần ở phía "nhiều" và bộ phận ở phía "một" — đúng như LỚP và HỌC SINH.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Lỗi 2: Quên <code>NOT NULL</code> trên khoá ngoại bắt buộc</p>
+<p>Thiết kế đúng trên giấy là <em>"mọi học sinh phải có lớp"</em>, nhưng khi <code>CREATE TABLE</code> lại viết <code>ma_lop CHAR(3) REFERENCES lop(ma_lop)</code> mà quên <code>NOT NULL</code>.</p>
+<p>Lúc đó khoá ngoại vẫn hoạt động — mã lớp ghi vào phải có thật. Nhưng để <strong>trống</strong> thì được phép, và một hôm nào đó bạn sẽ có học sinh không thuộc lớp nào mà không hiểu vì sao.</p>
+<p><strong>Tham gia toàn phần trên giấy phải thành <code>NOT NULL</code> trong SQL.</strong> Không có ngoại lệ.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Lỗi 3: Cho thực thể yếu một khoá riêng rồi quên mất nó là thực thể yếu</p>
+<p>Thêm <code>ma_ph</code> làm khoá chính là hợp lý. Nhưng nhiều người làm xong thì bỏ luôn <code>NOT NULL</code> và <code>ON DELETE CASCADE</code>, nghĩ rằng "đã có khoá riêng rồi thì nó mạnh rồi".</p>
+<p>Hậu quả: xoá một học sinh xong, hồ sơ phụ huynh vẫn nằm lại trong bảng, trỏ vào một mã học sinh không còn tồn tại — hoặc tệ hơn, <code>ma_hs</code> bị để <code>NULL</code> và không ai biết đó là phụ huynh của ai nữa. Dữ liệu rác kiểu này gần như không dọn được về sau.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Lỗi 4: Coi mọi bảng có khoá ngoại đều là thực thể yếu</p>
+<p><code>hoc_sinh</code> có khoá ngoại <code>ma_lop</code>, <code>NOT NULL</code> hẳn hoi. Vậy HỌC SINH có phải thực thể yếu của LỚP không? <strong>Không.</strong></p>
+<p>Phép thử: <em>thực thể này có khoá của riêng nó không?</em> HỌC SINH có <code>ma_hs</code>, tự định danh được, không cần biết lớp nào. Vậy nó <strong>mạnh</strong>.</p>
+<p>Còn PHỤ HUYNH thì nói <em>"Bố"</em> không định danh nổi ai — phải mượn <code>ma_hs</code>. Vậy nó <strong>yếu</strong>.</p>
+<p>Khoá ngoại nói về <strong>liên kết</strong>; thực thể yếu nói về <strong>khả năng tự định danh</strong>. Hai chuyện khác nhau.</p>
+</div>
+<h2 id="bai-tap">✍️ Bài tập<a class="headerlink" href="#bai-tap" title="Permanent link">&para;</a></h2>
+<ol>
+<li>
+<p>Với mỗi mối quan hệ dưới đây trong <code>truong_hoc</code>, hãy nói ràng buộc tham gia ở <strong>cả hai phía</strong> và chỉ ra bằng chứng trong lược đồ hoặc dữ liệu:</p>
+<p>a. HỌC SINH — <em>mượn</em> — SÁCH
+b. HỌC SINH — <em>được điểm danh</em> — (bảng <code>diem_danh</code>)</p>
+</li>
+<li>
+<p>Trường mở thêm hệ thống quản lý <strong>phòng học</strong>, và ghi lại <strong>thiết bị</strong> trong từng phòng: <em>"máy chiếu số 1 của phòng A101"</em>, <em>"máy chiếu số 1 của phòng A102"</em>. Thiết bị chỉ được đánh số trong phạm vi từng phòng. Hãy xác định: thực thể yếu, thực thể chủ, quan hệ nhận diện, khoá bộ phận, và khoá đầy đủ.</p>
+</li>
+<li>
+<p>Viết câu SQL tìm những học sinh <strong>chưa từng mượn quyển sách nào</strong>. Kết quả này chứng minh điều gì về ràng buộc tham gia của HỌC SINH trong mối quan hệ <em>mượn sách</em>?</p>
+</li>
+<li>
+<p>Cô hiệu trưởng ra quy định: <em>"Từ nay mọi lớp đều phải có giáo viên chủ nhiệm, không được để trống."</em> Cần sửa lược đồ thế nào? Việc sửa này có chạy được ngay trên dữ liệu hiện tại không? Vì sao?</p>
+</li>
+<li>
+<p>Giải thích vì sao <strong>thực thể yếu luôn luôn tham gia toàn phần</strong> vào quan hệ nhận diện. Có ngoại lệ nào không?</p>
+</li>
+</ol>
+<details class="success">
+<summary>Đáp án</summary>
+<p><strong>Câu 1a. HỌC SINH — mượn — SÁCH</strong></p>
+<table>
+<thead>
+<tr>
+<th>Phía</th>
+<th>Tham gia</th>
+<th>Bằng chứng</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>HỌC SINH</td>
+<td><strong>Bộ phận</strong></td>
+<td>Dữ liệu mẫu chỉ có <code>HS001</code>–<code>HS025</code> từng mượn; 15 bạn còn lại chưa mượn cuốn nào mà vẫn là học sinh hợp lệ</td>
+</tr>
+<tr>
+<td>SÁCH</td>
+<td><strong>Bộ phận</strong></td>
+<td>Một cuốn mới nhập kho chưa ai mượn vẫn nằm hợp lệ trong bảng <code>sach</code></td>
+</tr>
+</tbody>
+</table>
+<p>Ngược lại, xét từ phía <strong>bảng trung gian</strong> <code>muon_sach</code>: cả <code>ma_hs</code> lẫn <code>ma_sach</code> đều <code>NOT NULL</code>, nên mỗi <strong>lượt mượn</strong> bắt buộc phải gắn với một học sinh và một cuốn sách. Đây lại là tham gia toàn phần — nhưng của LƯỢT MƯỢN, không phải của HỌC SINH.</p>
+<p><strong>Câu 1b. HỌC SINH — được điểm danh</strong></p>
+<table>
+<thead>
+<tr>
+<th>Phía</th>
+<th>Tham gia</th>
+<th>Bằng chứng</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>HỌC SINH</td>
+<td><strong>Bộ phận</strong> về mặt lược đồ</td>
+<td>Không có gì ép mỗi học sinh phải có ít nhất một dòng điểm danh. Dữ liệu mẫu tình cờ đủ cả 40 bạn × 5 ngày = 200 dòng, nhưng đó là do dữ liệu, không do ràng buộc</td>
+</tr>
+<tr>
+<td>Dòng <code>diem_danh</code></td>
+<td><strong>Toàn phần</strong></td>
+<td><code>diem_danh.ma_hs</code> là <code>NOT NULL</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Câu 2.</strong></p>
+<table>
+<thead>
+<tr>
+<th>Thành phần</th>
+<th>Trả lời</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Thực thể yếu</td>
+<td>THIẾT BỊ</td>
+</tr>
+<tr>
+<td>Thực thể chủ</td>
+<td>PHÒNG HỌC</td>
+</tr>
+<tr>
+<td>Quan hệ nhận diện</td>
+<td><em>"được lắp trong"</em></td>
+</tr>
+<tr>
+<td>Khoá bộ phận</td>
+<td><code>so_thu_tu</code> — số thứ tự thiết bị trong phòng</td>
+</tr>
+<tr>
+<td>Khoá đầy đủ</td>
+<td><code>(ma_phong, so_thu_tu)</code></td>
+</tr>
+</tbody>
+</table>
+<p>Lược đồ tương ứng:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>phong_hoc(ma_phong, ten_phong, suc_chua)
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>thiet_bi(ma_phong, so_thu_tu, ten_thiet_bi, tinh_trang)
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>    PRIMARY KEY (ma_phong, so_thu_tu)
+</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>    FOREIGN KEY (ma_phong) REFERENCES phong_hoc ON DELETE CASCADE
+</span></code></pre></div>
+<p>Dấu hiệu nhận ra đây là thực thể yếu: <em>"máy chiếu số 1"</em> nói trống không thì vô nghĩa — phải hỏi <em>"số 1 của phòng nào?"</em>.</p>
+<p><strong>Câu 3.</strong></p>
+<div class="highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">ma_hs</span><span class="p">,</span><span class="w"> </span><span class="n">ho_ten</span>
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span><span class="w"> </span><span class="n">h</span>
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="k">WHERE</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="p">(</span>
+</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="w">    </span><span class="k">SELECT</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">muon_sach</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">m</span><span class="p">.</span><span class="n">ma_hs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">ma_hs</span>
+</span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="p">)</span>
+</span><span id="__span-15-6"><a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">ma_hs</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Kết quả là 15 bạn từ <code>HS026</code> tới <code>HS040</code>. (<code>NOT EXISTS</code> sẽ được dạy kỹ ở <strong>Bài 27</strong>; tạm đọc là <em>"giữ những học sinh mà không tồn tại dòng mượn sách nào của họ"</em>.)</p>
+<p>Kết quả khác rỗng chứng minh HỌC SINH tham gia <strong>bộ phận</strong> vào mối quan hệ <em>mượn sách</em>: có học sinh thật, hợp lệ, nhưng chưa từng tham gia mối quan hệ đó. Nếu tham gia là toàn phần thì câu truy vấn này bắt buộc phải trả về 0 dòng.</p>
+<p><strong>Câu 4.</strong>
+Cần đổi ràng buộc tham gia của LỚP từ bộ phận sang toàn phần, tức thêm <code>NOT NULL</code>:</p>
+<p><!-- sql:khong-chay -->
+<div class="highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="k">ALTER</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">lop</span><span class="w"> </span><span class="k">ALTER</span><span class="w"> </span><span class="k">COLUMN</span><span class="w"> </span><span class="n">ma_gvcn</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">;</span>
+</span></code></pre></div></p>
+<p><strong>Chạy ngay thì thất bại</strong>, vì lớp <code>L06</code> (9A3) đang có <code>ma_gvcn</code> là <code>NULL</code>. PostgreSQL sẽ từ chối với lỗi cho biết cột chứa giá trị null.</p>
+<p>Muốn thành công phải xử lý dữ liệu cũ trước — phân công một giáo viên cho lớp 9A3 — rồi mới <code>ALTER</code>. Đây là bài học rất thật: <strong>đổi ràng buộc trên một database đang chạy luôn phải dọn dữ liệu cũ trước.</strong></p>
+<p><strong>Câu 5.</strong>
+Vì định nghĩa của thực thể yếu là <em>"không có khoá riêng, phải mượn khoá của thực thể chủ"</em>.</p>
+<p>Giả sử có một thực thể yếu <strong>không</strong> tham gia quan hệ nhận diện — tức là không có chủ. Khi đó nó không mượn được khoá của ai, mà bản thân nó lại không có khoá riêng. Kết quả: <strong>không cách nào định danh nó</strong>, nên nó không thể là một dòng hợp lệ trong bất kỳ bảng nào.</p>
+<p>Suy ra tham gia toàn phần không phải là một lựa chọn thiết kế, mà là <strong>hệ quả logic bắt buộc</strong>. Không có ngoại lệ.</p>
+<p>Cũng chính vì thế mà <code>ON DELETE CASCADE</code> là lựa chọn tự nhiên: xoá chủ đi thì thực thể yếu mất luôn khả năng định danh, giữ lại cũng vô nghĩa.</p>
+</details>
+<h2 id="tom-tat">🔑 Tóm tắt<a class="headerlink" href="#tom-tat" title="Permanent link">&para;</a></h2>
+<ol>
+<li><strong>Ràng buộc tham gia</strong> trả lời <em>"tối thiểu bao nhiêu"</em>, còn <strong>bản số</strong> trả lời <em>"tối đa bao nhiêu"</em> — hai câu hỏi độc lập, phải hỏi cho cả hai phía.</li>
+<li><strong>Tham gia toàn phần</strong> nghĩa là mọi thực thể đều phải tham gia; trong SQL nó chính là <code>NOT NULL</code> trên cột khoá ngoại.</li>
+<li><strong>Tham gia bộ phận</strong> cho phép đứng ngoài — lớp 9A3 chưa có chủ nhiệm và học sinh <code>HS040</code> chưa có phụ huynh đều hợp lệ.</li>
+<li><strong>Thực thể yếu</strong> không có khoá riêng, phải ghép <strong>khoá chủ + khoá bộ phận</strong>; nó luôn tham gia toàn phần vào <strong>quan hệ nhận diện</strong> và bị xoá theo chủ bằng <code>ON DELETE CASCADE</code>.</li>
+<li>Khi khoá bộ phận không chắc đủ phân biệt — như <code>quan_he</code> của <code>HS029</code> — người ta thay bằng <strong>khoá nhân tạo</strong>, nhưng bản chất thực thể yếu thì vẫn giữ nguyên.</li>
+</ol>
+<hr />
+<p>⬅️ <a href="../08-moi-quan-he-va-cardinality/">Bài 8 — Mối quan hệ, bậc và bản số</a> · ➡️ <a href="../10-bieu-do-er-ky-hieu-chen/">Bài 10 — Biểu đồ ER ký hiệu Chen</a></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Trở lại mục lục
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Chân trang" >
+        
+          
+          <a href="../08-moi-quan-he-va-cardinality/" class="md-footer__link md-footer__link--prev" aria-label="Trước: Bài 8 — Mối quan hệ, bậc và bản số (Cardinality)">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Trước
+              </span>
+              <div class="md-ellipsis">
+                Bài 8 — Mối quan hệ, bậc và bản số (Cardinality)
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../10-bieu-do-er-ky-hieu-chen/" class="md-footer__link md-footer__link--next" aria-label="Sau: Bài 10 — Biểu đồ ER — ký hiệu Chen">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Sau
+              </span>
+              <div class="md-ellipsis">
+                Bài 10 — Biểu đồ ER — ký hiệu Chen
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Nội dung theo giấy phép CC BY 4.0
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/hungnguyen010518/database-tu-a-z" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.sections", "navigation.top", "navigation.footer", "navigation.indexes", "navigation.tracking", "toc.follow", "content.code.copy", "content.code.annotate", "search.highlight", "search.suggest"], "search": "../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "\u0110\u00e3 sao ch\u00e9p", "clipboard.copy": "Sao ch\u00e9p v\u00e0o b\u1ed9 nh\u1edb t\u1ea1m", "search.result.more.one": "1 t\u1eeb kh\u00e1c trong trang", "search.result.more.other": "# t\u1eeb kh\u00e1c trong trang", "search.result.none": "Kh\u00f4ng t\u00ecm th\u1ea5y t\u00e0i li\u1ec7u li\u00ean quan", "search.result.one": "1 t\u00e0i li\u1ec7u li\u00ean quan", "search.result.other": "# t\u00e0i li\u1ec7u li\u00ean quan", "search.result.placeholder": "Nh\u1eadp \u0111\u1ec3 b\u1eaft \u0111\u1ea7u t\u00ecm ki\u1ebfm", "search.result.term.missing": "Kh\u00f4ng", "select.version": "Ch\u1ecdn phi\u00ean b\u1ea3n"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.525ec568.min.js"></script>
+      
+    
+  </body>
+</html>
