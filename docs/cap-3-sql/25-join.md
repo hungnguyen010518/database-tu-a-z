@@ -460,7 +460,8 @@ LEFT JOIN giao_vien g ON g.ma_gv = l.ma_gvcn;
 Cuối cùng, đây là bảng mà cô hiệu phó đã nhờ từ đầu bài: **tên học sinh, tên lớp, tên giáo viên chủ nhiệm** — và **không đánh rơi lớp `9A3`**:
 
 ```sql
--- KỲ VỌNG: 40 dòng
+-- KỲ VỌNG: 1 dòng
+-- KỲ VỌNG: so_dong = 40
 -- KỲ VỌNG: so_khong_co_gvcn = 7
 SELECT count(*)                                AS so_dong,
        count(*) FILTER (WHERE g.ma_gv IS NULL) AS so_khong_co_gvcn
@@ -583,7 +584,8 @@ LEFT JOIN giao_vien g ON g.ma_gv  = l.ma_gvcn;
     **Câu 1.**
 
     ```sql
-    -- KỲ VỌNG: 50 dòng
+    -- KỲ VỌNG: 1 dòng
+    -- KỲ VỌNG: so_dong = 50
     -- KỲ VỌNG: so_sach_chua_ai_muon = 0
     SELECT count(*)                                AS so_dong,
            count(*) FILTER (WHERE m.ma_muon IS NULL) AS so_sach_chua_ai_muon
