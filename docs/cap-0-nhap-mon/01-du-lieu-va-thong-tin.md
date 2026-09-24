@@ -219,7 +219,7 @@ Buổi chiều dò sổ bằng tay của bạn vừa được thay bằng **năm
 3. Câu lệnh sau đọc thành tiếng Việt là gì, và kết quả trên bảng ở câu 2 là gì?
 
     <!-- sql:khong-chay -->
-```sql
+    ```sql
     SELECT ten_sach
     FROM sach
     WHERE nam_xb < 1960
