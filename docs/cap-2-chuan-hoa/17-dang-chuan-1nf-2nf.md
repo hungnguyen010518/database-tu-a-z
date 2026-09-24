@@ -48,11 +48,13 @@ Ba điều cần nhớ ngay:
 
 Chuẩn hoá tồn tại để diệt ba con bệnh sau. Chúng có tên chính thức, và ba chuyện của cô văn thư ứng đúng ba con:
 
-| Tên | English | Triệu chứng | Chuyện của cô văn thư |
+| Tên | English | Triệu chứng | Hậu quả thật trên `bang_bet` |
 |---|---|---|---|
-| **Bất thường khi thêm** | *insertion anomaly* | Muốn ghi một sự thật mà không ghi được, vì thiếu một sự thật khác chẳng liên quan | Muốn thêm học sinh mới nhưng bạn ấy chưa có điểm môn nào |
-| **Bất thường khi sửa** | *update anomaly* | Một sự thật được cất nhiều bản sao; sửa sót một bản là dữ liệu mâu thuẫn | Đổi email cô Mai phải sửa 8 dòng |
-| **Bất thường khi xoá** | *deletion anomaly* | Xoá một sự thật thì mất luôn một sự thật khác chẳng liên quan | Xoá hết điểm của một bạn là mất luôn địa chỉ nhà bạn ấy |
+| **Bất thường khi thêm** | *insertion anomaly* | Muốn ghi một sự thật mà không ghi được, vì thiếu một sự thật khác chẳng liên quan | Lớp 9A3 vừa mở, đã có chủ nhiệm nhưng **chưa tuyển học sinh nào**. Bảng mỗi dòng một học sinh, nên không có chỗ nào để ghi lớp ấy vào |
+| **Bất thường khi sửa** | *update anomaly* | Một sự thật được cất nhiều bản sao; sửa sót một bản là dữ liệu mâu thuẫn | Cô Mai đổi email → phải sửa đúng **8 dòng**; sót một dòng là cô có hai email |
+| **Bất thường khi xoá** | *deletion anomaly* | Xoá một sự thật thì mất luôn một sự thật khác chẳng liên quan | Cả **4** học sinh lớp 9A2 chuyển trường → xoá 4 dòng là mất luôn sự thật *"9A2 do cô Nhung chủ nhiệm"* |
+
+Chú ý: hai chuyện đầu của cô văn thư — không cộng nổi điểm Toán, và không có cột `PH3` — **không** thuộc ba loại này. Chúng là vi phạm **1NF**, một căn bệnh khác, và mục ngay dưới đây sẽ chữa chúng trước.
 
 ### Dạng chuẩn 1 (1NF)
 
@@ -125,7 +127,14 @@ Nhắc lại từ [Bài 16](16-phu-thuoc-ham.md): phụ thuộc bộ phận là 
 !!! tip "Hệ quả rất tiện: khoá một cột thì 2NF là miễn phí"
     Nếu **mọi** khoá dự tuyển của bảng chỉ gồm **một** thuộc tính, thì không có "một phần của khoá" nào để mà phụ thuộc bộ phận. Bảng tự động đạt 2NF.
 
-    Vì thế 2NF **chỉ đáng lo ở bảng có khoá phức hợp**. Trong `truong_hoc`, bảng duy nhất có khoá phức hợp là `phan_cong_day` — và nó không có thuộc tính không khoá nào cả, nên cũng tự động đạt 2NF.
+    Vì thế 2NF **chỉ đáng lo ở bảng có khoá dự tuyển phức hợp**. Trong `truong_hoc` có đúng **hai** bảng như vậy, và cả hai đều đạt 2NF — vì hai lý do khác nhau:
+
+    | Bảng | Khoá dự tuyển phức hợp | Thuộc tính không khoá | Vì sao vẫn đạt 2NF |
+    |---|---|---|---|
+    | `phan_cong_day` | `(ma_gv, ma_mon, ma_lop, hoc_ky)` — khoá chính | **Không có cột nào** | Điều kiện 2NF chỉ nói về thuộc tính không khoá; không có cột nào như vậy thì nó thoả một cách rỗng |
+    | `diem_danh` | `(ma_hs, ngay)` — khoá thay thế, ràng buộc `diem_danh_ma_hs_ngay_key` | `trang_thai`, `ly_do` | Cả hai phụ thuộc **đầy đủ**: chỉ biết `ma_hs` thì không biết hôm nào, chỉ biết `ngay` thì không biết của ai |
+
+    Chú ý `diem_danh`: khoá **chính** của nó là `ma_dd` — một cột — nhưng 2NF đòi kiểm trên **mọi** khoá dự tuyển, nên vẫn phải xét `(ma_hs, ngay)`. Đây đúng là chỗ mà hai chữ *"mọi khoá dự tuyển"* trong định nghĩa có sức nặng.
 
 ### Bảng thuật ngữ
 
@@ -198,6 +207,7 @@ Sáu thuộc tính trong ô đỏ chỉ cần `ma_hs` là xác định được.
 Bảng **TRƯỚC** — ba dòng đầu của `bang_bet`, đúng như `dataset/01-chua-chuan-hoa.sql` nạp vào:
 
 ```sql
+-- KỲ VỌNG: 3 dòng
 SELECT stt, ho_ten_hs, ten_lop,
        ho_ten_ph1, ho_ten_ph2,
        cac_mon_va_diem
@@ -217,6 +227,7 @@ Hai cột cuối cùng là hai vi phạm 1NF, mỗi cột một kiểu.
 Đo mức lãng phí của nhóm lặp:
 
 ```sql
+-- KỲ VỌNG: 1 dòng
 SELECT count(*)                       AS tong_so_dong,
        count(ho_ten_ph1)              AS co_phu_huynh_1,
        count(ho_ten_ph2)              AS co_phu_huynh_2,
@@ -229,15 +240,16 @@ Kết quả: `30`, `30`, `6`, `24`. Nghĩa là **24 trong 30 dòng** có hai ô 
 Đo mức khó của ô đa trị — thử tìm bạn nào điểm Toán từ 9 trở lên:
 
 ```sql
+-- KỲ VỌNG: 5 dòng
 SELECT ho_ten_hs, cac_mon_va_diem
 FROM bang_bet
 WHERE cac_mon_va_diem LIKE 'Toán:9%'
 ORDER BY ho_ten_hs;
 ```
 
-Hai dòng: Lê Hoàng Cường (`Toán:9.0`) và Ngô Quang Huy (`Toán:9.5`).
+Năm dòng: Hồ Thị Quyên (`Toán:9.2`), Lê Hoàng Cường (`Toán:9.0`), Ngô Quang Huy (`Toán:9.5`), Nguyễn Hữu Vinh (`Toán:9.0`), Vũ Thị Chi (`Toán:9.5`).
 
-Nhưng câu này **sai về nguyên tắc**, và nó chỉ chạy đúng nhờ may mắn:
+Nhưng câu này **sai về nguyên tắc**, và nó chỉ ra đúng kết quả nhờ may mắn:
 
 - Nó dựa vào việc môn Toán luôn được gõ **đầu tiên** trong chuỗi. Đổi thứ tự là hỏng.
 - `LIKE 'Toán:9%'` bắt cả `9.0` lẫn `9.5`, nhưng cũng sẽ bắt nhầm `Toán:90` nếu ai đó gõ sai.
@@ -265,6 +277,7 @@ SELECT 'HS' || lpad(b.stt::text, 3, '0')             AS ma_hs,
 FROM bang_bet AS b,
      unnest(string_to_array(b.cac_mon_va_diem, ',')) AS t(md);
 
+-- KỲ VỌNG: 1 dòng
 SELECT count(*) AS so_dong FROM b17_bet_1nf;
 ```
 
@@ -273,6 +286,7 @@ SELECT count(*) AS so_dong FROM b17_bet_1nf;
 Bảng **SAU** — ba dòng đầu của cùng bạn Nguyễn Văn An:
 
 ```sql
+-- KỲ VỌNG: 3 dòng
 SELECT ma_hs, ho_ten_hs, ten_lop, ten_mon, diem_so
 FROM b17_bet_1nf
 WHERE ma_hs = 'HS001'
@@ -288,6 +302,7 @@ ORDER BY ten_mon;
 Bây giờ `diem_so` là `numeric` thật. Câu hỏi của thầy hiệu trưởng trở nên tầm thường:
 
 ```sql
+-- KỲ VỌNG: 3 dòng
 SELECT ten_mon,
        round(avg(diem_so), 2) AS diem_trung_binh,
        count(*)               AS so_con_diem
@@ -324,6 +339,7 @@ SELECT 'HS' || lpad(stt::text, 3, '0'),
 FROM bang_bet
 WHERE ho_ten_ph2 IS NOT NULL;
 
+-- KỲ VỌNG: 1 dòng
 SELECT count(*) AS so_phu_huynh FROM b17_phu_huynh;
 ```
 
@@ -332,6 +348,7 @@ SELECT count(*) AS so_phu_huynh FROM b17_phu_huynh;
 Xem học sinh nào có nhiều hơn một phụ huynh:
 
 ```sql
+-- KỲ VỌNG: 6 dòng
 SELECT ma_hs, count(*) AS so_phu_huynh,
        string_agg(ho_ten, ' · ' ORDER BY ho_ten) AS danh_sach
 FROM b17_phu_huynh
@@ -350,6 +367,21 @@ Và đây là điều quan trọng nhất: bây giờ **học sinh thứ ba, th�
     [Bài 12](../cap-1-mo-hinh-er/12-bay-loai-khoa.md) đã khảo sát đúng bảng này và kết luận: `phu_huynh` **không có** khoá tự nhiên hợp lệ. Vì vậy lược đồ đích trong `dataset/02-chuan-hoa.sql` thêm một **khoá nhân tạo** `ma_ph` dạng `PH001`–`PH045`.
 
     Ghi nhớ: khi chuẩn hoá xong mà một bảng vẫn không tìm ra khoá tự nhiên, đáp án đúng là **thêm khoá nhân tạo**, chứ không phải ghép đại vài cột lại rồi hy vọng.
+
+!!! note "`b17_phu_huynh` khớp tới đâu so với bảng `phu_huynh` của lược đồ đích"
+    Brief của Cấp 2 nói kết quả cuối phải trùng `dataset/02-chuan-hoa.sql`. Với bảng phụ huynh thì chỉ trùng **một phần**, và cần nói rõ phần nào:
+
+    | Cột trong `phu_huynh` | Có trong `b17_phu_huynh`? | Vì sao |
+    |---|---|---|
+    | `ho_ten` | ✅ Có | Chép thẳng từ `ho_ten_ph1` / `ho_ten_ph2` |
+    | `so_dien_thoai` | ✅ Có | Chép thẳng từ `sdt_ph1` / `sdt_ph2` |
+    | `ma_hs` | ✅ Có | Khoá ngoại, sinh từ `stt` |
+    | `ma_ph` | ❌ Không | **Khoá nhân tạo** — chuẩn hoá không sinh ra nó, người thiết kế phải thêm vào ở bước chuyển ER sang bảng ([Bài 14](../cap-1-mo-hinh-er/14-chuyen-er-sang-bang.md)) |
+    | `quan_he` | ❌ Không | **`bang_bet` không hề lưu thông tin này.** Cột `ho_ten_ph1` không cho biết đó là bố, mẹ hay ông |
+
+    Hai dòng cuối là cùng một bài học, nói hai cách: **chuẩn hoá chỉ sắp xếp lại thông tin đã có, nó không phát minh ra thông tin mới.** Thiếu `quan_he` thì phải đi hỏi nhà trường; thiếu `ma_ph` thì phải tự đặt ra.
+
+    Ngược lại, ba bảng `giao_vien`, `lop`, `hoc_sinh` thì khớp **đúng tới từng giá trị** — [Bài 18](18-dang-chuan-3nf-bcnf.md) mục 3 có truy vấn đối chiếu chạy thật để chứng minh.
 
 ### 4. Chẩn đoán 2NF
 
@@ -381,6 +413,7 @@ Sáu phụ thuộc bộ phận → **`b17_bet_1nf` KHÔNG ở 2NF**.
 Đo cái giá bằng SQL:
 
 ```sql
+-- KỲ VỌNG: 5 dòng
 SELECT ma_hs, ho_ten_hs, dia_chi, count(*) AS so_ban_sao
 FROM b17_bet_1nf
 GROUP BY ma_hs, ho_ten_hs, dia_chi
@@ -425,6 +458,7 @@ CREATE TABLE b17_diem AS
 SELECT ma_hs, ten_mon, diem_so
 FROM b17_bet_1nf;
 
+-- KỲ VỌNG: 2 dòng
 SELECT 'b17_hoc_sinh' AS bang, count(*) AS so_dong FROM b17_hoc_sinh
 UNION ALL
 SELECT 'b17_diem', count(*) FROM b17_diem;
@@ -454,6 +488,7 @@ Khoá của hai bảng mới:
 Tách xong phải chứng minh nối lại ra đúng bảng cũ, không thiếu dòng nào và **không thừa dòng nào**.
 
 ```sql
+-- KỲ VỌNG: 1 dòng
 SELECT (SELECT count(*) FROM b17_bet_1nf)                       AS goc,
        (SELECT count(*) FROM b17_hoc_sinh h
           JOIN b17_diem d ON d.ma_hs = h.ma_hs)                 AS noi_lai,
@@ -481,6 +516,7 @@ Hai số `0` cuối là thứ quan trọng nhất. Chúng nói rằng phép tác
 Nhìn lại `b17_hoc_sinh`:
 
 ```sql
+-- KỲ VỌNG: 5 dòng
 SELECT ten_lop, gvcn, email_gvcn, count(*) AS so_hoc_sinh
 FROM b17_hoc_sinh
 GROUP BY ten_lop, gvcn, email_gvcn

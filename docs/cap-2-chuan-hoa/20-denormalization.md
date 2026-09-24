@@ -195,6 +195,7 @@ flowchart LR
 Đây là cái màn hình mà thầy hiệu trưởng muốn. Nó phải nối **bốn** bảng:
 
 ```sql
+-- KỲ VỌNG: 6 dòng
 SELECT l.ten_lop,
        g.ho_ten                  AS gvcn,
        count(DISTINCT h.ma_hs)   AS si_so,
@@ -239,6 +240,7 @@ SELECT h.ma_hs,
                                           AS so_con_diem        -- ← cột tính sẵn
 FROM hoc_sinh h;
 
+-- KỲ VỌNG: 1 dòng
 SELECT count(*)                                        AS tong_hoc_sinh,
        count(*) FILTER (WHERE so_con_diem = 12)        AS du_12_con_diem,
        count(*) FILTER (WHERE diem_trung_binh IS NULL) AS chua_co_diem
@@ -250,6 +252,7 @@ Một dòng: `40`, `40`, `0`.
 Bây giờ câu hỏi *"ai điểm trung bình cao nhất"* không cần `JOIN` và không cần `GROUP BY` nữa:
 
 ```sql
+-- KỲ VỌNG: 3 dòng
 SELECT ho_ten, ma_lop, diem_trung_binh
 FROM b20_hoc_sinh_pcn
 ORDER BY diem_trung_binh DESC, ma_hs
@@ -280,6 +283,7 @@ LEFT JOIN hoc_sinh h  ON h.ma_lop = l.ma_lop
 LEFT JOIN b20_diem d  ON d.ma_hs  = h.ma_hs
 GROUP BY l.ma_lop, l.ten_lop;
 
+-- KỲ VỌNG: 6 dòng
 SELECT ma_lop, ten_lop, si_so, so_con_diem
 FROM b20_tong_hop_lop
 ORDER BY ma_lop;
@@ -297,6 +301,7 @@ VALUES (999001, 'HS001', 'MH01', 2, '15 phút', 9.50, DATE '2026-03-01');
 Và đây là điều đáng sợ:
 
 ```sql
+-- KỲ VỌNG: 1 dòng
 SELECT t.ten_lop,
        t.so_con_diem AS bang_tong_hop_noi,
        (SELECT count(*)
@@ -333,6 +338,7 @@ LEFT JOIN hoc_sinh h  ON h.ma_lop = l.ma_lop
 LEFT JOIN b20_diem d  ON d.ma_hs  = h.ma_hs
 GROUP BY l.ma_lop, l.ten_lop;
 
+-- KỲ VỌNG: 1 dòng
 SELECT ten_lop, so_con_diem FROM b20_tong_hop_lop WHERE ten_lop = '8A1';
 ```
 
@@ -371,6 +377,7 @@ LEFT JOIN hoc_sinh  h ON h.ma_lop = l.ma_lop
 LEFT JOIN diem      d ON d.ma_hs  = h.ma_hs
 GROUP BY l.ma_lop, l.ten_lop, g.ho_ten;
 
+-- KỲ VỌNG: 6 dòng
 SELECT ma_lop, ten_lop, coalesce(gvcn, '(chưa có GVCN)') AS gvcn, si_so, so_con_diem
 FROM b20_mv_thong_ke_lop
 ORDER BY ma_lop;
@@ -408,6 +415,7 @@ DROP TABLE IF EXISTS b20_hoc_sinh_pcn CASCADE;
 Và kiểm lại rằng mười bảng thật **không hề bị đụng tới** trong suốt cả Cấp 2:
 
 ```sql
+-- KỲ VỌNG: 5 dòng
 SELECT 'giao_vien' AS bang, count(*) AS so_dong FROM giao_vien
 UNION ALL SELECT 'lop',      count(*) FROM lop
 UNION ALL SELECT 'hoc_sinh', count(*) FROM hoc_sinh
