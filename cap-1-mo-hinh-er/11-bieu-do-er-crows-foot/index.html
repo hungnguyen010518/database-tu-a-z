@@ -1304,69 +1304,80 @@
 <thead>
 <tr>
 <th>Nửa</th>
-<th>Vị trí</th>
+<th>Nằm ở đâu</th>
 <th>Trả lời câu hỏi</th>
 <th>Bài đã học</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Nửa <strong>ngoài</strong> (xa thực thể)</td>
-<td>sát thực thể</td>
-<td><strong>Tối thiểu bao nhiêu?</strong> → ràng buộc tham gia</td>
-<td><a href="../09-participation-va-thuc-the-yeu/">Bài 9</a></td>
-</tr>
-<tr>
-<td>Nửa <strong>trong</strong> (gần đường)</td>
-<td>phía đường nối</td>
+<td>Nửa <strong>trong</strong></td>
+<td>ký tự <strong>sát thực thể</strong></td>
 <td><strong>Tối đa bao nhiêu?</strong> → bản số</td>
 <td><a href="../08-moi-quan-he-va-cardinality/">Bài 8</a></td>
 </tr>
+<tr>
+<td>Nửa <strong>ngoài</strong></td>
+<td>ký tự <strong>xa thực thể hơn</strong>, phía đường nối</td>
+<td><strong>Tối thiểu bao nhiêu?</strong> → ràng buộc tham gia</td>
+<td><a href="../09-participation-va-thuc-the-yeu/">Bài 9</a></td>
+</tr>
 </tbody>
 </table>
-<p>Đúng hai câu hỏi mà <a href="../09-participation-va-thuc-the-yeu/">Bài 9</a> đã dạy: <em>giới hạn dưới</em> và <em>giới hạn trên</em>. Crow's Foot chỉ làm một việc: gói cả hai vào một ký hiệu duy nhất.</p>
+<p>Đúng hai câu hỏi mà <a href="../09-participation-va-thuc-the-yeu/">Bài 9</a> đã dạy: <em>giới hạn trên</em> và <em>giới hạn dưới</em>. Crow's Foot chỉ làm một việc: gói cả hai vào một ký hiệu duy nhất.</p>
+<p>Xem tận mắt trên một ví dụ. Lấy <code>giao_vien |o--o| lop</code> và tách từng ký tự ra:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>giao_vien  |  o  --  o  |  lop
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>           │  │      │  │
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>           │  │      │  └── sát lop     → nửa TRONG  → tối đa 1 lớp
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>           │  │      └───── xa lop hơn  → nửa NGOÀI  → tối thiểu 0
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>           │  └──────────── xa GV hơn   → nửa NGOÀI  → tối thiểu 0
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>           └─────────────── sát GV      → nửa TRONG  → tối đa 1 giáo viên
+</span></code></pre></div>
+<p>Nhìn theo hình: <strong>ký tự chạm vào hình chữ nhật cho biết "nhiều nhất bao nhiêu"</strong>, ký tự lùi vào trong đường nối cho biết <strong>"ít nhất bao nhiêu"</strong>.</p>
 <p>Bảng tra bốn ký hiệu, viết theo cú pháp Mermaid:</p>
+<p>Mermaid viết cùng một ký hiệu theo <strong>hai chiều</strong>, tuỳ nó nằm bên trái hay bên phải dấu <code>--</code>. Hai cột đầu của bảng dưới đây là <strong>cùng một hình vẽ</strong>, chỉ lật gương:</p>
 <table>
 <thead>
 <tr>
-<th>Mermaid</th>
-<th>Hình vẽ thật</th>
-<th>Nửa "tối thiểu"</th>
-<th>Nửa "tối đa"</th>
+<th>Viết ở <strong>bên trái</strong></th>
+<th>Viết ở <strong>bên phải</strong></th>
+<th>Nửa <strong>trong</strong> (sát thực thể) → tối đa</th>
+<th>Nửa <strong>ngoài</strong> (phía đường) → tối thiểu</th>
 <th>Đọc là</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>&#124;&#124;</code></td>
-<td>hai vạch thẳng</td>
-<td>vạch <code>&#124;</code> = <strong>tối thiểu 1</strong></td>
+<td><code>&#124;&#124;</code></td>
 <td>vạch <code>&#124;</code> = <strong>tối đa 1</strong></td>
+<td>vạch <code>&#124;</code> = <strong>tối thiểu 1</strong></td>
 <td><strong>đúng một</strong></td>
 </tr>
 <tr>
+<td><code>&#124;o</code></td>
 <td><code>o&#124;</code></td>
-<td>vòng tròn + vạch</td>
-<td>vòng tròn <code>o</code> = <strong>tối thiểu 0</strong></td>
 <td>vạch <code>&#124;</code> = <strong>tối đa 1</strong></td>
+<td>vòng tròn <code>o</code> = <strong>tối thiểu 0</strong></td>
 <td><strong>không hoặc một</strong></td>
 </tr>
 <tr>
 <td><code>}&#124;</code></td>
-<td>chân quạ + vạch</td>
+<td><code>&#124;{</code></td>
+<td>chân quạ <code>}</code> <code>{</code> = <strong>tối đa nhiều</strong></td>
 <td>vạch <code>&#124;</code> = <strong>tối thiểu 1</strong></td>
-<td>chân quạ <code>}</code> = <strong>tối đa nhiều</strong></td>
 <td><strong>một hoặc nhiều</strong></td>
 </tr>
 <tr>
 <td><code>}o</code></td>
-<td>chân quạ + vòng tròn</td>
+<td><code>o{</code></td>
+<td>chân quạ <code>}</code> <code>{</code> = <strong>tối đa nhiều</strong></td>
 <td>vòng tròn <code>o</code> = <strong>tối thiểu 0</strong></td>
-<td>chân quạ <code>}</code> = <strong>tối đa nhiều</strong></td>
 <td><strong>không hoặc nhiều</strong></td>
 </tr>
 </tbody>
 </table>
+<p>Mẹo gõ cho khỏi sai: <strong>chân quạ luôn toẽ về phía hình chữ nhật</strong>, nên nó là <code>}</code> khi nằm bên trái và <code>{</code> khi nằm bên phải.</p>
 <p>Mẹo nhớ gọn trong hai dòng:</p>
 <blockquote>
 <p><strong>Vòng tròn <code>o</code> = con số 0.</strong> Thấy vòng tròn là "được phép không có".</p>
@@ -1538,15 +1549,15 @@
 <h3 id="cu-phap-erdiagram-cua-mermaid">Cú pháp <code>erDiagram</code> của Mermaid<a class="headerlink" href="#cu-phap-erdiagram-cua-mermaid" title="Permanent link">&para;</a></h3>
 <p>Một sơ đồ Crow's Foot trong Mermaid gồm <strong>hai phần</strong>, viết trong cùng một khối:</p>
 <p><strong>Phần 1 — các đường nối.</strong> Mỗi dòng một quan hệ:</p>
-<div class="highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>&lt;bảng trái&gt; &lt;ký hiệu trái&gt;--&lt;ký hiệu phải&gt; &lt;bảng phải&gt; : "nhãn"
+<div class="highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>&lt;bảng trái&gt; &lt;ký hiệu trái&gt;--&lt;ký hiệu phải&gt; &lt;bảng phải&gt; : "nhãn"
 </span></code></pre></div>
 <p>Nhãn <strong>bắt buộc</strong> phải có và nên đặt trong ngoặc kép — nhãn tiếng Việt có dấu mà quên ngoặc kép là lỗi cú pháp.</p>
 <p><strong>Phần 2 — cột của từng bảng.</strong> Mỗi bảng một khối <code>{ }</code>, mỗi dòng một cột theo thứ tự <code>kiểu tên khoá</code>:</p>
-<div class="highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>hoc_sinh {
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    char ma_hs PK
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    varchar ho_ten
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    char ma_lop FK
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>}
+<div class="highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>hoc_sinh {
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    char ma_hs PK
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    varchar ho_ten
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    char ma_lop FK
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>}
 </span></code></pre></div>
 <p>Ba nhãn khoá mà Mermaid hiểu:</p>
 <table>
@@ -1578,7 +1589,7 @@
 <div class="admonition danger">
 <p class="admonition-title">Một cột mang hai vai thì viết <code>PK, FK</code> — có dấu phẩy</p>
 <p>Trong <code>phan_cong_day</code>, cột <code>ma_gv</code> vừa nằm trong khoá chính vừa là khoá ngoại. Viết đúng là:</p>
-<div class="highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>char ma_gv PK, FK
+<div class="highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>char ma_gv PK, FK
 </span></code></pre></div>
 <p>Viết <code>PK_FK</code> hoặc <code>PK FK</code> (thiếu dấu phẩy) đều làm sơ đồ <strong>không render được</strong>. Đây là lỗi cú pháp hay gặp nhất khi gõ <code>erDiagram</code> bằng tay.</p>
 </div>
@@ -1764,7 +1775,7 @@ diem_danh {
 </div>
 <h2 id="thuc-hanh">💻 Thực hành<a class="headerlink" href="#thuc-hanh" title="Permanent link">&para;</a></h2>
 <h3 id="suy-ra-ky-hieu-crows-foot-tu-chinh-luoc-o">Suy ra ký hiệu Crow's Foot từ chính lược đồ<a class="headerlink" href="#suy-ra-ky-hieu-crows-foot-tu-chinh-luoc-o" title="Permanent link">&para;</a></h3>
-<p>Điều hay nhất của Crow's Foot: <strong>mọi ký hiệu đều đọc được ra từ database</strong>, không cần đoán. Quy tắc đúng ba dòng:</p>
+<p>Điều hay nhất của Crow's Foot: <strong>mọi ký hiệu đều đọc được ra từ database</strong>, không cần đoán. Quy tắc gọn trong hai dòng:</p>
 <table>
 <thead>
 <tr>
@@ -1787,21 +1798,21 @@ diem_danh {
 </tbody>
 </table>
 <p>Câu lệnh sau tự sinh ra bảng đó cho <strong>mọi</strong> khoá ngoại trong database:</p>
-<div class="highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">c</span><span class="p">.</span><span class="n">conrelid</span><span class="p">::</span><span class="n">regclass</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">bang_con</span><span class="p">,</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">       </span><span class="n">a</span><span class="p">.</span><span class="n">attname</span><span class="w">            </span><span class="k">AS</span><span class="w"> </span><span class="n">cot_khoa_ngoai</span><span class="p">,</span>
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">       </span><span class="k">c</span><span class="p">.</span><span class="n">confrelid</span><span class="p">::</span><span class="n">regclass</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">bang_cha</span><span class="p">,</span>
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">       </span><span class="n">a</span><span class="p">.</span><span class="n">attnotnull</span><span class="w">         </span><span class="k">AS</span><span class="w"> </span><span class="n">bat_buoc</span><span class="p">,</span>
-</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">       </span><span class="k">EXISTS</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="mi">1</span>
-</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">               </span><span class="k">FROM</span><span class="w"> </span><span class="n">pg_constraint</span><span class="w"> </span><span class="n">u</span>
-</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">               </span><span class="k">WHERE</span><span class="w"> </span><span class="n">u</span><span class="p">.</span><span class="n">conrelid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">c</span><span class="p">.</span><span class="n">conrelid</span>
-</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">                 </span><span class="k">AND</span><span class="w"> </span><span class="n">u</span><span class="p">.</span><span class="n">contype</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="p">(</span><span class="s1">'p'</span><span class="p">,</span><span class="w"> </span><span class="s1">'u'</span><span class="p">)</span>
-</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">                 </span><span class="k">AND</span><span class="w"> </span><span class="n">u</span><span class="p">.</span><span class="n">conkey</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">ARRAY</span><span class="p">[</span><span class="n">a</span><span class="p">.</span><span class="n">attnum</span><span class="p">])</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">duy_nhat</span>
-</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="k">FROM</span><span class="w"> </span><span class="n">pg_constraint</span><span class="w"> </span><span class="k">c</span>
-</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="k">JOIN</span><span class="w"> </span><span class="n">pg_attribute</span><span class="w"> </span><span class="n">a</span>
-</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">  </span><span class="k">ON</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">attrelid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">c</span><span class="p">.</span><span class="n">conrelid</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">attnum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ANY</span><span class="w"> </span><span class="p">(</span><span class="k">c</span><span class="p">.</span><span class="n">conkey</span><span class="p">)</span>
-</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="k">WHERE</span><span class="w"> </span><span class="k">c</span><span class="p">.</span><span class="n">contype</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'f'</span>
-</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="w">  </span><span class="k">AND</span><span class="w"> </span><span class="k">c</span><span class="p">.</span><span class="n">connamespace</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'public'</span><span class="p">::</span><span class="n">regnamespace</span>
-</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="k">c</span><span class="p">.</span><span class="n">conrelid</span><span class="p">::</span><span class="n">regclass</span><span class="p">::</span><span class="nb">text</span><span class="p">,</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">attname</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">c</span><span class="p">.</span><span class="n">conrelid</span><span class="p">::</span><span class="n">regclass</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">bang_con</span><span class="p">,</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">       </span><span class="n">a</span><span class="p">.</span><span class="n">attname</span><span class="w">            </span><span class="k">AS</span><span class="w"> </span><span class="n">cot_khoa_ngoai</span><span class="p">,</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">       </span><span class="k">c</span><span class="p">.</span><span class="n">confrelid</span><span class="p">::</span><span class="n">regclass</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">bang_cha</span><span class="p">,</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">       </span><span class="n">a</span><span class="p">.</span><span class="n">attnotnull</span><span class="w">         </span><span class="k">AS</span><span class="w"> </span><span class="n">bat_buoc</span><span class="p">,</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">       </span><span class="k">EXISTS</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="mi">1</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">               </span><span class="k">FROM</span><span class="w"> </span><span class="n">pg_constraint</span><span class="w"> </span><span class="n">u</span>
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">               </span><span class="k">WHERE</span><span class="w"> </span><span class="n">u</span><span class="p">.</span><span class="n">conrelid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">c</span><span class="p">.</span><span class="n">conrelid</span>
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">                 </span><span class="k">AND</span><span class="w"> </span><span class="n">u</span><span class="p">.</span><span class="n">contype</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="p">(</span><span class="s1">'p'</span><span class="p">,</span><span class="w"> </span><span class="s1">'u'</span><span class="p">)</span>
+</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">                 </span><span class="k">AND</span><span class="w"> </span><span class="n">u</span><span class="p">.</span><span class="n">conkey</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">ARRAY</span><span class="p">[</span><span class="n">a</span><span class="p">.</span><span class="n">attnum</span><span class="p">])</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">duy_nhat</span>
+</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="k">FROM</span><span class="w"> </span><span class="n">pg_constraint</span><span class="w"> </span><span class="k">c</span>
+</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="k">JOIN</span><span class="w"> </span><span class="n">pg_attribute</span><span class="w"> </span><span class="n">a</span>
+</span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">  </span><span class="k">ON</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">attrelid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">c</span><span class="p">.</span><span class="n">conrelid</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">attnum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ANY</span><span class="w"> </span><span class="p">(</span><span class="k">c</span><span class="p">.</span><span class="n">conkey</span><span class="p">)</span>
+</span><span id="__span-4-13"><a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="k">WHERE</span><span class="w"> </span><span class="k">c</span><span class="p">.</span><span class="n">contype</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'f'</span>
+</span><span id="__span-4-14"><a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">  </span><span class="k">AND</span><span class="w"> </span><span class="k">c</span><span class="p">.</span><span class="n">connamespace</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'public'</span><span class="p">::</span><span class="n">regnamespace</span>
+</span><span id="__span-4-15"><a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="k">c</span><span class="p">.</span><span class="n">conrelid</span><span class="p">::</span><span class="n">regclass</span><span class="p">::</span><span class="nb">text</span><span class="p">,</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">attname</span><span class="p">;</span>
 </span></code></pre></div>
 <p>Kết quả <strong>11 dòng</strong> — đúng bằng số cột khoá ngoại của 10 bảng. Đọc chúng thành ký hiệu:</p>
 <table>
@@ -1860,11 +1871,11 @@ diem_danh {
 </table>
 <p><strong>Đúng một dòng</strong> có <code>duy_nhat = t</code>, và đó chính là đường <code>|o--o|</code> duy nhất của Sơ đồ 2.</p>
 <h3 id="xem-tan-mat-rang-buoc-lam-nen-quan-he-11">Xem tận mắt ràng buộc làm nên quan hệ 1:1<a class="headerlink" href="#xem-tan-mat-rang-buoc-lam-nen-quan-he-11" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">conname</span><span class="p">,</span><span class="w"> </span><span class="n">contype</span><span class="p">,</span><span class="w"> </span><span class="n">pg_get_constraintdef</span><span class="p">(</span><span class="n">oid</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">dinh_nghia</span>
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="k">FROM</span><span class="w"> </span><span class="n">pg_constraint</span>
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">conrelid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'lop'</span><span class="p">::</span><span class="n">regclass</span>
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span><span class="k">AND</span><span class="w"> </span><span class="n">contype</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="p">(</span><span class="s1">'p'</span><span class="p">,</span><span class="w"> </span><span class="s1">'u'</span><span class="p">,</span><span class="w"> </span><span class="s1">'f'</span><span class="p">)</span>
-</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">contype</span><span class="p">,</span><span class="w"> </span><span class="n">conname</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">conname</span><span class="p">,</span><span class="w"> </span><span class="n">contype</span><span class="p">,</span><span class="w"> </span><span class="n">pg_get_constraintdef</span><span class="p">(</span><span class="n">oid</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">dinh_nghia</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="k">FROM</span><span class="w"> </span><span class="n">pg_constraint</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">conrelid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'lop'</span><span class="p">::</span><span class="n">regclass</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span><span class="k">AND</span><span class="w"> </span><span class="n">contype</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="p">(</span><span class="s1">'p'</span><span class="p">,</span><span class="w"> </span><span class="s1">'u'</span><span class="p">,</span><span class="w"> </span><span class="s1">'f'</span><span class="p">)</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">contype</span><span class="p">,</span><span class="w"> </span><span class="n">conname</span><span class="p">;</span>
 </span></code></pre></div>
 <p>Trong kết quả có ba dòng đáng chú ý:</p>
 <ul>
@@ -1874,10 +1885,10 @@ diem_danh {
 </ul>
 <p>Hai ràng buộc riêng biệt, đặt trên <strong>cùng một cột</strong>, và phải có <strong>cả hai</strong> thì mới ra <code>|o--o|</code>. Bỏ <code>lop_ma_gvcn_key</code> đi thì sơ đồ tụt xuống thành <code>|o--o{</code> — mỗi giáo viên chủ nhiệm được nhiều lớp.</p>
 <h3 id="kiem-chung-bang-du-lieu-unique-ang-lam-gi">Kiểm chứng bằng dữ liệu: <code>UNIQUE</code> đang làm gì<a class="headerlink" href="#kiem-chung-bang-du-lieu-unique-ang-lam-gi" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w">                  </span><span class="k">AS</span><span class="w"> </span><span class="n">so_lop</span><span class="p">,</span>
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">       </span><span class="k">count</span><span class="p">(</span><span class="n">ma_gvcn</span><span class="p">)</span><span class="w">            </span><span class="k">AS</span><span class="w"> </span><span class="n">so_lop_co_gvcn</span><span class="p">,</span>
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">       </span><span class="k">count</span><span class="p">(</span><span class="k">DISTINCT</span><span class="w"> </span><span class="n">ma_gvcn</span><span class="p">)</span><span class="w">   </span><span class="k">AS</span><span class="w"> </span><span class="n">so_gvcn_khac_nhau</span>
-</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="k">FROM</span><span class="w"> </span><span class="n">lop</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w">                  </span><span class="k">AS</span><span class="w"> </span><span class="n">so_lop</span><span class="p">,</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">       </span><span class="k">count</span><span class="p">(</span><span class="n">ma_gvcn</span><span class="p">)</span><span class="w">            </span><span class="k">AS</span><span class="w"> </span><span class="n">so_lop_co_gvcn</span><span class="p">,</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">       </span><span class="k">count</span><span class="p">(</span><span class="k">DISTINCT</span><span class="w"> </span><span class="n">ma_gvcn</span><span class="p">)</span><span class="w">   </span><span class="k">AS</span><span class="w"> </span><span class="n">so_gvcn_khac_nhau</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="k">FROM</span><span class="w"> </span><span class="n">lop</span><span class="p">;</span>
 </span></code></pre></div>
 <p>Kết quả: <code>6</code>, <code>5</code>, <code>5</code>.</p>
 <p>Đọc ra ký hiệu:</p>
@@ -1887,22 +1898,22 @@ diem_danh {
 </ul>
 <p>Ghép lại: <code>|o--o|</code>. Sơ đồ và dữ liệu khớp nhau.</p>
 <h3 id="so-sanh-voi-mot-quan-he-1n">So sánh với một quan hệ 1:N<a class="headerlink" href="#so-sanh-voi-mot-quan-he-1n" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w">                </span><span class="k">AS</span><span class="w"> </span><span class="n">so_hoc_sinh</span><span class="p">,</span>
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">       </span><span class="k">count</span><span class="p">(</span><span class="k">DISTINCT</span><span class="w"> </span><span class="n">ma_lop</span><span class="p">)</span><span class="w">  </span><span class="k">AS</span><span class="w"> </span><span class="n">so_lop_khac_nhau</span>
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w">                </span><span class="k">AS</span><span class="w"> </span><span class="n">so_hoc_sinh</span><span class="p">,</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">       </span><span class="k">count</span><span class="p">(</span><span class="k">DISTINCT</span><span class="w"> </span><span class="n">ma_lop</span><span class="p">)</span><span class="w">  </span><span class="k">AS</span><span class="w"> </span><span class="n">so_lop_khac_nhau</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span><span class="p">;</span>
 </span></code></pre></div>
 <p>Kết quả: <code>40</code> và <code>6</code>.</p>
 <p>Bốn mươi dòng dồn vào sáu giá trị — nghĩa là có lớp chứa nhiều học sinh. Đó là <strong>chân quạ</strong>. Và vì <code>ma_lop</code> là <code>NOT NULL</code> nên phía <code>lop</code> là vạch. Ghép lại: <code>lop ||--o{ hoc_sinh</code>.</p>
 <h3 id="bang-nao-la-bang-trung-gian">Bảng nào là bảng trung gian<a class="headerlink" href="#bang-nao-la-bang-trung-gian" title="Permanent link">&para;</a></h3>
 <p>Bảng trung gian có một dấu hiệu rất dễ nhận: <strong>có từ hai khoá ngoại trở lên</strong>.</p>
-<div class="highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">conrelid</span><span class="p">::</span><span class="n">regclass</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">bang</span><span class="p">,</span>
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">       </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w">           </span><span class="k">AS</span><span class="w"> </span><span class="n">so_khoa_ngoai</span>
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="k">FROM</span><span class="w"> </span><span class="n">pg_constraint</span>
-</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">contype</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'f'</span>
-</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">  </span><span class="k">AND</span><span class="w"> </span><span class="n">connamespace</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'public'</span><span class="p">::</span><span class="n">regnamespace</span>
-</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="mi">1</span>
-</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="k">HAVING</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">2</span>
-</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="k">DESC</span><span class="p">,</span><span class="w"> </span><span class="n">conrelid</span><span class="p">::</span><span class="n">regclass</span><span class="p">::</span><span class="nb">text</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">conrelid</span><span class="p">::</span><span class="n">regclass</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">bang</span><span class="p">,</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">       </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w">           </span><span class="k">AS</span><span class="w"> </span><span class="n">so_khoa_ngoai</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="k">FROM</span><span class="w"> </span><span class="n">pg_constraint</span>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">contype</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'f'</span>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">  </span><span class="k">AND</span><span class="w"> </span><span class="n">connamespace</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'public'</span><span class="p">::</span><span class="n">regnamespace</span>
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="mi">1</span>
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="k">HAVING</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">2</span>
+</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="k">DESC</span><span class="p">,</span><span class="w"> </span><span class="n">conrelid</span><span class="p">::</span><span class="n">regclass</span><span class="p">::</span><span class="nb">text</span><span class="p">;</span>
 </span></code></pre></div>
 <p>Ba bảng hiện ra: <code>phan_cong_day</code> (3 khoá ngoại), <code>diem</code> (2) và <code>muon_sach</code> (2).</p>
 <p>Đúng ba hình chữ nhật mà <a href="../10-bieu-do-er-ky-hieu-chen/">Bài 10</a> đã nói là <strong>vốn là hình thoi</strong> trong ký hiệu Chen. Crow's Foot buộc chúng phải hiện ra thành bảng — và câu SQL trên tìm lại được chúng chỉ bằng cách đếm khoá ngoại.</p>
@@ -1915,7 +1926,7 @@ diem_danh {
 </div>
 <div class="admonition warning">
 <p class="admonition-title">Lỗi 2: Quên nửa 'tối thiểu'</p>
-<p>Vẽ <code>lop |{--o{ hoc_sinh</code> rồi bảo <em>"xong, 1:N đấy"</em>. Nhưng <code>|{</code> nghĩa là <em>"một hoặc nhiều lớp cho mỗi học sinh"</em> — tức là một học sinh học <strong>nhiều lớp cùng lúc</strong>.</p>
+<p>Vẽ <code>lop }|--o{ hoc_sinh</code> rồi bảo <em>"xong, 1:N đấy"</em>. Nhưng <code>}|</code> nghĩa là <em>"một hoặc nhiều lớp cho mỗi học sinh"</em> — tức là một học sinh học <strong>nhiều lớp cùng lúc</strong>. Chân quạ <code>}</code> sát <code>lop</code> đã nói "tối đa nhiều" rồi.</p>
 <p>Mỗi ký hiệu có <strong>hai</strong> ký tự và cả hai đều mang nghĩa. Bỏ qua một nửa là mô tả sai lược đồ.</p>
 </div>
 <div class="admonition warning">
@@ -1925,7 +1936,7 @@ diem_danh {
 </div>
 <div class="admonition warning">
 <p class="admonition-title">Lỗi 4: Viết <code>PK_FK</code> trong <code>erDiagram</code></p>
-<p><div class="highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>char ma_gv PK_FK
+<p><div class="highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>char ma_gv PK_FK
 </span></code></pre></div>
 Mermaid không hiểu <code>PK_FK</code>, và cả sơ đồ sẽ không hiện ra — chỉ còn một khung báo lỗi đỏ.</p>
 <p>Viết đúng là <code>PK, FK</code> — <strong>hai nhãn, ngăn bằng dấu phẩy</strong>.</p>
@@ -1956,11 +1967,11 @@ d. <code>mon_hoc }o--o{ giao_vien</code></p>
 </li>
 <li>
 <p>Một bạn vẽ sơ đồ sau cho hệ thống thư viện và nói <em>"em vẽ theo Crow's Foot"</em>:</p>
-<div class="highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>hoc_sinh }o--o{ sach : "mượn"
-</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>muon_sach {
-</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>    serial ma_muon PK
-</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>    date ngay_muon
-</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>}
+<div class="highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>hoc_sinh }o--o{ sach : "mượn"
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>muon_sach {
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>    serial ma_muon PK
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>    date ngay_muon
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>}
 </span></code></pre></div>
 <p>Chỉ ra <strong>hai</strong> lỗi và viết lại cho đúng.</p>
 </li>
@@ -1996,10 +2007,10 @@ d. <code>mon_hoc }o--o{ giao_vien</code></p>
 </table>
 <p>Lưu ý câu c: ký hiệu <code>|{</code> (một hoặc nhiều) là chỗ duy nhất trong bốn câu có ràng buộc tham gia <strong>toàn phần ở phía nhiều</strong> — và đó cũng là ràng buộc mà SQL không cưỡng chế nổi bằng <code>NOT NULL</code> (<a href="../09-participation-va-thuc-the-yeu/">Bài 9</a>).</p>
 <p><strong>Câu 2.</strong></p>
-<div class="highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>cau_lac_bo ||--|{ hoc_sinh : "có thành viên"
+<div class="highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>cau_lac_bo ||--|{ hoc_sinh : "có thành viên"
 </span></code></pre></div>
 <p>Sai! Đọc lại: <code>||</code> sát <code>cau_lac_bo</code> nghĩa là <em>mỗi học sinh phải có đúng một câu lạc bộ</em> — trái với đề bài (được phép không tham gia). Viết đúng là:</p>
-<div class="highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>cau_lac_bo |o--|{ hoc_sinh : "có thành viên"
+<div class="highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>cau_lac_bo |o--|{ hoc_sinh : "có thành viên"
 </span></code></pre></div>
 <ul>
 <li><code>|o</code> sát <code>cau_lac_bo</code>: mỗi học sinh có <strong>0 hoặc 1</strong> câu lạc bộ.</li>
@@ -2011,20 +2022,20 @@ d. <code>mon_hoc }o--o{ giao_vien</code></p>
 <p>Câu chuyện đời thực: <strong>một giáo viên được phép chủ nhiệm nhiều lớp cùng lúc</strong>. Quan hệ tụt từ 1:1 xuống 1:N. Nửa ngoài vẫn là vòng tròn (lớp vẫn được phép chưa có chủ nhiệm), chỉ nửa trong đổi từ vạch sang chân quạ.</p>
 <p>Đây đúng là điều <a href="../08-moi-quan-he-va-cardinality/">Bài 8</a> đã cảnh báo: <strong><code>UNIQUE</code> là toàn bộ khác biệt giữa 1:1 và 1:N ở mức bảng.</strong></p>
 <p><strong>Câu 4.</strong></p>
-<div class="highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">bang</span><span class="p">,</span><span class="w"> </span><span class="k">sum</span><span class="p">(</span><span class="n">so_duong</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_duong_cham_vao</span>
-</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="k">FROM</span><span class="w"> </span><span class="p">(</span>
-</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">    </span><span class="k">SELECT</span><span class="w"> </span><span class="n">conrelid</span><span class="p">::</span><span class="n">regclass</span><span class="p">::</span><span class="nb">text</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">bang</span><span class="p">,</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_duong</span>
-</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">    </span><span class="k">FROM</span><span class="w"> </span><span class="n">pg_constraint</span>
-</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="w">    </span><span class="k">WHERE</span><span class="w"> </span><span class="n">contype</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'f'</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">connamespace</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'public'</span><span class="p">::</span><span class="n">regnamespace</span>
-</span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="w">    </span><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="mi">1</span>
-</span><span id="__span-12-7"><a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="w">    </span><span class="k">UNION</span><span class="w"> </span><span class="k">ALL</span>
-</span><span id="__span-12-8"><a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="w">    </span><span class="k">SELECT</span><span class="w"> </span><span class="n">confrelid</span><span class="p">::</span><span class="n">regclass</span><span class="p">::</span><span class="nb">text</span><span class="p">,</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span>
-</span><span id="__span-12-9"><a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="w">    </span><span class="k">FROM</span><span class="w"> </span><span class="n">pg_constraint</span>
-</span><span id="__span-12-10"><a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="w">    </span><span class="k">WHERE</span><span class="w"> </span><span class="n">contype</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'f'</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">connamespace</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'public'</span><span class="p">::</span><span class="n">regnamespace</span>
-</span><span id="__span-12-11"><a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="w">    </span><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="mi">1</span>
-</span><span id="__span-12-12"><a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a><span class="p">)</span><span class="w"> </span><span class="n">t</span>
-</span><span id="__span-12-13"><a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">bang</span>
-</span><span id="__span-12-14"><a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="k">DESC</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">bang</span><span class="p">,</span><span class="w"> </span><span class="k">sum</span><span class="p">(</span><span class="n">so_duong</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_duong_cham_vao</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="k">FROM</span><span class="w"> </span><span class="p">(</span>
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="w">    </span><span class="k">SELECT</span><span class="w"> </span><span class="n">conrelid</span><span class="p">::</span><span class="n">regclass</span><span class="p">::</span><span class="nb">text</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">bang</span><span class="p">,</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_duong</span>
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="w">    </span><span class="k">FROM</span><span class="w"> </span><span class="n">pg_constraint</span>
+</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="w">    </span><span class="k">WHERE</span><span class="w"> </span><span class="n">contype</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'f'</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">connamespace</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'public'</span><span class="p">::</span><span class="n">regnamespace</span>
+</span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="w">    </span><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="mi">1</span>
+</span><span id="__span-13-7"><a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="w">    </span><span class="k">UNION</span><span class="w"> </span><span class="k">ALL</span>
+</span><span id="__span-13-8"><a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="w">    </span><span class="k">SELECT</span><span class="w"> </span><span class="n">confrelid</span><span class="p">::</span><span class="n">regclass</span><span class="p">::</span><span class="nb">text</span><span class="p">,</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span>
+</span><span id="__span-13-9"><a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="w">    </span><span class="k">FROM</span><span class="w"> </span><span class="n">pg_constraint</span>
+</span><span id="__span-13-10"><a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="w">    </span><span class="k">WHERE</span><span class="w"> </span><span class="n">contype</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'f'</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">connamespace</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'public'</span><span class="p">::</span><span class="n">regnamespace</span>
+</span><span id="__span-13-11"><a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a><span class="w">    </span><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="mi">1</span>
+</span><span id="__span-13-12"><a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a><span class="p">)</span><span class="w"> </span><span class="n">t</span>
+</span><span id="__span-13-13"><a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">bang</span>
+</span><span id="__span-13-14"><a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="k">DESC</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
 </span></code></pre></div>
 <p><code>hoc_sinh</code> đứng đầu: nó có 1 khoá ngoại đi ra (<code>ma_lop</code>) và 4 khoá ngoại trỏ tới (<code>phu_huynh</code>, <code>diem</code>, <code>muon_sach</code>, <code>diem_danh</code>) — tổng 5 đường.</p>
 <p>Điều này khớp đúng với Sơ đồ 2: <code>hoc_sinh</code> là <strong>trung tâm</strong> của cả biểu đồ. Trong một database thật, bảng có nhiều đường chạm vào nhất thường là bảng quan trọng nhất — và cũng là bảng nguy hiểm nhất khi xoá dòng, điều <a href="../15-rang-buoc-toan-ven/">Bài 15</a> sẽ bàn.</p>
@@ -2035,16 +2046,16 @@ Hai lỗi:</p>
 <li><strong><code>muon_sach</code> không nối vào đâu cả, và thiếu hai khoá ngoại.</strong> Một bảng trung gian mà không có <code>ma_hs</code>, <code>ma_sach</code> thì không trung gian được gì.</li>
 </ol>
 <p>Viết lại:</p>
-<div class="highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>hoc_sinh ||--o{ muon_sach : "mượn"
-</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>sach ||--o{ muon_sach : "được mượn"
-</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>muon_sach {
-</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>    serial ma_muon PK
-</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>    char ma_hs FK
-</span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>    char ma_sach FK
-</span><span id="__span-13-7"><a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>    date ngay_muon
-</span><span id="__span-13-8"><a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>    date ngay_tra_du_kien
-</span><span id="__span-13-9"><a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>    date ngay_tra_thuc_te
-</span><span id="__span-13-10"><a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>}
+<div class="highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>hoc_sinh ||--o{ muon_sach : "mượn"
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>sach ||--o{ muon_sach : "được mượn"
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>muon_sach {
+</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>    serial ma_muon PK
+</span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>    char ma_hs FK
+</span><span id="__span-14-6"><a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>    char ma_sach FK
+</span><span id="__span-14-7"><a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>    date ngay_muon
+</span><span id="__span-14-8"><a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>    date ngay_tra_du_kien
+</span><span id="__span-14-9"><a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>    date ngay_tra_thuc_te
+</span><span id="__span-14-10"><a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>}
 </span></code></pre></div>
 </details>
 <h2 id="tom-tat">🔑 Tóm tắt<a class="headerlink" href="#tom-tat" title="Permanent link">&para;</a></h2>

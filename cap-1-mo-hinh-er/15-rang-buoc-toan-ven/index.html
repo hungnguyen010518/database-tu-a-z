@@ -1357,7 +1357,7 @@
 <h2 id="cau-chuyen-mo-au">🧠 Câu chuyện mở đầu<a class="headerlink" href="#cau-chuyen-mo-au" title="Permanent link">&para;</a></h2>
 <p>Chiều thứ Sáu, cô văn thư nhập điểm kiểm tra học kỳ.</p>
 <p>Bàn phím số bị kẹt, và thay vì <code>8.5</code> cô gõ thành <code>85</code>. Cô không để ý, bấm Lưu.</p>
-<p>Tuần sau, phần mềm in bảng tổng kết. Điểm trung bình của lớp 8A1 là <strong>14.2</strong>. Cô hiệu trưởng nhìn tờ giấy, ngẩng lên: <em>"Thang điểm 10 mà trung bình 14 à?"</em></p>
+<p>Tuần sau, phần mềm in phiếu tổng kết từng học sinh. Phiếu của bạn Nguyễn Văn An ghi điểm trung bình <strong>13.4</strong> — cao hơn cả điểm tối đa của thang điểm 10. Cô hiệu trưởng nhìn tờ giấy, ngẩng lên: <em>"Thang điểm 10 mà trung bình 13 à?"</em></p>
 <p>Cả buổi chiều hôm ấy trôi qua trong việc dò lại 480 con điểm để tìm con số sai.</p>
 <p>Hôm sau, cô văn thư kể chuyện với anh lập trình viên. Anh hỏi lại một câu: <em>"Sao lúc cô bấm Lưu, phần mềm không chặn ngay?"</em></p>
 <p>Rồi anh kể tiếp một chuyện suýt còn tệ hơn. Tháng trước, có người định xoá lớp <code>8A1</code> khỏi hệ thống vì tưởng lớp đó đã giải thể. Nếu xoá thành công, <strong>sáu học sinh</strong> trong lớp sẽ trỏ về một mã lớp không còn tồn tại — và không ai biết các bạn ấy thuộc lớp nào nữa. May mà database <strong>từ chối</strong>.</p>
@@ -1433,7 +1433,7 @@
 </table>
 <p>Ba loại đầu là <strong>ràng buộc chung của mô hình quan hệ</strong> — bất kỳ database nào cũng cần. Loại thứ tư thì tuỳ từng bài toán.</p>
 <h3 id="toan-ven-mien">Toàn vẹn miền<a class="headerlink" href="#toan-ven-mien" title="Permanent link">&para;</a></h3>
-<p><strong>Miền giá trị</strong> (<em>domain</em>) đã được <a href="../06-mo-hinh-quan-he/">Bài 6</a> định nghĩa: tập hợp mọi giá trị hợp lệ của một cột.</p>
+<p><strong>Miền giá trị</strong> đã được <a href="../06-mo-hinh-quan-he/">Bài 6</a> định nghĩa: tập hợp mọi giá trị hợp lệ của một cột.</p>
 <p>Toàn vẹn miền được cưỡng chế bằng bốn tầng, từ thô tới tinh:</p>
 <table>
 <thead>
@@ -1570,7 +1570,7 @@
 <li><code>NO ACTION</code> kiểm <strong>muộn hơn</strong>, và nếu ràng buộc được khai <code>DEFERRABLE INITIALLY DEFERRED</code> thì việc kiểm dời hẳn tới lúc <code>COMMIT</code>.</li>
 </ul>
 <p>Sự khác biệt này rất thật. Với <code>NO ACTION</code> hoãn, bạn được phép xoá dòng cha <strong>trước</strong>, rồi sửa các dòng con <strong>sau</strong>, miễn là mọi thứ ổn thoả trước khi <code>COMMIT</code>. Với <code>RESTRICT</code> thì câu <code>DELETE</code> hỏng ngay tại chỗ, không có cơ hội sửa.</p>
-<p>Đây gọi là <strong>ràng buộc hoãn</strong> (<em>deferrable constraint</em>), và phần Thực hành sẽ chạy thật cả hai để bạn thấy khác biệt.</p>
+<p>Đây gọi là <strong>ràng buộc hoãn</strong> — thuật ngữ <a href="../11-bieu-do-er-crows-foot/">Bài 11</a> đã nhắc tới — và phần Thực hành sẽ chạy thật cả hai để bạn thấy khác biệt.</p>
 <p>Nếu bạn không viết gì cả, chuẩn SQL quy định mặc định là <strong><code>NO ACTION</code></strong>.</p>
 </div>
 <p>Năm hành vi này trong <code>truong_hoc</code> được dùng như sau:</p>
@@ -1666,8 +1666,12 @@
 <td>Cần đếm dòng ở <strong>bảng khác</strong></td>
 </tr>
 <tr>
-<td><em>"Mỗi lớp mỗi môn chỉ một giáo viên dạy"</em></td>
-<td>Cần so sánh với <strong>các dòng khác</strong> cùng bảng</td>
+<td><em>"Một học sinh không mượn quá 3 cuốn cùng lúc"</em></td>
+<td>Cần đếm <strong>các dòng khác</strong> cùng bảng</td>
+</tr>
+<tr>
+<td><em>"Tổng số tiết dạy của một giáo viên không quá 20 mỗi tuần"</em></td>
+<td>Cần cộng qua <strong>nhiều dòng, nhiều bảng</strong></td>
 </tr>
 <tr>
 <td><em>"Mọi người trong trường phải thuộc một lớp con"</em></td>
@@ -1677,6 +1681,11 @@
 </table>
 <p>Lý do chung: <code>CHECK</code> trong PostgreSQL chỉ được nhìn <strong>đúng dòng đang xét</strong>. Muốn vượt ra ngoài phải dùng trigger.</p>
 <p>Điều cần làm ngay bây giờ: <strong>ghi những luật này vào tài liệu thiết kế</strong>. Ràng buộc không được ghi lại là ràng buộc sẽ bị vi phạm.</p>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Đừng vội xếp mọi luật nghiệp vụ vào nhóm 'phải dùng trigger'</p>
+<p>Luật <em>"mỗi lớp, mỗi môn, mỗi học kỳ chỉ một giáo viên dạy"</em> <strong>không</strong> nằm trong bảng trên, dù trông rất giống. Nó cưỡng chế được trọn vẹn bằng SQL thuần — chỉ cần <code>UNIQUE (ma_mon, ma_lop, hoc_ky)</code> trên <code>phan_cong_day</code>, như <a href="../14-chuyen-er-sang-bang/">Bài 14</a> đã phân tích.</p>
+<p>Phép thử: <strong>luật này có diễn đạt được thành 'tổ hợp cột X không bao giờ trùng' không?</strong> Nếu có, <code>UNIQUE</code> là đủ. Chỉ khi luật cần <strong>đếm</strong> hoặc <strong>cộng</strong> qua nhiều dòng thì mới phải dùng trigger.</p>
 </div>
 <h3 id="bang-thuat-ngu">Bảng thuật ngữ<a class="headerlink" href="#bang-thuat-ngu" title="Permanent link">&para;</a></h3>
 <table>
@@ -1842,9 +1851,16 @@
 <p>Thử tiếp một vi phạm miền kiểu khác — giá trị ngoài danh sách cho phép:</p>
 <!-- sql:co-y-loi -->
 <div class="highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">giao_vien</span><span class="w"> </span><span class="p">(</span><span class="n">ma_gv</span><span class="p">,</span><span class="w"> </span><span class="n">ho_ten</span><span class="p">,</span><span class="w"> </span><span class="n">ngay_sinh</span><span class="p">,</span><span class="w"> </span><span class="n">gioi_tinh</span><span class="p">,</span><span class="w"> </span><span class="n">mon_chuyen_mon</span><span class="p">,</span><span class="w"> </span><span class="n">email</span><span class="p">,</span><span class="w"> </span><span class="n">luong</span><span class="p">)</span>
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="s1">'GV98'</span><span class="p">,</span><span class="w"> </span><span class="s1">'Thử Giới Tính'</span><span class="p">,</span><span class="w"> </span><span class="s1">'1990-01-01'</span><span class="p">,</span><span class="w"> </span><span class="s1">'Khác'</span><span class="p">,</span><span class="w"> </span><span class="s1">'Toán'</span><span class="p">,</span><span class="w"> </span><span class="s1">'thu98@thcs.edu.vn'</span><span class="p">,</span><span class="w"> </span><span class="mi">10000000</span><span class="p">);</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="s1">'GV98'</span><span class="p">,</span><span class="w"> </span><span class="s1">'Thử Giới Tính'</span><span class="p">,</span><span class="w"> </span><span class="s1">'1990-01-01'</span><span class="p">,</span><span class="w"> </span><span class="s1">'Nu'</span><span class="p">,</span><span class="w"> </span><span class="s1">'Toán'</span><span class="p">,</span><span class="w"> </span><span class="s1">'thu98@thcs.edu.vn'</span><span class="p">,</span><span class="w"> </span><span class="mi">10000000</span><span class="p">);</span>
 </span></code></pre></div>
-<p>Bị chặn bởi <code>giao_vien_gioi_tinh_check</code>, vì lược đồ khai <code>CHECK (gioi_tinh IN ('Nam', 'Nữ'))</code>.</p>
+<p>Bị chặn bởi <code>giao_vien_gioi_tinh_check</code>, vì lược đồ khai <code>CHECK (gioi_tinh IN ('Nam', 'Nữ'))</code> — mà <code>'Nu'</code> không dấu thì không nằm trong danh sách.</p>
+<div class="admonition tip">
+<p class="admonition-title">Vì sao ví dụ trên dùng <code>'Nu'</code> chứ không dùng <code>'Khác'</code> cho dễ hiểu?</p>
+<p>Vì <strong>hai tầng của toàn vẹn miền chặn theo thứ tự</strong>, và tầng thô chặn trước.</p>
+<p>Cột khai <code>gioi_tinh VARCHAR(3)</code>. Chuỗi <code>'Khác'</code> dài <strong>4 ký tự</strong>, nên PostgreSQL từ chối ngay ở bước <strong>ép kiểu</strong> với <code>ERROR: value too long for type character varying(3)</code> — <code>CHECK</code> còn chưa được chạy tới.</p>
+<p>Muốn dạy <code>CHECK</code> thì phải chọn một giá trị <strong>hợp lệ về kiểu nhưng sai về nội dung</strong>. <code>'Nu'</code> dài 2 ký tự nên lọt qua tầng kiểu, rồi mới đụng <code>CHECK</code>.</p>
+<p>Đây là điều đáng nhớ khi đọc thông báo lỗi: <strong>lỗi bạn nhận được là lỗi của tầng gần nhất</strong>, không nhất thiết là lỗi bạn đang nghĩ tới.</p>
+</div>
 <h3 id="toan-ven-thuc-the-khoa-chinh-khong-uoc-null">Toàn vẹn thực thể — khoá chính không được <code>NULL</code><a class="headerlink" href="#toan-ven-thuc-the-khoa-chinh-khong-uoc-null" title="Permanent link">&para;</a></h3>
 <p>Trước hết, xem PostgreSQL tự thêm <code>NOT NULL</code> như thế nào:</p>
 <div class="highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">attrelid</span><span class="p">::</span><span class="n">regclass</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">bang</span><span class="p">,</span>
@@ -2058,7 +2074,9 @@
 </span><span id="__span-26-4"><a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">conname</span><span class="p">;</span>
 </span></code></pre></div>
 <p>Hai dòng, ứng với hai luật nghiệp vụ: <em>"ngày trả dự kiến không được trước ngày mượn"</em> và <em>"ngày trả thực tế, nếu có, không được trước ngày mượn"</em>.</p>
-<p>Chú ý vế <code>ngay_tra_thuc_te IS NULL OR ...</code> trong ràng buộc thứ hai. Không có vế đó thì mọi lượt mượn <strong>chưa trả</strong> đều bị chặn — vì trong SQL, so sánh với <code>NULL</code> không cho ra <code>true</code>.</p>
+<p>Chú ý vế <code>ngay_tra_thuc_te IS NULL OR ...</code> trong ràng buộc thứ hai — và hãy đọc kỹ, vì chỗ này rất dễ hiểu ngược.</p>
+<p>Vế đó <strong>không</strong> phải để cho lượt mượn chưa trả lọt qua. Bỏ nó đi thì lượt mượn chưa trả <strong>vẫn được nhận</strong>, vì <code>CHECK</code> chỉ từ chối khi biểu thức cho ra <code>false</code>; gặp <code>NULL</code> thì biểu thức cho ra <code>UNKNOWN</code>, và <code>CHECK</code> <strong>chấp nhận</strong>.</p>
+<p>Vế đó ở đó để <strong>nói rõ ý định</strong> cho người đọc lược đồ: <em>"trường hợp chưa trả là hợp lệ, tôi đã nghĩ tới nó rồi."</em> Phần Lỗi thường gặp sẽ quay lại điểm này, và <strong>Bài 24</strong> sẽ dạy kỹ logic ba giá trị.</p>
 <p>Thử vi phạm:</p>
 <!-- sql:co-y-loi -->
 <div class="highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">muon_sach</span><span class="w"> </span><span class="p">(</span><span class="n">ma_hs</span><span class="p">,</span><span class="w"> </span><span class="n">ma_sach</span><span class="p">,</span><span class="w"> </span><span class="n">ngay_muon</span><span class="p">,</span><span class="w"> </span><span class="n">ngay_tra_du_kien</span><span class="p">,</span><span class="w"> </span><span class="n">ngay_tra_thuc_te</span><span class="p">)</span>
@@ -2116,10 +2134,11 @@
 <p>Dùng <code>SET DEFAULT</code> thì <strong>luôn phải tạo sẵn dòng mặc định</strong> ở bảng cha trước.</p>
 </div>
 <div class="admonition warning">
-<p class="admonition-title">Lỗi 5: Quên vế <code>IS NULL</code> trong <code>CHECK</code></p>
-<p>Viết <code>CHECK (ngay_tra_thuc_te &gt;= ngay_muon)</code> cho <code>muon_sach</code>.</p>
-<p>Trông đúng, nhưng nó chặn luôn mọi lượt mượn <strong>chưa trả</strong>. Vì khi <code>ngay_tra_thuc_te</code> là <code>NULL</code>, phép so sánh cho ra <code>NULL</code> chứ không phải <code>true</code>.</p>
-<p>Thực ra <code>CHECK</code> coi kết quả <code>NULL</code> là <strong>chấp nhận được</strong> — nên câu trên vẫn chạy. Nhưng đừng dựa vào hành vi tinh tế đó: hãy viết rõ <code>CHECK (ngay_tra_thuc_te IS NULL OR ngay_tra_thuc_te &gt;= ngay_muon)</code> như lược đồ mẫu, để người đọc sau hiểu ngay ý định của bạn. <strong>Bài 24</strong> sẽ dạy kỹ logic ba giá trị.</p>
+<p class="admonition-title">Lỗi 5: Tưởng <code>CHECK</code> chặn được giá trị <code>NULL</code></p>
+<p>Khai <code>dia_chi VARCHAR(120) CHECK (length(dia_chi) &gt;= 5)</code> rồi yên tâm rằng cột này không thể để trống.</p>
+<p>Không đúng. <strong><code>CHECK</code> chỉ từ chối khi biểu thức cho ra <code>false</code>.</strong> Khi cột là <code>NULL</code>, biểu thức cho ra <code>UNKNOWN</code>, và <code>CHECK</code> <strong>chấp nhận</strong> dòng đó. Muốn cấm trống thì phải khai thêm <code>NOT NULL</code> — hai ràng buộc riêng biệt, lo hai việc khác nhau.</p>
+<p>Hệ quả ngược lại cũng đúng, và nó giải thích lược đồ của <code>muon_sach</code>: câu <code>CHECK (ngay_tra_thuc_te &gt;= ngay_muon)</code> <strong>không</strong> chặn lượt mượn chưa trả, vì <code>NULL &gt;= ngày</code> cho ra <code>UNKNOWN</code>. Vế <code>ngay_tra_thuc_te IS NULL OR ...</code> trong lược đồ mẫu <strong>không làm thay đổi hành vi</strong> — nó chỉ ghi rõ ý định cho người đọc, và đó vẫn là cách viết nên theo.</p>
+<p>Nhớ một câu: <strong><code>NOT NULL</code> chặn ô trống, <code>CHECK</code> chặn ô sai.</strong> <strong>Bài 24</strong> sẽ dạy kỹ logic ba giá trị.</p>
 </div>
 <div class="admonition warning">
 <p class="admonition-title">Lỗi 6: Thêm ràng buộc vào bảng đang có dữ liệu sai</p>

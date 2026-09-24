@@ -879,6 +879,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#cau-hoi-ung-bang-nay-co-khoa-tu-nhien-hop-le-khong" class="md-nav__link">
+    <span class="md-ellipsis">
+      Câu hỏi đúng: bảng này CÓ khoá tự nhiên hợp lệ không?
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#7-khoa-ngoai-noi-sang-bang-khac" class="md-nav__link">
     <span class="md-ellipsis">
       7. Khoá ngoại — nối sang bảng khác
@@ -1267,6 +1276,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#cau-hoi-ung-bang-nay-co-khoa-tu-nhien-hop-le-khong" class="md-nav__link">
+    <span class="md-ellipsis">
+      Câu hỏi đúng: bảng này CÓ khoá tự nhiên hợp lệ không?
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#7-khoa-ngoai-noi-sang-bang-khac" class="md-nav__link">
     <span class="md-ellipsis">
       7. Khoá ngoại — nối sang bảng khác
@@ -1535,7 +1553,8 @@
 <h3 id="6-khoa-nhan-tao-va-khoa-tu-nhien">6. Khoá nhân tạo — và khoá tự nhiên<a class="headerlink" href="#6-khoa-nhan-tao-va-khoa-tu-nhien" title="Permanent link">&para;</a></h3>
 <p>Hai khái niệm này luôn đi thành cặp:</p>
 <p><strong>Khoá tự nhiên</strong> (<em>natural key</em>) là khoá được làm từ <strong>dữ liệu có thật ngoài đời</strong>, thứ tồn tại độc lập với database: số căn cước, mã học sinh nhà trường cấp, tên môn học, mã ISBN của sách.</p>
-<p><strong>Khoá nhân tạo</strong> (<em>surrogate key</em>) là khoá do <strong>hệ thống tự phát sinh</strong>, không mang ý nghĩa gì ngoài việc đánh số: cột <code>SERIAL</code>, <code>UUID</code>, số thứ tự tăng dần.</p>
+<p><strong>Khoá nhân tạo</strong> (<em>surrogate key</em>) là khoá <strong>không mang ý nghĩa nghiệp vụ nào</strong> — nó chỉ tồn tại để định danh dòng, và người dùng cuối không bao giờ cần đọc tới nó: cột <code>SERIAL</code>, <code>UUID</code>, hay một dãy mã do người thiết kế tự đặt.</p>
+<p>Chú ý: thuộc tính định nghĩa là <strong>không mang ý nghĩa</strong>, chứ không phải <em>"ai sinh ra nó"</em>. Một mã do database tự tăng và một mã do người nhập gõ tay đều là khoá nhân tạo, miễn là chúng không mô tả gì về thực thể ngoài đời.</p>
 <table>
 <thead>
 <tr>
@@ -1548,7 +1567,7 @@
 <tr>
 <td>Nguồn gốc</td>
 <td>Có sẵn ngoài đời</td>
-<td>Database bịa ra</td>
+<td>Do hệ thống hoặc người thiết kế bịa ra</td>
 </tr>
 <tr>
 <td>Ví dụ trong <code>truong_hoc</code></td>
@@ -1604,6 +1623,7 @@
 </tr>
 </tbody>
 </table>
+<p>Chú ý <code>ma_ph</code>: nó <strong>không</strong> phải cột <code>SERIAL</code>, mà là dãy <code>PH001</code>–<code>PH045</code> do người thiết kế tự đặt. Nó vẫn là khoá nhân tạo, vì <code>PH001</code> không mô tả gì về con người ấy cả.</p>
 <div class="admonition danger">
 <p class="admonition-title">Khoá nhân tạo KHÔNG phải thuộc tính trong biểu đồ ER</p>
 <p><code>ma_ph</code> và <code>ma_dd</code> là hai cột <strong>được sinh ra ở bước chuyển ER sang bảng</strong> (<a href="../14-chuyen-er-sang-bang/">Bài 14</a> Bước 2), không phải đặc điểm có thật của người phụ huynh hay của một buổi điểm danh.</p>
@@ -1632,13 +1652,14 @@
 <p>Ngược lại, <code>ma_hs</code> và <code>ma_gv</code> <strong>là</strong> thuộc tính trong biểu đồ ER, vì nhà trường cấp mã đó cho từng người ở ngoài đời — chúng là <strong>khoá tự nhiên</strong>.</p>
 </div>
 <div class="admonition question">
-<p class="admonition-title"><code>ma_dd</code> và <code>ma_ph</code> khác nhau ở một điểm quan trọng</p>
-<p>Cả hai đều là khoá nhân tạo. Nhưng <code>diem_danh</code> <strong>vẫn có</strong> một khoá tự nhiên hợp lệ song song — cặp <code>(ma_hs, ngay)</code> — và lược đồ giữ nó bằng <code>UNIQUE (ma_hs, ngay)</code>.</p>
-<p>Còn <code>phu_huynh</code> thì <strong>không có</strong> khoá tự nhiên nào hợp lệ, nên không có ràng buộc <code>UNIQUE</code> nào tương ứng.</p>
-<p>Nói theo ngôn ngữ của bài này: <code>(ma_hs, ngay)</code> là một <strong>khoá thay thế</strong> của <code>diem_danh</code>; còn <code>phu_huynh</code> không có khoá thay thế nào cả.</p>
+<p class="admonition-title">Bốn khoá nhân tạo, nhưng chỉ MỘT bảng có khoá thay thế</p>
+<p>Cả bốn cột trên đều là khoá nhân tạo. Nhưng chỉ <code>diem_danh</code> <strong>còn có thêm</strong> một khoá tự nhiên hợp lệ song song — cặp <code>(ma_hs, ngay)</code> — và lược đồ giữ nó bằng <code>UNIQUE (ma_hs, ngay)</code>.</p>
+<p>Ba bảng kia <strong>không có</strong> khoá tự nhiên nào hợp lệ, nên không có ràng buộc <code>UNIQUE</code> nào tương ứng, và đó là điều <strong>đúng</strong> chứ không phải thiếu sót.</p>
+<p>Nói theo ngôn ngữ của bài này: <code>(ma_hs, ngay)</code> là một <strong>khoá thay thế</strong> của <code>diem_danh</code>; còn <code>phu_huynh</code>, <code>muon_sach</code>, <code>diem</code> không có khoá thay thế nào cả.</p>
+<p>Phần Thực hành mục 6 sẽ dựng bảng so sánh đầy đủ bốn trường hợp, và chỉ ra vì sao <code>diem</code> rất dễ bị xếp nhầm.</p>
 </div>
 <h3 id="7-khoa-ngoai">7. Khoá ngoại<a class="headerlink" href="#7-khoa-ngoai" title="Permanent link">&para;</a></h3>
-<p><strong>Khoá ngoại</strong> (<em>foreign key</em>) là <strong>một hoặc nhiều cột trong bảng này, mang giá trị của khoá chính bảng kia</strong>, để nối hai bảng lại với nhau.</p>
+<p><strong>Khoá ngoại</strong> — thuật ngữ đã gặp lần đầu ở <a href="../../cap-0-nhap-mon/02-tu-so-giay-den-excel/">Bài 2</a> — là <strong>một hoặc nhiều cột trong bảng này, mang giá trị của khoá chính bảng kia</strong>, để nối hai bảng lại với nhau.</p>
 <p>Nó khác hẳn sáu loại trên ở một điểm căn bản: <strong>sáu loại kia nói về việc phân biệt các dòng trong CÙNG một bảng; khoá ngoại nói về mối liên hệ GIỮA hai bảng.</strong></p>
 <p>Cột <code>hoc_sinh.ma_lop</code> là khoá ngoại trỏ về <code>lop.ma_lop</code>. Nó <strong>không</strong> phân biệt các học sinh — bốn mươi học sinh chỉ có sáu giá trị <code>ma_lop</code>.</p>
 <p>Ba điều database bảo đảm nhờ khoá ngoại:</p>
@@ -1989,37 +2010,108 @@ hoc_sinh {
 </span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="k">FROM</span><span class="w"> </span><span class="n">phu_huynh</span><span class="p">;</span>
 </span></code></pre></div>
 <p>Kết quả <code>45</code> và <code>45</code>.</p>
-<p>Bây giờ so sánh một khoá nhân tạo với khoá tự nhiên song song của cùng bảng <code>diem</code>:</p>
+<p>Bây giờ tới một <strong>câu hỏi bẫy</strong>. Bảng <code>diem</code> dùng khoá nhân tạo <code>ma_diem</code>. Vậy nó còn khoá tự nhiên nào nữa không?</p>
 <div class="highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w">                                             </span><span class="k">AS</span><span class="w"> </span><span class="n">so_dong</span><span class="p">,</span>
-</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="w">       </span><span class="k">count</span><span class="p">(</span><span class="k">DISTINCT</span><span class="w"> </span><span class="n">ma_diem</span><span class="p">)</span><span class="w">                              </span><span class="k">AS</span><span class="w"> </span><span class="n">theo_khoa_nhan_tao</span><span class="p">,</span>
-</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="w">       </span><span class="k">count</span><span class="p">(</span><span class="k">DISTINCT</span><span class="w"> </span><span class="p">(</span><span class="n">ma_hs</span><span class="p">,</span><span class="w"> </span><span class="n">ma_mon</span><span class="p">,</span><span class="w"> </span><span class="n">hoc_ky</span><span class="p">,</span><span class="w"> </span><span class="n">loai_diem</span><span class="p">))</span><span class="w">   </span><span class="k">AS</span><span class="w"> </span><span class="n">theo_khoa_tu_nhien</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="w">       </span><span class="k">count</span><span class="p">(</span><span class="k">DISTINCT</span><span class="w"> </span><span class="n">ma_diem</span><span class="p">)</span><span class="w">                              </span><span class="k">AS</span><span class="w"> </span><span class="n">theo_ma_diem</span><span class="p">,</span>
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="w">       </span><span class="k">count</span><span class="p">(</span><span class="k">DISTINCT</span><span class="w"> </span><span class="p">(</span><span class="n">ma_hs</span><span class="p">,</span><span class="w"> </span><span class="n">ma_mon</span><span class="p">,</span><span class="w"> </span><span class="n">hoc_ky</span><span class="p">,</span><span class="w"> </span><span class="n">loai_diem</span><span class="p">))</span><span class="w">   </span><span class="k">AS</span><span class="w"> </span><span class="n">theo_bon_cot</span>
 </span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="k">FROM</span><span class="w"> </span><span class="n">diem</span><span class="p">;</span>
 </span></code></pre></div>
 <p>Kết quả: <code>480</code>, <code>480</code>, <code>480</code>.</p>
-<p>Cả hai đều phân biệt được mọi dòng. Người thiết kế chọn <code>ma_diem</code> vì nó là <strong>một cột số ngắn</strong> thay vì bốn cột; nhưng hãy chú ý một điều:</p>
-<div class="admonition warning">
-<p class="admonition-title"><code>(ma_hs, ma_mon, hoc_ky, loai_diem)</code> đang KHÔNG được bảo vệ</p>
-<p>Truy vấn trên cho thấy tổ hợp này hiện không trùng. Nhưng bảng <code>diem</code> <strong>không có</strong> ràng buộc <code>UNIQUE</code> nào trên nó — hãy chạy lại truy vấn ở mục 4 mà xem.</p>
-<p>Nghĩa là ngày mai ai đó hoàn toàn có thể nhập <strong>hai</strong> điểm Học kỳ môn Toán học kỳ 1 cho cùng bạn An, và database vui vẻ nhận cả hai.</p>
-<p>Đây đúng là cái bẫy mà mục 2 đã cảnh báo, lần này xảy ra trên một bảng thật. Thêm khoá nhân tạo mà quên bảo vệ khoá tự nhiên là lỗi thiết kế rất phổ biến. Đối chiếu: <code>diem_danh</code> <strong>không</strong> mắc lỗi này, vì nó có <code>UNIQUE (ma_hs, ngay)</code>.</p>
+<p>Nhìn con số thì bốn cột kia cũng phân biệt được mọi dòng. Rất dễ kết luận: <em>"vậy <code>(ma_hs, ma_mon, hoc_ky, loai_diem)</code> là khoá tự nhiên của <code>diem</code>, và lược đồ đã quên đặt <code>UNIQUE</code> lên nó."</em></p>
+<p><strong>Kết luận đó sai</strong> — và nó sai vì đúng cái lỗi mà Quy tắc vàng ở mục 2 vừa cảnh báo.</p>
+<div class="admonition danger">
+<p class="admonition-title">Đây là bẫy Quy tắc vàng, lần này giăng trên một bảng thật</p>
+<p>Hãy hỏi câu hỏi <strong>nghiệp vụ</strong> thay vì nhìn con số: <em>"Một học sinh có thể có hai con điểm cùng môn, cùng học kỳ, cùng loại không?"</em></p>
+<p>Mở lược đồ ra xem miền giá trị của <code>loai_diem</code>:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>loai_diem VARCHAR(10) NOT NULL CHECK (loai_diem IN ('15 phút', '1 tiết', 'Học kỳ'))
+</span></code></pre></div>
+<p>Có <code>'15 phút'</code>. Mà ở trường Việt Nam, một học sinh có <strong>nhiều</strong> bài kiểm tra 15 phút môn Toán trong một học kỳ là chuyện hoàn toàn bình thường. Vậy câu trả lời là <strong>CÓ</strong> — và tổ hợp bốn cột kia <strong>không phải</strong> khoá.</p>
+<p>Thế tại sao <code>count(DISTINCT ...)</code> lại ra đúng <code>480</code>?</p>
+</div>
+<p>Chạy câu này là rõ:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">loai_diem</span><span class="p">,</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_dong</span>
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="k">FROM</span><span class="w"> </span><span class="n">diem</span>
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">loai_diem</span>
+</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">loai_diem</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Chỉ <strong>hai</strong> dòng: <code>1 tiết</code> (<code>120</code>) và <code>Học kỳ</code> (<code>360</code>). Dữ liệu mẫu <strong>không có con điểm 15 phút nào</strong>.</p>
+<p>Con số <code>480 = 480</code> chỉ là sự trùng hợp của bộ dữ liệu mẫu, không phải một luật. Đúng như Quy tắc vàng nói: <strong>dữ liệu không chứng minh được khoá.</strong></p>
+<h3 id="cau-hoi-ung-bang-nay-co-khoa-tu-nhien-hop-le-khong">Câu hỏi đúng: bảng này CÓ khoá tự nhiên hợp lệ không?<a class="headerlink" href="#cau-hoi-ung-bang-nay-co-khoa-tu-nhien-hop-le-khong" title="Permanent link">&para;</a></h3>
+<p>Với mỗi bảng dùng khoá nhân tạo, câu hỏi cần đặt <strong>không</strong> phải <em>"ai đó có quên <code>UNIQUE</code> không?"</em> mà là:</p>
+<blockquote>
+<p><strong>Ở mức nghiệp vụ, có tồn tại một tổ hợp cột nào KHÔNG BAO GIỜ được phép trùng không?</strong></p>
+</blockquote>
+<p>Nếu <strong>có</strong> thì phải giữ nó bằng <code>UNIQUE</code>. Nếu <strong>không</strong> thì khoá nhân tạo đứng một mình là đúng, và việc thiếu <code>UNIQUE</code> <strong>không</strong> phải thiếu sót.</p>
+<p>Bốn bảng dùng khoá nhân tạo của <code>truong_hoc</code>, bốn câu trả lời khác nhau:</p>
+<table>
+<thead>
+<tr>
+<th>Bảng</th>
+<th>Có khoá tự nhiên hợp lệ?</th>
+<th>Lý do <strong>nghiệp vụ</strong></th>
+<th>Lược đồ làm gì</th>
+<th>Đánh giá</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>diem_danh</code></td>
+<td><strong>Có</strong> — <code>(ma_hs, ngay)</code></td>
+<td>Một học sinh mỗi ngày chỉ điểm danh một lần</td>
+<td><code>ma_dd</code> + <strong>giữ</strong> <code>UNIQUE (ma_hs, ngay)</code></td>
+<td>Đúng</td>
+</tr>
+<tr>
+<td><code>phu_huynh</code></td>
+<td><strong>Không</strong></td>
+<td><code>HS029</code> có hai người cùng ghi <code>Bố</code> — <a href="../09-participation-va-thuc-the-yeu/">Bài 9</a> đã chứng minh</td>
+<td><code>ma_ph</code>, không có <code>UNIQUE</code></td>
+<td>Đúng</td>
+</tr>
+<tr>
+<td><code>muon_sach</code></td>
+<td><strong>Không</strong></td>
+<td>Mượn lại cùng một cuốn sách nhiều lần là bình thường</td>
+<td><code>ma_muon</code>, không có <code>UNIQUE</code></td>
+<td>Đúng</td>
+</tr>
+<tr>
+<td><code>diem</code></td>
+<td><strong>Không</strong></td>
+<td>Nhiều bài 15 phút cùng môn cùng học kỳ là bình thường</td>
+<td><code>ma_diem</code>, không có <code>UNIQUE</code></td>
+<td>Đúng</td>
+</tr>
+</tbody>
+</table>
+<p>Ba bảng dưới cùng <strong>không</strong> thiếu sót gì cả — chúng đúng, vì đơn giản là <strong>không có gì để giữ</strong>. Chỉ <code>diem_danh</code> có khoá tự nhiên hợp lệ, và lược đồ giữ nó thật.</p>
+<div class="admonition danger">
+<p class="admonition-title">ĐỪNG thêm <code>UNIQUE (ma_hs, ma_mon, hoc_ky, loai_diem)</code> vào bảng <code>diem</code></p>
+<p>Đây là cái bẫy nguy hiểm nhất của cả bài, vì câu lệnh sau <strong>sẽ chạy thành công</strong> trên dữ liệu hiện tại:</p>
+<p><!-- sql:khong-chay -->
+<div class="highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="k">ALTER</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">diem</span><span class="w"> </span><span class="k">ADD</span><span class="w"> </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">diem_khoa_tu_nhien</span>
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="w">    </span><span class="k">UNIQUE</span><span class="w"> </span><span class="p">(</span><span class="n">ma_hs</span><span class="p">,</span><span class="w"> </span><span class="n">ma_mon</span><span class="p">,</span><span class="w"> </span><span class="n">hoc_ky</span><span class="p">,</span><span class="w"> </span><span class="n">loai_diem</span><span class="p">);</span>
+</span></code></pre></div></p>
+<p>Chạy được, không báo lỗi gì — vì dữ liệu mẫu chưa có điểm 15 phút. Nhưng từ giây phút đó, database <strong>vĩnh viễn từ chối</strong> con điểm 15 phút thứ hai của một học sinh, trong khi ràng buộc <code>CHECK</code> vẫn cho phép giá trị <code>'15 phút'</code> tồn tại. Lược đồ tự mâu thuẫn với chính nó.</p>
+<p>Bài học: <strong>một ràng buộc chạy được không có nghĩa là nó đúng.</strong> Trước khi thêm bất kỳ <code>UNIQUE</code> nào, hãy hỏi câu hỏi nghiệp vụ, đừng hỏi dữ liệu.</p>
 </div>
 <h3 id="7-khoa-ngoai-noi-sang-bang-khac">7. Khoá ngoại — nối sang bảng khác<a class="headerlink" href="#7-khoa-ngoai-noi-sang-bang-khac" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">conname</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">ten_rang_buoc</span><span class="p">,</span>
-</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="w">       </span><span class="n">pg_get_constraintdef</span><span class="p">(</span><span class="n">oid</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">dinh_nghia</span>
-</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="k">FROM</span><span class="w"> </span><span class="n">pg_constraint</span>
-</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">conrelid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'hoc_sinh'</span><span class="p">::</span><span class="n">regclass</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">contype</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'f'</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">conname</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">ten_rang_buoc</span><span class="p">,</span>
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="w">       </span><span class="n">pg_get_constraintdef</span><span class="p">(</span><span class="n">oid</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">dinh_nghia</span>
+</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="k">FROM</span><span class="w"> </span><span class="n">pg_constraint</span>
+</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">conrelid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'hoc_sinh'</span><span class="p">::</span><span class="n">regclass</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">contype</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'f'</span><span class="p">;</span>
 </span></code></pre></div>
 <p>Một dòng: <code>hoc_sinh_ma_lop_fkey</code> — <code>FOREIGN KEY (ma_lop) REFERENCES lop(ma_lop) ON DELETE RESTRICT</code>.</p>
 <p>Và khoá ngoại <strong>không</strong> phân biệt được các dòng — đây là điểm khác biệt căn bản so với sáu loại trên:</p>
-<div class="highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w">               </span><span class="k">AS</span><span class="w"> </span><span class="n">so_hoc_sinh</span><span class="p">,</span>
-</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="w">       </span><span class="k">count</span><span class="p">(</span><span class="k">DISTINCT</span><span class="w"> </span><span class="n">ma_lop</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_gia_tri_khoa_ngoai</span>
-</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w">               </span><span class="k">AS</span><span class="w"> </span><span class="n">so_hoc_sinh</span><span class="p">,</span>
+</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="w">       </span><span class="k">count</span><span class="p">(</span><span class="k">DISTINCT</span><span class="w"> </span><span class="n">ma_lop</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_gia_tri_khoa_ngoai</span>
+</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span><span class="p">;</span>
 </span></code></pre></div>
 <p>Kết quả: <code>40</code> và <code>6</code>. Số tổ hợp <strong>nhỏ hơn hẳn</strong> số dòng → <code>ma_lop</code> không phải siêu khoá của <code>hoc_sinh</code>, và không bao giờ có ý định làm điều đó.</p>
 <p>Cái nó bảo đảm là <strong>mọi giá trị đều có thật ở bảng cha</strong>:</p>
-<div class="highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_hoc_sinh_tro_vao_lop_khong_ton_tai</span>
-</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span><span class="w"> </span><span class="n">h</span>
-</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="k">WHERE</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">lop</span><span class="w"> </span><span class="n">l</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">ma_lop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">ma_lop</span><span class="p">);</span>
+<div class="highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_hoc_sinh_tro_vao_lop_khong_ton_tai</span>
+</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span><span class="w"> </span><span class="n">h</span>
+</span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="k">WHERE</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">lop</span><span class="w"> </span><span class="n">l</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">ma_lop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">ma_lop</span><span class="p">);</span>
 </span></code></pre></div>
 <p>Kết quả <code>0</code> — và đó là điều <strong>duy nhất</strong> có thể xảy ra, vì ràng buộc khoá ngoại chặn từ lúc <code>INSERT</code>. <a href="../15-rang-buoc-toan-ven/">Bài 15</a> gọi tên hiện tượng này là <strong>toàn vẹn tham chiếu</strong>.</p>
 <h2 id="loi-thuong-gap">⚠️ Lỗi thường gặp<a class="headerlink" href="#loi-thuong-gap" title="Permanent link">&para;</a></h2>
@@ -2036,7 +2128,7 @@ hoc_sinh {
 <div class="admonition warning">
 <p class="admonition-title">Lỗi 3: Nghĩ khoá chính phải là một cột</p>
 <p>Thấy <code>phan_cong_day</code> không có cột <code>ma_pc</code> nào nên tưởng bảng này <em>"quên khoá chính"</em>.</p>
-<p>Khoá chính của nó là <strong>phức hợp bốn cột</strong>. Thêm một cột <code>SERIAL</code> vào cho "gọn" nghe thì hay, nhưng nếu thêm mà <strong>không</strong> giữ <code>UNIQUE (ma_gv, ma_mon, ma_lop, hoc_ky)</code> thì bạn vừa mở cửa cho dữ liệu trùng — đúng cái bẫy mà bảng <code>diem</code> đang mắc.</p>
+<p>Khoá chính của nó là <strong>phức hợp bốn cột</strong>. Thêm một cột <code>SERIAL</code> vào cho "gọn" nghe thì hay, nhưng nếu thêm mà <strong>không</strong> giữ <code>UNIQUE (ma_gv, ma_mon, ma_lop, hoc_ky)</code> thì bạn vừa mở cửa cho dữ liệu trùng. Ở đây tổ hợp bốn cột <strong>là</strong> khoá tự nhiên hợp lệ — một giáo viên không thể được phân công cùng một môn, cùng một lớp, cùng một học kỳ hai lần — nên nó bắt buộc phải được giữ.</p>
 </div>
 <div class="admonition warning">
 <p class="admonition-title">Lỗi 4: Dùng dữ liệu cá nhân hay đổi làm khoá chính</p>
@@ -2050,10 +2142,16 @@ hoc_sinh {
 <p>Khoá ngoại chỉ cần <strong>trùng kiểu dữ liệu và trỏ đúng bảng</strong>, tên thì đặt sao cho dễ hiểu. <code>ma_gvcn</code> nói rõ <em>"giáo viên chủ nhiệm"</em> — tốt hơn hẳn <code>ma_gv</code> chung chung. Và nếu một bảng có <strong>hai</strong> khoá ngoại cùng trỏ về một bảng cha thì bắt buộc phải đặt tên khác nhau.</p>
 </div>
 <div class="admonition warning">
-<p class="admonition-title">Lỗi 6: Thêm khoá nhân tạo rồi vứt bỏ khoá tự nhiên</p>
-<p>Đây là lỗi tinh vi nhất, và bảng <code>diem</code> là ví dụ sống.</p>
-<p>Thêm <code>ma_diem SERIAL PRIMARY KEY</code> là hợp lý. Nhưng làm xong mà không thêm <code>UNIQUE (ma_hs, ma_mon, hoc_ky, loai_diem)</code> thì bảng mất khả năng chống trùng.</p>
-<p><strong>Khoá nhân tạo bổ sung cho khoá tự nhiên, chứ không thay thế nó.</strong> Mỗi khi thêm một cột <code>SERIAL</code>, hãy tự hỏi ngay: <em>"khoá tự nhiên của bảng này là gì, và tôi đã khai <code>UNIQUE</code> cho nó chưa?"</em></p>
+<p class="admonition-title">Lỗi 6: Thêm khoá nhân tạo rồi vứt bỏ khoá tự nhiên ĐANG CÓ</p>
+<p>Bảng <code>diem_danh</code> là ví dụ về cách làm <strong>đúng</strong>: có <code>ma_dd SERIAL PRIMARY KEY</code>, <strong>và vẫn giữ</strong> <code>UNIQUE (ma_hs, ngay)</code>.</p>
+<p>Thử tưởng tượng ai đó bỏ ràng buộc <code>UNIQUE</code> kia đi vì nghĩ <em>"đã có khoá chính rồi thì thừa"</em>. Hậu quả: một học sinh có thể bị điểm danh hai lần trong cùng một ngày, một lần <code>Có mặt</code> một lần <code>Vắng</code>, và không ai biết dòng nào đúng.</p>
+<p><strong>Khoá nhân tạo bổ sung cho khoá tự nhiên, chứ không thay thế nó.</strong> Mỗi khi thêm một cột <code>SERIAL</code>, hãy tự hỏi ngay: <em>"bảng này có khoá tự nhiên hợp lệ không?"</em></p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Lỗi 7: Thêm <code>UNIQUE</code> cho một khoá tự nhiên KHÔNG tồn tại</p>
+<p>Đây là lỗi ngược lại của Lỗi 6, và nó tinh vi hơn hẳn, vì câu <code>ALTER TABLE</code> sẽ <strong>chạy thành công</strong>.</p>
+<p>Thấy <code>diem</code> có khoá nhân tạo mà không có <code>UNIQUE</code> nào, người học vội kết luận <em>"thiếu rồi"</em> và thêm <code>UNIQUE (ma_hs, ma_mon, hoc_ky, loai_diem)</code>. Dữ liệu hiện tại chấp nhận, nên không có cảnh báo gì. Nhưng lược đồ vừa cấm vĩnh viễn con điểm 15 phút thứ hai — một chuyện hoàn toàn bình thường ở trường.</p>
+<p>Phép thử trước khi thêm bất kỳ <code>UNIQUE</code> nào: <strong>hỏi nghiệp vụ, đừng hỏi dữ liệu.</strong> Câu hỏi đúng là <em>"tổ hợp này có bao giờ được phép trùng không?"</em>, không phải <em>"tổ hợp này hiện có trùng không?"</em></p>
 </div>
 <h2 id="bai-tap">✍️ Bài tập<a class="headerlink" href="#bai-tap" title="Permanent link">&para;</a></h2>
 <ol>
@@ -2075,7 +2173,7 @@ d. <code>ma_gvcn</code> thuộc loại khoá nào?</p>
 </li>
 <li>
 <p>Một bạn thiết kế bảng danh bạ học sinh như sau và nói <em>"<code>so_dien_thoai</code> chắc chắn không trùng nên em cho nó làm khoá chính"</em>:</p>
-<div class="highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>danh_ba(so_dien_thoai, ho_ten, ma_lop, dia_chi)
+<div class="highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>danh_ba(so_dien_thoai, ho_ten, ma_lop, dia_chi)
 </span></code></pre></div>
 <p>Nêu <strong>ba</strong> vấn đề với thiết kế này.</p>
 </li>
@@ -2111,13 +2209,13 @@ d. <code>ma_gvcn</code> thuộc loại khoá nào?</p>
 </table>
 <p>Chỗ d là câu phân biệt hay nhất của bài: <strong>không phải cứ <code>UNIQUE</code> là khoá thay thế.</strong></p>
 <p><strong>Câu 2.</strong></p>
-<div class="highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w">                                      </span><span class="k">AS</span><span class="w"> </span><span class="n">so_dong</span><span class="p">,</span>
-</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="w">       </span><span class="k">count</span><span class="p">(</span><span class="k">DISTINCT</span><span class="w"> </span><span class="p">(</span><span class="n">ma_hs</span><span class="p">,</span><span class="w"> </span><span class="n">ma_sach</span><span class="p">,</span><span class="w"> </span><span class="n">ngay_muon</span><span class="p">))</span><span class="w">   </span><span class="k">AS</span><span class="w"> </span><span class="n">so_to_hop</span>
-</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="k">FROM</span><span class="w"> </span><span class="n">muon_sach</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w">                                      </span><span class="k">AS</span><span class="w"> </span><span class="n">so_dong</span><span class="p">,</span>
+</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="w">       </span><span class="k">count</span><span class="p">(</span><span class="k">DISTINCT</span><span class="w"> </span><span class="p">(</span><span class="n">ma_hs</span><span class="p">,</span><span class="w"> </span><span class="n">ma_sach</span><span class="p">,</span><span class="w"> </span><span class="n">ngay_muon</span><span class="p">))</span><span class="w">   </span><span class="k">AS</span><span class="w"> </span><span class="n">so_to_hop</span>
+</span><span id="__span-21-3"><a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="k">FROM</span><span class="w"> </span><span class="n">muon_sach</span><span class="p">;</span>
 </span></code></pre></div>
 <p>Về <strong>dữ liệu</strong>: hai con số bằng nhau (<code>50</code> và <code>50</code>) — tổ hợp này hiện không trùng.</p>
 <p>Về <strong>lược đồ</strong>: không có ràng buộc <code>UNIQUE</code> nào trên tổ hợp đó. Chạy lại truy vấn liệt kê <code>contype = 'u'</code> ở phần Thực hành mục 4 là thấy — chỉ có năm ràng buộc, không cái nào thuộc <code>muon_sach</code>.</p>
-<p>Kết luận: về <strong>nghiệp vụ</strong> nó <strong>không nên</strong> là khoá dự tuyển, vì một bạn hoàn toàn có thể mượn cùng một cuốn hai lần trong cùng ngày (mượn sáng, trả trưa, mượn lại chiều). Nên ở đây khoá nhân tạo <code>ma_muon</code> là lựa chọn đúng, và việc không có <code>UNIQUE</code> là <strong>cố ý</strong>, khác hẳn trường hợp bảng <code>diem</code>.</p>
+<p>Kết luận: về <strong>nghiệp vụ</strong> nó <strong>không</strong> phải khoá dự tuyển, vì một bạn hoàn toàn có thể mượn cùng một cuốn hai lần trong cùng ngày (mượn sáng, trả trưa, mượn lại chiều). Nên ở đây khoá nhân tạo <code>ma_muon</code> là lựa chọn đúng, và việc không có <code>UNIQUE</code> là <strong>cố ý</strong> — <strong>giống hệt</strong> trường hợp bảng <code>diem</code> ở phần Thực hành mục 6.</p>
 <p><strong>Câu 3.</strong></p>
 <p>Các cột: <code>ma_hs</code>, <code>ma_mon_an</code>, <code>thoi_diem</code>, <code>so_luong</code>.</p>
 <table>
@@ -2141,21 +2239,21 @@ d. <code>ma_gvcn</code> thuộc loại khoá nào?</p>
 </tr>
 </tbody>
 </table>
-<p>Lý do: một lượt mua ngoài đời <strong>không có định danh tự nhiên</strong> nào cả — giống hệt <code>diem</code>, <code>muon_sach</code>, <code>diem_danh</code> trong <code>truong_hoc</code>.</p>
-<p>Nhưng nhớ bài học của Lỗi 6: nếu nghiệp vụ khẳng định <em>"một học sinh không thể mua cùng một món hai lần trong cùng một giây"</em> thì vẫn phải thêm <code>UNIQUE (ma_hs, ma_mon_an, thoi_diem)</code> bên cạnh khoá nhân tạo.</p>
+<p>Lý do: một lượt mua ngoài đời <strong>không có định danh tự nhiên</strong> nào cả — giống hệt <code>diem</code> và <code>muon_sach</code> trong <code>truong_hoc</code>.</p>
+<p>Bước tiếp theo là câu hỏi nghiệp vụ của Lỗi 6 và Lỗi 7: <em>"có tổ hợp cột nào không bao giờ được phép trùng không?"</em> Nếu căng tin khẳng định <em>"một học sinh không thể mua cùng một món hai lần trong cùng một giây"</em> thì thêm <code>UNIQUE (ma_hs, ma_mon_an, thoi_diem)</code>. Còn nếu không chắc — ví dụ <code>thoi_diem</code> chỉ chính xác tới phút — thì <strong>đừng thêm</strong>, y như bảng <code>diem</code>.</p>
 <p><strong>Câu 4.</strong></p>
-<div class="highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">c</span><span class="p">.</span><span class="n">conrelid</span><span class="p">::</span><span class="n">regclass</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">bang</span><span class="p">,</span>
-</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="w">       </span><span class="k">CASE</span><span class="w"> </span><span class="k">c</span><span class="p">.</span><span class="n">contype</span><span class="w"> </span><span class="k">WHEN</span><span class="w"> </span><span class="s1">'p'</span><span class="w"> </span><span class="k">THEN</span><span class="w"> </span><span class="s1">'PRIMARY KEY'</span>
-</span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="w">                      </span><span class="k">WHEN</span><span class="w"> </span><span class="s1">'u'</span><span class="w"> </span><span class="k">THEN</span><span class="w"> </span><span class="s1">'UNIQUE'</span>
-</span><span id="__span-19-4"><a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="w">                      </span><span class="k">WHEN</span><span class="w"> </span><span class="s1">'f'</span><span class="w"> </span><span class="k">THEN</span><span class="w"> </span><span class="s1">'FOREIGN KEY'</span><span class="w"> </span><span class="k">END</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">loai</span><span class="p">,</span>
-</span><span id="__span-19-5"><a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a><span class="w">       </span><span class="k">c</span><span class="p">.</span><span class="n">conname</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">ten_rang_buoc</span><span class="p">,</span>
-</span><span id="__span-19-6"><a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a><span class="w">       </span><span class="n">pg_get_constraintdef</span><span class="p">(</span><span class="k">c</span><span class="p">.</span><span class="n">oid</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">dinh_nghia</span>
-</span><span id="__span-19-7"><a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a><span class="k">FROM</span><span class="w"> </span><span class="n">pg_constraint</span><span class="w"> </span><span class="k">c</span>
-</span><span id="__span-19-8"><a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a><span class="k">WHERE</span><span class="w"> </span><span class="k">c</span><span class="p">.</span><span class="n">contype</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="p">(</span><span class="s1">'p'</span><span class="p">,</span><span class="w"> </span><span class="s1">'u'</span><span class="p">,</span><span class="w"> </span><span class="s1">'f'</span><span class="p">)</span>
-</span><span id="__span-19-9"><a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a><span class="w">  </span><span class="k">AND</span><span class="w"> </span><span class="k">c</span><span class="p">.</span><span class="n">conrelid</span><span class="p">::</span><span class="n">regclass</span><span class="p">::</span><span class="nb">text</span><span class="w"> </span><span class="k">IN</span>
-</span><span id="__span-19-10"><a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a><span class="w">      </span><span class="p">(</span><span class="s1">'giao_vien'</span><span class="p">,</span><span class="w"> </span><span class="s1">'lop'</span><span class="p">,</span><span class="w"> </span><span class="s1">'hoc_sinh'</span><span class="p">,</span><span class="w"> </span><span class="s1">'phu_huynh'</span><span class="p">,</span><span class="w"> </span><span class="s1">'mon_hoc'</span><span class="p">,</span>
-</span><span id="__span-19-11"><a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a><span class="w">       </span><span class="s1">'phan_cong_day'</span><span class="p">,</span><span class="w"> </span><span class="s1">'diem'</span><span class="p">,</span><span class="w"> </span><span class="s1">'sach'</span><span class="p">,</span><span class="w"> </span><span class="s1">'muon_sach'</span><span class="p">,</span><span class="w"> </span><span class="s1">'diem_danh'</span><span class="p">)</span>
-</span><span id="__span-19-12"><a id="__codelineno-19-12" name="__codelineno-19-12" href="#__codelineno-19-12"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">c</span><span class="p">.</span><span class="n">conrelid</span><span class="p">::</span><span class="n">regclass</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">bang</span><span class="p">,</span>
+</span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="w">       </span><span class="k">CASE</span><span class="w"> </span><span class="k">c</span><span class="p">.</span><span class="n">contype</span><span class="w"> </span><span class="k">WHEN</span><span class="w"> </span><span class="s1">'p'</span><span class="w"> </span><span class="k">THEN</span><span class="w"> </span><span class="s1">'PRIMARY KEY'</span>
+</span><span id="__span-22-3"><a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="w">                      </span><span class="k">WHEN</span><span class="w"> </span><span class="s1">'u'</span><span class="w"> </span><span class="k">THEN</span><span class="w"> </span><span class="s1">'UNIQUE'</span>
+</span><span id="__span-22-4"><a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="w">                      </span><span class="k">WHEN</span><span class="w"> </span><span class="s1">'f'</span><span class="w"> </span><span class="k">THEN</span><span class="w"> </span><span class="s1">'FOREIGN KEY'</span><span class="w"> </span><span class="k">END</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">loai</span><span class="p">,</span>
+</span><span id="__span-22-5"><a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a><span class="w">       </span><span class="k">c</span><span class="p">.</span><span class="n">conname</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">ten_rang_buoc</span><span class="p">,</span>
+</span><span id="__span-22-6"><a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a><span class="w">       </span><span class="n">pg_get_constraintdef</span><span class="p">(</span><span class="k">c</span><span class="p">.</span><span class="n">oid</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">dinh_nghia</span>
+</span><span id="__span-22-7"><a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a><span class="k">FROM</span><span class="w"> </span><span class="n">pg_constraint</span><span class="w"> </span><span class="k">c</span>
+</span><span id="__span-22-8"><a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a><span class="k">WHERE</span><span class="w"> </span><span class="k">c</span><span class="p">.</span><span class="n">contype</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="p">(</span><span class="s1">'p'</span><span class="p">,</span><span class="w"> </span><span class="s1">'u'</span><span class="p">,</span><span class="w"> </span><span class="s1">'f'</span><span class="p">)</span>
+</span><span id="__span-22-9"><a id="__codelineno-22-9" name="__codelineno-22-9" href="#__codelineno-22-9"></a><span class="w">  </span><span class="k">AND</span><span class="w"> </span><span class="k">c</span><span class="p">.</span><span class="n">conrelid</span><span class="p">::</span><span class="n">regclass</span><span class="p">::</span><span class="nb">text</span><span class="w"> </span><span class="k">IN</span>
+</span><span id="__span-22-10"><a id="__codelineno-22-10" name="__codelineno-22-10" href="#__codelineno-22-10"></a><span class="w">      </span><span class="p">(</span><span class="s1">'giao_vien'</span><span class="p">,</span><span class="w"> </span><span class="s1">'lop'</span><span class="p">,</span><span class="w"> </span><span class="s1">'hoc_sinh'</span><span class="p">,</span><span class="w"> </span><span class="s1">'phu_huynh'</span><span class="p">,</span><span class="w"> </span><span class="s1">'mon_hoc'</span><span class="p">,</span>
+</span><span id="__span-22-11"><a id="__codelineno-22-11" name="__codelineno-22-11" href="#__codelineno-22-11"></a><span class="w">       </span><span class="s1">'phan_cong_day'</span><span class="p">,</span><span class="w"> </span><span class="s1">'diem'</span><span class="p">,</span><span class="w"> </span><span class="s1">'sach'</span><span class="p">,</span><span class="w"> </span><span class="s1">'muon_sach'</span><span class="p">,</span><span class="w"> </span><span class="s1">'diem_danh'</span><span class="p">)</span>
+</span><span id="__span-22-12"><a id="__codelineno-22-12" name="__codelineno-22-12" href="#__codelineno-22-12"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">;</span>
 </span></code></pre></div>
 <p>Kết quả gồm 10 khoá chính, 5 ràng buộc <code>UNIQUE</code> và 11 khoá ngoại — tổng <strong>26 dòng</strong>. Đây là bản kiểm kê đầy đủ mọi khoá của database.</p>
 <p><strong>Câu 5.</strong>
@@ -2173,7 +2271,7 @@ Ba vấn đề:</p>
 <li><strong>Khoá chính</strong> là khoá dự tuyển được chọn (đúng một cho mỗi bảng, không bao giờ <code>NULL</code>); những khoá dự tuyển còn lại là <strong>khoá thay thế</strong>, giữ bằng <code>UNIQUE</code>.</li>
 <li><strong>Khoá phức hợp</strong> mô tả hình dạng (từ hai cột trở lên) — <code>phan_cong_day</code> có khoá chính bốn cột; <strong>khoá tự nhiên</strong> và <strong>khoá nhân tạo</strong> mô tả nguồn gốc.</li>
 <li><strong>Khoá ngoại</strong> không phân biệt dòng trong bảng của nó, mà nối sang bảng khác — <code>hoc_sinh.ma_lop</code> chỉ có 6 giá trị cho 40 dòng.</li>
-<li>Khoá là <strong>luật về dữ liệu tương lai</strong>, nên chỉ ràng buộc trong lược đồ mới chứng minh được; <code>count(DISTINCT ...)</code> chỉ dùng để phát hiện vi phạm, và bảng <code>diem</code> là ví dụ sống về một khoá tự nhiên bị bỏ quên.</li>
+<li>Khoá là <strong>luật về dữ liệu tương lai</strong>, nên chỉ <strong>nghiệp vụ</strong> mới xác định được nó còn <code>count(DISTINCT ...)</code> chỉ dùng để phát hiện vi phạm — bảng <code>diem</code> là ví dụ sống: bốn cột của nó <strong>trông</strong> như khoá trên dữ liệu mẫu, nhưng vì trường được phép có nhiều bài 15 phút nên nó <strong>không</strong> phải khoá, và việc lược đồ không đặt <code>UNIQUE</code> là <strong>đúng</strong>.</li>
 </ol>
 <hr />
 <p>⬅️ <a href="../11-bieu-do-er-crows-foot/">Bài 11 — Biểu đồ ER ký hiệu Crow's Foot</a> · ➡️ <a href="../13-mo-hinh-eer/">Bài 13 — Mô hình EER</a></p>
