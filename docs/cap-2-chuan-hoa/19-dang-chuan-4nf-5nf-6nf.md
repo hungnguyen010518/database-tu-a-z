@@ -261,6 +261,7 @@ Bây giờ **dò tìm phản ví dụ**: nếu `ten_gv ↠ mon_day` đúng thì 
 
 ```sql
 -- KỲ VỌNG: 1 dòng
+-- KỲ VỌNG: to_hop_con_thieu = 0
 SELECT count(*) AS to_hop_con_thieu
 FROM (
     SELECT DISTINCT a.ten_gv, a.mon_day, b.clb
@@ -309,6 +310,9 @@ Kiểm phép tách không mất mát:
 
 ```sql
 -- KỲ VỌNG: 1 dòng
+-- KỲ VỌNG: goc = 5
+-- KỲ VỌNG: noi_lai = 5
+-- KỲ VỌNG: dong_ma = 0
 SELECT (SELECT count(*) FROM b19_phan_cong_bet) AS goc,
        (SELECT count(*) FROM b19_gv_mon m
           JOIN b19_gv_clb c ON c.ten_gv = m.ten_gv) AS noi_lai,
@@ -396,6 +400,9 @@ ORDER BY gm.ten_gv, gm.ten_mon, ml.ten_lop;
 
 ```sql
 -- KỲ VỌNG: 1 dòng
+-- KỲ VỌNG: ten_gv = Trần Văn Hùng
+-- KỲ VỌNG: ten_mon = Toán
+-- KỲ VỌNG: ten_lop = 8A2
 SELECT gm.ten_gv, gm.ten_mon, ml.ten_lop
 FROM b19_gv_monhoc gm
 JOIN b19_mon_lop ml ON ml.ten_mon = gm.ten_mon
@@ -409,6 +416,7 @@ Một dòng: `Trần Văn Hùng | Toán | 8A2`. Đây là **dòng ma** — thầ
 
 ```sql
 -- KỲ VỌNG: 1 dòng
+-- KỲ VỌNG: so_dong_sau_khi_noi_ba_manh = 4
 SELECT count(*) AS so_dong_sau_khi_noi_ba_manh
 FROM b19_gv_monhoc gm
 JOIN b19_mon_lop ml ON ml.ten_mon = gm.ten_mon
@@ -421,6 +429,8 @@ Kiểm cho chắc, không thiếu cũng không thừa:
 
 ```sql
 -- KỲ VỌNG: 1 dòng
+-- KỲ VỌNG: dong_ma = 0
+-- KỲ VỌNG: dong_mat = 0
 SELECT (SELECT count(*) FROM (
             SELECT gm.ten_gv, gm.ten_mon, ml.ten_lop
             FROM b19_gv_monhoc gm
@@ -457,6 +467,8 @@ CREATE TABLE b19_day_hoc_2 AS SELECT * FROM b19_day_hoc;
 INSERT INTO b19_day_hoc_2 VALUES ('Trần Văn Hùng', 'Ngữ văn', '8A2');
 
 -- KỲ VỌNG: 1 dòng
+-- KỲ VỌNG: goc = 5
+-- KỲ VỌNG: sau_khi_tach_ba = 8
 SELECT (SELECT count(*) FROM b19_day_hoc_2) AS goc,
        (SELECT count(*) FROM (
             SELECT DISTINCT a.ten_gv, b.ten_mon, c.ten_lop
@@ -495,7 +507,9 @@ Cùng một phép tách, cùng một cấu trúc bảng — chỉ khác **luật
 
     ```sql
     -- KỲ VỌNG: 1 dòng
-SELECT (SELECT count(*) FROM phan_cong_day WHERE hoc_ky = 1) AS goc,
+    -- KỲ VỌNG: goc = 32
+    -- KỲ VỌNG: sau_khi_tach_ba = 32
+    SELECT (SELECT count(*) FROM phan_cong_day WHERE hoc_ky = 1) AS goc,
            (SELECT count(*) FROM (
                 SELECT DISTINCT a.ma_gv, b.ma_mon, c.ma_lop
                 FROM (SELECT DISTINCT ma_gv, ma_mon FROM phan_cong_day WHERE hoc_ky = 1) a
@@ -503,7 +517,7 @@ SELECT (SELECT count(*) FROM phan_cong_day WHERE hoc_ky = 1) AS goc,
                   ON b.ma_mon = a.ma_mon
                 JOIN (SELECT DISTINCT ma_lop, ma_gv FROM phan_cong_day WHERE hoc_ky = 1) c
                   ON c.ma_lop = b.ma_lop AND c.ma_gv = a.ma_gv) t) AS sau_khi_tach_ba;
-```
+    ```
 
     Kết quả: `goc = 32` và `sau_khi_tach_ba = 32`. **Bằng nhau!** Dữ liệu hiện tại tách ba chiều được mà không sinh dòng ma nào.
 
@@ -555,6 +569,9 @@ Bây giờ hỏi được câu mà bảng thường không trả lời nổi: *"
 
 ```sql
 -- KỲ VỌNG: 1 dòng
+-- KỲ VỌNG: ma_hs = HS001
+-- KỲ VỌNG: ten_lop = 8A2
+-- KỲ VỌNG: dia_chi = 12 Lê Lợi, Hà Nội
 SELECT l.ma_hs, l.ten_lop, d.dia_chi
 FROM b19_hs_lop l
 JOIN b19_hs_diachi d ON d.ma_hs = l.ma_hs

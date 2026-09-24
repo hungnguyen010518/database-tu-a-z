@@ -326,12 +326,24 @@ Ba ô tô màu vàng và đỏ là ba "trạm trung gian": từ `stt` muốn t�
 
 ## 💻 Thực hành
 
-!!! info "Dòng `-- KỲ VỌNG: N dòng` trong các khối SQL là gì?"
-    Từ Cấp 2 trở đi, nhiều khối SQL mở đầu bằng một dòng chú thích như `-- KỲ VỌNG: 5 dòng`.
+!!! info "Những dòng `-- KỲ VỌNG:` trong các khối SQL là gì?"
+    Từ Cấp 2 trở đi, nhiều khối SQL mở đầu bằng một hoặc vài dòng chú thích như:
 
-    Nó nói cho bạn biết **truy vấn phải trả về bao nhiêu dòng**. Chạy ra khác là bạn gõ nhầm ở đâu đó — hoặc dữ liệu của bạn đã bị sửa.
+    ```text
+    -- KỲ VỌNG: 5 dòng
+    -- KỲ VỌNG: so_dong = 90
+    ```
 
-    Dòng này cũng được máy chủ kiểm thử của khóa học đọc: mỗi lần bài học được cập nhật, nó chạy lại toàn bộ truy vấn trên một PostgreSQL thật và **báo lỗi nếu số dòng không khớp**. Nhờ vậy những con số bạn đọc trong bài không bao giờ là con số bịa.
+    Chúng nói cho bạn biết **kết quả đúng phải trông thế nào**:
+
+    | Dạng | Nghĩa |
+    |---|---|
+    | `-- KỲ VỌNG: N dòng` | Truy vấn phải trả về đúng `N` dòng |
+    | `-- KỲ VỌNG: <cột> = <giá trị>` | Ở **dòng đầu tiên**, cột ấy phải có đúng giá trị ấy (chuỗi viết không có dấu nháy) |
+
+    Chạy ra khác là bạn gõ nhầm ở đâu đó — hoặc dữ liệu của bạn đã bị sửa.
+
+    Những dòng này cũng được máy chủ kiểm thử của khóa học đọc: mỗi lần bài học được cập nhật, nó chạy lại toàn bộ truy vấn trên một PostgreSQL 16 thật và **báo lỗi nếu số dòng hoặc giá trị không khớp**. Nhờ vậy những con số bạn đọc trong bài không bao giờ là con số bịa.
 
 ### 1. Tập phụ thuộc hàm của `bang_bet`
 
@@ -616,10 +628,12 @@ Hệ quả rất đáng chú ý: cả ba thuộc tính đều góp mặt trong �
 
     ```sql
     -- KỲ VỌNG: 1 dòng
-SELECT count(*) AS so_dong,
+    -- KỲ VỌNG: so_dong = 30
+    -- KỲ VỌNG: so_ho_ten_khac_nhau = 30
+    SELECT count(*) AS so_dong,
            count(DISTINCT ho_ten_hs) AS so_ho_ten_khac_nhau
     FROM bang_bet;
-```
+    ```
 
     Kết quả `30` và `30`. Y hệt cái bẫy của [Bài 12](../cap-1-mo-hinh-er/12-bay-loai-khoa.md): con số này **không** biến `ho_ten_hs` thành khoá. Lược đồ `bang_bet` không hề có `UNIQUE (ho_ten_hs)`, và nghiệp vụ thì cho phép hai bạn trùng tên.
 
@@ -756,11 +770,11 @@ DROP TABLE IF EXISTS b16_pth CASCADE;
 
     ```sql
     -- KỲ VỌNG: 0 dòng
-SELECT ngay_sinh_hs, count(DISTINCT ten_lop) AS so_lop
+    SELECT ngay_sinh_hs, count(DISTINCT ten_lop) AS so_lop
     FROM bang_bet
     GROUP BY ngay_sinh_hs
     HAVING count(DISTINCT ten_lop) > 1;
-```
+    ```
 
     Truy vấn trả về **0 dòng** — vì 30 học sinh trong `bang_bet` có 30 ngày sinh khác nhau, nên mỗi nhóm chỉ có một dòng.
 

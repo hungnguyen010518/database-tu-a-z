@@ -257,6 +257,9 @@ SELECT 'GV' || lpad((row_number() OVER (ORDER BY ten_lop))::text, 2, '0') AS ma_
 FROM b18_gvcn_tam;
 
 -- KỲ VỌNG: 5 dòng
+-- KỲ VỌNG: ma_gv = GV01
+-- KỲ VỌNG: ho_ten = Nguyễn Thị Lan
+-- KỲ VỌNG: email = lan.nt@thcs.edu.vn
 SELECT * FROM b18_giao_vien ORDER BY ma_gv;
 ```
 
@@ -290,6 +293,11 @@ FROM b18_gvcn_tam t
 JOIN b18_giao_vien g ON g.ho_ten = t.gvcn;
 
 -- KỲ VỌNG: 5 dòng
+-- KỲ VỌNG: ma_lop = L01
+-- KỲ VỌNG: ten_lop = 8A1
+-- KỲ VỌNG: khoi = 8
+-- KỲ VỌNG: nam_hoc = 2025-2026
+-- KỲ VỌNG: ma_gvcn = GV01
 SELECT * FROM b18_lop ORDER BY ma_lop;
 ```
 
@@ -336,6 +344,9 @@ Kết quả: `5`, `5`, `30`.
 
 ```sql
 -- KỲ VỌNG: 1 dòng
+-- KỲ VỌNG: giao_vien_khop = 5
+-- KỲ VỌNG: lop_khop = 5
+-- KỲ VỌNG: hoc_sinh_khop = 30
 SELECT (SELECT count(*) FROM b18_giao_vien b JOIN giao_vien r
           ON r.ma_gv = b.ma_gv AND r.ho_ten = b.ho_ten AND r.email = b.email)
            AS giao_vien_khop,
@@ -515,6 +526,9 @@ Ba dòng và sáu dòng. Bây giờ *"thầy Khoa dạy Tin học"* chỉ còn *
 
 ```sql
 -- KỲ VỌNG: 1 dòng
+-- KỲ VỌNG: goc = 6
+-- KỲ VỌNG: dong_ma = 0
+-- KỲ VỌNG: dong_mat = 0
 SELECT (SELECT count(*) FROM b18_phu_dao) AS goc,
        (SELECT count(*) FROM (
             SELECT g.ma_hs, m.ten_mon, g.ten_gv
@@ -543,6 +557,10 @@ INSERT INTO b18_gv_mon VALUES ('Vũ Minh Tuấn', 'Toán');
 INSERT INTO b18_hs_gv  VALUES ('HS001', 'Vũ Minh Tuấn');
 
 -- KỲ VỌNG: 1 dòng
+-- KỲ VỌNG: ma_hs = HS001
+-- KỲ VỌNG: ten_mon = Toán
+-- KỲ VỌNG: so_giao_vien = 2
+-- KỲ VỌNG: danh_sach = Nguyễn Thị Lan + Vũ Minh Tuấn
 SELECT g.ma_hs, m.ten_mon,
        count(*)                                  AS so_giao_vien,
        string_agg(g.ten_gv, ' + ' ORDER BY g.ten_gv) AS danh_sach
@@ -578,6 +596,8 @@ Tách `b17_hoc_sinh` thành `(ho_ten_hs, ten_lop)` và `(ten_lop, dia_chi)`. Ph�
 
 ```sql
 -- KỲ VỌNG: 1 dòng
+-- KỲ VỌNG: goc = 30
+-- KỲ VỌNG: sau_khi_noi_lai = 188
 SELECT (SELECT count(*) FROM b17_hoc_sinh)  AS goc,
        (SELECT count(*)
         FROM (SELECT DISTINCT ho_ten_hs, ten_lop FROM b17_hoc_sinh) a

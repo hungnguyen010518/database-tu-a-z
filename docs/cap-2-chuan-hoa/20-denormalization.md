@@ -241,6 +241,9 @@ SELECT h.ma_hs,
 FROM hoc_sinh h;
 
 -- KỲ VỌNG: 1 dòng
+-- KỲ VỌNG: tong_hoc_sinh = 40
+-- KỲ VỌNG: du_12_con_diem = 40
+-- KỲ VỌNG: chua_co_diem = 0
 SELECT count(*)                                        AS tong_hoc_sinh,
        count(*) FILTER (WHERE so_con_diem = 12)        AS du_12_con_diem,
        count(*) FILTER (WHERE diem_trung_binh IS NULL) AS chua_co_diem
@@ -302,6 +305,9 @@ Và đây là điều đáng sợ:
 
 ```sql
 -- KỲ VỌNG: 1 dòng
+-- KỲ VỌNG: bang_tong_hop_noi = 72
+-- KỲ VỌNG: su_that = 73
+-- KỲ VỌNG: lech = 1
 SELECT t.ten_lop,
        t.so_con_diem AS bang_tong_hop_noi,
        (SELECT count(*)
@@ -339,6 +345,7 @@ LEFT JOIN b20_diem d  ON d.ma_hs  = h.ma_hs
 GROUP BY l.ma_lop, l.ten_lop;
 
 -- KỲ VỌNG: 1 dòng
+-- KỲ VỌNG: so_con_diem = 73
 SELECT ten_lop, so_con_diem FROM b20_tong_hop_lop WHERE ten_lop = '8A1';
 ```
 
@@ -416,6 +423,8 @@ Và kiểm lại rằng mười bảng thật **không hề bị đụng tới**
 
 ```sql
 -- KỲ VỌNG: 5 dòng
+-- KỲ VỌNG: bang = bang_bet
+-- KỲ VỌNG: so_dong = 30
 SELECT 'giao_vien' AS bang, count(*) AS so_dong FROM giao_vien
 UNION ALL SELECT 'lop',      count(*) FROM lop
 UNION ALL SELECT 'hoc_sinh', count(*) FROM hoc_sinh
