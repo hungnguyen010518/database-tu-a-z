@@ -181,14 +181,28 @@ flowchart TB
 | `ma_hs` và `ma_lop` được gạch chân, tô cam | Thuộc tính **khoá** |
 | `ho_ten` có ba elip con treo bên dưới | Thuộc tính **phức hợp** |
 | `tuoi` tô đỏ nhạt | Thuộc tính **dẫn xuất** — không lưu vào bảng |
-| `so_dien_thoai_lien_lac` là hình tròn tím | Thuộc tính **đa trị** — phải tách bảng riêng |
+| `so_dien_thoai_lien_lac` là hình tròn tím | Thuộc tính **đa trị** — khi chuyển sang bảng phải tách ra bảng 2 cột |
 | `HỌC TẠI` hình thoi đơn | Mối quan hệ thường |
 | `LÀ PHỤ HUYNH CỦA` hình lục giác | Quan hệ **nhận diện** |
 | Đường từ `HỌC SINH` tới `HỌC TẠI` **đậm** | HỌC SINH tham gia **toàn phần** |
 | Đường từ `LỚP` tới `HỌC TẠI` **mảnh** | LỚP tham gia **bộ phận** |
 | Đường từ `LÀ PHỤ HUYNH CỦA` tới `PHỤ HUYNH` **đậm** | PHỤ HUYNH tham gia **toàn phần** — bắt buộc, vì nó yếu |
 
-Chú ý `so_dien_thoai_lien_lac`: sơ đồ ER **được phép** có thuộc tính đa trị, vì nó mô tả thế giới thực. Chỉ khi chuyển sang bảng thì nó mới buộc phải tách ra — và trong `truong_hoc` nó đã tách thành bảng `phu_huynh`. **Bài 14** dạy phép chuyển đổi này.
+Trước hết, chú ý một điều chung: sơ đồ ER **được phép** có thuộc tính đa trị và thuộc tính dẫn xuất, vì nó mô tả thế giới thực chứ không mô tả bảng. Chỉ tới bước chuyển sang bảng thì chúng mới buộc phải xử lý — **Bài 14** dạy phép chuyển đổi đó.
+
+!!! danger "Sơ đồ 1 cố ý vẽ HAI cách mô hình hoá cho CÙNG một nhu cầu"
+    Nhu cầu đời thực chỉ có một: *"trường phải liên lạc được với gia đình học sinh"*. Sơ đồ trên cố ý vẽ đồng thời **hai cách giải quyết khác nhau** để bạn thấy chúng khác nhau chỗ nào:
+
+    | | Cách 1 — thuộc tính đa trị | Cách 2 — thực thể yếu |
+    |---|---|---|
+    | Vẽ ra sao | elip đôi `so_dien_thoai_lien_lac` treo thẳng vào `HỌC SINH` | chữ nhật đôi `PHỤ HUYNH` + thoi đôi |
+    | Lưu được gì | chỉ dãy số | dãy số **và** `ho_ten`, `quan_he` |
+    | Chuyển sang bảng thành | `hoc_sinh_sdt(ma_hs, so_dien_thoai)` — đúng 2 cột | `phu_huynh(ma_ph, ho_ten, so_dien_thoai, quan_he, ma_hs)` |
+    | Bước trong thuật toán Bài 14 | Bước 6 | Bước 2 |
+
+    Database mẫu `truong_hoc` chọn **cách 2** — nên nó có bảng `phu_huynh` chứ **không** có bảng `hoc_sinh_sdt`. Lý do: trường cần biết cả tên lẫn quan hệ của người liên lạc, chứ không chỉ một dãy số trơ.
+
+    Quy tắc chọn, đã nêu ở [Bài 7](07-thuc-the-va-thuoc-tinh.md): thứ lặp lại mà **chỉ là một giá trị trơ** thì dùng thuộc tính đa trị; thứ lặp lại mà **có đặc điểm riêng cần mô tả** thì đó là một thực thể.
 
 ### Sơ đồ 2 — Toàn bộ `truong_hoc` theo ký hiệu Chen
 
@@ -209,12 +223,16 @@ flowchart TB
     RPC{"<b>PHÂN CÔNG DẠY</b><br/>bậc 3 · M — N — P"}
     RD{"<b>CÓ ĐIỂM</b><br/>M — N"}
     RM{"<b>MƯỢN</b><br/>M — N"}
-    RDD{"<b>ĐƯỢC ĐIỂM DANH</b><br/>1 — N"}
+    RDD{{"<b>ĐƯỢC ĐIỂM DANH</b><br/>1 — N"}}
+
+    DD[["<b>BUỔI ĐIỂM DANH</b>"]]
 
     HKY(["hoc_ky"])
+    HKD(["hoc_ky"])
     DSO(["diem_so"])
     LDI(["loai_diem"])
     NMU(["ngay_muon"])
+    NTD(["ngay_tra_du_kien"])
     NTR(["ngay_tra_thuc_te"])
     NGA(["ngay"])
     TTH(["trang_thai"])
@@ -235,17 +253,20 @@ flowchart TB
 
     HS --- RD
     MH --- RD
+    RD --- HKD
     RD --- DSO
     RD --- LDI
 
     HS --- RM
     S --- RM
     RM --- NMU
+    RM --- NTD
     RM --- NTR
 
     HS --- RDD
-    RDD --- NGA
-    RDD --- TTH
+    RDD === DD
+    DD --- NGA
+    DD --- TTH
 
     style GV fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
     style L fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
@@ -253,12 +274,13 @@ flowchart TB
     style MH fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
     style S fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
     style PH fill:#e3f2fd,stroke:#1565c0,stroke-width:4px
+    style DD fill:#e3f2fd,stroke:#1565c0,stroke-width:4px
     style RCN fill:#fff8e1,stroke:#f9a825,stroke-width:2px
     style RHT fill:#fff8e1,stroke:#f9a825,stroke-width:2px
     style RPC fill:#ffe0b2,stroke:#ef6c00,stroke-width:3px
     style RD fill:#fff8e1,stroke:#f9a825,stroke-width:2px
     style RM fill:#fff8e1,stroke:#f9a825,stroke-width:2px
-    style RDD fill:#fff8e1,stroke:#f9a825,stroke-width:2px
+    style RDD fill:#fff8e1,stroke:#f9a825,stroke-width:4px
     style RPH fill:#fff8e1,stroke:#f9a825,stroke-width:4px
 ```
 
@@ -266,8 +288,18 @@ Vài điểm đáng chú ý khi đọc sơ đồ này:
 
 - **`PHÂN CÔNG DẠY` nối vào ba hình chữ nhật** — đó là mối quan hệ **bậc ba** của Bài 8. Ký hiệu Chen vẽ được điều này rất tự nhiên; Crow's Foot ở Bài 11 thì không.
 - **`hoc_ky`, `diem_so`, `ngay_muon`... treo vào hình thoi chứ không treo vào hình chữ nhật.** Đó là **thuộc tính của mối quan hệ** — chúng chỉ có nghĩa khi cả hai (hoặc ba) phía đã được xác định.
-- **`ĐƯỢC ĐIỂM DANH` là 1:N**, vì mỗi buổi điểm danh gắn với đúng một học sinh. Ràng buộc `UNIQUE (ma_hs, ngay)` là cách bảng bảo đảm một bạn chỉ được điểm danh một lần mỗi ngày.
-- Sơ đồ có **6 hình chữ nhật** nhưng database có **10 bảng**. Bốn bảng chênh lệch — `phan_cong_day`, `diem`, `muon_sach`, `diem_danh` — chính là các **hình thoi đã hoá thành bảng**. Đây là điều quan trọng nhất của toàn bộ Cấp 1, và Bài 14 sẽ biến nó thành thuật toán 7 bước.
+- **Có hai hình chữ nhật đôi, không phải một**: `PHỤ HUYNH` và `BUỔI ĐIỂM DANH`. Cả hai đều là **thực thể yếu** của `HỌC SINH`, và cả hai đều nối bằng **hình thoi đôi** với **đường đôi** ở phía thực thể yếu. [Bài 9](09-participation-va-thuc-the-yeu.md) đã phân tích kỹ cặp này.
+- **`BUỔI ĐIỂM DANH` là hình chữ nhật chứ không phải hình thoi** — đây là chỗ dễ vẽ sai nhất của sơ đồ này. Xem hộp cảnh báo ngay dưới đây.
+- Sơ đồ có **7 hình chữ nhật** (5 đơn + 2 đôi) và **3 hình thoi sẽ hoá thành bảng** (`PHÂN CÔNG DẠY`, `CÓ ĐIỂM`, `MƯỢN`). Cộng lại vừa đúng **10 bảng** của database. Đây là điều quan trọng nhất của toàn bộ Cấp 1, và Bài 14 sẽ biến nó thành thuật toán 7 bước.
+
+!!! warning "Vì sao `ĐIỂM DANH` là thực thể yếu chứ không phải một mối quan hệ"
+    Cách vẽ sai mà nhiều người mắc: một hình thoi `ĐIỂM DANH` nối `HỌC SINH` với một hình chữ nhật `NGÀY`.
+
+    Sai vì **NGÀY không phải một tập thực thể**. Trường không lưu dữ liệu gì về bản thân ngày 15/09/2026 — không tên, không mô tả, không gì cả. Vẽ nó thành hình chữ nhật là bịa ra một thực thể không tồn tại.
+
+    Cách vẽ sai thứ hai: bỏ `NGÀY` đi, để hình thoi `ĐIỂM DANH` chỉ nối vào **một** hình chữ nhật `HỌC SINH`. Trong ký hiệu Chen, hình thoi nối đúng một tập thực thể là **mối quan hệ một ngôi** — mà Bài 8 đã nói rõ `truong_hoc` không có mối quan hệ một ngôi nào.
+
+    Cách đúng: *"ngày 15/09, bạn An có mặt"* là một **sự việc** có đặc điểm riêng (`trang_thai`, `ly_do`) nhưng **không tự định danh được** nếu thiếu học sinh. Đó đúng là định nghĩa **thực thể yếu**, với `HỌC SINH` là thực thể chủ và `ngay` là **khoá bộ phận**. Ràng buộc `UNIQUE (ma_hs, ngay)` trong lược đồ chính là khoá bộ phận đó được cưỡng chế.
 
 ### Biểu đồ ER dùng để làm gì
 
@@ -304,12 +336,21 @@ Kết quả đúng **10 dòng**. Đối chiếu với sơ đồ 2:
 | `MÔN HỌC` (chữ nhật) | `mon_hoc` | Thực thể mạnh |
 | `SÁCH` (chữ nhật) | `sach` | Thực thể mạnh |
 | `PHỤ HUYNH` (chữ nhật đôi) | `phu_huynh` | Thực thể **yếu** |
+| `BUỔI ĐIỂM DANH` (chữ nhật đôi) | `diem_danh` | Thực thể **yếu** |
 | `PHÂN CÔNG DẠY` (thoi, bậc 3) | `phan_cong_day` | Mối quan hệ hoá bảng |
 | `CÓ ĐIỂM` (thoi, M:N) | `diem` | Mối quan hệ hoá bảng |
 | `MƯỢN` (thoi, M:N) | `muon_sach` | Mối quan hệ hoá bảng |
-| `ĐƯỢC ĐIỂM DANH` (thoi, 1:N) | `diem_danh` | Mối quan hệ hoá bảng |
 
-Còn `CHỦ NHIỆM` và `HỌC TẠI` thì **không** thành bảng — chúng chỉ là một cột khoá ngoại, vì bản số của chúng là 1:1 và 1:N.
+Bảy hình chữ nhật cộng ba hình thoi hoá bảng — vừa đúng 10.
+
+Còn `CHỦ NHIỆM`, `HỌC TẠI`, `LÀ PHỤ HUYNH CỦA` và `ĐƯỢC ĐIỂM DANH` thì **không** sinh ra bảng nào cả. Chúng chỉ để lại dấu vết là **một cột khoá ngoại**:
+
+| Mối quan hệ | Bản số | Dấu vết trong bảng |
+|---|---|---|
+| `CHỦ NHIỆM` | 1:1 | `lop.ma_gvcn`, có thêm `UNIQUE` |
+| `HỌC TẠI` | 1:N | `hoc_sinh.ma_lop`, `NOT NULL` |
+| `LÀ PHỤ HUYNH CỦA` | nhận diện | `phu_huynh.ma_hs`, `NOT NULL` + `ON DELETE CASCADE` |
+| `ĐƯỢC ĐIỂM DANH` | nhận diện | `diem_danh.ma_hs`, `NOT NULL` + `ON DELETE CASCADE` |
 
 ### Chữ nhật đôi hiện ra trong lược đồ như thế nào
 
@@ -442,12 +483,12 @@ Kết quả `0`, đúng như sơ đồ đã báo trước bằng elip nét đứ
     - Ba thuộc tính ngày tháng treo vào **hình thoi**, không treo vào hình chữ nhật nào — vì chúng mô tả *lượt mượn*, không mô tả học sinh cũng không mô tả sách.
 
     **Câu 3.**
-    Quy tắc chung: **chỉ mối quan hệ M:N (và mọi mối quan hệ bậc từ 3 trở lên) mới bắt buộc thành bảng riêng.** Mối quan hệ 1:1 và 1:N thì chỉ cần một cột khoá ngoại là đủ.
+    Quy tắc chung: **chỉ mối quan hệ M:N (và mọi mối quan hệ bậc từ 3 trở lên) mới bắt buộc thành bảng riêng.** Mối quan hệ 1:1 và 1:N thì một cột khoá ngoại là đủ — khác nhau ở chỗ 1:1 phải kèm `UNIQUE`, còn 1:N thì không.
 
-    - `CHỦ NHIỆM` là **1:1** → nhúng khoá ngoại `ma_gvcn` vào bảng `lop`. Một cột là xong.
+    - `CHỦ NHIỆM` là **1:1** → nhúng khoá ngoại `ma_gvcn` vào bảng `lop`, **kèm ràng buộc `UNIQUE`** trên chính cột đó. Thiếu `UNIQUE` thì cột này chỉ hiện thực được 1:N chứ không phải 1:1 — xem [Bài 8](08-moi-quan-he-va-cardinality.md).
     - `CÓ ĐIỂM` là **M:N** → không có chỗ nào nhét nổi khoá ngoại (Bài 8 đã phân tích), nên buộc phải sinh bảng `diem`.
 
-    `HỌC TẠI` là 1:N cũng vậy — chỉ cần cột `hoc_sinh.ma_lop`. Bài 14 sẽ viết quy tắc này thành các bước 3, 4, 5, 7 của thuật toán chuyển đổi.
+    `HỌC TẠI` là 1:N cũng vậy — chỉ cần cột `hoc_sinh.ma_lop`, và lần này **không** có `UNIQUE`, vì nhiều học sinh được phép chung một lớp. Đúng một chữ `UNIQUE` là toàn bộ khác biệt giữa hai cách hiện thực. Bài 14 sẽ viết quy tắc này thành các bước 3, 4, 5, 7 của thuật toán chuyển đổi.
 
     **Câu 4.**
     Hai lỗi:
@@ -496,7 +537,7 @@ Kết quả `0`, đúng như sơ đồ đã báo trước bằng elip nét đứ
 2. **Ký hiệu Chen** cho mỗi thứ một hình riêng: chữ nhật = thực thể, elip = thuộc tính, thoi = mối quan hệ; cái gì **đôi** thì chặt hơn.
 3. Mermaid **mô phỏng** Chen chứ không vẽ đúng chuẩn — ba chỗ khác rõ nhất là elip đôi, elip nét đứt và thoi đôi.
 4. Trong biểu đồ ER **không có khoá ngoại**; mối quan hệ luôn được vẽ bằng hình thoi, và thuộc tính của mối quan hệ treo vào hình thoi đó.
-5. Sơ đồ `truong_hoc` có 6 hình chữ nhật nhưng database có 10 bảng — bốn bảng chênh lệch chính là các hình thoi đã hoá thành bảng.
+5. Sơ đồ `truong_hoc` có 7 hình chữ nhật (2 trong đó là thực thể yếu) cộng 3 hình thoi hoá thành bảng — vừa đúng 10 bảng của database.
 
 ---
 

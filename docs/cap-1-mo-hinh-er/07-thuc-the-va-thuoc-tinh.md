@@ -54,7 +54,7 @@ Trong lời nói hằng ngày, người ta hay nói tắt "thực thể HỌC SI
 
 ### Thuộc tính — và ba cặp phân loại
 
-**Thuộc tính** (*attribute*) là một đặc điểm mô tả thực thể. Bạn đã gặp từ này ở Bài 6 với nghĩa "một cột của bảng"; ở đây là cùng một khái niệm, nhìn từ phía thế giới thực.
+**Thuộc tính** là một đặc điểm mô tả thực thể. Bạn đã gặp từ này ở [Bài 6](06-mo-hinh-quan-he.md) với nghĩa "một cột của bảng"; ở đây là cùng một khái niệm, nhìn từ phía thế giới thực.
 
 Ba rắc rối trong câu chuyện đầu bài tương ứng đúng ba cặp phân loại sau.
 
@@ -88,7 +88,21 @@ Database mẫu `truong_hoc` cố ý **không tách** `ho_ten` và `dia_chi`, vì
 
     Mô hình quan hệ chỉ có **một** cách xử lý đúng: **tách ra bảng riêng**, mỗi giá trị một dòng.
 
-    Đó chính xác là lý do database mẫu có bảng `phu_huynh` riêng thay vì nhét cột `sdt_phu_huynh` vào bảng `hoc_sinh`. Bài 14 sẽ biến quy tắc này thành **Bước 6** của thuật toán chuyển ER sang bảng.
+    Ví dụ: thuộc tính đa trị `so_dien_thoai` của HỌC SINH phải thành một bảng riêng `hoc_sinh_sdt(ma_hs, so_dien_thoai)` — đúng **hai** cột, mỗi số một dòng. Bài 14 sẽ biến quy tắc này thành **Bước 6** của thuật toán chuyển ER sang bảng.
+
+!!! danger "Bảng `phu_huynh` KHÔNG phải kết quả của quy tắc này"
+    Rất dễ nhìn `phu_huynh` rồi nghĩ *"à, đây chính là thuộc tính đa trị số điện thoại đã được tách ra"*. **Không phải**, và nhầm chỗ này sẽ làm bạn trả lời sai ở Bài 9 lẫn Bài 14.
+
+    Nếu chỉ là tách thuộc tính đa trị, bảng sinh ra sẽ đúng hai cột `(ma_hs, so_dien_thoai)`. Nhưng `phu_huynh` còn có `ho_ten` và `quan_he` — tức bản thân người liên lạc là một **đối tượng có đặc điểm riêng**, chứ không phải một dãy số trơ.
+
+    | | Thuộc tính đa trị | Thực thể |
+    |---|---|---|
+    | Thứ lặp lại là | một **giá trị** trơ | một **đối tượng** có đặc điểm riêng |
+    | Ví dụ | `so_dien_thoai`, `the_loai` của sách | người phụ huynh |
+    | Chuyển sang bảng thành | bảng 2 cột `(khoá chủ, giá trị)` | bảng đầy đủ, có thuộc tính riêng |
+    | Bước trong thuật toán Bài 14 | Bước 6 | Bước 1 hoặc Bước 2 |
+
+    [Bài 9](09-participation-va-thuc-the-yeu.md) sẽ gọi đúng tên `phu_huynh`: **thực thể yếu**. Phép thử nhanh để khỏi nhầm: *"thứ lặp lại này có cần mô tả gì thêm ngoài chính nó không?"* — cần thì đó là thực thể, không cần thì đó là thuộc tính đa trị.
 
 #### Cặp 3 — Lưu trữ ↔ Dẫn xuất
 
@@ -195,7 +209,7 @@ flowchart LR
     P2 --> L2["phức hợp · đơn trị · lưu trữ"]
     P3 --> L3["đơn · đơn trị · lưu trữ"]
     P4 --> L4["phức hợp · đơn trị · lưu trữ"]
-    P5 --> L5["ĐA TRỊ → tách sang bảng phu_huynh"]
+    P5 --> L5["ĐA TRỊ → tách sang bảng riêng<br/>hoc_sinh_sdt · 2 cột"]
     P6 --> L6["DẪN XUẤT → không lưu · tính từ ngay_sinh"]
 
     style HS fill:#e3f2fd,stroke:#1565c0,stroke-width:3px
@@ -257,9 +271,9 @@ WHERE table_schema = 'public' AND table_name = 'hoc_sinh' AND column_name = 'tuo
 
 Kết quả: `0`. Không có cột `tuoi` nào cả — đúng như thiết kế.
 
-### Thuộc tính đa trị — đã được tách ra bảng riêng
+### Nhiều giá trị thì nhiều dòng — không bao giờ nhét chung một ô
 
-Số điện thoại liên lạc của học sinh nằm ở bảng `phu_huynh`, mỗi người liên lạc một dòng:
+`truong_hoc` không có bảng `hoc_sinh_sdt`: nó mô hình hoá người liên lạc thành một **thực thể riêng** (`phu_huynh`) chứ không phải một thuộc tính đa trị — đúng như hộp cảnh báo ở trên. Nhưng nguyên tắc *mỗi giá trị một dòng* thì giống hệt nhau, và bảng `phu_huynh` minh hoạ được nguyên tắc đó:
 
 ```sql
 SELECT ma_ph, ho_ten, quan_he, so_dien_thoai
@@ -321,7 +335,7 @@ Trong kết quả có `hoc_sinh_pkey` với `contype = 'p'` — đó là ràng b
 
     Ba hậu quả cụ thể: không tìm được ai theo số điện thoại bằng phép so sánh thường; không ràng buộc nổi "mỗi số phải đủ 10 chữ số"; và bạn thứ ba trong nhà thì hết chỗ ghi.
 
-    Cách sửa duy nhất đúng: **một bảng riêng, mỗi giá trị một dòng** — đúng như `phu_huynh`.
+    Cách sửa duy nhất đúng: **một bảng riêng, mỗi giá trị một dòng** — ở đây là `hoc_sinh_sdt(ma_hs, so_dien_thoai)`. Nếu người liên lạc còn cần lưu cả tên và quan hệ thì đó không còn là thuộc tính đa trị nữa, mà là một thực thể — và bảng đúng chính là `phu_huynh`.
 
 !!! warning "Lỗi 2: Thêm cột `so_hoc_sinh` vào bảng `lop`"
     Nghe rất hợp lý và rất tiện. Nhưng `so_hoc_sinh` là **thuộc tính dẫn xuất** — đếm trong bảng `hoc_sinh` là ra.
