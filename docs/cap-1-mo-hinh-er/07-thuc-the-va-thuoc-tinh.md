@@ -422,7 +422,7 @@ Trong kết quả có `hoc_sinh_pkey` với `contype = 'p'` — đó là ràng b
     1. **Mâu thuẫn dữ liệu.** Nhập thêm một con điểm vào bảng `diem` mà quên cập nhật `diem_trung_binh` là hai chỗ nói hai điều khác nhau, và không ai biết chỗ nào đúng.
     2. **Không rõ nghĩa.** Trung bình của học kỳ nào, loại điểm nào, có nhân hệ số không? Một con số duy nhất không trả lời nổi, trong khi tính từ bảng `diem` thì muốn cắt theo tiêu chí nào cũng được.
 
-    Tình huống hợp lý: khi bảng `diem` đã cực lớn (hàng trăm triệu dòng) và màn hình chính của phần mềm phải hiện điểm trung bình cho hàng nghìn học sinh cùng lúc. Lúc đó người ta chấp nhận lưu sẵn để đổi lấy tốc độ — kỹ thuật này gọi là **phi chuẩn hoá** (*denormalization*), và bắt buộc phải kèm cơ chế tự cập nhật lại. **Cấp 4** sẽ bàn kỹ.
+    Tình huống hợp lý: khi bảng `diem` đã cực lớn (hàng trăm triệu dòng) và màn hình chính của phần mềm phải hiện điểm trung bình cho hàng nghìn học sinh cùng lúc. Lúc đó người ta chấp nhận lưu sẵn để đổi lấy tốc độ — kỹ thuật này gọi là **phi chuẩn hoá** (*denormalization*), và bắt buộc phải kèm cơ chế tự cập nhật lại. [Bài 20](../cap-2-chuan-hoa/20-denormalization.md) sẽ bàn kỹ.
 
 ## 🔑 Tóm tắt
 
