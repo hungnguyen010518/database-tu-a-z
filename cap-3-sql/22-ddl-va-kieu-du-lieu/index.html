@@ -1599,7 +1599,7 @@
 <li>Chia được SQL thành bốn nhóm con <strong>DDL / DML / DCL / TCL</strong> và biết câu lệnh nào thuộc nhóm nào</li>
 <li>Viết được <code>CREATE TABLE</code> đầy đủ ràng buộc, <code>ALTER TABLE</code> để sửa bảng đang chạy, và phân biệt <code>DROP TABLE</code> với <code>TRUNCATE</code></li>
 <li>Chọn đúng <strong>kiểu dữ liệu</strong> cho từng cột, thay vì cho tất cả vào <code>TEXT</code></li>
-<li>Tránh được ba cái bẫy kinh điển: <code>CHAR</code> đệm khoảng trắng, <code>REAL</code> làm hỏng tiền và điểm, <code>TIMESTAMP</code> mất múi giờ</li>
+<li>Tránh được ba cái bẫy kinh điển: <code>CHAR</code> đệm khoảng trắng, <code>REAL</code> làm hỏng tiền và điểm, và <code>TIMESTAMP</code> không neo được vào một thời điểm thật</li>
 </ul>
 </div>
 <h2 id="cau-chuyen-mo-au">🧠 Câu chuyện mở đầu<a class="headerlink" href="#cau-chuyen-mo-au" title="Permanent link">&para;</a></h2>
@@ -1743,6 +1743,12 @@
 <td>Có (trong PostgreSQL)</td>
 <td>Có</td>
 </tr>
+<tr>
+<td>Đặt lại bộ đếm của <code>SERIAL</code>?</td>
+<td>Không còn bảng nên không có bộ đếm để nói</td>
+<td><strong>Không</strong> — trừ khi viết <code>TRUNCATE t RESTART IDENTITY</code></td>
+<td><strong>Không</strong></td>
+</tr>
 </tbody>
 </table>
 <div class="admonition danger">
@@ -1874,13 +1880,13 @@
 </tr>
 <tr>
 <td><code>TIMESTAMP</code></td>
-<td>Ngày <strong>và</strong> giờ, <strong>không</strong> có múi giờ</td>
+<td>Ngày <strong>và</strong> giờ, <strong>không</strong> gắn với múi giờ nào</td>
 <td>Hai người ở hai múi giờ đọc ra hai thời điểm khác nhau</td>
 </tr>
 <tr>
 <td><code>TIMESTAMPTZ</code></td>
-<td>Ngày và giờ, <strong>có</strong> múi giờ</td>
-<td>Gần như luôn là lựa chọn đúng</td>
+<td><strong>Một thời điểm tuyệt đối</strong> — nhận vào và hiển thị ra theo múi giờ của phiên, nhưng <strong>không lưu</strong> múi giờ</td>
+<td>Gần như luôn là lựa chọn đúng; nhưng đừng mong lấy lại được múi giờ gốc của lúc nhập</td>
 </tr>
 </tbody>
 </table>
@@ -2040,7 +2046,7 @@
 <li><code>diem_tb NUMERIC(4,2)</code> — bốn chữ số, hai chữ số sau dấu phẩy, tức là <code>10.00</code> vừa khít. Chính xác tuyệt đối.</li>
 <li><code>dang_hoc BOOLEAN NOT NULL DEFAULT TRUE</code> — học sinh mới nhập thì mặc định đang học.</li>
 <li><code>ghi_chu TEXT</code> — độ dài tự do, không đoán trước được.</li>
-<li><code>tao_luc TIMESTAMPTZ NOT NULL DEFAULT now()</code> — thời điểm bản ghi ra đời, có múi giờ.</li>
+<li><code>tao_luc TIMESTAMPTZ NOT NULL DEFAULT now()</code> — thời điểm bản ghi ra đời, ghi như một <strong>thời điểm tuyệt đối</strong>.</li>
 </ul>
 <p>Thêm vài dòng, cố tình <strong>không</strong> nhắc tới <code>dang_hoc</code> và <code>tao_luc</code> để xem <code>DEFAULT</code> làm việc:</p>
 <div class="highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">b22_hoc_sinh_nhap</span><span class="w"> </span><span class="p">(</span><span class="n">ho_ten</span><span class="p">,</span><span class="w"> </span><span class="n">ngay_sinh</span><span class="p">,</span><span class="w"> </span><span class="n">gioi_tinh</span><span class="p">,</span><span class="w"> </span><span class="n">diem_tb</span><span class="p">,</span><span class="w"> </span><span class="n">ghi_chu</span><span class="p">)</span><span class="w"> </span><span class="k">VALUES</span>
@@ -2056,6 +2062,12 @@
 </span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">       </span><span class="k">count</span><span class="p">(</span><span class="n">ghi_chu</span><span class="p">)</span><span class="w">                    </span><span class="k">AS</span><span class="w"> </span><span class="n">so_co_ghi_chu</span>
 </span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="k">FROM</span><span class="w"> </span><span class="n">b22_hoc_sinh_nhap</span><span class="p">;</span>
 </span></code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">Gặp <code>FILTER (WHERE ...)</code> lần đầu — chưa cần hiểu kỹ</p>
+<p><code>count(*) FILTER (WHERE dang_hoc)</code> đọc là <em>"đếm số dòng, nhưng </em><em>chỉ</em><em> những dòng thoả điều kiện trong ngoặc"</em>. Nó là cách gọn nhất để lấy <strong>nhiều con số với nhiều điều kiện khác nhau trong một câu lệnh</strong>, nên từ đây tới hết Cấp 3 bạn sẽ thấy nó rất nhiều.</p>
+<p>Bây giờ chỉ cần đọc được nó như một câu tiếng Việt là đủ. <a href="../26-group-by-having/">Bài 26</a> sẽ dạy nó đầy đủ cùng với <code>GROUP BY</code> và các hàm tổng hợp khác.</p>
+<p>Không có <code>FILTER</code>, ba con số trên phải chạy bằng ba câu lệnh riêng rồi tự ghép kết quả lại.</p>
+</div>
 <p>Ba dòng đều có <code>dang_hoc = TRUE</code> dù không ai nhắc tới nó — đó là <code>DEFAULT</code>. Còn <code>ghi_chu</code> chỉ có 2 giá trị thật, vì dòng thứ hai được ghi <code>NULL</code> <strong>một cách tường minh</strong>; <code>DEFAULT</code> không can thiệp vào chuyện đó.</p>
 <h3 id="sua-bang-bang-alter-table">Sửa bảng bằng <code>ALTER TABLE</code><a class="headerlink" href="#sua-bang-bang-alter-table" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1">-- Thêm cột mới: học sinh thuộc lớp nào</span>
@@ -2144,6 +2156,13 @@
 <h3 id="bay-3-timestamp-khong-co-mui-gio">Bẫy 3 — <code>TIMESTAMP</code> không có múi giờ<a class="headerlink" href="#bay-3-timestamp-khong-co-mui-gio" title="Permanent link">&para;</a></h3>
 <p><code>TIMESTAMP</code> lưu đúng chuỗi ngày giờ bạn đưa vào, <strong>không kèm thông tin múi giờ</strong>. Nó giống như viết <code>"8 giờ sáng"</code> lên giấy: người ở Hà Nội và người ở London đọc ra hai thời điểm cách nhau 7 tiếng.</p>
 <p><code>TIMESTAMPTZ</code> thì lưu <strong>một thời điểm tuyệt đối</strong>. Bạn đưa vào giờ nào, múi nào cũng được — nó quy về chuẩn UTC bên trong, rồi hiển thị lại theo múi giờ của người đang xem.</p>
+<div class="admonition danger">
+<p class="admonition-title">Cái tên <code>TIMESTAMPTZ</code> nói dối, và đây là ngộ nhận phổ biến nhất về nó</p>
+<p>Chữ <code>TZ</code> làm ai cũng tưởng cột này <strong>lưu kèm múi giờ</strong>. Nó <strong>không</strong>.</p>
+<p>Bên trong, <code>timestamptz</code> chỉ là <strong>một con số</strong> đếm từ một mốc gốc — tức đúng một thời điểm tuyệt đối, không có chỗ nào chứa <code>+07</code> hay <code>Asia/Ho_Chi_Minh</code>. Múi giờ chỉ được dùng <strong>hai lần</strong>, và cả hai lần đều ở ngoài chỗ lưu trữ: một lần lúc <strong>nhận vào</strong> để quy về mốc gốc, một lần lúc <strong>hiển thị ra</strong> theo thiết lập <code>TimeZone</code> của phiên làm việc.</p>
+<p>Hệ quả rất cụ thể: nếu bạn ghi <code>'2026-09-25 08:00:00+07'</code> rồi hôm sau muốn biết <em>"bản ghi này được nhập ở múi giờ nào"</em> — <strong>không có cách nào</strong>. Thông tin đó đã bị bỏ đi ngay lúc ghi. Muốn giữ được nó thì phải thêm một cột riêng, ví dụ <code>mui_gio_nhap TEXT</code>.</p>
+<p>Nói cho gọn: <code>TIMESTAMP</code> là <em>"một con số trên mặt đồng hồ"</em>, <code>TIMESTAMPTZ</code> là <em>"một khoảnh khắc trong lịch sử"</em>. Không cái nào lưu múi giờ.</p>
+</div>
 <div class="highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1">-- KỲ VỌNG: khac_nhau = true</span>
 </span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="p">(</span><span class="n">TIMESTAMPTZ</span><span class="w"> </span><span class="s1">'2026-09-25 08:00:00+07'</span><span class="w"> </span><span class="k">AT</span><span class="w"> </span><span class="k">TIME</span><span class="w"> </span><span class="k">ZONE</span><span class="w"> </span><span class="s1">'UTC'</span><span class="p">)</span>
 </span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">       </span><span class="o">&lt;&gt;</span><span class="w"> </span><span class="k">TIMESTAMP</span><span class="w"> </span><span class="s1">'2026-09-25 08:00:00'</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">khac_nhau</span><span class="p">;</span>
@@ -2424,7 +2443,7 @@
 <li>SQL chia làm bốn nhóm: <strong>DDL</strong> dựng cấu trúc (<code>CREATE</code>, <code>ALTER</code>, <code>DROP</code>, <code>TRUNCATE</code>), <strong>DML</strong> thao tác dữ liệu (<code>INSERT</code>, <code>UPDATE</code>, <code>DELETE</code>, <code>SELECT</code>), <strong>DCL</strong> cấp quyền (<code>GRANT</code>, <code>REVOKE</code>), <strong>TCL</strong> điều khiển giao tác (<code>BEGIN</code>, <code>COMMIT</code>, <code>ROLLBACK</code>, <code>SAVEPOINT</code>).</li>
 <li><code>DROP TABLE</code> xoá <strong>cả bảng</strong>; <code>TRUNCATE</code> xoá <strong>mọi dòng</strong> nhưng <strong>không có <code>WHERE</code></strong> và không kích hoạt trigger dòng; <code>DELETE</code> xoá <strong>có điều kiện</strong> và là lệnh DML. Ba việc khác nhau, đừng nhầm.</li>
 <li><strong>Kiểu dữ liệu</strong> làm bốn việc cùng lúc: chặn giá trị sai, quyết định cách so sánh và sắp xếp, quyết định phép toán dùng được, quyết định dung lượng. Chọn sai kiểu thì lỗi không xuất hiện lúc nhập mà xuất hiện nhiều tháng sau, dưới dạng một kết quả sai không ai để ý.</li>
-<li>Ba cái bẫy phải thuộc lòng: <strong><code>CHAR(n)</code> đệm khoảng trắng</strong> và so sánh bỏ qua khoảng trắng cuối; <strong><code>REAL</code> / <code>DOUBLE PRECISION</code> không chính xác</strong> nên tiền và điểm phải dùng <code>NUMERIC</code>; <strong><code>TIMESTAMP</code> không có múi giờ</strong> nên sự kiện thật phải dùng <code>TIMESTAMPTZ</code>.</li>
+<li>Ba cái bẫy phải thuộc lòng: <strong><code>CHAR(n)</code> đệm khoảng trắng</strong> và so sánh bỏ qua khoảng trắng cuối; <strong><code>REAL</code> / <code>DOUBLE PRECISION</code> không chính xác</strong> nên tiền và điểm phải dùng <code>NUMERIC</code>; <strong><code>TIMESTAMP</code> không neo vào thời điểm thật</strong> nên sự kiện đã xảy ra phải dùng <code>TIMESTAMPTZ</code> — thứ lưu một <strong>thời điểm tuyệt đối</strong>, chứ <strong>không</strong> lưu múi giờ nào.</li>
 <li><strong>Giá trị mặc định</strong> (<code>DEFAULT</code>) chỉ nhảy vào khi câu <code>INSERT</code> không nhắc tới cột — nó <strong>không</strong> thay được cho <code>NOT NULL</code>. Muốn chắc chắn thì khai cả hai.</li>
 </ol>
 <hr />

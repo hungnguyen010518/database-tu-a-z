@@ -1750,7 +1750,7 @@
 <td>÷</td>
 <td><strong>Phép chia</strong></td>
 <td><em>division</em></td>
-<td>Viết được bằng × và − (khá dài)</td>
+<td>Viết được bằng π, × và − — xem khai triển ở dưới</td>
 </tr>
 </tbody>
 </table>
@@ -1765,7 +1765,11 @@
 <li>
 <p><strong>Phép chia</strong> (<em>division</em>, ký hiệu <strong>÷</strong>) là phép khó nhất và cũng đẹp nhất. <code>R ÷ S</code> trả lời câu hỏi dạng <strong>"tất cả"</strong>: <em>"những giá trị nào ở R đi kèm với </em><em>toàn bộ</em><em> giá trị của S?"</em></p>
 <p>Ví dụ: <em>"giáo viên nào dạy ở </em><em>tất cả</em><em> các lớp khối 8?"</em> Đó chính là <code>phan_cong_day ÷ (danh sách lớp khối 8)</code>.</p>
-<p>Đáng chú ý: SQL <strong>không có</strong> từ khoá cho phép chia. Bạn phải tự dựng nó, bằng <code>GROUP BY ... HAVING count(...)</code> (<a href="../26-group-by-having/">Bài 26</a>) hoặc bằng <code>NOT EXISTS</code> lồng hai tầng (<strong>Bài 27</strong> <em>(sắp có)</em> — sắp có).</p>
+<p>Khai triển của nó qua các phép cơ bản cần tới <strong>ba</strong> phép — π, × và − — và đó là lý do nó là phép dài nhất trong cả chín phép. Với <code>R(x, y)</code> và <code>S(y)</code>:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>R ÷ S  =  π_x(R)  −  π_x( ( π_x(R) × S )  −  R )
+</span></code></pre></div>
+<p>Đọc từ trong ra ngoài: <code>π_x(R) × S</code> là <strong>mọi</strong> cặp <em>(giá trị x, giá trị y)</em> có thể; trừ đi <code>R</code> thì còn lại những cặp <strong>đáng lẽ phải có mà không có</strong>; chiếu xuống <code>x</code> thì được danh sách những <code>x</code> <strong>thiếu ít nhất một</strong> <code>y</code>; lấy toàn bộ <code>x</code> trừ đi danh sách đó, còn lại đúng những <code>x</code> <strong>đủ mọi</strong> <code>y</code>.</p>
+<p>Đáng chú ý: SQL <strong>không có</strong> từ khoá cho phép chia. Bạn phải tự dựng nó, bằng <code>GROUP BY ... HAVING count(...)</code> (<a href="../26-group-by-having/">Bài 26</a>) hoặc bằng <code>NOT EXISTS</code> lồng hai tầng (<strong>Bài 27</strong>, <em>sắp có</em>).</p>
 </li>
 </ul>
 <h3 id="bang-thuat-ngu">Bảng thuật ngữ<a class="headerlink" href="#bang-thuat-ngu" title="Permanent link">&para;</a></h3>
@@ -1909,33 +1913,79 @@
     DIF --&gt; INT
     CAR --&gt; JOI
     SEL --&gt; JOI
+    PRO --&gt; DIV
     CAR --&gt; DIV
     DIF --&gt; DIV
 
     style CB fill:#fff8e1,stroke:#f9a825,stroke-width:2px
     style DX fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px</code></pre>
-<p>Còn đây là cách nhớ σ và π — hai phép hay bị lẫn nhất:</p>
-<pre class="mermaid"><code>flowchart LR
-    subgraph SIG["σ — PHÉP CHỌN · cắt NGANG"]
-        direction TB
-        S1["ma_hs │ ho_ten │ ma_lop"]
-        S2["&lt;b&gt;HS001 │ Nguyễn Văn An │ L01&lt;/b&gt;"]
-        S3["HS007 │ Đỗ Văn Hải │ L02"]
-        S4["&lt;b&gt;HS003 │ Lê Hoàng Cường │ L01&lt;/b&gt;"]
-        S1 --- S2 --- S3 --- S4
-    end
-
-    subgraph PI["π — PHÉP CHIẾU · cắt DỌC"]
-        direction TB
-        P1["ma_hs │ &lt;b&gt;ho_ten&lt;/b&gt; │ ma_lop"]
-        P2["HS001 │ &lt;b&gt;Nguyễn Văn An&lt;/b&gt; │ L01"]
-        P3["HS007 │ &lt;b&gt;Đỗ Văn Hải&lt;/b&gt; │ L02"]
-        P4["HS003 │ &lt;b&gt;Lê Hoàng Cường&lt;/b&gt; │ L01"]
-        P1 --- P2 --- P3 --- P4
-    end
-
-    style SIG fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
-    style PI fill:#f3e5f5,stroke:#6a1b9a,stroke-width:2px</code></pre>
+<p>Còn đây là cách nhớ σ và π — hai phép hay bị lẫn nhất. Chỗ này cố ý <strong>không</strong> dùng sơ đồ, vì thứ cần diễn đạt là "hàng và cột", mà một cái bảng thì <strong>chính là</strong> hàng và cột. Ô <strong>in đậm</strong> là phần được giữ lại.</p>
+<p><strong>σ — phép chọn — cắt NGANG.</strong> <code>σ_{ma_lop = 'L01'}(hoc_sinh)</code> giữ <strong>cả dòng</strong>, bỏ <strong>cả dòng</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>ma_hs</th>
+<th>ho_ten</th>
+<th>ma_lop</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>HS001</strong></td>
+<td><strong>Nguyễn Văn An</strong></td>
+<td><strong>L01</strong></td>
+<td>✅ giữ</td>
+</tr>
+<tr>
+<td><del>HS007</del></td>
+<td><del>Đỗ Văn Hải</del></td>
+<td><del>L02</del></td>
+<td>❌ bỏ</td>
+</tr>
+<tr>
+<td><strong>HS003</strong></td>
+<td><strong>Lê Hoàng Cường</strong></td>
+<td><strong>L01</strong></td>
+<td>✅ giữ</td>
+</tr>
+</tbody>
+</table>
+<p>Số <strong>cột</strong> không đổi, số <strong>dòng</strong> giảm.</p>
+<p><strong>π — phép chiếu — cắt DỌC.</strong> <code>π_{ho_ten}(hoc_sinh)</code> giữ <strong>cả cột</strong>, bỏ <strong>cả cột</strong>:</p>
+<table>
+<thead>
+<tr>
+<th><del>ma_hs</del></th>
+<th><strong>ho_ten</strong></th>
+<th><del>ma_lop</del></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><del>HS001</del></td>
+<td><strong>Nguyễn Văn An</strong></td>
+<td><del>L01</del></td>
+</tr>
+<tr>
+<td><del>HS007</del></td>
+<td><strong>Đỗ Văn Hải</strong></td>
+<td><del>L02</del></td>
+</tr>
+<tr>
+<td><del>HS003</del></td>
+<td><strong>Lê Hoàng Cường</strong></td>
+<td><del>L01</del></td>
+</tr>
+<tr>
+<td>❌ bỏ</td>
+<td>✅ giữ</td>
+<td>❌ bỏ</td>
+</tr>
+</tbody>
+</table>
+<p>Số <strong>dòng</strong> có thể giảm (nếu có tên trùng và bạn dùng <code>DISTINCT</code>), số <strong>cột</strong> giảm chắc chắn.</p>
+<p>Mẹo nhớ bằng hình chữ: <strong>π</strong> có <strong>hai chân dọc</strong> — nó cắt <strong>dọc</strong>. <strong>σ</strong> tròn vo như một nét gạch ngang xoá dòng — nó cắt <strong>ngang</strong>.</p>
 <h2 id="thuc-hanh">💻 Thực hành<a class="headerlink" href="#thuc-hanh" title="Permanent link">&para;</a></h2>
 <p>Mỗi phép dưới đây có ba phần: <strong>ký hiệu toán</strong>, <strong>một câu tiếng Việt</strong>, và <strong>câu SQL chạy thật</strong> trên database <code>truong_hoc</code>. Hãy đọc cả ba rồi tự nhủ <em>"à, hai thứ này là một"</em>.</p>
 <h3 id="1-phep-chon">1. σ — Phép chọn<a class="headerlink" href="#1-phep-chon" title="Permanent link">&para;</a></h3>
@@ -1943,11 +1993,11 @@
 <p><strong>Toán:</strong> <code>σ_{ma_lop = 'L01'}(hoc_sinh)</code>
 <strong>Tiếng Việt:</strong> <em>"Lấy những học sinh thuộc lớp L01."</em></p>
 </blockquote>
-<div class="highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1">-- KỲ VỌNG: 6 dòng</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span>
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span>
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">ma_lop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'L01'</span>
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">ma_hs</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1">-- KỲ VỌNG: 6 dòng</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">ma_lop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'L01'</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">ma_hs</span><span class="p">;</span>
 </span></code></pre></div>
 <p>Từ khoá SQL tương ứng với σ là <strong><code>WHERE</code></strong>. Số cột giữ nguyên 6, số dòng giảm từ 40 xuống 6.</p>
 <h3 id="2-phep-chieu">2. π — Phép chiếu<a class="headerlink" href="#2-phep-chieu" title="Permanent link">&para;</a></h3>
@@ -1955,47 +2005,47 @@
 <p><strong>Toán:</strong> <code>π_{ma_lop}(hoc_sinh)</code>
 <strong>Tiếng Việt:</strong> <em>"Lấy tập các mã lớp đang có học sinh."</em></p>
 </blockquote>
-<div class="highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1">-- KỲ VỌNG: 6 dòng</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">DISTINCT</span><span class="w"> </span><span class="n">ma_lop</span>
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span>
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">ma_lop</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1">-- KỲ VỌNG: 6 dòng</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">DISTINCT</span><span class="w"> </span><span class="n">ma_lop</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">ma_lop</span><span class="p">;</span>
 </span></code></pre></div>
 <p>Từ khoá tương ứng với π là <strong>danh sách cột sau <code>SELECT</code></strong>, kèm <code>DISTINCT</code> nếu muốn đúng nghĩa toán học. Bỏ <code>DISTINCT</code> đi thì SQL trả về 40 dòng — vì SQL làm việc trên đa tập:</p>
-<div class="highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1">-- KỲ VỌNG: so_dong_khong_distinct = 40</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_dong_khong_distinct</span>
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="k">FROM</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">ma_lop</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">t</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1">-- KỲ VỌNG: so_dong_khong_distinct = 40</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_dong_khong_distinct</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="k">FROM</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">ma_lop</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">t</span><span class="p">;</span>
 </span></code></pre></div>
 <h3 id="3-phep-hop">3. ∪ — Phép hợp<a class="headerlink" href="#3-phep-hop" title="Permanent link">&para;</a></h3>
 <blockquote>
 <p><strong>Toán:</strong> <code>π_{ma_hs}(σ_{ma_lop='L01'}(hoc_sinh)) ∪ π_{ma_hs}(σ_{ma_lop IN ('L01','L02')}(hoc_sinh))</code>
 <strong>Tiếng Việt:</strong> <em>"Gộp danh sách mã học sinh lớp L01 với danh sách mã học sinh lớp L01 và L02."</em></p>
 </blockquote>
-<div class="highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1">-- KỲ VỌNG: 12 dòng</span>
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">ma_hs</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">ma_lop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'L01'</span>
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="k">UNION</span>
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">ma_hs</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">ma_lop</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="p">(</span><span class="s1">'L01'</span><span class="p">,</span><span class="w"> </span><span class="s1">'L02'</span><span class="p">)</span>
-</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">ma_hs</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1">-- KỲ VỌNG: 12 dòng</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">ma_hs</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">ma_lop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'L01'</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="k">UNION</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">ma_hs</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">ma_lop</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="p">(</span><span class="s1">'L01'</span><span class="p">,</span><span class="w"> </span><span class="s1">'L02'</span><span class="p">)</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">ma_hs</span><span class="p">;</span>
 </span></code></pre></div>
 <p>Kết quả là <strong>12</strong> chứ không phải <code>6 + 12 = 18</code>: sáu mã của L01 xuất hiện ở cả hai vế, và <code>UNION</code> bỏ trùng đúng như phép ∪ trong toán.</p>
 <p>Nếu bạn <strong>không</strong> muốn bỏ trùng, SQL cho thêm <code>UNION ALL</code> — đây lại là một chỗ SQL rộng hơn đại số quan hệ:</p>
-<div class="highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1">-- KỲ VỌNG: so_dong = 18</span>
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_dong</span>
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="k">FROM</span><span class="w"> </span><span class="p">(</span>
-</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">    </span><span class="k">SELECT</span><span class="w"> </span><span class="n">ma_hs</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">ma_lop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'L01'</span>
-</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">    </span><span class="k">UNION</span><span class="w"> </span><span class="k">ALL</span>
-</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">    </span><span class="k">SELECT</span><span class="w"> </span><span class="n">ma_hs</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">ma_lop</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="p">(</span><span class="s1">'L01'</span><span class="p">,</span><span class="w"> </span><span class="s1">'L02'</span><span class="p">)</span>
-</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">t</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1">-- KỲ VỌNG: so_dong = 18</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_dong</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="k">FROM</span><span class="w"> </span><span class="p">(</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">    </span><span class="k">SELECT</span><span class="w"> </span><span class="n">ma_hs</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">ma_lop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'L01'</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">    </span><span class="k">UNION</span><span class="w"> </span><span class="k">ALL</span>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">    </span><span class="k">SELECT</span><span class="w"> </span><span class="n">ma_hs</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">ma_lop</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="p">(</span><span class="s1">'L01'</span><span class="p">,</span><span class="w"> </span><span class="s1">'L02'</span><span class="p">)</span>
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">t</span><span class="p">;</span>
 </span></code></pre></div>
 <h3 id="4-phep-hieu">4. − — Phép hiệu<a class="headerlink" href="#4-phep-hieu" title="Permanent link">&para;</a></h3>
 <blockquote>
 <p><strong>Toán:</strong> <code>π_{ma_gv}(giao_vien) − π_{ma_gvcn}(lop)</code>
 <strong>Tiếng Việt:</strong> <em>"Giáo viên nào chưa làm chủ nhiệm lớp nào?"</em></p>
 </blockquote>
-<div class="highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1">-- KỲ VỌNG: 3 dòng</span>
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">ma_gv</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">giao_vien</span>
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="k">EXCEPT</span>
-</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">ma_gvcn</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">lop</span>
-</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">ma_gv</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1">-- KỲ VỌNG: 3 dòng</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">ma_gv</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">giao_vien</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="k">EXCEPT</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">ma_gvcn</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">lop</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">ma_gv</span><span class="p">;</span>
 </span></code></pre></div>
 <p>Ba người đó là <code>GV06</code>, <code>GV07</code>, <code>GV08</code>. Từ khoá tương ứng là <strong><code>EXCEPT</code></strong> (một số DBMS khác gọi là <code>MINUS</code>).</p>
 <div class="admonition note">
@@ -2009,9 +2059,9 @@
 <p><strong>Toán:</strong> <code>lop × giao_vien</code>
 <strong>Tiếng Việt:</strong> <em>"Ghép mọi lớp với mọi giáo viên."</em></p>
 </blockquote>
-<div class="highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1">-- KỲ VỌNG: so_dong = 48</span>
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_dong</span>
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="k">FROM</span><span class="w"> </span><span class="n">lop</span><span class="w"> </span><span class="k">CROSS</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">giao_vien</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1">-- KỲ VỌNG: so_dong = 48</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_dong</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="k">FROM</span><span class="w"> </span><span class="n">lop</span><span class="w"> </span><span class="k">CROSS</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">giao_vien</span><span class="p">;</span>
 </span></code></pre></div>
 <p>6 lớp × 8 giáo viên = <strong>48</strong> dòng. Không có ý nghĩa nghiệp vụ nào, nhưng là <strong>nguyên liệu</strong> để dựng phép kết nối ở bước sau.</p>
 <p>Từ khoá tương ứng là <strong><code>CROSS JOIN</code></strong> — hoặc chỉ cần viết hai bảng cách nhau bằng dấu phẩy trong <code>FROM</code> và <strong>quên</strong> điều kiện nối. Chính cái "quên" đó là lỗi kinh điển ở <a href="../25-join/">Bài 25</a>.</p>
@@ -2020,10 +2070,10 @@
 <p><strong>Toán:</strong> <code>ρ_{g1}(giao_vien) × ρ_{g2}(giao_vien)</code>
 <strong>Tiếng Việt:</strong> <em>"Đặt cho bảng giáo viên hai cái tên tạm để ghép nó với chính nó."</em></p>
 </blockquote>
-<div class="highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1">-- KỲ VỌNG: so_cap = 28</span>
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_cap</span>
-</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="k">FROM</span><span class="w"> </span><span class="n">giao_vien</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">g1</span>
-</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="k">JOIN</span><span class="w"> </span><span class="n">giao_vien</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">g2</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">g1</span><span class="p">.</span><span class="n">luong</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">g2</span><span class="p">.</span><span class="n">luong</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1">-- KỲ VỌNG: so_cap = 28</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_cap</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="k">FROM</span><span class="w"> </span><span class="n">giao_vien</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">g1</span>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="k">JOIN</span><span class="w"> </span><span class="n">giao_vien</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">g2</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">g1</span><span class="p">.</span><span class="n">luong</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">g2</span><span class="p">.</span><span class="n">luong</span><span class="p">;</span>
 </span></code></pre></div>
 <p>Từ khoá tương ứng là <strong><code>AS</code></strong>. Không có <code>g1</code> và <code>g2</code>, câu này không viết nổi — bạn sẽ không có cách nào phân biệt <code>luong</code> của bên nào với bên nào.</p>
 <p>8 giáo viên có 8 mức lương khác nhau, nên số cặp <em>(người lương cao hơn, người lương thấp hơn)</em> đúng bằng số cặp không xếp thứ tự của 8 phần tử: <code>8 × 7 ÷ 2 = 28</code>.</p>
@@ -2032,35 +2082,35 @@
 <p><strong>Toán:</strong> <code>π_{ma_hs}(muon_sach) ∩ π_{ma_hs}(σ_{ma_lop='L01'}(hoc_sinh))</code>
 <strong>Tiếng Việt:</strong> <em>"Học sinh lớp L01 nào đã từng mượn sách?"</em></p>
 </blockquote>
-<div class="highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1">-- KỲ VỌNG: 6 dòng</span>
-</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">ma_hs</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">muon_sach</span>
-</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="k">INTERSECT</span>
-</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">ma_hs</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">ma_lop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'L01'</span>
-</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">ma_hs</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1">-- KỲ VỌNG: 6 dòng</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">ma_hs</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">muon_sach</span>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="k">INTERSECT</span>
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">ma_hs</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">ma_lop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'L01'</span>
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">ma_hs</span><span class="p">;</span>
 </span></code></pre></div>
 <p>Cả 6 bạn lớp L01 đều đã mượn sách. Từ khoá tương ứng là <strong><code>INTERSECT</code></strong>.</p>
 <h3 id="8-phep-ket-noi-ba-bien-the">8. ⋈ — Phép kết nối, ba biến thể<a class="headerlink" href="#8-phep-ket-noi-ba-bien-the" title="Permanent link">&para;</a></h3>
-<p><strong>a) Kết nối bằng</strong> (<em>equi join</em>) — điều kiện chỉ có dấu <code>=</code>:</p>
+<p><strong>a) Kết nối bằng</strong> — điều kiện chỉ có dấu <code>=</code>:</p>
 <blockquote>
 <p><strong>Toán:</strong> <code>hoc_sinh ⋈_{hoc_sinh.ma_lop = lop.ma_lop} lop</code>
 <strong>Tiếng Việt:</strong> <em>"Mỗi học sinh kèm tên lớp của bạn ấy."</em></p>
 </blockquote>
-<div class="highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1">-- KỲ VỌNG: so_dong = 40</span>
-</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_dong</span>
-</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span><span class="w"> </span><span class="n">h</span>
-</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="k">JOIN</span><span class="w"> </span><span class="n">lop</span><span class="w"> </span><span class="n">l</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">ma_lop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">ma_lop</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1">-- KỲ VỌNG: so_dong = 40</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_dong</span>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span><span class="w"> </span><span class="n">h</span>
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="k">JOIN</span><span class="w"> </span><span class="n">lop</span><span class="w"> </span><span class="n">l</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">ma_lop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">ma_lop</span><span class="p">;</span>
 </span></code></pre></div>
-<p><strong>b) Kết nối tự nhiên</strong> (<em>natural join</em>) — tự tìm cột trùng tên:</p>
+<p><strong>b) Kết nối tự nhiên</strong> — tự tìm cột trùng tên:</p>
 <blockquote>
 <p><strong>Toán:</strong> <code>hoc_sinh ⋈ lop</code>
 <strong>Tiếng Việt:</strong> <em>"Ghép hai bảng theo mọi cột cùng tên — ở đây chỉ có <code>ma_lop</code>."</em></p>
 </blockquote>
-<div class="highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1">-- KỲ VỌNG: so_dong = 40</span>
-</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_dong</span>
-</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span><span class="w"> </span><span class="k">NATURAL</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">lop</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1">-- KỲ VỌNG: so_dong = 40</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_dong</span>
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span><span class="w"> </span><span class="k">NATURAL</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">lop</span><span class="p">;</span>
 </span></code></pre></div>
 <p>Kết quả giống hệt câu trên, nhưng bảng ra chỉ có <strong>một</strong> cột <code>ma_lop</code> chứ không phải hai.</p>
-<p><strong>c) Kết nối theta</strong> (<em>theta join</em>) — điều kiện là phép so sánh bất kỳ:</p>
+<p><strong>c) Kết nối theta</strong> — điều kiện là phép so sánh bất kỳ:</p>
 <blockquote>
 <p><strong>Toán:</strong> <code>giao_vien ⋈_{g1.luong &gt; g2.luong} giao_vien</code>
 <strong>Tiếng Việt:</strong> <em>"Mọi cặp giáo viên mà người thứ nhất lương cao hơn người thứ hai."</em></p>
@@ -2072,23 +2122,23 @@
 <strong>Tiếng Việt:</strong> <em>"Giáo viên nào được phân công dạy ở </em><em>tất cả</em><em> các lớp khối 8?"</em></p>
 </blockquote>
 <p>SQL không có toán tử chia. Cách dựng phổ biến nhất là <strong>đếm và so sánh</strong>: gom theo giáo viên, đếm xem người đó chạm tới bao nhiêu lớp khối 8, rồi giữ những người chạm đủ cả 3.</p>
-<div class="highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1">-- KỲ VỌNG: 8 dòng</span>
-</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">pc</span><span class="p">.</span><span class="n">ma_gv</span>
-</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="k">FROM</span><span class="w"> </span><span class="n">phan_cong_day</span><span class="w"> </span><span class="n">pc</span>
-</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="k">JOIN</span><span class="w"> </span><span class="n">lop</span><span class="w"> </span><span class="n">l</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">ma_lop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">pc</span><span class="p">.</span><span class="n">ma_lop</span>
-</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">khoi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">8</span>
-</span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">pc</span><span class="p">.</span><span class="n">ma_gv</span>
-</span><span id="__span-12-7"><a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="k">HAVING</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="k">DISTINCT</span><span class="w"> </span><span class="n">pc</span><span class="p">.</span><span class="n">ma_lop</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">lop</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">khoi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">8</span><span class="p">)</span>
-</span><span id="__span-12-8"><a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">pc</span><span class="p">.</span><span class="n">ma_gv</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1">-- KỲ VỌNG: 8 dòng</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">pc</span><span class="p">.</span><span class="n">ma_gv</span>
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="k">FROM</span><span class="w"> </span><span class="n">phan_cong_day</span><span class="w"> </span><span class="n">pc</span>
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="k">JOIN</span><span class="w"> </span><span class="n">lop</span><span class="w"> </span><span class="n">l</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">ma_lop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">pc</span><span class="p">.</span><span class="n">ma_lop</span>
+</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">khoi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">8</span>
+</span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">pc</span><span class="p">.</span><span class="n">ma_gv</span>
+</span><span id="__span-13-7"><a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="k">HAVING</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="k">DISTINCT</span><span class="w"> </span><span class="n">pc</span><span class="p">.</span><span class="n">ma_lop</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">lop</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">khoi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">8</span><span class="p">)</span>
+</span><span id="__span-13-8"><a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">pc</span><span class="p">.</span><span class="n">ma_gv</span><span class="p">;</span>
 </span></code></pre></div>
 <p>Cả <strong>8</strong> giáo viên đều dạy đủ ba lớp khối 8 (<code>L01</code>, <code>L02</code>, <code>L03</code>).</p>
 <p>Bây giờ đổi mẫu số thành <strong>toàn bộ 6 lớp</strong> của trường:</p>
-<div class="highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1">-- KỲ VỌNG: 0 dòng</span>
-</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">pc</span><span class="p">.</span><span class="n">ma_gv</span>
-</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="k">FROM</span><span class="w"> </span><span class="n">phan_cong_day</span><span class="w"> </span><span class="n">pc</span>
-</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">pc</span><span class="p">.</span><span class="n">ma_gv</span>
-</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="k">HAVING</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="k">DISTINCT</span><span class="w"> </span><span class="n">pc</span><span class="p">.</span><span class="n">ma_lop</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">lop</span><span class="p">)</span>
-</span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">pc</span><span class="p">.</span><span class="n">ma_gv</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1">-- KỲ VỌNG: 0 dòng</span>
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">pc</span><span class="p">.</span><span class="n">ma_gv</span>
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="k">FROM</span><span class="w"> </span><span class="n">phan_cong_day</span><span class="w"> </span><span class="n">pc</span>
+</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">pc</span><span class="p">.</span><span class="n">ma_gv</span>
+</span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="k">HAVING</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="k">DISTINCT</span><span class="w"> </span><span class="n">pc</span><span class="p">.</span><span class="n">ma_lop</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">lop</span><span class="p">)</span>
+</span><span id="__span-14-6"><a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">pc</span><span class="p">.</span><span class="n">ma_gv</span><span class="p">;</span>
 </span></code></pre></div>
 <p><strong>Không ai cả.</strong> Bảng <code>phan_cong_day</code> chỉ phân công cho <code>L01</code>–<code>L04</code>; hai lớp <code>L05</code> và <code>L06</code> chưa có ai dạy. Phép chia rất khắt khe: thiếu <strong>một</strong> phần tử của mẫu số là bị loại.</p>
 <div class="admonition note">
@@ -2158,7 +2208,7 @@
 <tr>
 <td>Kết nối bằng</td>
 <td>⋈</td>
-<td><code>JOIN ... ON a.x = b.x</code>, hoặc <code>USING (x)</code></td>
+<td><code>JOIN ... ON a.x = b.x</code>, hoặc lối viết gọn <code>USING (x)</code> khi hai bảng <strong>cùng tên cột</strong> — <a href="../25-join/">Bài 25</a> dạy kỹ</td>
 <td><a href="../25-join/">Bài 25</a></td>
 </tr>
 <tr>
@@ -2206,17 +2256,17 @@
 <p class="admonition-title">Lỗi 3: <code>UNION</code> hai bảng không khả hợp</p>
 <p>Phép ∪ đòi hai quan hệ <strong>khả hợp</strong>: cùng số cột, các cột tương ứng cùng miền giá trị.</p>
 <p><!-- sql:co-y-loi -->
-<div class="highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">ma_hs</span><span class="p">,</span><span class="w"> </span><span class="n">ho_ten</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span>
-</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="k">UNION</span>
-</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">ma_sach</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">sach</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">ma_hs</span><span class="p">,</span><span class="w"> </span><span class="n">ho_ten</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span>
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="k">UNION</span>
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">ma_sach</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">sach</span><span class="p">;</span>
 </span></code></pre></div></p>
 <p>PostgreSQL sẽ báo lỗi vì hai vế không cùng số cột. Sửa bằng cách cho hai vế cùng số cột và cùng kiểu:</p>
-<div class="highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1">-- KỲ VỌNG: so_dong = 60</span>
-</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_dong</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="p">(</span>
-</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="w">    </span><span class="k">SELECT</span><span class="w"> </span><span class="n">ho_ten</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span>
-</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="w">    </span><span class="k">UNION</span>
-</span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="w">    </span><span class="k">SELECT</span><span class="w"> </span><span class="n">ten_sach</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">sach</span>
-</span><span id="__span-15-6"><a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">t</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1">-- KỲ VỌNG: so_dong = 60</span>
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_dong</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="p">(</span>
+</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="w">    </span><span class="k">SELECT</span><span class="w"> </span><span class="n">ho_ten</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span>
+</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="w">    </span><span class="k">UNION</span>
+</span><span id="__span-16-5"><a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="w">    </span><span class="k">SELECT</span><span class="w"> </span><span class="n">ten_sach</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">sach</span>
+</span><span id="__span-16-6"><a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">t</span><span class="p">;</span>
 </span></code></pre></div>
 <p>40 tên học sinh phân biệt cộng 20 tên sách phân biệt, không có tên nào trùng nhau — ra đúng 60.</p>
 </div>
@@ -2263,13 +2313,13 @@
 <p>Chú ý thứ tự: <strong>chọn trước, chiếu sau</strong>. Viết ngược lại — <code>σ_{luong &gt; 15000000}(π_{ho_ten}(giao_vien))</code> — là <strong>sai</strong>, vì sau khi chiếu chỉ còn cột <code>ho_ten</code>, không còn cột <code>luong</code> để mà lọc nữa.</p>
 <p>b. <code>π_{khoi}(lop)</code></p>
 <p><code>DISTINCT</code> không cần dịch thành gì thêm, vì bản thân π đã bỏ trùng rồi.</p>
-<p>c. <code>hoc_sinh ⋈_{hoc_sinh.ma_lop = lop.ma_lop} lop</code> — một <strong>kết nối bằng</strong> (<em>equi join</em>).</p>
+<p>c. <code>hoc_sinh ⋈_{hoc_sinh.ma_lop = lop.ma_lop} lop</code> — một <strong>kết nối bằng</strong>.</p>
 <p><strong>Câu 2.</strong></p>
-<div class="highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1">-- KỲ VỌNG: 8 dòng</span>
-</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">DISTINCT</span><span class="w"> </span><span class="n">ten_sach</span>
-</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="k">FROM</span><span class="w"> </span><span class="n">sach</span>
-</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">nam_xuat_ban</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">1950</span>
-</span><span id="__span-16-5"><a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">ten_sach</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1">-- KỲ VỌNG: 8 dòng</span>
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">DISTINCT</span><span class="w"> </span><span class="n">ten_sach</span>
+</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="k">FROM</span><span class="w"> </span><span class="n">sach</span>
+</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">nam_xuat_ban</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">1950</span>
+</span><span id="__span-17-5"><a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">ten_sach</span><span class="p">;</span>
 </span></code></pre></div>
 <p><strong>8 dòng.</strong> Các cuốn thoả điều kiện là <code>S001</code> <em>Dế Mèn phiêu lưu ký</em> (1941), <code>S006</code> <em>Số đỏ</em> (1936), <code>S007</code> <em>Chí Phèo</em> (1941), <code>S008</code> <em>Lão Hạc</em> (1943), <code>S009</code> <em>Tắt đèn</em> (1939), <code>S010</code> <em>Vang bóng một thời</em> (1940), <code>S016</code> <em>Không gia đình</em> (1878), <code>S017</code> <em>Hoàng tử bé</em> (1943).</p>
 <p><code>DISTINCT</code> ở đây không bỏ dòng nào, vì 8 tên sách này vốn đã khác nhau. Nhưng vẫn nên viết, vì biểu thức toán có π thì bản dịch SQL trung thành phải có <code>DISTINCT</code>.</p>
@@ -2277,9 +2327,9 @@
 <p>a. <code>40 × 9 = 360</code> dòng.</p>
 <p>b. <code>hoc_sinh</code> có 6 cột, <code>mon_hoc</code> có 3 cột → tích có <strong>9 cột</strong>. Quy tắc: tích Descartes <strong>nhân số dòng</strong> nhưng <strong>cộng số cột</strong>.</p>
 <p>c. Câu lệnh:</p>
-<div class="highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1">-- KỲ VỌNG: so_dong = 360</span>
-</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_dong</span>
-</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span><span class="w"> </span><span class="k">CROSS</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">mon_hoc</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1">-- KỲ VỌNG: so_dong = 360</span>
+</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_dong</span>
+</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span><span class="w"> </span><span class="k">CROSS</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">mon_hoc</span><span class="p">;</span>
 </span></code></pre></div>
 <p><strong>Câu 4.</strong></p>
 <p>Truy vấn đó phải so sánh bảng <code>hoc_sinh</code> với <strong>chính nó</strong> — lấy một học sinh ở "bên trái" và một học sinh ở "bên phải", rồi so tháng sinh của hai bên.</p>
@@ -2288,12 +2338,12 @@
 <p>Đây là lý do ρ được xếp vào <strong>sáu phép cơ bản</strong> dù thoạt nhìn nó chẳng "làm" gì với dữ liệu: bỏ nó đi thì một lớp truy vấn hoàn toàn biến mất. <a href="../25-join/">Bài 25</a> gọi kỹ thuật này là <code>SELF JOIN</code>.</p>
 <p><strong>Câu 5.</strong></p>
 <p>Chữ <strong>"tất cả"</strong> là dấu hiệu của <strong>phép chia ÷</strong>. Cụ thể: <code>π_{ma_hs, ma_mon}(diem) ÷ π_{ma_mon}(mon_hoc)</code>.</p>
-<div class="highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1">-- KỲ VỌNG: 40 dòng</span>
-</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">d</span><span class="p">.</span><span class="n">ma_hs</span>
-</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="k">FROM</span><span class="w"> </span><span class="n">diem</span><span class="w"> </span><span class="n">d</span>
-</span><span id="__span-18-4"><a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">d</span><span class="p">.</span><span class="n">ma_hs</span>
-</span><span id="__span-18-5"><a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="k">HAVING</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="k">DISTINCT</span><span class="w"> </span><span class="n">d</span><span class="p">.</span><span class="n">ma_mon</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">mon_hoc</span><span class="p">)</span>
-</span><span id="__span-18-6"><a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">d</span><span class="p">.</span><span class="n">ma_hs</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1">-- KỲ VỌNG: 40 dòng</span>
+</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">d</span><span class="p">.</span><span class="n">ma_hs</span>
+</span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="k">FROM</span><span class="w"> </span><span class="n">diem</span><span class="w"> </span><span class="n">d</span>
+</span><span id="__span-19-4"><a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">d</span><span class="p">.</span><span class="n">ma_hs</span>
+</span><span id="__span-19-5"><a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a><span class="k">HAVING</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="k">DISTINCT</span><span class="w"> </span><span class="n">d</span><span class="p">.</span><span class="n">ma_mon</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">mon_hoc</span><span class="p">)</span>
+</span><span id="__span-19-6"><a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">d</span><span class="p">.</span><span class="n">ma_hs</span><span class="p">;</span>
 </span></code></pre></div>
 <p>Kết quả: <strong>40 dòng</strong> — toàn bộ học sinh của trường. Dữ liệu mẫu cho mỗi học sinh một điểm "Học kỳ" ở cả 9 môn, nên không ai bị thiếu.</p>
 <p>Lưu ý <code>count(DISTINCT d.ma_mon)</code> chứ không phải <code>count(*)</code>: mỗi học sinh có 12 dòng điểm (9 điểm Học kỳ + 3 điểm 1 tiết), nên <code>count(*)</code> sẽ ra 12 và so với 9 là trượt hết. Phép chia quan tâm tới <strong>tập các môn phân biệt</strong>, không quan tâm tới số lần.</p>
