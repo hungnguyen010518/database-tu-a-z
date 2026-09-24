@@ -5,7 +5,7 @@ Toàn bộ thuật ngữ chuyên ngành xuất hiện trong khóa học, đối 
 Bảng được sắp xếp theo thứ tự chữ cái của **thuật ngữ tiếng Anh**, vì đó là dạng bạn sẽ gặp khi đọc tài liệu và khi đi phỏng vấn.
 
 !!! info "Bảng này lớn dần theo khóa học"
-    Mỗi khi một cấp độ mới được xuất bản, thuật ngữ của cấp đó được bổ sung vào đây. Hiện bảng phủ trọn **Bài 1–20**: Cấp 0 (Nhập môn), Cấp 1 (Mô hình quan hệ & ER) và Cấp 2 (Chuẩn hoá).
+    Mỗi khi một cấp độ mới được xuất bản, thuật ngữ của cấp đó được bổ sung vào đây. Hiện bảng phủ trọn **Bài 1–26**: Cấp 0 (Nhập môn), Cấp 1 (Mô hình quan hệ & ER), Cấp 2 (Chuẩn hoá) và nửa đầu Cấp 3 (SQL).
 
 !!! tip "Vì sao có nhiều từ trùng nghĩa?"
     *record* / *row* / *tuple* cùng chỉ **một hàng**, còn *field* / *column* / *attribute* cùng chỉ **một cột**. Bảng giữ đủ cả ba vì bạn sẽ gặp cả ba khi đọc tài liệu; cột nghĩa có trỏ chéo sang các biến thể còn lại.
@@ -21,10 +21,13 @@ Bảng được sắp xếp theo thứ tự chữ cái của **thuật ngữ ti�
 | Tiếng Việt | English | Nghĩa trong một câu | Học ở bài |
 |---|---|---|---|
 | Ràng buộc giới hạn tổng | *aggregate constraint* | Luật nghiệp vụ phải cộng hoặc đếm qua nhiều dòng mới kiểm được, nên khoá ngoại và `UNIQUE` không cưỡng chế nổi | [Bài 14](cap-1-mo-hinh-er/14-chuyen-er-sang-bang.md) |
+| Hàm tổng hợp | *aggregate function* | Hàm nhận nhiều dòng và trả về một giá trị duy nhất, ví dụ `COUNT`, `SUM`, `AVG`, `MIN`, `MAX` | [Bài 26](cap-3-sql/26-group-by-having.md) |
 | Kết tập | *aggregation* | Coi cả một mối quan hệ như một thực thể duy nhất, để nó tham gia được vào một mối quan hệ khác | [Bài 13](cap-1-mo-hinh-er/13-mo-hinh-eer.md) |
+| Bí danh | *alias* | Tên tạm đặt cho cột hoặc bảng bằng `AS` — chính là phép đổi tên ρ của đại số quan hệ | [Bài 24](cap-3-sql/24-select-where-order-by.md) |
 | Khoá thay thế | *alternate key* | Khoá dự tuyển không được chọn làm khoá chính, thường giữ bằng `UNIQUE` | [Bài 12](cap-1-mo-hinh-er/12-bay-loai-khoa.md) |
 | Mô hình neo | *anchor modeling* | Kiểu thiết kế kho dữ liệu theo 6NF: mỗi thuộc tính một bảng riêng, nên thêm thuộc tính mới không phải đụng bảng cũ | [Bài 19](cap-2-chuan-hoa/19-dang-chuan-4nf-5nf-6nf.md) |
 | Bất thường | *anomaly* | Tình huống mà một thao tác hoàn toàn bình thường lại làm hỏng dữ liệu | [Bài 2](cap-0-nhap-mon/02-tu-so-giay-den-excel.md) |
+| Kết nối chống | *anti join* | Khuôn `LEFT JOIN ... WHERE <khoá bảng phải> IS NULL` để tìm những dòng không có bạn khớp bên kia | [Bài 25](cap-3-sql/25-join.md) |
 | Tiên đề Armstrong | *Armstrong's axioms* | Ba luật — phản xạ, tăng trưởng, bắc cầu — đủ để suy ra mọi phụ thuộc hàm suy ra được | [Bài 16](cap-2-chuan-hoa/16-phu-thuoc-ham.md) |
 | Nguyên tử | *atomic* | Không chia nhỏ hơn được nữa, theo nhu cầu nghiệp vụ | [Bài 17](cap-2-chuan-hoa/17-dang-chuan-1nf-2nf.md) |
 | Tính nguyên tử | *atomicity* | Tính chất mỗi ô chỉ chứa đúng một giá trị đơn, không chứa danh sách | [Bài 6](cap-1-mo-hinh-er/06-mo-hinh-quan-he.md) |
@@ -49,11 +52,14 @@ Bảng được sắp xếp theo thứ tự chữ cái của **thuật ngữ ti�
 | Bản số | *cardinality* | Một thực thể phía này ghép được với tối đa bao nhiêu thực thể phía kia | [Bài 8](cap-1-mo-hinh-er/08-moi-quan-he-va-cardinality.md) |
 | Lực lượng | *cardinality of a relation* | Số dòng của một bảng — đừng nhầm với *cardinality* (bản số) ở Bài 8 | [Bài 6](cap-1-mo-hinh-er/06-mo-hinh-quan-he.md) |
 | Tỉ lệ bản số | *cardinality ratio* | Cách viết gọn bản số: 1:1, 1:N hoặc M:N | [Bài 8](cap-1-mo-hinh-er/08-moi-quan-he-va-cardinality.md) |
+| Tích Descartes bùng nổ | *Cartesian explosion* | Quên điều kiện ghép nên số dòng nhân lên theo tích hai bảng — không báo lỗi, chỉ treo máy | [Bài 25](cap-3-sql/25-join.md) |
+| Tích Descartes | *Cartesian product* | Phép × ghép mọi dòng bảng này với mọi dòng bảng kia, cho ra `m × n` dòng | [Bài 21](cap-3-sql/21-dai-so-quan-he.md) |
 | Danh mục hệ thống | *catalog* | Tên gọi khác của từ điển dữ liệu | [Bài 3](cap-0-nhap-mon/03-dbms-la-gi.md) |
 | Ký hiệu Chen | *Chen notation* | Bộ ký hiệu ER gốc năm 1976: mỗi loại phần tử một hình riêng, mỗi thuộc tính một elip treo ra ngoài | [Bài 10](cap-1-mo-hinh-er/10-bieu-do-er-ky-hieu-chen.md) |
 | Máy khách | *client* | Chương trình gõ cửa máy chủ để gửi câu lệnh, ví dụ `psql` | [Bài 5](cap-0-nhap-mon/05-cai-dat-postgresql.md) |
 | Máy khách – máy chủ | *client–server* | Mô hình nhiều máy khách cùng kết nối tới một máy chủ giữ kho dữ liệu duy nhất | [Bài 5](cap-0-nhap-mon/05-cai-dat-postgresql.md) |
 | Bao đóng của tập phụ thuộc hàm | *closure of F* | Tập mọi phụ thuộc hàm suy ra được từ `F`, ký hiệu `F⁺` | [Bài 16](cap-2-chuan-hoa/16-phu-thuoc-ham.md) |
+| Tính khả đóng | *closure property* | Mọi phép của đại số quan hệ đều trả về một quan hệ, nên lồng phép này vào phép kia được không giới hạn | [Bài 21](cap-3-sql/21-dai-so-quan-he.md) |
 | Cụm cơ sở dữ liệu | *cluster* | Tập hợp các database do một máy chủ PostgreSQL quản lý | [Bài 5](cap-0-nhap-mon/05-cai-dat-postgresql.md) |
 | Cột | *column* | Cách gọi khác của *field* (trường) và *attribute* (thuộc tính) | [Bài 1](cap-0-nhap-mon/01-du-lieu-va-thong-tin.md) |
 | Cột rộng | *column-family* | Họ NoSQL lưu bảng khổng lồ mà mỗi dòng có bộ cột riêng | [Bài 4](cap-0-nhap-mon/04-cac-mo-hinh-du-lieu.md) |
@@ -63,8 +69,10 @@ Bảng được sắp xếp theo thứ tự chữ cái của **thuật ngữ ti�
 | Mức khái niệm (mức ý niệm) | *conceptual level* | Mức mô tả toàn bộ database — có bảng nào, cột nào, ràng buộc gì — dùng chung cho mọi người | [Bài 3](cap-0-nhap-mon/03-dbms-la-gi.md) |
 | Đồng thời | *concurrency* | Nhiều người cùng đọc và ghi trên một tập dữ liệu tại cùng một thời điểm | [Bài 2](cap-0-nhap-mon/02-tu-so-giay-den-excel.md) |
 | Vùng chứa | *container* | Cái hộp chạy sẵn một phần mềm, tách biệt hẳn với máy thật | [Bài 5](cap-0-nhap-mon/05-cai-dat-postgresql.md) |
+| Kết nối chéo | *CROSS JOIN* | Cú pháp SQL của tích Descartes: ghép mọi dòng với mọi dòng, không có điều kiện | [Bài 25](cap-3-sql/25-join.md) |
 | Chân quạ | *crow's foot* | Ba nhánh toẽ ra sát hình chữ nhật, nghĩa là phía nhiều | [Bài 11](cap-1-mo-hinh-er/11-bieu-do-er-crows-foot.md) |
 | Ký hiệu Crow's Foot | *Crow's Foot notation* | Bộ ký hiệu ER gọn: cột liệt kê bên trong hình chữ nhật, bản số ghi bằng ký hiệu ở đầu đường | [Bài 11](cap-1-mo-hinh-er/11-bieu-do-er-crows-foot.md) |
+| Gom theo mọi tổ hợp | *CUBE* | Mệnh đề sinh thêm dòng tổng cho mọi tổ hợp của các cột gom | [Bài 26](cap-3-sql/26-group-by-having.md) |
 
 ## D
 
@@ -72,27 +80,37 @@ Bảng được sắp xếp theo thứ tự chữ cái của **thuật ngữ ti�
 |---|---|---|---|
 | Dữ liệu | *data* | Sự kiện thô đã được ghi lại, chưa qua xử lý | [Bài 1](cap-0-nhap-mon/01-du-lieu-va-thong-tin.md) |
 | Làm sạch dữ liệu | *data cleansing* | Việc dọn dữ liệu đã gõ sai, gõ thiếu hoặc gõ không thống nhất — khác hẳn chuẩn hoá | [Bài 18](cap-2-chuan-hoa/18-dang-chuan-3nf-bcnf.md) |
+| Ngôn ngữ điều khiển dữ liệu | *Data Control Language* (DCL) | Nhóm lệnh SQL cấp và thu hồi quyền: `GRANT`, `REVOKE` | [Bài 22](cap-3-sql/22-ddl-va-kieu-du-lieu.md) |
+| Ngôn ngữ định nghĩa dữ liệu | *Data Definition Language* (DDL) | Nhóm lệnh SQL dựng và sửa cấu trúc: `CREATE`, `ALTER`, `DROP`, `TRUNCATE` | [Bài 22](cap-3-sql/22-ddl-va-kieu-du-lieu.md) |
 | Từ điển dữ liệu | *data dictionary* | Các bảng nằm trong chính database, dùng để lưu lược đồ của nó | [Bài 3](cap-0-nhap-mon/03-dbms-la-gi.md) |
 | Độc lập dữ liệu | *data independence* | Khả năng sửa một mức mà không phải sửa mức phía trên | [Bài 3](cap-0-nhap-mon/03-dbms-la-gi.md) |
 | Toàn vẹn dữ liệu | *data integrity* | Tính đúng đắn và nhất quán của dữ liệu trong suốt vòng đời của nó | [Bài 2](cap-0-nhap-mon/02-tu-so-giay-den-excel.md) |
+| Ngôn ngữ thao tác dữ liệu | *Data Manipulation Language* (DML) | Nhóm lệnh SQL làm việc với nội dung bảng: `INSERT`, `UPDATE`, `DELETE`, `SELECT` | [Bài 22](cap-3-sql/22-ddl-va-kieu-du-lieu.md) |
 | Mô hình dữ liệu | *data model* | Tập quy ước về cách tổ chức dữ liệu, ràng buộc đặt được và phép thao tác dùng được | [Bài 4](cap-0-nhap-mon/04-cac-mo-hinh-du-lieu.md) |
+| Ngôn ngữ truy vấn dữ liệu (DQL) | *Data Query Language* | Tên mà một số tài liệu tách riêng cho `SELECT`, vì nó chỉ đọc chứ không sửa; chuẩn SQL xếp `SELECT` vào DML | [Bài 22](cap-3-sql/22-ddl-va-kieu-du-lieu.md) |
 | Dư thừa dữ liệu | *data redundancy* | Cùng một sự thật được lưu ở nhiều chỗ | [Bài 2](cap-0-nhap-mon/02-tu-so-giay-den-excel.md) |
+| Kiểu dữ liệu | *data type* | Khai báo loại giá trị một cột được phép chứa — quyết định cả miền giá trị, cách so sánh, phép toán dùng được và dung lượng | [Bài 22](cap-3-sql/22-ddl-va-kieu-du-lieu.md) |
 | Cơ sở dữ liệu | *database* | Tập hợp các bảng có liên quan, được tổ chức để dễ dùng lại | [Bài 1](cap-0-nhap-mon/01-du-lieu-va-thong-tin.md) |
-| Hệ quản trị cơ sở dữ liệu | *DBMS — database management system* | Phần mềm quản lý cơ sở dữ liệu, ví dụ PostgreSQL, MySQL, Oracle | [Bài 3](cap-0-nhap-mon/03-dbms-la-gi.md) |
 | Lược đồ cơ sở dữ liệu | *database schema* | Toàn bộ lược đồ quan hệ của một database ghép lại | [Bài 6](cap-1-mo-hinh-er/06-mo-hinh-quan-he.md) |
 | Hệ cơ sở dữ liệu | *database system* | DBMS cộng các database nó quản lý, cộng người dùng và ứng dụng dùng chúng | [Bài 3](cap-0-nhap-mon/03-dbms-la-gi.md) |
+| Hệ quản trị cơ sở dữ liệu | *DBMS — database management system* | Phần mềm quản lý cơ sở dữ liệu, ví dụ PostgreSQL, MySQL, Oracle | [Bài 3](cap-0-nhap-mon/03-dbms-la-gi.md) |
 | Khai báo | *declarative* | Kiểu ngôn ngữ chỉ mô tả thứ mình muốn, để phần mềm tự tìm cách lấy | [Bài 4](cap-0-nhap-mon/04-cac-mo-hinh-du-lieu.md) |
 | Luật tách | *decomposition* | Luật suy diễn: `X → YZ` thì `X → Y` và `X → Z` | [Bài 16](cap-2-chuan-hoa/16-phu-thuoc-ham.md) |
+| Giá trị mặc định | *default value* | Giá trị DBMS tự điền khi câu `INSERT` không nhắc tới cột; nó **không** thay được cho `NOT NULL` | [Bài 22](cap-3-sql/22-ddl-va-kieu-du-lieu.md) |
 | Ràng buộc hoãn | *deferrable constraint* | Ràng buộc hoãn được việc kiểm tra tới lúc `COMMIT` thay vì kiểm ngay | [Bài 15](cap-1-mo-hinh-er/15-rang-buoc-toan-ven.md) |
 | Bậc của quan hệ | *degree / arity* | Số cột của một bảng | [Bài 6](cap-1-mo-hinh-er/06-mo-hinh-quan-he.md) |
 | Bậc của mối quan hệ | *degree of a relationship* | Số tập thực thể tham gia vào một mối quan hệ | [Bài 8](cap-1-mo-hinh-er/08-moi-quan-he-va-cardinality.md) |
+| Xoá dòng | *delete* | Lệnh DML bỏ các dòng thoả điều kiện; đi qua từng dòng nên kiểm khoá ngoại và kích hoạt trigger | [Bài 23](cap-3-sql/23-dml-insert-update-delete.md) |
 | Bất thường khi xoá | *deletion anomaly* | Xoá một sự thật thì vô tình mất luôn một sự thật khác | [Bài 2](cap-0-nhap-mon/02-tu-so-giay-den-excel.md) |
 | Phi chuẩn hoá | *denormalization* | Cố ý đưa dư thừa trở lại một lược đồ **đã được chuẩn hoá**, để đổi lấy tốc độ đọc | [Bài 20](cap-2-chuan-hoa/20-denormalization.md) |
 | Bảo toàn phụ thuộc | *dependency preservation* | Phép tách mà gom các phụ thuộc hàm kiểm được trên từng bảng con lại vẫn suy ra được toàn bộ `F⁺` | [Bài 18](cap-2-chuan-hoa/18-dang-chuan-3nf-bcnf.md) |
 | Cột tính sẵn | *derived / computed column* | Cột lưu sẵn kết quả một phép tính từ dữ liệu khác | [Bài 20](cap-2-chuan-hoa/20-denormalization.md) |
 | Thuộc tính dẫn xuất | *derived attribute* | Thuộc tính tính ra được từ thuộc tính khác hoặc từ bảng khác | [Bài 7](cap-1-mo-hinh-er/07-thuc-the-va-thuoc-tinh.md) |
+| Phép dẫn xuất | *derived operation* | Phép của đại số quan hệ viết lại được bằng các phép cơ bản — gồm ∩, ⋈ và ÷ | [Bài 21](cap-3-sql/21-dai-so-quan-he.md) |
 | Định thức | *determinant* | Vế trái của một phụ thuộc hàm — thứ mà khi biết nó thì biết được vế phải | [Bài 16](cap-2-chuan-hoa/16-phu-thuoc-ham.md) |
+| Phép hiệu | *difference* | Phép − lấy những dòng có ở quan hệ trái mà không có ở quan hệ phải; trong SQL là `EXCEPT` | [Bài 21](cap-3-sql/21-dai-so-quan-he.md) |
 | Ràng buộc disjoint | *disjoint* | Mỗi thực thể lớp cha thuộc tối đa một lớp con | [Bài 13](cap-1-mo-hinh-er/13-mo-hinh-eer.md) |
+| Phép chia | *division* | Phép ÷ trả lời câu hỏi "giá trị nào đi kèm với **toàn bộ** một tập cho trước"; SQL không có từ khoá riêng cho nó | [Bài 21](cap-3-sql/21-dai-so-quan-he.md) |
 | Tài liệu | *document* | Họ NoSQL lưu mỗi bản ghi thành một tệp JSON tự chứa mọi thứ | [Bài 4](cap-0-nhap-mon/04-cac-mo-hinh-du-lieu.md) |
 | Miền giá trị | *domain* | Tập hợp tất cả các giá trị hợp lệ mà một thuộc tính được phép nhận | [Bài 6](cap-1-mo-hinh-er/06-mo-hinh-quan-he.md) |
 | Toàn vẹn miền | *domain integrity* | Mọi ô phải nằm trong miền giá trị hợp lệ của cột | [Bài 15](cap-1-mo-hinh-er/15-rang-buoc-toan-ven.md) |
@@ -106,7 +124,9 @@ Bảng được sắp xếp theo thứ tự chữ cái của **thuật ngữ ti�
 | Toàn vẹn thực thể | *entity integrity* | Khoá chính không bao giờ được `NULL`, và không bao giờ được trùng | [Bài 15](cap-1-mo-hinh-er/15-rang-buoc-toan-ven.md) |
 | Tập thực thể | *entity set* | Tập hợp mọi thực thể cùng loại — chính nó mới là thứ trở thành một bảng | [Bài 7](cap-1-mo-hinh-er/07-thuc-the-va-thuoc-tinh.md) |
 | Biểu đồ ER | *Entity–Relationship Diagram / ERD* | Bản vẽ mô tả các tập thực thể, thuộc tính của chúng, và các mối quan hệ giữa chúng | [Bài 10](cap-1-mo-hinh-er/10-bieu-do-er-ky-hieu-chen.md) |
+| Kết nối bằng | *equi join* | Kết nối mà điều kiện chỉ gồm các phép so sánh bằng — loại chiếm phần lớn công việc thực tế | [Bài 21](cap-3-sql/21-dai-so-quan-he.md) |
 | Ánh xạ ER sang quan hệ | *ER-to-relational mapping* | Thuật toán bảy bước chuyển một biểu đồ ER thành các bảng | [Bài 14](cap-1-mo-hinh-er/14-chuyen-er-sang-bang.md) |
+| Bảng ảo dòng bị từ chối | *EXCLUDED* | Bảng ảo trong `ON CONFLICT DO UPDATE`, chứa đúng dòng **mới** vừa định thêm nhưng bị đụng độ | [Bài 23](cap-3-sql/23-dml-insert-update-delete.md) |
 | Ràng buộc tồn tại | *existence dependency* | Tên gọi khác của tham gia toàn phần: thực thể không được phép tồn tại nếu thiếu liên kết đó | [Bài 9](cap-1-mo-hinh-er/09-participation-va-thuc-the-yeu.md) |
 | Mức ngoài | *external level* | Mức mô tả góc nhìn của từng người dùng, mỗi người chỉ thấy phần dữ liệu liên quan tới mình | [Bài 3](cap-0-nhap-mon/03-dbms-la-gi.md) |
 
@@ -117,11 +137,13 @@ Bảng được sắp xếp theo thứ tự chữ cái của **thuật ngữ ti�
 | Định lý Fagin | *Fagin's theorem* | `R` tách đôi không mất mát khi và chỉ khi có phụ thuộc đa trị tương ứng | [Bài 19](cap-2-chuan-hoa/19-dang-chuan-4nf-5nf-6nf.md) |
 | Trường | *field* | Một cột trong bảng — cách gọi khác của *column* và *attribute* | [Bài 1](cap-0-nhap-mon/01-du-lieu-va-thong-tin.md) |
 | Dạng chuẩn 5 | *Fifth Normal Form — 5NF / PJ-NF* | Mọi phụ thuộc kết nối không tầm thường của bảng đều suy ra được từ các khoá dự tuyển | [Bài 19](cap-2-chuan-hoa/19-dang-chuan-4nf-5nf-6nf.md) |
+| Lọc riêng cho một hàm | *FILTER* | Mệnh đề `FILTER (WHERE ...)` cho một hàm tổng hợp chỉ nhìn phần dòng nó cần | [Bài 26](cap-3-sql/26-group-by-having.md) |
 | Dạng chuẩn 1 | *First Normal Form — 1NF* | Mọi ô nguyên tử, không nhóm lặp, cột có tên riêng và cùng kiểu, thứ tự dòng và cột vô nghĩa, bảng có khoá chính | [Bài 17](cap-2-chuan-hoa/17-dang-chuan-1nf-2nf.md) |
 | Bảng bẹt | *flat table* | Một bảng duy nhất nhồi mọi thứ vào — gốc rễ của dư thừa và ba loại bất thường | [Bài 2](cap-0-nhap-mon/02-tu-so-giay-den-excel.md) |
 | Khoá ngoại | *foreign key* | Cột mang giá trị khoá chính của bảng khác, và chỉ được chứa giá trị có thật ở bảng đó | [Bài 2](cap-0-nhap-mon/02-tu-so-giay-den-excel.md) |
 | Dạng chuẩn 4 | *Fourth Normal Form — 4NF* | Bảng đã ở BCNF và mọi định thức đa trị đều là siêu khoá | [Bài 19](cap-2-chuan-hoa/19-dang-chuan-4nf-5nf-6nf.md) |
 | Phụ thuộc đầy đủ | *full functional dependency* | `X → Y` mà bỏ bất kỳ thuộc tính nào khỏi `X` là luật không còn đúng | [Bài 16](cap-2-chuan-hoa/16-phu-thuoc-ham.md) |
+| Kết nối ngoài đầy đủ | *FULL OUTER JOIN* | Giữ mọi dòng của cả hai bảng — dùng để đối chiếu hai danh sách và thấy phần lệch ở hai phía | [Bài 25](cap-3-sql/25-join.md) |
 | Phụ thuộc hàm | *functional dependency* | Luật *biết `X` thì biết chắc `Y`*, đúng với mọi trạng thái dữ liệu — Cấp 2 viết tắt là **PTH** | [Bài 16](cap-2-chuan-hoa/16-phu-thuoc-ham.md) |
 
 ## G
@@ -130,11 +152,14 @@ Bảng được sắp xếp theo thứ tự chữ cái của **thuật ngữ ti�
 |---|---|---|---|
 | Tổng quát hoá | *generalization* | Đi từ nhiều tập thực thể riêng lên, gom phần chung lại thành lớp cha | [Bài 13](cap-1-mo-hinh-er/13-mo-hinh-eer.md) |
 | Đồ thị | *graph* | Họ NoSQL lưu các điểm nối nhau bằng cạnh có nhãn | [Bài 4](cap-0-nhap-mon/04-cac-mo-hinh-du-lieu.md) |
+| Gom nhóm | *GROUP BY* | Gom các dòng cùng giá trị thành nhóm rồi áp hàm tổng hợp lên từng nhóm; không sinh nhóm rỗng | [Bài 26](cap-3-sql/26-group-by-having.md) |
+| Tập gom tự chọn | *GROUPING SETS* | Mệnh đề cho phép tự liệt kê chính xác các tổ hợp gom — dạng tổng quát của `ROLLUP` và `CUBE` | [Bài 26](cap-3-sql/26-group-by-having.md) |
 
 ## H
 
 | Tiếng Việt | English | Nghĩa trong một câu | Học ở bài |
 |---|---|---|---|
+| Lọc nhóm | *HAVING* | Lọc trên **nhóm** sau khi đã gom, nên dùng được hàm tổng hợp; khác `WHERE` vốn lọc từng dòng | [Bài 26](cap-3-sql/26-group-by-having.md) |
 | Mô hình phân cấp | *hierarchical model* | Mô hình tổ chức dữ liệu thành cây: mỗi bản ghi có đúng một bản ghi cha | [Bài 4](cap-0-nhap-mon/04-cac-mo-hinh-du-lieu.md) |
 | Mở rộng ngang | *horizontal scaling* | Tăng sức chứa bằng cách thêm máy, thay vì mua một máy to hơn | [Bài 4](cap-0-nhap-mon/04-cac-mo-hinh-du-lieu.md) |
 
@@ -148,10 +173,13 @@ Bảng được sắp xếp theo thứ tự chữ cái của **thuật ngữ ti�
 | Chỉ mục | *index* | Cấu trúc ở mức trong giúp tìm dữ liệu nhanh hơn | [Bài 3](cap-0-nhap-mon/03-dbms-la-gi.md) |
 | Thông tin | *information* | Kết quả sau khi xử lý dữ liệu để trả lời một câu hỏi | [Bài 1](cap-0-nhap-mon/01-du-lieu-va-thong-tin.md) |
 | Ký hiệu IE | *Information Engineering notation* | Tên gọi học thuật khác của Crow's Foot | [Bài 11](cap-1-mo-hinh-er/11-bieu-do-er-crows-foot.md) |
+| Kết nối trong | *INNER JOIN* | Chỉ giữ những cặp dòng khớp nhau ở cả hai bảng — nên âm thầm đánh rơi dòng khi khoá ngoại là `NULL` | [Bài 25](cap-3-sql/25-join.md) |
+| Thêm dòng | *insert* | Lệnh DML đưa một hoặc nhiều dòng mới vào bảng | [Bài 23](cap-3-sql/23-dml-insert-update-delete.md) |
 | Bất thường khi thêm | *insertion anomaly* | Không ghi được một sự thật vì thiếu một sự thật khác chẳng liên quan | [Bài 2](cap-0-nhap-mon/02-tu-so-giay-den-excel.md) |
 | Thực thể lưu trữ (thể hiện) | *instance* | Dữ liệu đang nằm trong lược đồ tại một thời điểm cụ thể | [Bài 3](cap-0-nhap-mon/03-dbms-la-gi.md) |
 | Ràng buộc toàn vẹn | *integrity constraint* | Luật khai trong lược đồ, mà database bắt buộc kiểm tra trước mọi thay đổi dữ liệu | [Bài 15](cap-1-mo-hinh-er/15-rang-buoc-toan-ven.md) |
 | Mức trong | *internal level* | Mức mô tả dữ liệu thật sự được ghi xuống đĩa như thế nào | [Bài 3](cap-0-nhap-mon/03-dbms-la-gi.md) |
+| Phép giao | *intersection* | Phép ∩ lấy những dòng có mặt ở cả hai quan hệ; trong SQL là `INTERSECT` | [Bài 21](cap-3-sql/21-dai-so-quan-he.md) |
 | Quan hệ IS-A | *IS-A relationship* | Quan hệ *một A là một B* giữa lớp con và lớp cha | [Bài 13](cap-1-mo-hinh-er/13-mo-hinh-eer.md) |
 
 ## J
@@ -172,8 +200,10 @@ Bảng được sắp xếp theo thứ tự chữ cái của **thuật ngữ ti�
 
 | Tiếng Việt | English | Nghĩa trong một câu | Học ở bài |
 |---|---|---|---|
+| Kết nối ngoài bên trái | *LEFT OUTER JOIN* | Giữ mọi dòng bảng trái; các cột bên phải được điền `NULL` khi không tìm được dòng khớp | [Bài 25](cap-3-sql/25-join.md) |
 | Độc lập dữ liệu logic | *logical data independence* | Đổi mức khái niệm mà mức ngoài không phải đổi theo | [Bài 3](cap-0-nhap-mon/03-dbms-la-gi.md) |
 | Mức logic | *logical level* | Mức đã biết sẽ có bảng nào, cột nào, nhưng chưa chọn hệ quản trị và chưa nói tới lưu trữ vật lý | [Bài 11](cap-1-mo-hinh-er/11-bieu-do-er-crows-foot.md) |
+| Thứ tự thực thi logic | *logical query processing order* | Trình tự ngữ nghĩa `FROM` → `WHERE` → `GROUP BY` → `HAVING` → `SELECT` → `DISTINCT` → `ORDER BY` → `LIMIT`, khác thứ tự viết | [Bài 26](cap-3-sql/26-group-by-having.md) |
 | Phân rã không mất mát | *lossless-join decomposition* | Tách bảng rồi nối lại ra đúng bảng gốc: không thiếu dòng nào và không sinh thêm dòng nào | [Bài 18](cap-2-chuan-hoa/18-dang-chuan-3nf-bcnf.md) |
 | Mất cập nhật | *lost update* | Người này lưu đè mất phần người kia vừa ghi, vì mỗi người giữ một bản chụp riêng | [Bài 2](cap-0-nhap-mon/02-tu-so-giay-den-excel.md) |
 
@@ -188,11 +218,13 @@ Bảng được sắp xếp theo thứ tự chữ cái của **thuật ngữ ti�
 | Thuộc tính đa trị | *multi-valued attribute* | Thuộc tính mà một thực thể có thể có nhiều giá trị cùng lúc | [Bài 7](cap-1-mo-hinh-er/07-thuc-the-va-thuoc-tinh.md) |
 | Ô đa trị | *multi-valued cell* | Một ô bị nhồi nhiều giá trị — vi phạm 1NF | [Bài 17](cap-2-chuan-hoa/17-dang-chuan-1nf-2nf.md) |
 | Phụ thuộc đa trị | *multi-valued dependency — MVD* | Với mỗi giá trị của `X`, tập giá trị `Y` đi kèm là cố định và độc lập hẳn với phần còn lại của bảng | [Bài 19](cap-2-chuan-hoa/19-dang-chuan-4nf-5nf-6nf.md) |
+| Đa tập | *multiset* | Tập hợp có cho phép phần tử trùng nhau — đây là thứ SQL thật sự làm việc trên, khác tập hợp của toán học | [Bài 21](cap-3-sql/21-dai-so-quan-he.md) |
 
 ## N
 
 | Tiếng Việt | English | Nghĩa trong một câu | Học ở bài |
 |---|---|---|---|
+| Kết nối tự nhiên | *natural join* | Equi join tự động trên mọi cột trùng tên và bỏ bớt cột lặp — tiện nhưng dễ đổi kết quả trong im lặng, nên tránh | [Bài 21](cap-3-sql/21-dai-so-quan-he.md) |
 | Khoá tự nhiên | *natural key* | Khoá làm từ dữ liệu có thật ngoài đời, mang ý nghĩa nghiệp vụ | [Bài 12](cap-1-mo-hinh-er/12-bay-loai-khoa.md) |
 | Điều hướng thủ công | *navigational programming* | Kiểu lập trình phải tự viết lộ trình đi theo con trỏ mới lấy được dữ liệu | [Bài 4](cap-0-nhap-mon/04-cac-mo-hinh-du-lieu.md) |
 | Mô hình mạng | *network model* | Mô hình cho phép một bản ghi có nhiều cha, nối nhau bằng con trỏ | [Bài 4](cap-0-nhap-mon/04-cac-mo-hinh-du-lieu.md) |
@@ -216,6 +248,7 @@ Bảng được sắp xếp theo thứ tự chữ cái của **thuật ngữ ti�
 
 | Tiếng Việt | English | Nghĩa trong một câu | Học ở bài |
 |---|---|---|---|
+| Phân trang | *pagination* | Cắt kết quả thành từng trang bằng `LIMIT` và `OFFSET` | [Bài 24](cap-3-sql/24-select-where-order-by.md) |
 | Phụ thuộc bộ phận | *partial functional dependency* | `X → Y` mà chỉ một phần của `X` đã đủ xác định `Y` — vế trái thừa cột | [Bài 16](cap-2-chuan-hoa/16-phu-thuoc-ham.md) |
 | Khoá bộ phận | *partial key / discriminator* | Phần riêng của thực thể yếu, ghép với khoá của thực thể chủ mới đủ định danh | [Bài 9](cap-1-mo-hinh-er/09-participation-va-thuc-the-yeu.md) |
 | Tham gia bộ phận | *partial participation* | Được phép có thực thể không tham gia mối quan hệ — tối thiểu 0 | [Bài 9](cap-1-mo-hinh-er/09-participation-va-thuc-the-yeu.md) |
@@ -223,9 +256,12 @@ Bảng được sắp xếp theo thứ tự chữ cái của **thuật ngữ ti�
 | Ràng buộc tham gia | *participation constraint* | Quy định một thực thể phía này có bắt buộc tham gia mối quan hệ hay không | [Bài 9](cap-1-mo-hinh-er/09-participation-va-thuc-the-yeu.md) |
 | Độc lập dữ liệu vật lý | *physical data independence* | Đổi mức trong mà mức khái niệm không phải đổi theo | [Bài 3](cap-0-nhap-mon/03-dbms-la-gi.md) |
 | Cổng | *port* | Con số phân biệt các máy chủ chạy trên cùng một máy; PostgreSQL mặc định là 5432 | [Bài 5](cap-0-nhap-mon/05-cai-dat-postgresql.md) |
+| Vị từ | *predicate* | Biểu thức trong `WHERE` trả về `TRUE`, `FALSE` hoặc `UNKNOWN` | [Bài 24](cap-3-sql/24-select-where-order-by.md) |
 | Khoá chính | *primary key* | Khoá dự tuyển được người thiết kế chọn làm định danh chính thức của bảng | [Bài 12](cap-1-mo-hinh-er/12-bay-loai-khoa.md) |
 | Thuộc tính khoá (mức chuẩn hoá) | *prime attribute* | Thuộc tính nằm trong ít nhất một khoá dự tuyển của lược đồ | [Bài 16](cap-2-chuan-hoa/16-phu-thuoc-ham.md) |
+| Phép toán cơ bản | *primitive operation* | Phép của đại số quan hệ không định nghĩa được từ các phép khác — có đúng sáu phép như vậy | [Bài 21](cap-3-sql/21-dai-so-quan-he.md) |
 | Thủ tục | *procedural* | Kiểu ngôn ngữ bắt bạn nói rõ từng bước phải làm thế nào | [Bài 4](cap-0-nhap-mon/04-cac-mo-hinh-du-lieu.md) |
+| Phép chiếu | *projection* | Phép π giữ lại những cột được nêu tên và bỏ dòng trùng — cắt dọc; trong SQL là danh sách cột sau `SELECT` kèm `DISTINCT` | [Bài 21](cap-3-sql/21-dai-so-quan-he.md) |
 | Luật giả bắc cầu | *pseudotransitivity* | Luật suy diễn: `X → Y` và `WY → Z` thì `WX → Z` | [Bài 16](cap-2-chuan-hoa/16-phu-thuoc-ham.md) |
 
 ## Q
@@ -239,20 +275,25 @@ Bảng được sắp xếp theo thứ tự chữ cái của **thuật ngữ ti�
 
 | Tiếng Việt | English | Nghĩa trong một câu | Học ở bài |
 |---|---|---|---|
+| Hệ quản trị cơ sở dữ liệu quan hệ | *RDBMS — relational database management system* | DBMS xây trên mô hình quan hệ | [Bài 4](cap-0-nhap-mon/04-cac-mo-hinh-du-lieu.md) |
 | Bản ghi | *record* | Một hàng trong bảng — cách gọi khác của *row* và *tuple* | [Bài 1](cap-0-nhap-mon/01-du-lieu-va-thong-tin.md) |
 | Cột nhân bản | *redundant column* | Cột chép từ bảng khác sang để khỏi phải `JOIN` | [Bài 20](cap-2-chuan-hoa/20-denormalization.md) |
 | Toàn vẹn tham chiếu | *referential integrity* | Mọi giá trị trong cột khoá ngoại phải tồn tại thật ở bảng cha, hoặc phải là `NULL` | [Bài 15](cap-1-mo-hinh-er/15-rang-buoc-toan-ven.md) |
 | Phản xạ | *reflexivity* | Tiên đề Armstrong: `Y ⊆ X` thì `X → Y` | [Bài 16](cap-2-chuan-hoa/16-phu-thuoc-ham.md) |
 | Quan hệ | *relation* | Tên chính thức của một cái **bảng** — khác hẳn *relationship* (mối quan hệ) | [Bài 4](cap-0-nhap-mon/04-cac-mo-hinh-du-lieu.md) |
 | Lược đồ quan hệ | *relation schema* | Cái khung của một bảng: tên bảng, danh sách thuộc tính, và miền giá trị của từng thuộc tính | [Bài 6](cap-1-mo-hinh-er/06-mo-hinh-quan-he.md) |
+| Đại số quan hệ | *relational algebra* | Hệ phép toán nhận quan hệ làm đầu vào và trả về quan hệ làm đầu ra — nền toán học của SQL | [Bài 21](cap-3-sql/21-dai-so-quan-he.md) |
 | Cơ sở dữ liệu quan hệ | *relational database* | Database xây trên mô hình quan hệ | [Bài 8](cap-1-mo-hinh-er/08-moi-quan-he-va-cardinality.md) |
-| Hệ quản trị cơ sở dữ liệu quan hệ | *RDBMS — relational database management system* | DBMS xây trên mô hình quan hệ | [Bài 4](cap-0-nhap-mon/04-cac-mo-hinh-du-lieu.md) |
 | Mô hình quan hệ | *relational model* | Mô hình của Codd: dữ liệu chỉ gồm các bảng, nối nhau bằng giá trị trùng nhau chứ không bằng con trỏ | [Bài 4](cap-0-nhap-mon/04-cac-mo-hinh-du-lieu.md) |
 | Lược đồ quan hệ (mức bảng) | *relational schema* | Danh sách các bảng kèm cột và ràng buộc của chúng | [Bài 14](cap-1-mo-hinh-er/14-chuyen-er-sang-bang.md) |
 | Mối quan hệ | *relationship* | Một sự liên kết cụ thể giữa các thực thể — khác hẳn *relation* (một cái bảng) | [Bài 6](cap-1-mo-hinh-er/06-mo-hinh-quan-he.md) |
 | Tập mối quan hệ | *relationship set* | Tập hợp mọi mối quan hệ cùng loại giữa cùng các tập thực thể | [Bài 8](cap-1-mo-hinh-er/08-moi-quan-he-va-cardinality.md) |
+| Phép đổi tên | *rename* | Phép ρ đặt tên mới cho quan hệ hoặc cột; trong SQL là `AS`, và là điều kiện để ghép một bảng với chính nó | [Bài 21](cap-3-sql/21-dai-so-quan-he.md) |
 | Nhóm lặp | *repeating group* | Cùng một nhóm thuộc tính bị lặp lại thành nhiều cột đánh số — vi phạm 1NF | [Bài 17](cap-2-chuan-hoa/17-dang-chuan-1nf-2nf.md) |
+| Trả về sau khi ghi | *RETURNING* | Mệnh đề của PostgreSQL cho `INSERT`/`UPDATE`/`DELETE` trả về chính các dòng vừa bị tác động | [Bài 23](cap-3-sql/23-dml-insert-update-delete.md) |
+| Kết nối ngoài bên phải | *RIGHT OUTER JOIN* | Đối xứng với `LEFT JOIN`; ít dùng vì đổi chỗ hai bảng rồi viết `LEFT JOIN` thì dễ đọc hơn | [Bài 25](cap-3-sql/25-join.md) |
 | Vai trò | *role* | Người dùng trong PostgreSQL, hoàn toàn riêng với tài khoản đăng nhập máy tính | [Bài 5](cap-0-nhap-mon/05-cai-dat-postgresql.md) |
+| Gom theo thứ bậc | *ROLLUP* | Mệnh đề sinh thêm dòng tổng theo thứ bậc cha–con, ví dụ lớp → khối → toàn trường | [Bài 26](cap-3-sql/26-group-by-having.md) |
 | Dòng | *row* | Một hàng trong bảng — cách gọi khác của *record* và *tuple* | [Bài 1](cap-0-nhap-mon/01-du-lieu-va-thong-tin.md) |
 
 ## S
@@ -261,7 +302,10 @@ Bảng được sắp xếp theo thứ tự chữ cái của **thuật ngữ ti�
 |---|---|---|---|
 | Lược đồ | *schema* | Cái khung của database — có bảng nào, cột nào, kiểu gì — thứ hầu như không đổi theo thời gian | [Bài 3](cap-0-nhap-mon/03-dbms-la-gi.md) |
 | Dạng chuẩn 2 | *Second Normal Form — 2NF* | Bảng đã ở 1NF và mọi thuộc tính không khoá đều phụ thuộc đầy đủ vào mọi khoá dự tuyển | [Bài 17](cap-2-chuan-hoa/17-dang-chuan-1nf-2nf.md) |
+| Phép chọn | *selection* | Phép σ giữ lại những dòng thoả điều kiện — cắt ngang; trong SQL là `WHERE` | [Bài 21](cap-3-sql/21-dai-so-quan-he.md) |
+| Tự kết nối | *SELF JOIN* | Ghép một bảng với chính nó; bắt buộc dùng bí danh, và nên thêm `a.khoa < b.khoa` để mỗi cặp chỉ hiện một lần | [Bài 25](cap-3-sql/25-join.md) |
 | Ràng buộc ngữ nghĩa | *semantic constraint* | Luật nghiệp vụ riêng của từng bài toán, ngoài ba loại toàn vẹn chung | [Bài 15](cap-1-mo-hinh-er/15-rang-buoc-toan-ven.md) |
+| Bộ đếm | *sequence* | Đối tượng sinh số tăng dần — là thứ nằm sau từ viết tắt `SERIAL` | [Bài 22](cap-3-sql/22-ddl-va-kieu-du-lieu.md) |
 | Máy chủ | *server* | Chương trình chạy âm thầm và liên tục ở nền, nằm chờ máy khách gõ cửa | [Bài 5](cap-0-nhap-mon/05-cai-dat-postgresql.md) |
 | Thuộc tính đơn | *simple attribute* | Thuộc tính không tách nhỏ thêm được mà vẫn giữ nghĩa | [Bài 7](cap-1-mo-hinh-er/07-thuc-the-va-thuoc-tinh.md) |
 | Gộp một bảng | *single table / single table inheritance* | Cách hiện thực kế thừa: một bảng duy nhất chứa mọi cột của cha lẫn con, thêm một cột cho biết dòng đó là loại gì | [Bài 13](cap-1-mo-hinh-er/13-mo-hinh-eer.md) |
@@ -293,10 +337,13 @@ Bảng được sắp xếp theo thứ tự chữ cái của **thuật ngữ ti�
 | Bảng cho mỗi lớp con | *table per subclass / class table inheritance* | Cách hiện thực kế thừa: một bảng cho lớp cha, mỗi lớp con thêm một bảng chứa phần riêng và trỏ về cha bằng khoá ngoại | [Bài 13](cap-1-mo-hinh-er/13-mo-hinh-eer.md) |
 | Dữ liệu theo thời gian | *temporal data* | Dữ liệu ghi kèm khoảng thời gian mà giá trị đó có hiệu lực | [Bài 19](cap-2-chuan-hoa/19-dang-chuan-4nf-5nf-6nf.md) |
 | Mối quan hệ bậc ba | *ternary relationship* | Mối quan hệ có ba tập thực thể tham gia cùng lúc; tách ra là mất thông tin | [Bài 8](cap-1-mo-hinh-er/08-moi-quan-he-va-cardinality.md) |
+| Kết nối theta | *theta join* | Kết nối với điều kiện so sánh bất kỳ, không chỉ dấu bằng | [Bài 21](cap-3-sql/21-dai-so-quan-he.md) |
 | Dạng chuẩn 3 | *Third Normal Form — 3NF* | Bảng đã ở 2NF và không thuộc tính không khoá nào phụ thuộc bắc cầu vào một khoá dự tuyển | [Bài 18](cap-2-chuan-hoa/18-dang-chuan-3nf-bcnf.md) |
+| Logic ba giá trị | *three-valued logic* | Hệ logic của SQL, có thêm giá trị thứ ba `UNKNOWN` bên cạnh `TRUE` và `FALSE` | [Bài 24](cap-3-sql/24-select-where-order-by.md) |
 | Tham gia toàn phần | *total participation* | Mọi thực thể phía này đều bắt buộc phải tham gia mối quan hệ | [Bài 9](cap-1-mo-hinh-er/09-participation-va-thuc-the-yeu.md) |
 | Chuyên biệt hoá toàn phần | *total specialization* | Mọi thực thể lớp cha phải thuộc ít nhất một lớp con | [Bài 13](cap-1-mo-hinh-er/13-mo-hinh-eer.md) |
 | Giao dịch | *transaction* | Một nhóm thao tác được bọc lại thành một đơn vị: `COMMIT` để giữ, `ROLLBACK` để trả lại nguyên trạng | [Bài 2](cap-0-nhap-mon/02-tu-so-giay-den-excel.md) |
+| Ngôn ngữ điều khiển giao tác | *Transaction Control Language* (TCL) | Nhóm lệnh SQL gom nhiều câu thành một khối: `BEGIN`, `COMMIT`, `ROLLBACK`, `SAVEPOINT` | [Bài 22](cap-3-sql/22-ddl-va-kieu-du-lieu.md) |
 | Phụ thuộc bắc cầu | *transitive functional dependency* | `X → Z` đi vòng qua một tập `Y` trung gian, trong khi `Y` không xác định ngược lại `X` | [Bài 16](cap-2-chuan-hoa/16-phu-thuoc-ham.md) |
 | Bắc cầu | *transitivity* | Tiên đề Armstrong: `X → Y` và `Y → Z` thì `X → Z` | [Bài 16](cap-2-chuan-hoa/16-phu-thuoc-ham.md) |
 | Bẫy sự kiện | *trigger* | Đoạn lệnh mà database tự chạy mỗi khi một sự kiện dữ liệu xảy ra | [Bài 3](cap-0-nhap-mon/03-dbms-la-gi.md) |
@@ -309,7 +356,12 @@ Bảng được sắp xếp theo thứ tự chữ cái của **thuật ngữ ti�
 |---|---|---|---|
 | Một ngôi | *unary / recursive* | Mối quan hệ mà một tập thực thể tự liên kết với chính nó | [Bài 8](cap-1-mo-hinh-er/08-moi-quan-he-va-cardinality.md) |
 | Luật hợp | *union* | Luật suy diễn: `X → Y` và `X → Z` thì `X → YZ` | [Bài 16](cap-2-chuan-hoa/16-phu-thuoc-ham.md) |
+| Phép hợp | *union* — phép toán | Phép ∪ gộp hai quan hệ khả hợp và bỏ dòng trùng; trong SQL là `UNION`, còn `UNION ALL` thì giữ trùng — đừng nhầm với *Luật hợp* ở Bài 16 | [Bài 21](cap-3-sql/21-dai-so-quan-he.md) |
+| Khả hợp | *union-compatible* | Hai quan hệ cùng số cột và các cột tương ứng cùng miền giá trị — điều kiện để dùng ∪ và − | [Bài 21](cap-3-sql/21-dai-so-quan-he.md) |
+| Chưa biết | *UNKNOWN* | Giá trị chân lý thứ ba, sinh ra mỗi khi so sánh với `NULL`; `WHERE` **loại bỏ** mọi dòng cho `UNKNOWN` | [Bài 24](cap-3-sql/24-select-where-order-by.md) |
+| Cập nhật | *update* | Lệnh DML sửa giá trị của các dòng đã có; không có `WHERE` thì sửa toàn bộ bảng | [Bài 23](cap-3-sql/23-dml-insert-update-delete.md) |
 | Bất thường khi cập nhật | *update anomaly* | Muốn sửa một sự thật phải sửa nhiều dòng; sót một dòng là dữ liệu tự mâu thuẫn | [Bài 2](cap-0-nhap-mon/02-tu-so-giay-den-excel.md) |
+| Thêm-hoặc-sửa | *upsert* | Thao tác "có thì sửa, chưa có thì thêm", gọn trong một câu lệnh nguyên tử `INSERT ... ON CONFLICT DO UPDATE` | [Bài 23](cap-3-sql/23-dml-insert-update-delete.md) |
 
 ## V
 

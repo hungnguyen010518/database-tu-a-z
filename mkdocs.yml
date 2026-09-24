@@ -105,5 +105,12 @@ nav:
       - "Bài 18 — Dạng chuẩn 3 (3NF) và BCNF": cap-2-chuan-hoa/18-dang-chuan-3nf-bcnf.md
       - "Bài 19 — 4NF, 5NF và 6NF": cap-2-chuan-hoa/19-dang-chuan-4nf-5nf-6nf.md
       - "Bài 20 — Phi chuẩn hoá — khi nào nên phá luật": cap-2-chuan-hoa/20-denormalization.md
+  - "Cấp 3 — SQL từ 0 tới cao thủ":
+      - "Bài 21 — Đại số quan hệ: nền toán học phía sau SQL": cap-3-sql/21-dai-so-quan-he.md
+      - "Bài 22 — DDL: CREATE, ALTER, DROP và các kiểu dữ liệu": cap-3-sql/22-ddl-va-kieu-du-lieu.md
+      - "Bài 23 — DML: INSERT, UPDATE, DELETE": cap-3-sql/23-dml-insert-update-delete.md
+      - "Bài 24 — SELECT, WHERE, ORDER BY, LIMIT": cap-3-sql/24-select-where-order-by.md
+      - "Bài 25 — JOIN: sáu cách ghép bảng": cap-3-sql/25-join.md
+      - "Bài 26 — GROUP BY, HAVING và các hàm tổng hợp": cap-3-sql/26-group-by-having.md
   - "Database mẫu": dataset.md
   - "Bảng thuật ngữ": glossary.md
