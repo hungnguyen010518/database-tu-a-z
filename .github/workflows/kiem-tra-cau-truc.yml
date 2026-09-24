@@ -1,0 +1,19 @@
+name: Kiểm tra cấu trúc bài học
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'docs/**'
+      - 'scripts/kiem_cau_truc.py'
+      - '.github/workflows/kiem-tra-cau-truc.yml'
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  kiem-tra:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Kiểm tra thụt lề khối code và khuôn mẫu 8 khối
+        run: python3 scripts/kiem_cau_truc.py
