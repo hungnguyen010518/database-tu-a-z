@@ -1,0 +1,2507 @@
+
+<!doctype html>
+<html lang="vi" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Khóa học cơ sở dữ liệu tiếng Việt, từ con số 0 tới mức siêu nâng cao — giải thích để học sinh cấp 2 cũng hiểu được.">
+      
+      
+      
+        <link rel="canonical" href="https://hungnguyen010518.github.io/database-tu-a-z/cap-2-chuan-hoa/16-phu-thuoc-ham/">
+      
+      
+        <link rel="prev" href="../../cap-1-mo-hinh-er/15-rang-buoc-toan-ven/">
+      
+      
+        <link rel="next" href="../17-dang-chuan-1nf-2nf/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.39">
+    
+    
+      
+        <title>Bài 16 — Phụ thuộc hàm và bao đóng - Database từ A-Z</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.8c3ca2c6.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#bai-16-phu-thuoc-ham-va-bao-ong" class="md-skip">
+          Bỏ qua
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Đầu trang">
+    <a href="../.." title="Database từ A-Z" class="md-header__button md-logo" aria-label="Database từ A-Z" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3C7.58 3 4 4.79 4 7s3.58 4 8 4 8-1.79 8-4-3.58-4-8-4M4 9v3c0 2.21 3.58 4 8 4s8-1.79 8-4V9c0 2.21-3.58 4-8 4s-8-1.79-8-4m0 5v3c0 2.21 3.58 4 8 4s8-1.79 8-4v-3c0 2.21-3.58 4-8 4s-8-1.79-8-4"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Database từ A-Z
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Bài 16 — Phụ thuộc hàm và bao đóng
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Chuyển sang chế độ tối"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Chuyển sang chế độ tối" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Chuyển sang chế độ sáng"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Chuyển sang chế độ sáng" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Tìm kiếm" placeholder="Tìm kiếm" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Tìm kiếm">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Xoá" aria-label="Xoá" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/hungnguyen010518/database-tu-a-z" title="Xem mã nguồn" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    database-tu-a-z
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Thanh điều hướng" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Database từ A-Z" class="md-nav__button md-logo" aria-label="Database từ A-Z" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3C7.58 3 4 4.79 4 7s3.58 4 8 4 8-1.79 8-4-3.58-4-8-4M4 9v3c0 2.21 3.58 4 8 4s8-1.79 8-4V9c0 2.21-3.58 4-8 4s-8-1.79-8-4m0 5v3c0 2.21 3.58 4 8 4s8-1.79 8-4v-3c0 2.21-3.58 4-8 4s-8-1.79-8-4"/></svg>
+
+    </a>
+    Database từ A-Z
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/hungnguyen010518/database-tu-a-z" title="Xem mã nguồn" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    database-tu-a-z
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Trang chủ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Cấp 0 — Nhập môn
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Cấp 0 — Nhập môn
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-0-nhap-mon/01-du-lieu-va-thong-tin/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 1 — Dữ liệu, thông tin và tại sao phải lưu trữ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-0-nhap-mon/02-tu-so-giay-den-excel/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 2 — Từ sổ giấy đến Excel
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-0-nhap-mon/03-dbms-la-gi/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 3 — DBMS là gì
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-0-nhap-mon/04-cac-mo-hinh-du-lieu/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 4 — Các mô hình dữ liệu
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-0-nhap-mon/05-cai-dat-postgresql/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 5 — Cài đặt PostgreSQL
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Cấp 1 — Mô hình quan hệ & Biểu đồ ER
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Cấp 1 — Mô hình quan hệ & Biểu đồ ER
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/06-mo-hinh-quan-he/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 6 — Mô hình quan hệ: bảng, dòng, cột, miền giá trị, lược đồ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/07-thuc-the-va-thuoc-tinh/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 7 — Thực thể và các loại thuộc tính
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/08-moi-quan-he-va-cardinality/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 8 — Mối quan hệ, bậc và bản số (Cardinality)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/09-participation-va-thuc-the-yeu/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 9 — Ràng buộc tham gia và Thực thể yếu
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/10-bieu-do-er-ky-hieu-chen/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 10 — Biểu đồ ER — ký hiệu Chen
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/11-bieu-do-er-crows-foot/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 11 — Biểu đồ ER — ký hiệu Crow's Foot và vẽ bằng Mermaid
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/12-bay-loai-khoa/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 12 — Bảy loại khoá trong cơ sở dữ liệu
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/13-mo-hinh-eer/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 13 — Mô hình EER: Generalization, Specialization, Aggregation
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/14-chuyen-er-sang-bang/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 14 — Chuyển biểu đồ ER thành lược đồ quan hệ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/15-rang-buoc-toan-ven/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 15 — Ràng buộc toàn vẹn (Integrity Constraints)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Cấp 2 — Chuẩn hoá
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Cấp 2 — Chuẩn hoá
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Bài 16 — Phụ thuộc hàm và bao đóng
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Bài 16 — Phụ thuộc hàm và bao đóng
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Mục lục">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Mục lục
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#cau-chuyen-mo-au" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧠 Câu chuyện mở đầu
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#khai-niem-thuat-ngu" class="md-nav__link">
+    <span class="md-ellipsis">
+      📖 Khái niệm &amp; thuật ngữ
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📖 Khái niệm & thuật ngữ">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#phu-thuoc-ham" class="md-nav__link">
+    <span class="md-ellipsis">
+      Phụ thuộc hàm
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phu-thuoc-ham-tam-thuong" class="md-nav__link">
+    <span class="md-ellipsis">
+      Phụ thuộc hàm tầm thường
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ay-u-bo-phan-bac-cau" class="md-nav__link">
+    <span class="md-ellipsis">
+      Đầy đủ, bộ phận, bắc cầu
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ba-tien-e-armstrong" class="md-nav__link">
+    <span class="md-ellipsis">
+      Ba tiên đề Armstrong
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bao-ong" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bao đóng
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#thuoc-tinh-khoa-va-khong-khoa" class="md-nav__link">
+    <span class="md-ellipsis">
+      Thuộc tính khoá và không khoá
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phu-toi-thieu" class="md-nav__link">
+    <span class="md-ellipsis">
+      Phủ tối thiểu
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bang-thuat-ngu" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bảng thuật ngữ
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#so-o" class="md-nav__link">
+    <span class="md-ellipsis">
+      🖼️ Sơ đồ
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#thuc-hanh" class="md-nav__link">
+    <span class="md-ellipsis">
+      💻 Thực hành
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="💻 Thực hành">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-tap-phu-thuoc-ham-cua-bang_bet" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Tập phụ thuộc hàm của bang_bet
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-du-lieu-chi-dung-e-bac-bo" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Dữ liệu chỉ dùng để BÁC BỎ
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-cai-gia-cua-phu-thuoc-bac-cau" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Cái giá của phụ thuộc bắc cầu
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-bao-ong-tinh-bang-tay-vi-du-1-ten_lop" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Bao đóng tính bằng tay — ví dụ 1: {ten_lop}⁺
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-bao-ong-bang-may" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. Bao đóng bằng máy
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-bao-ong-tinh-bang-tay-vi-du-2-ma_hs-ten_mon" class="md-nav__link">
+    <span class="md-ellipsis">
+      6. Bao đóng tính bằng tay — ví dụ 2: {ma_hs, ten_mon}⁺
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7-tu-bao-ong-ra-khoa-du-tuyen" class="md-nav__link">
+    <span class="md-ellipsis">
+      7. Từ bao đóng ra khoá dự tuyển
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#8-rut-gon-ve-phu-toi-thieu" class="md-nav__link">
+    <span class="md-ellipsis">
+      8. Rút gọn về phủ tối thiểu
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#9-don-dep" class="md-nav__link">
+    <span class="md-ellipsis">
+      9. Dọn dẹp
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#loi-thuong-gap" class="md-nav__link">
+    <span class="md-ellipsis">
+      ⚠️ Lỗi thường gặp
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bai-tap" class="md-nav__link">
+    <span class="md-ellipsis">
+      ✍️ Bài tập
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tom-tat" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔑 Tóm tắt
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../17-dang-chuan-1nf-2nf/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 17 — Dạng chuẩn 1 (1NF) và Dạng chuẩn 2 (2NF)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../18-dang-chuan-3nf-bcnf/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 18 — Dạng chuẩn 3 (3NF) và BCNF
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../19-dang-chuan-4nf-5nf-6nf/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 19 — 4NF, 5NF và 6NF
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20-denormalization/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 20 — Phi chuẩn hoá — khi nào nên phá luật
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../dataset/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Database mẫu
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../glossary/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bảng thuật ngữ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Mục lục">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Mục lục
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#cau-chuyen-mo-au" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧠 Câu chuyện mở đầu
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#khai-niem-thuat-ngu" class="md-nav__link">
+    <span class="md-ellipsis">
+      📖 Khái niệm &amp; thuật ngữ
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📖 Khái niệm & thuật ngữ">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#phu-thuoc-ham" class="md-nav__link">
+    <span class="md-ellipsis">
+      Phụ thuộc hàm
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phu-thuoc-ham-tam-thuong" class="md-nav__link">
+    <span class="md-ellipsis">
+      Phụ thuộc hàm tầm thường
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ay-u-bo-phan-bac-cau" class="md-nav__link">
+    <span class="md-ellipsis">
+      Đầy đủ, bộ phận, bắc cầu
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ba-tien-e-armstrong" class="md-nav__link">
+    <span class="md-ellipsis">
+      Ba tiên đề Armstrong
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bao-ong" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bao đóng
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#thuoc-tinh-khoa-va-khong-khoa" class="md-nav__link">
+    <span class="md-ellipsis">
+      Thuộc tính khoá và không khoá
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phu-toi-thieu" class="md-nav__link">
+    <span class="md-ellipsis">
+      Phủ tối thiểu
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bang-thuat-ngu" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bảng thuật ngữ
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#so-o" class="md-nav__link">
+    <span class="md-ellipsis">
+      🖼️ Sơ đồ
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#thuc-hanh" class="md-nav__link">
+    <span class="md-ellipsis">
+      💻 Thực hành
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="💻 Thực hành">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-tap-phu-thuoc-ham-cua-bang_bet" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Tập phụ thuộc hàm của bang_bet
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-du-lieu-chi-dung-e-bac-bo" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Dữ liệu chỉ dùng để BÁC BỎ
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-cai-gia-cua-phu-thuoc-bac-cau" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Cái giá của phụ thuộc bắc cầu
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-bao-ong-tinh-bang-tay-vi-du-1-ten_lop" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Bao đóng tính bằng tay — ví dụ 1: {ten_lop}⁺
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-bao-ong-bang-may" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. Bao đóng bằng máy
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-bao-ong-tinh-bang-tay-vi-du-2-ma_hs-ten_mon" class="md-nav__link">
+    <span class="md-ellipsis">
+      6. Bao đóng tính bằng tay — ví dụ 2: {ma_hs, ten_mon}⁺
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7-tu-bao-ong-ra-khoa-du-tuyen" class="md-nav__link">
+    <span class="md-ellipsis">
+      7. Từ bao đóng ra khoá dự tuyển
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#8-rut-gon-ve-phu-toi-thieu" class="md-nav__link">
+    <span class="md-ellipsis">
+      8. Rút gọn về phủ tối thiểu
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#9-don-dep" class="md-nav__link">
+    <span class="md-ellipsis">
+      9. Dọn dẹp
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#loi-thuong-gap" class="md-nav__link">
+    <span class="md-ellipsis">
+      ⚠️ Lỗi thường gặp
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bai-tap" class="md-nav__link">
+    <span class="md-ellipsis">
+      ✍️ Bài tập
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tom-tat" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔑 Tóm tắt
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="bai-16-phu-thuoc-ham-va-bao-ong">Bài 16 — Phụ thuộc hàm và bao đóng<a class="headerlink" href="#bai-16-phu-thuoc-ham-va-bao-ong" title="Permanent link">&para;</a></h1>
+<div class="admonition abstract">
+<p class="admonition-title">🎯 Học xong bài này, bạn sẽ</p>
+<ul>
+<li>Viết được một <strong>phụ thuộc hàm</strong> đúng cú pháp và đọc được nó thành câu tiếng Việt</li>
+<li>Phân biệt <strong>phụ thuộc đầy đủ</strong>, <strong>phụ thuộc bộ phận</strong> và <strong>phụ thuộc bắc cầu</strong> — ba khái niệm mà Bài 17 và Bài 18 sẽ dùng liên tục</li>
+<li>Nêu và áp dụng được <strong>ba tiên đề Armstrong</strong></li>
+<li>Chạy <strong>thuật toán tính bao đóng X⁺</strong> bằng tay, từng bước, không sót</li>
+<li>Dùng bao đóng để <strong>tìm mọi khoá dự tuyển</strong> của một lược đồ</li>
+<li>Rút gọn một tập phụ thuộc hàm về <strong>phủ tối thiểu</strong></li>
+</ul>
+</div>
+<h2 id="cau-chuyen-mo-au">🧠 Câu chuyện mở đầu<a class="headerlink" href="#cau-chuyen-mo-au" title="Permanent link">&para;</a></h2>
+<p>Lớp 8A1 có hai bạn cùng tên <strong>Nguyễn Văn An</strong> — chuyện này bạn đã gặp ở <a href="../../cap-1-mo-hinh-er/12-bay-loai-khoa/">Bài 12</a>.</p>
+<p>Hôm nay cô văn thư nhờ bạn một việc khác. Cô đưa một tờ giấy chỉ ghi đúng một dòng:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>HS001
+</span></code></pre></div>
+<p>và hỏi: <em>"Em tra hộ cô xem bạn này tên gì?"</em></p>
+<p>Bạn mở sổ, dò tới <code>HS001</code>, đọc lên: <em>"Nguyễn Văn An ạ."</em> Cô hỏi tiếp: <em>"Em chắc không? Lỡ có hai dòng <code>HS001</code> ghi hai cái tên khác nhau thì sao?"</em></p>
+<p>Bạn trả lời rất tự tin: <em>"Không thể ạ. Mã học sinh là duy nhất, một mã chỉ ứng với một bạn."</em></p>
+<p>Chiều hôm đó cô đưa tờ giấy thứ hai:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Nguyễn Văn An
+</span></code></pre></div>
+<p><em>"Thế còn đây, em tra hộ cô mã của bạn này."</em> Bạn chịu. Có <strong>hai</strong> bạn tên như vậy.</p>
+<p>Cùng một quyển sổ, mà chiều này thì tra được chắc chắn, chiều kia thì không. Sự bất đối xứng ấy không phải chuyện vặt — nó chính là viên gạch đầu tiên của toàn bộ lý thuyết chuẩn hoá.</p>
+<p>Vậy làm sao viết cái ý <em>"biết cái này thì biết chắc cái kia"</em> ra thành một công thức, rồi tính toán được trên nó?</p>
+<h2 id="khai-niem-thuat-ngu">📖 Khái niệm &amp; thuật ngữ<a class="headerlink" href="#khai-niem-thuat-ngu" title="Permanent link">&para;</a></h2>
+<h3 id="phu-thuoc-ham">Phụ thuộc hàm<a class="headerlink" href="#phu-thuoc-ham" title="Permanent link">&para;</a></h3>
+<p><strong>Phụ thuộc hàm</strong> (<em>functional dependency</em>, viết tắt <strong>PTH</strong>) là một luật có dạng:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>X → Y
+</span></code></pre></div>
+<p>Đọc là <em>"X xác định Y"</em>, hoặc <em>"Y phụ thuộc hàm vào X"</em>. Trong đó <code>X</code> và <code>Y</code> là hai <strong>tập thuộc tính</strong> của cùng một bảng.</p>
+<p>Định nghĩa chính xác:</p>
+<blockquote>
+<p><code>X → Y</code> đúng trên lược đồ <code>R</code> khi và chỉ khi: với <strong>mọi</strong> trạng thái hợp lệ của <code>R</code>, nếu hai bộ bất kỳ có giá trị giống nhau trên toàn bộ <code>X</code>, thì chúng cũng phải giống nhau trên toàn bộ <code>Y</code>.</p>
+</blockquote>
+<p>Câu chuyện mở đầu viết lại thành ký hiệu:</p>
+<table>
+<thead>
+<tr>
+<th>Câu tiếng Việt</th>
+<th>Phụ thuộc hàm</th>
+<th>Đúng?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Biết mã học sinh thì biết chắc họ tên</td>
+<td><code>ma_hs → ho_ten</code></td>
+<td>✅ Đúng</td>
+</tr>
+<tr>
+<td>Biết họ tên thì biết chắc mã học sinh</td>
+<td><code>ho_ten → ma_hs</code></td>
+<td>❌ Sai — hai bạn trùng tên</td>
+</tr>
+</tbody>
+</table>
+<p>Vế trái <code>X</code> có một cái tên riêng: <strong>định thức</strong> (<em>determinant</em>). Định thức là <em>"thứ mà khi biết nó, ta biết được cái còn lại"</em>. Toàn bộ Bài 18 sẽ xoay quanh một câu hỏi duy nhất về định thức, nên hãy nhớ kỹ từ này.</p>
+<div class="admonition danger">
+<p class="admonition-title">Phụ thuộc hàm KHÔNG suy ra từ dữ liệu mẫu — đây là cảnh báo quan trọng nhất của cả Cấp 2</p>
+<p><a href="../../cap-1-mo-hinh-er/12-bay-loai-khoa/">Bài 12</a> đã chốt một <strong>Quy tắc vàng</strong>: câu hỏi <em>"cột này có phải khoá không?"</em> là <strong>câu hỏi nghiệp vụ</strong>, không phải câu hỏi dữ liệu.</p>
+<p>Phụ thuộc hàm thừa hưởng nguyên vẹn quy tắc đó, vì khoá chẳng qua là một trường hợp riêng của phụ thuộc hàm.</p>
+<p>Chú ý hai chữ <strong>"mọi trạng thái"</strong> trong định nghĩa ở trên. <code>X → Y</code> là mệnh đề về <em>tất cả</em> dữ liệu có thể có trong tương lai, chứ không phải về 30 dòng đang nằm trong bảng hôm nay.</p>
+<p>Hệ quả rất sắc bén:</p>
+<ul>
+<li>Dữ liệu <strong>bác bỏ</strong> được một PTH: chỉ cần tìm ra <strong>hai dòng</strong> giống nhau trên <code>X</code> mà khác nhau trên <code>Y</code> là PTH đó chết ngay, không cãi được.</li>
+<li>Dữ liệu <strong>không bao giờ chứng minh</strong> được một PTH. Không tìm thấy phản ví dụ hôm nay không có nghĩa là ngày mai không có.</li>
+</ul>
+<p>Nguồn duy nhất sinh ra phụ thuộc hàm là <strong>luật nghiệp vụ</strong>: quy chế nhà trường, quy định của Bộ, thói quen làm việc của cô văn thư. Bạn phải đi hỏi người dùng, không phải đi chạy <code>count(DISTINCT ...)</code>.</p>
+</div>
+<h3 id="phu-thuoc-ham-tam-thuong">Phụ thuộc hàm tầm thường<a class="headerlink" href="#phu-thuoc-ham-tam-thuong" title="Permanent link">&para;</a></h3>
+<p><code>X → Y</code> là <strong>phụ thuộc hàm tầm thường</strong> (<em>trivial functional dependency</em>) khi <code>Y ⊆ X</code>.</p>
+<p>Ví dụ <code>{ma_hs, ho_ten} → ho_ten</code>. Nó luôn đúng, đúng với mọi bảng, mọi dữ liệu — và vì thế nó chẳng nói lên điều gì. Khi nói <em>"bảng này còn phụ thuộc hàm nào không"</em>, người ta luôn ngầm hiểu là <strong>không tầm thường</strong>.</p>
+<h3 id="ay-u-bo-phan-bac-cau">Đầy đủ, bộ phận, bắc cầu<a class="headerlink" href="#ay-u-bo-phan-bac-cau" title="Permanent link">&para;</a></h3>
+<p>Ba tính từ dưới đây mô tả <strong>hình dạng</strong> của một phụ thuộc hàm. Bài 17 và Bài 18 dựa hoàn toàn vào chúng.</p>
+<p><strong>Phụ thuộc đầy đủ</strong> (<em>full functional dependency</em>): <code>X → Y</code> là đầy đủ nếu <strong>không</strong> bỏ bớt được thuộc tính nào khỏi <code>X</code> mà vẫn giữ được luật. Nghĩa là với mọi tập con thật sự <code>X' ⊂ X</code>, ta có <code>X' ↛ Y</code>.</p>
+<p><strong>Phụ thuộc bộ phận</strong> (<em>partial functional dependency</em>): ngược lại — tồn tại một tập con thật sự <code>X' ⊂ X</code> mà <code>X' → Y</code> vẫn đúng. Nói nôm na: <strong>vế trái thừa cột</strong>.</p>
+<p>Ví dụ trên bảng điểm <code>(ma_hs, ten_mon) → diem_so</code> và <code>(ma_hs, ten_mon) → ho_ten_hs</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Phụ thuộc hàm</th>
+<th>Bỏ bớt vế trái được không?</th>
+<th>Loại</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>(ma_hs, ten_mon) → diem_so</code></td>
+<td>Không. Chỉ biết <code>ma_hs</code> thì không biết điểm môn nào; chỉ biết <code>ten_mon</code> thì không biết của ai</td>
+<td><strong>Đầy đủ</strong></td>
+</tr>
+<tr>
+<td><code>(ma_hs, ten_mon) → ho_ten_hs</code></td>
+<td>Được. <code>ma_hs → ho_ten_hs</code> đã đủ, <code>ten_mon</code> là thừa</td>
+<td><strong>Bộ phận</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Phụ thuộc bắc cầu</strong> (<em>transitive functional dependency</em>): <code>X → Z</code> là bắc cầu nếu tồn tại một tập <code>Y</code> sao cho cả ba điều sau cùng đúng:</p>
+<ol>
+<li><code>X → Y</code></li>
+<li><code>Y → Z</code></li>
+<li><code>Y ↛ X</code>, và <code>Z</code> không nằm trong <code>X ∪ Y</code></li>
+</ol>
+<p>Nói nôm na: <code>X</code> không xác định <code>Z</code> một cách trực tiếp, mà <strong>đi vòng</strong> qua một trạm trung gian <code>Y</code>. Điều kiện 3 là để loại các trường hợp <code>Y</code> cũng là khoá — lúc đó chẳng có "trạm trung gian" nào cả.</p>
+<h3 id="ba-tien-e-armstrong">Ba tiên đề Armstrong<a class="headerlink" href="#ba-tien-e-armstrong" title="Permanent link">&para;</a></h3>
+<p>Năm 1974, William W. Armstrong chứng minh rằng <strong>mọi</strong> phụ thuộc hàm suy ra được đều suy ra được từ đúng ba luật. Ba luật đó gọi là <strong>tiên đề Armstrong</strong> (<em>Armstrong's axioms</em>).</p>
+<table>
+<thead>
+<tr>
+<th>Tên</th>
+<th>Ký hiệu</th>
+<th>Phát biểu</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Phản xạ</strong> (<em>reflexivity</em>)</td>
+<td><code>Y ⊆ X ⟹ X → Y</code></td>
+<td>Tập lớn luôn xác định tập con của chính nó</td>
+</tr>
+<tr>
+<td><strong>Tăng trưởng</strong> (<em>augmentation</em>)</td>
+<td><code>X → Y ⟹ XZ → YZ</code></td>
+<td>Thêm cùng một nhóm thuộc tính vào cả hai vế thì luật vẫn đúng</td>
+</tr>
+<tr>
+<td><strong>Bắc cầu</strong> (<em>transitivity</em>)</td>
+<td><code>X → Y</code> và <code>Y → Z</code> <code>⟹ X → Z</code></td>
+<td>Nối hai bước suy luận thành một</td>
+</tr>
+</tbody>
+</table>
+<p>Giải thích bằng chuyện đời thường:</p>
+<div class="admonition example">
+<p class="admonition-title">Phản xạ — 'biết nhiều thì biết ít'</p>
+<p>Bạn cầm tờ giấy ghi <strong>cả mã lẫn tên</strong>: <code>{HS001, Nguyễn Văn An}</code>. Cô hỏi <em>"tên bạn ấy là gì?"</em>. Bạn đọc luôn, khỏi tra sổ.</p>
+<p>Đó chính là <code>{ma_hs, ho_ten} → ho_ten</code>. Nghe như nói thừa, nhưng đây là viên gạch nền: nó bảo đảm mọi phụ thuộc hàm tầm thường đều nằm trong hệ thống.</p>
+</div>
+<div class="admonition example">
+<p class="admonition-title">Tăng trưởng — 'thêm cùng một thứ vào hai bên thì cân vẫn thăng bằng'</p>
+<p>Đã biết: <code>ma_hs → ho_ten</code> (biết mã thì biết tên).</p>
+<p>Bây giờ thêm <code>ten_lop</code> vào <strong>cả hai vế</strong>: <code>{ma_hs, ten_lop} → {ho_ten, ten_lop}</code>.</p>
+<p>Vẫn đúng, và lý do rất dễ thấy: nếu hai dòng giống nhau ở <em>cả mã lẫn lớp</em>, thì riêng phần "giống nhau ở mã" đã kéo theo giống nhau ở tên rồi; còn phần "giống nhau ở lớp" thì chép thẳng từ vế trái sang.</p>
+<p>Lưu ý cái bẫy: tiên đề này <strong>không</strong> cho phép thêm vào một vế thôi. <code>ma_hs → ho_ten</code> <strong>không</strong> suy ra <code>{ma_hs, ten_lop} → dia_chi</code>.</p>
+</div>
+<div class="admonition example">
+<p class="admonition-title">Bắc cầu — 'hỏi vòng hai lần'</p>
+<p>Trong bảng bẹt <code>bang_bet</code>:</p>
+<ul>
+<li>Biết <strong>tên lớp</strong> thì biết <strong>giáo viên chủ nhiệm</strong>: <code>ten_lop → gvcn</code> (mỗi lớp một GVCN).</li>
+<li>Biết <strong>giáo viên chủ nhiệm</strong> thì biết <strong>email</strong> của thầy cô ấy: <code>gvcn → email_gvcn</code>.</li>
+</ul>
+<p>Vậy biết tên lớp là biết email GVCN: <code>ten_lop → email_gvcn</code>. Bạn phải tra sổ hai lần, nhưng kết quả vẫn chắc chắn.</p>
+<p>Đây đúng là hình dạng "phụ thuộc bắc cầu" ở mục trên — và <a href="../18-dang-chuan-3nf-bcnf/">Bài 18</a> sẽ cho thấy nó chính là căn bệnh mà Dạng chuẩn 3 sinh ra để chữa.</p>
+</div>
+<p>Ba tiên đề này <strong>đúng đắn</strong> (<em>sound</em> — mọi thứ suy ra được đều thật sự đúng) và <strong>đầy đủ</strong> (<em>complete</em> — mọi PTH thật sự đúng đều suy ra được). Nghĩa là bạn không cần luật thứ tư nào nữa.</p>
+<p>Tuy vậy, để tính tay cho nhanh, người ta hay dùng thêm ba <strong>luật dẫn xuất</strong> — cả ba đều chứng minh được từ ba tiên đề gốc:</p>
+<table>
+<thead>
+<tr>
+<th>Tên</th>
+<th>Phát biểu</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Luật hợp</strong> (<em>union</em>)</td>
+<td><code>X → Y</code> và <code>X → Z</code> <code>⟹</code> <code>X → YZ</code></td>
+</tr>
+<tr>
+<td><strong>Luật tách</strong> (<em>decomposition</em>)</td>
+<td><code>X → YZ</code> <code>⟹</code> <code>X → Y</code> và <code>X → Z</code></td>
+</tr>
+<tr>
+<td><strong>Luật giả bắc cầu</strong> (<em>pseudotransitivity</em>)</td>
+<td><code>X → Y</code> và <code>WY → Z</code> <code>⟹</code> <code>WX → Z</code></td>
+</tr>
+</tbody>
+</table>
+<p>Luật hợp và luật tách nói rằng <strong>vế phải muốn gộp hay tách tuỳ ý cũng được</strong>. Đây là lý do người ta hay quy ước viết mọi PTH với vế phải chỉ một thuộc tính.</p>
+<h3 id="bao-ong">Bao đóng<a class="headerlink" href="#bao-ong" title="Permanent link">&para;</a></h3>
+<p>Từ một tập PTH <code>F</code>, dùng ba tiên đề suy ra mãi, ta được <strong>bao đóng của tập phụ thuộc hàm</strong> (<em>closure of F</em>), ký hiệu <code>F⁺</code>. Tập này thường khổng lồ và không ai đi liệt kê nó cả.</p>
+<p>Thứ thực sự dùng được là khái niệm hẹp hơn:</p>
+<p><strong>Bao đóng thuộc tính</strong> (<em>attribute closure</em>) của tập thuộc tính <code>X</code> đối với <code>F</code>, ký hiệu <strong><code>X⁺</code></strong>, là <strong>tập tất cả các thuộc tính <code>A</code> sao cho <code>X → A</code> suy ra được từ <code>F</code></strong>.</p>
+<p>Nói nôm na: <em>"Biết <code>X</code> rồi thì tra sổ vòng vo bao nhiêu lần cũng được — cuối cùng biết thêm được những gì?"</em></p>
+<p>Bao đóng thuộc tính trả lời được hai câu hỏi lớn chỉ bằng một phép tính:</p>
+<table>
+<thead>
+<tr>
+<th>Câu hỏi</th>
+<th>Cách trả lời bằng bao đóng</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>X → Y</code> có suy ra được từ <code>F</code> không?</td>
+<td>Đúng khi và chỉ khi <code>Y ⊆ X⁺</code></td>
+</tr>
+<tr>
+<td><code>X</code> có phải <strong>siêu khoá</strong> không?</td>
+<td>Đúng khi và chỉ khi <code>X⁺</code> = toàn bộ thuộc tính của bảng</td>
+</tr>
+</tbody>
+</table>
+<h3 id="thuoc-tinh-khoa-va-khong-khoa">Thuộc tính khoá và không khoá<a class="headerlink" href="#thuoc-tinh-khoa-va-khong-khoa" title="Permanent link">&para;</a></h3>
+<p><strong>Thuộc tính khoá</strong> (<em>prime attribute</em>) là thuộc tính nằm trong <strong>ít nhất một</strong> khoá dự tuyển của lược đồ.</p>
+<p><strong>Thuộc tính không khoá</strong> (<em>non-prime attribute</em>) là thuộc tính <strong>không nằm trong bất kỳ</strong> khoá dự tuyển nào.</p>
+<p>Chú ý chữ <em>"ít nhất một"</em>: một lược đồ có thể có nhiều khoá dự tuyển (<a href="../../cap-1-mo-hinh-er/12-bay-loai-khoa/">Bài 12</a> mục 2), và chỉ cần góp mặt trong một cái là đủ để được gọi là thuộc tính khoá.</p>
+<p>Hai từ này nghe khô khan, nhưng chúng là bản lề của mọi định nghĩa dạng chuẩn ở Bài 17 và Bài 18.</p>
+<h3 id="phu-toi-thieu">Phủ tối thiểu<a class="headerlink" href="#phu-toi-thieu" title="Permanent link">&para;</a></h3>
+<p>Hai tập PTH gọi là <strong>tương đương</strong> nếu chúng có cùng bao đóng — tức là suy ra được y hệt nhau.</p>
+<p><strong>Phủ tối thiểu</strong> (<em>minimal cover</em>, còn gọi <em>canonical cover</em>) của <code>F</code> là một tập <code>G</code> tương đương với <code>F</code> và thoả cả ba điều:</p>
+<ol>
+<li><strong>Vế phải chỉ một thuộc tính</strong> — mọi PTH trong <code>G</code> có dạng <code>X → A</code>.</li>
+<li><strong>Vế trái không thừa</strong> — không bỏ được thuộc tính nào khỏi <code>X</code> mà <code>G</code> vẫn tương đương.</li>
+<li><strong>Không có PTH thừa</strong> — không bỏ được cả một PTH nào mà <code>G</code> vẫn tương đương.</li>
+</ol>
+<p>Phủ tối thiểu là <em>bản rút gọn hết cỡ</em> của luật nghiệp vụ. <a href="../18-dang-chuan-3nf-bcnf/">Bài 18</a> cần nó để chạy thuật toán tổng hợp lược đồ 3NF.</p>
+<h3 id="bang-thuat-ngu">Bảng thuật ngữ<a class="headerlink" href="#bang-thuat-ngu" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Tiếng Việt</th>
+<th>English</th>
+<th>Nghĩa dễ hiểu</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Phụ thuộc hàm</td>
+<td><em>functional dependency</em></td>
+<td>Luật "biết X thì biết chắc Y", đúng với mọi trạng thái dữ liệu</td>
+</tr>
+<tr>
+<td>Định thức</td>
+<td><em>determinant</em></td>
+<td>Vế trái của một phụ thuộc hàm — thứ mà khi biết nó thì biết được vế phải</td>
+</tr>
+<tr>
+<td>Phụ thuộc hàm tầm thường</td>
+<td><em>trivial dependency</em></td>
+<td><code>X → Y</code> với <code>Y ⊆ X</code> — luôn đúng nên vô dụng</td>
+</tr>
+<tr>
+<td>Phụ thuộc đầy đủ</td>
+<td><em>full dependency</em></td>
+<td><code>X → Y</code> mà bỏ bất kỳ thuộc tính nào khỏi X là luật hỏng</td>
+</tr>
+<tr>
+<td>Phụ thuộc bộ phận</td>
+<td><em>partial dependency</em></td>
+<td><code>X → Y</code> mà chỉ cần một phần của X đã đủ xác định Y — vế trái thừa cột</td>
+</tr>
+<tr>
+<td>Phụ thuộc bắc cầu</td>
+<td><em>transitive dependency</em></td>
+<td><code>X → Y → Z</code> mà X phải đi vòng qua trạm trung gian Y, và Y <strong>không</strong> xác định ngược lại X</td>
+</tr>
+<tr>
+<td>Tiên đề Armstrong</td>
+<td><em>Armstrong's axioms</em></td>
+<td>Ba luật phản xạ, tăng trưởng, bắc cầu — đủ để suy ra mọi phụ thuộc hàm</td>
+</tr>
+<tr>
+<td>Phản xạ</td>
+<td><em>reflexivity</em></td>
+<td><code>Y ⊆ X ⟹ X → Y</code></td>
+</tr>
+<tr>
+<td>Tăng trưởng</td>
+<td><em>augmentation</em></td>
+<td><code>X → Y ⟹ XZ → YZ</code></td>
+</tr>
+<tr>
+<td>Bắc cầu</td>
+<td><em>transitivity</em></td>
+<td><code>X → Y</code> và <code>Y → Z</code> thì <code>X → Z</code></td>
+</tr>
+<tr>
+<td>Bao đóng thuộc tính</td>
+<td><em>attribute closure</em> (<code>X⁺</code>)</td>
+<td>Tập mọi thuộc tính suy ra được khi đã biết X</td>
+</tr>
+<tr>
+<td>Bao đóng của tập PTH</td>
+<td><em>closure of F</em> (<code>F⁺</code>)</td>
+<td>Tập mọi phụ thuộc hàm suy ra được từ F</td>
+</tr>
+<tr>
+<td>Phủ tối thiểu</td>
+<td><em>minimal cover / canonical cover</em></td>
+<td>Bản rút gọn hết cỡ của tập PTH, vẫn suy ra được y hệt</td>
+</tr>
+<tr>
+<td>Thuộc tính khoá</td>
+<td><em>prime attribute</em></td>
+<td>Thuộc tính nằm trong ít nhất một khoá dự tuyển</td>
+</tr>
+<tr>
+<td>Thuộc tính không khoá</td>
+<td><em>non-prime attribute</em></td>
+<td>Thuộc tính không nằm trong khoá dự tuyển nào</td>
+</tr>
+</tbody>
+</table>
+<h2 id="so-o">🖼️ Sơ đồ<a class="headerlink" href="#so-o" title="Permanent link">&para;</a></h2>
+<p>Thuật toán tính bao đóng là một vòng lặp rất đơn giản — cứ quét đi quét lại tập PTH cho tới khi không thêm được gì nữa:</p>
+<pre class="mermaid"><code>flowchart TB
+    A["&lt;b&gt;Bước 1&lt;/b&gt;&lt;br/&gt;KQ ← X"]
+    B["&lt;b&gt;Bước 3&lt;/b&gt;&lt;br/&gt;thay_doi ← sai"]
+    C["&lt;b&gt;Bước 4&lt;/b&gt;&lt;br/&gt;Lấy phụ thuộc hàm tiếp theo&lt;br/&gt;trong F — gọi là VT → VP"]
+    D{"&lt;b&gt;Bước 5&lt;/b&gt;&lt;br/&gt;VT nằm trong KQ ?&lt;br/&gt;và VP chưa nằm trong KQ ?"}
+    F["&lt;b&gt;Bước 6-7&lt;/b&gt;&lt;br/&gt;KQ ← KQ ∪ VP&lt;br/&gt;thay_doi ← đúng"]
+    E{"Còn phụ thuộc hàm&lt;br/&gt;nào chưa xét ?"}
+    G{"&lt;b&gt;Bước 8&lt;/b&gt;&lt;br/&gt;thay_doi = đúng ?"}
+    H["&lt;b&gt;Bước 9&lt;/b&gt;&lt;br/&gt;Trả về KQ = X⁺"]
+
+    A --&gt; B
+    B --&gt; C
+    C --&gt; D
+    D --&gt;|"Không"| E
+    D --&gt;|"Có"| F
+    F --&gt; E
+    E --&gt;|"Còn"| C
+    E --&gt;|"Hết"| G
+    G --&gt;|"Đúng — quét lại từ đầu"| B
+    G --&gt;|"Sai — đứng yên rồi"| H
+
+    style A fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
+    style F fill:#fff8e1,stroke:#f9a825,stroke-width:2px
+    style H fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
+    style D fill:#fce4ec,stroke:#c2185b
+    style G fill:#fce4ec,stroke:#c2185b</code></pre>
+<p>Còn đây là <strong>đồ thị phụ thuộc hàm</strong> của <code>bang_bet</code> — mỗi mũi tên là một luật nghiệp vụ. Nhìn hình này là thấy ngay bệnh: có những mũi tên <strong>không xuất phát từ khoá</strong>.</p>
+<pre class="mermaid"><code>flowchart LR
+    STT(["&lt;b&gt;stt&lt;/b&gt;&lt;br/&gt;&lt;i&gt;khoá chính&lt;/i&gt;"])
+    HT["ho_ten_hs"]
+    NS["ngay_sinh_hs"]
+    DC["dia_chi"]
+    PH["ho_ten_ph1 · sdt_ph1&lt;br/&gt;ho_ten_ph2 · sdt_ph2"]
+    MD["cac_mon_va_diem"]
+    TL["ten_lop"]
+    GV["gvcn"]
+    EM["email_gvcn"]
+
+    STT --&gt; HT
+    STT --&gt; NS
+    STT --&gt; DC
+    STT --&gt; PH
+    STT --&gt; MD
+    STT --&gt; TL
+    TL --&gt; GV
+    GV --&gt; TL
+    GV --&gt; EM
+    EM --&gt; GV
+
+    style STT fill:#e8f5e9,stroke:#2e7d32,stroke-width:3px
+    style TL fill:#fff8e1,stroke:#f9a825,stroke-width:2px
+    style GV fill:#ffebee,stroke:#c62828,stroke-width:2px
+    style EM fill:#ffebee,stroke:#c62828,stroke-width:2px</code></pre>
+<p>Ba ô tô màu vàng và đỏ là ba "trạm trung gian": từ <code>stt</code> muốn tới <code>email_gvcn</code> thì phải đi qua <code>ten_lop</code> rồi <code>gvcn</code>. Đó là <strong>phụ thuộc bắc cầu</strong>, và nó là nguyên nhân khiến email của cô Lan bị chép lại <strong>6 lần</strong> trong bảng.</p>
+<div class="admonition warning">
+<p class="admonition-title">Một giả thiết phải nói thẳng ra</p>
+<p>Mũi tên <code>gvcn → email_gvcn</code> chỉ đúng nếu <strong>không có hai giáo viên trùng họ tên</strong>. Cột <code>gvcn</code> trong <code>bang_bet</code> lưu <em>họ tên</em>, chứ không lưu mã giáo viên.</p>
+<p>Cả Cấp 2 sẽ làm việc với giả thiết đã nêu này: <em>trong phạm vi bảng bẹt, nhà trường quy ước họ tên giáo viên là duy nhất</em>.</p>
+<p>Và bản thân việc phải nêu một giả thiết yếu như vậy <strong>đã là một lời chẩn đoán</strong>: một thiết kế tử tế không được phép dựa vào họ tên để định danh con người. Đó chính là lý do lược đồ đích trong <code>dataset/02-chuan-hoa.sql</code> có cột <code>giao_vien.ma_gv</code>. Chuyện này sẽ được giải quyết dứt điểm ở <a href="../18-dang-chuan-3nf-bcnf/">Bài 18</a>.</p>
+<p>Ngược lại, mũi tên <code>email_gvcn → gvcn</code> thì <strong>chắc chắn</strong> đúng: lược đồ đích khai <code>email</code> là <code>UNIQUE</code> (ràng buộc <code>giao_vien_email_key</code>), nên email là một khoá dự tuyển của giáo viên.</p>
+</div>
+<h2 id="thuc-hanh">💻 Thực hành<a class="headerlink" href="#thuc-hanh" title="Permanent link">&para;</a></h2>
+<h3 id="1-tap-phu-thuoc-ham-cua-bang_bet">1. Tập phụ thuộc hàm của <code>bang_bet</code><a class="headerlink" href="#1-tap-phu-thuoc-ham-cua-bang_bet" title="Permanent link">&para;</a></h3>
+<p>Trước khi tính gì, phải <strong>viết luật nghiệp vụ ra giấy</strong>. Đây là tập <code>F_bet</code> gồm 5 phụ thuộc hàm, kèm nguồn gốc nghiệp vụ của từng cái:</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Phụ thuộc hàm</th>
+<th>Luật nghiệp vụ sinh ra nó</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>f1</td>
+<td><code>stt → ho_ten_hs, ngay_sinh_hs, dia_chi, ten_lop, gvcn, email_gvcn, ho_ten_ph1, sdt_ph1, ho_ten_ph2, sdt_ph2, cac_mon_va_diem</code></td>
+<td><code>stt</code> được khai <code>PRIMARY KEY</code> — khoá chính xác định mọi thuộc tính</td>
+</tr>
+<tr>
+<td>f2</td>
+<td><code>ten_lop → gvcn</code></td>
+<td>Mỗi lớp có tối đa <strong>một</strong> giáo viên chủ nhiệm</td>
+</tr>
+<tr>
+<td>f3</td>
+<td><code>gvcn → ten_lop</code></td>
+<td>Mỗi giáo viên chủ nhiệm tối đa <strong>một</strong> lớp — luật 1:1, chính là <code>UNIQUE</code> trên <code>lop.ma_gvcn</code></td>
+</tr>
+<tr>
+<td>f4</td>
+<td><code>gvcn → email_gvcn</code></td>
+<td>Mỗi giáo viên có một địa chỉ email nhà trường cấp</td>
+</tr>
+<tr>
+<td>f5</td>
+<td><code>email_gvcn → gvcn</code></td>
+<td>Email là <code>UNIQUE</code> trong <code>giao_vien</code> — một email chỉ của một người</td>
+</tr>
+</tbody>
+</table>
+<p>Không có PTH nào khác. Đặc biệt <strong>không</strong> có <code>ho_ten_hs → ngay_sinh_hs</code>: hai học sinh trùng tên là chuyện bình thường.</p>
+<h3 id="2-du-lieu-chi-dung-e-bac-bo">2. Dữ liệu chỉ dùng để BÁC BỎ<a class="headerlink" href="#2-du-lieu-chi-dung-e-bac-bo" title="Permanent link">&para;</a></h3>
+<p>Ta không chứng minh được PTH bằng SQL, nhưng ta <strong>săn phản ví dụ</strong> được. Mẫu truy vấn: gom nhóm theo vế trái, rồi đếm xem trong một nhóm có mấy giá trị vế phải khác nhau.</p>
+<div class="highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="s1">'ten_lop -&gt; gvcn'</span><span class="w">      </span><span class="k">AS</span><span class="w"> </span><span class="n">phu_thuoc_ham</span><span class="p">,</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">       </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w">               </span><span class="k">AS</span><span class="w"> </span><span class="n">so_nhom_vi_pham</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="k">FROM</span><span class="w">  </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">ten_lop</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">bang_bet</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">       </span><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">ten_lop</span><span class="w"> </span><span class="k">HAVING</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="k">DISTINCT</span><span class="w"> </span><span class="n">gvcn</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="n">t</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="k">UNION</span><span class="w"> </span><span class="k">ALL</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="k">SELECT</span><span class="w"> </span><span class="s1">'gvcn -&gt; ten_lop'</span><span class="p">,</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="k">FROM</span><span class="w">  </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">gvcn</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">bang_bet</span>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">       </span><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">gvcn</span><span class="w"> </span><span class="k">HAVING</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="k">DISTINCT</span><span class="w"> </span><span class="n">ten_lop</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="n">t</span>
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="k">UNION</span><span class="w"> </span><span class="k">ALL</span>
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="k">SELECT</span><span class="w"> </span><span class="s1">'gvcn -&gt; email_gvcn'</span><span class="p">,</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span>
+</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="k">FROM</span><span class="w">  </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">gvcn</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">bang_bet</span>
+</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">       </span><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">gvcn</span><span class="w"> </span><span class="k">HAVING</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="k">DISTINCT</span><span class="w"> </span><span class="n">email_gvcn</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="n">t</span>
+</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="k">UNION</span><span class="w"> </span><span class="k">ALL</span>
+</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="k">SELECT</span><span class="w"> </span><span class="s1">'email_gvcn -&gt; gvcn'</span><span class="p">,</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span>
+</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="k">FROM</span><span class="w">  </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">email_gvcn</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">bang_bet</span>
+</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="w">       </span><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">email_gvcn</span><span class="w"> </span><span class="k">HAVING</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="k">DISTINCT</span><span class="w"> </span><span class="n">gvcn</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="n">t</span>
+</span><span id="__span-3-17"><a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="k">UNION</span><span class="w"> </span><span class="k">ALL</span>
+</span><span id="__span-3-18"><a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="k">SELECT</span><span class="w"> </span><span class="s1">'ten_lop -&gt; ho_ten_hs'</span><span class="p">,</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span>
+</span><span id="__span-3-19"><a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="k">FROM</span><span class="w">  </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">ten_lop</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">bang_bet</span>
+</span><span id="__span-3-20"><a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="w">       </span><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">ten_lop</span><span class="w"> </span><span class="k">HAVING</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="k">DISTINCT</span><span class="w"> </span><span class="n">ho_ten_hs</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="n">t</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Bốn dòng đầu ra <code>0</code>, dòng cuối ra <code>5</code>.</p>
+<p>Đọc kết quả cho <strong>thật đúng</strong>:</p>
+<ul>
+<li>Dòng cuối: <code>ten_lop → ho_ten_hs</code> <strong>bị bác bỏ</strong>, cả 5 lớp đều là phản ví dụ. Kết luận này <strong>chắc chắn</strong> — một phản ví dụ là đủ giết một PTH.</li>
+<li>Bốn dòng đầu: <em>"chưa tìm thấy phản ví dụ"</em>. Chỉ có thế thôi. Nó <strong>không</strong> chứng minh bốn PTH kia đúng. Lý do chúng đúng nằm ở cột "luật nghiệp vụ" của bảng mục 1, không nằm ở con số <code>0</code> này.</li>
+</ul>
+<h3 id="3-cai-gia-cua-phu-thuoc-bac-cau">3. Cái giá của phụ thuộc bắc cầu<a class="headerlink" href="#3-cai-gia-cua-phu-thuoc-bac-cau" title="Permanent link">&para;</a></h3>
+<p>Vì <code>email_gvcn</code> phụ thuộc bắc cầu vào khoá, nó bị chép lại y nguyên rất nhiều lần:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">gvcn</span><span class="p">,</span><span class="w"> </span><span class="n">email_gvcn</span><span class="p">,</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_dong_bi_chep_lai</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="k">FROM</span><span class="w"> </span><span class="n">bang_bet</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">gvcn</span><span class="p">,</span><span class="w"> </span><span class="n">email_gvcn</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">so_dong_bi_chep_lai</span><span class="w"> </span><span class="k">DESC</span><span class="p">,</span><span class="w"> </span><span class="n">gvcn</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Năm dòng. Cô Lê Thị Mai (8A3) có <code>8</code>; ba giáo viên có <code>6</code>; cô Hoàng Thị Nhung (9A2) có <code>4</code>. Tổng đúng <code>30</code> — bằng số dòng của cả bảng.</p>
+<p>Nghĩa là: <strong>cùng một mẩu thông tin "email của cô Mai" được cất giữ 8 bản sao</strong>. Sửa email mà quên một bản là dữ liệu mâu thuẫn ngay. <a href="../17-dang-chuan-1nf-2nf/">Bài 17</a> gọi hiện tượng này bằng tên chính thức của nó — <em>bất thường khi sửa</em>.</p>
+<h3 id="4-bao-ong-tinh-bang-tay-vi-du-1-ten_lop">4. Bao đóng tính bằng tay — ví dụ 1: <code>{ten_lop}⁺</code><a class="headerlink" href="#4-bao-ong-tinh-bang-tay-vi-du-1-ten_lop" title="Permanent link">&para;</a></h3>
+<p>Áp dụng đúng 9 bước của thuật toán lên tập <code>F_bet</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Bước</th>
+<th>Việc làm</th>
+<th><code>KQ</code> sau bước đó</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><code>KQ ← {ten_lop}</code></td>
+<td><code>{ten_lop}</code></td>
+</tr>
+<tr>
+<td>4–7</td>
+<td>Xét f1 <code>stt → ...</code>: <code>{stt} ⊄ KQ</code> → bỏ qua</td>
+<td><code>{ten_lop}</code></td>
+</tr>
+<tr>
+<td>4–7</td>
+<td>Xét f2 <code>ten_lop → gvcn</code>: vế trái ⊆ KQ, vế phải chưa có → <strong>thêm</strong></td>
+<td><code>{ten_lop, gvcn}</code></td>
+</tr>
+<tr>
+<td>4–7</td>
+<td>Xét f3 <code>gvcn → ten_lop</code>: vế phải đã có → bỏ qua</td>
+<td><code>{ten_lop, gvcn}</code></td>
+</tr>
+<tr>
+<td>4–7</td>
+<td>Xét f4 <code>gvcn → email_gvcn</code>: vế trái ⊆ KQ, vế phải chưa có → <strong>thêm</strong></td>
+<td><code>{ten_lop, gvcn, email_gvcn}</code></td>
+</tr>
+<tr>
+<td>4–7</td>
+<td>Xét f5 <code>email_gvcn → gvcn</code>: vế phải đã có → bỏ qua</td>
+<td><code>{ten_lop, gvcn, email_gvcn}</code></td>
+</tr>
+<tr>
+<td>8</td>
+<td>Vòng quét vừa rồi có thêm → <strong>quét lại từ đầu</strong></td>
+<td>—</td>
+</tr>
+<tr>
+<td>4–7</td>
+<td>Quét lượt hai: không PTH nào thêm được gì</td>
+<td><code>{ten_lop, gvcn, email_gvcn}</code></td>
+</tr>
+<tr>
+<td>9</td>
+<td><code>thay_doi = sai</code> → dừng</td>
+<td><strong><code>{ten_lop, gvcn, email_gvcn}</code></strong></td>
+</tr>
+</tbody>
+</table>
+<p>Kết luận: <code>{ten_lop}⁺</code> chỉ có <strong>3</strong> trong tổng số <strong>12</strong> thuộc tính của <code>bang_bet</code>. Vậy <code>ten_lop</code> <strong>không phải</strong> siêu khoá.</p>
+<div class="admonition tip">
+<p class="admonition-title">Đừng bao giờ bỏ vòng quét cuối</p>
+<p>Lỗi tính tay phổ biến nhất là dừng ngay sau khi quét hết <code>F</code> một lượt. Phải quét thêm <strong>một lượt nữa không thêm được gì</strong> thì mới được dừng — vì thuộc tính vừa thêm ở cuối lượt có thể kích hoạt một PTH nằm ở <strong>đầu</strong> danh sách.</p>
+</div>
+<h3 id="5-bao-ong-bang-may">5. Bao đóng bằng máy<a class="headerlink" href="#5-bao-ong-bang-may" title="Permanent link">&para;</a></h3>
+<p>Tính tay dễ sót. Hãy để PostgreSQL kiểm tra hộ. Trước hết, lưu tập PTH thành dữ liệu:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">b16_pth</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">;</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">b16_ket_qua</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">;</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">b16_pth</span><span class="w"> </span><span class="p">(</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">    </span><span class="n">ma</span><span class="w">       </span><span class="nb">SMALLINT</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">    </span><span class="n">ve_trai</span><span class="w">  </span><span class="nb">TEXT</span><span class="p">[]</span><span class="w">   </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">    </span><span class="n">ve_phai</span><span class="w">  </span><span class="nb">TEXT</span><span class="p">[]</span><span class="w">   </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span>
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="p">);</span>
+</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
+</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">b16_ket_qua</span><span class="w"> </span><span class="p">(</span>
+</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">    </span><span class="n">buoc</span><span class="w">     </span><span class="nb">SMALLINT</span><span class="p">,</span>
+</span><span id="__span-5-12"><a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">    </span><span class="n">ap_dung</span><span class="w">  </span><span class="nb">TEXT</span><span class="p">,</span>
+</span><span id="__span-5-13"><a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="w">    </span><span class="n">kq</span><span class="w">       </span><span class="nb">TEXT</span><span class="p">[]</span>
+</span><span id="__span-5-14"><a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="p">);</span>
+</span></code></pre></div>
+<p>Nạp tập <code>F_1nf</code> — tập phụ thuộc hàm của bảng mà <a href="../17-dang-chuan-1nf-2nf/">Bài 17</a> sẽ dựng sau khi đưa <code>bang_bet</code> về Dạng chuẩn 1. Ta dùng tập này vì nó có khoá gồm <strong>hai</strong> thuộc tính, thú vị hơn:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">b16_pth</span><span class="w"> </span><span class="p">(</span><span class="n">ma</span><span class="p">,</span><span class="w"> </span><span class="n">ve_trai</span><span class="p">,</span><span class="w"> </span><span class="n">ve_phai</span><span class="p">)</span><span class="w"> </span><span class="k">VALUES</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="nb">ARRAY</span><span class="p">[</span><span class="s1">'ma_hs'</span><span class="p">],</span><span class="w">              </span><span class="nb">ARRAY</span><span class="p">[</span><span class="s1">'ho_ten_hs'</span><span class="p">,</span><span class="s1">'ngay_sinh_hs'</span><span class="p">,</span><span class="s1">'dia_chi'</span><span class="p">,</span><span class="s1">'ten_lop'</span><span class="p">]),</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="nb">ARRAY</span><span class="p">[</span><span class="s1">'ten_lop'</span><span class="p">],</span><span class="w">            </span><span class="nb">ARRAY</span><span class="p">[</span><span class="s1">'gvcn'</span><span class="p">]),</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="nb">ARRAY</span><span class="p">[</span><span class="s1">'gvcn'</span><span class="p">],</span><span class="w">               </span><span class="nb">ARRAY</span><span class="p">[</span><span class="s1">'ten_lop'</span><span class="p">]),</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="nb">ARRAY</span><span class="p">[</span><span class="s1">'gvcn'</span><span class="p">],</span><span class="w">               </span><span class="nb">ARRAY</span><span class="p">[</span><span class="s1">'email_gvcn'</span><span class="p">]),</span>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="w"> </span><span class="nb">ARRAY</span><span class="p">[</span><span class="s1">'email_gvcn'</span><span class="p">],</span><span class="w">         </span><span class="nb">ARRAY</span><span class="p">[</span><span class="s1">'gvcn'</span><span class="p">]),</span>
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="w"> </span><span class="nb">ARRAY</span><span class="p">[</span><span class="s1">'ma_hs'</span><span class="p">,</span><span class="s1">'ten_mon'</span><span class="p">],</span><span class="w">    </span><span class="nb">ARRAY</span><span class="p">[</span><span class="s1">'diem_so'</span><span class="p">]);</span>
+</span></code></pre></div>
+<p>Bây giờ dịch thẳng 9 bước giả mã thành một khối lệnh:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="k">DO</span><span class="w"> </span><span class="err">$$</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="k">DECLARE</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">    </span><span class="n">kq</span><span class="w">        </span><span class="nb">text</span><span class="p">[]</span><span class="w">   </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="nb">ARRAY</span><span class="p">[</span><span class="s1">'ten_lop'</span><span class="p">];</span><span class="w">   </span><span class="c1">-- ← X cần tính bao đóng</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">    </span><span class="n">buoc</span><span class="w">      </span><span class="nb">smallint</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">    </span><span class="n">thay_doi</span><span class="w">  </span><span class="nb">boolean</span><span class="w">  </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">    </span><span class="n">f</span><span class="w">         </span><span class="n">record</span><span class="p">;</span>
+</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="k">BEGIN</span>
+</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="w">    </span><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">b16_ket_qua</span><span class="w"> </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="n">buoc</span><span class="p">,</span><span class="w"> </span><span class="s1">'Bước 1 — khởi tạo KQ ← X'</span><span class="p">,</span><span class="w"> </span><span class="n">kq</span><span class="p">);</span>
+</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="w">    </span><span class="n">WHILE</span><span class="w"> </span><span class="n">thay_doi</span><span class="w"> </span><span class="n">LOOP</span><span class="w">                                   </span><span class="c1">-- Bước 2 và 8</span>
+</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="w">        </span><span class="n">thay_doi</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span><span class="w">                                </span><span class="c1">-- Bước 3</span>
+</span><span id="__span-7-11"><a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="w">        </span><span class="k">FOR</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">b16_pth</span><span class="w"> </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">ma</span><span class="w"> </span><span class="n">LOOP</span><span class="w">   </span><span class="c1">-- Bước 4</span>
+</span><span id="__span-7-12"><a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="w">            </span><span class="k">IF</span><span class="w"> </span><span class="n">f</span><span class="p">.</span><span class="n">ve_trai</span><span class="w"> </span><span class="o">&lt;@</span><span class="w"> </span><span class="n">kq</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="p">(</span><span class="n">f</span><span class="p">.</span><span class="n">ve_phai</span><span class="w"> </span><span class="o">&lt;@</span><span class="w"> </span><span class="n">kq</span><span class="p">)</span><span class="w"> </span><span class="k">THEN</span><span class="w">   </span><span class="c1">-- Bước 5</span>
+</span><span id="__span-7-13"><a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="w">                </span><span class="n">kq</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">array_agg</span><span class="p">(</span><span class="k">DISTINCT</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w">  </span><span class="c1">-- Bước 6</span>
+</span><span id="__span-7-14"><a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="w">                       </span><span class="k">FROM</span><span class="w"> </span><span class="k">unnest</span><span class="p">(</span><span class="n">kq</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">f</span><span class="p">.</span><span class="n">ve_phai</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">t</span><span class="p">(</span><span class="n">x</span><span class="p">));</span>
+</span><span id="__span-7-15"><a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="w">                </span><span class="n">buoc</span><span class="w">     </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="n">buoc</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+</span><span id="__span-7-16"><a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="w">                </span><span class="n">thay_doi</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span><span class="w">                         </span><span class="c1">-- Bước 7</span>
+</span><span id="__span-7-17"><a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a><span class="w">                </span><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">b16_ket_qua</span>
+</span><span id="__span-7-18"><a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a><span class="w">                </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="n">buoc</span><span class="p">,</span><span class="w"> </span><span class="s1">'áp dụng PTH số '</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">f</span><span class="p">.</span><span class="n">ma</span><span class="p">,</span><span class="w"> </span><span class="n">kq</span><span class="p">);</span>
+</span><span id="__span-7-19"><a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a><span class="w">            </span><span class="k">END</span><span class="w"> </span><span class="k">IF</span><span class="p">;</span>
+</span><span id="__span-7-20"><a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a><span class="w">        </span><span class="k">END</span><span class="w"> </span><span class="n">LOOP</span><span class="p">;</span>
+</span><span id="__span-7-21"><a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a><span class="w">    </span><span class="k">END</span><span class="w"> </span><span class="n">LOOP</span><span class="p">;</span>
+</span><span id="__span-7-22"><a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a><span class="k">END</span><span class="w"> </span><span class="err">$$</span><span class="p">;</span>
+</span><span id="__span-7-23"><a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>
+</span><span id="__span-7-24"><a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">buoc</span><span class="p">,</span><span class="w"> </span><span class="n">ap_dung</span><span class="p">,</span><span class="w"> </span><span class="n">array_to_string</span><span class="p">(</span><span class="n">kq</span><span class="p">,</span><span class="w"> </span><span class="s1">', '</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">bao_dong</span>
+</span><span id="__span-7-25"><a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a><span class="k">FROM</span><span class="w"> </span><span class="n">b16_ket_qua</span>
+</span><span id="__span-7-26"><a id="__codelineno-7-26" name="__codelineno-7-26" href="#__codelineno-7-26"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">buoc</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Ba dòng, và dòng cuối đúng bằng kết quả tính tay ở mục 4: <code>email_gvcn, gvcn, ten_lop</code>.</p>
+<h3 id="6-bao-ong-tinh-bang-tay-vi-du-2-ma_hs-ten_mon">6. Bao đóng tính bằng tay — ví dụ 2: <code>{ma_hs, ten_mon}⁺</code><a class="headerlink" href="#6-bao-ong-tinh-bang-tay-vi-du-2-ma_hs-ten_mon" title="Permanent link">&para;</a></h3>
+<p>Lần này chạy trên <code>F_1nf</code>, với 9 thuộc tính: <code>ma_hs</code>, <code>ho_ten_hs</code>, <code>ngay_sinh_hs</code>, <code>dia_chi</code>, <code>ten_lop</code>, <code>gvcn</code>, <code>email_gvcn</code>, <code>ten_mon</code>, <code>diem_so</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Bước</th>
+<th>Việc làm</th>
+<th>Số thuộc tính trong <code>KQ</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><code>KQ ← {ma_hs, ten_mon}</code></td>
+<td>2</td>
+</tr>
+<tr>
+<td>4–7</td>
+<td>PTH 1 <code>ma_hs → ho_ten_hs, ngay_sinh_hs, dia_chi, ten_lop</code> → <strong>thêm 4</strong></td>
+<td>6</td>
+</tr>
+<tr>
+<td>4–7</td>
+<td>PTH 2 <code>ten_lop → gvcn</code> → <strong>thêm 1</strong></td>
+<td>7</td>
+</tr>
+<tr>
+<td>4–7</td>
+<td>PTH 3 <code>gvcn → ten_lop</code> — đã có → bỏ qua</td>
+<td>7</td>
+</tr>
+<tr>
+<td>4–7</td>
+<td>PTH 4 <code>gvcn → email_gvcn</code> → <strong>thêm 1</strong></td>
+<td>8</td>
+</tr>
+<tr>
+<td>4–7</td>
+<td>PTH 5 <code>email_gvcn → gvcn</code> — đã có → bỏ qua</td>
+<td>8</td>
+</tr>
+<tr>
+<td>4–7</td>
+<td>PTH 6 <code>(ma_hs, ten_mon) → diem_so</code> → <strong>thêm 1</strong></td>
+<td>9</td>
+</tr>
+<tr>
+<td>8–9</td>
+<td>Quét lượt hai không thêm gì → dừng</td>
+<td><strong>9 = toàn bộ</strong></td>
+</tr>
+</tbody>
+</table>
+<p><code>{ma_hs, ten_mon}⁺</code> = <strong>toàn bộ 9 thuộc tính</strong> → đây là một <strong>siêu khoá</strong>.</p>
+<p>Muốn máy xác nhận, chỉ cần sửa đúng một dòng trong khối lệnh ở mục 5:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="k">TRUNCATE</span><span class="w"> </span><span class="n">b16_ket_qua</span><span class="p">;</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="k">DO</span><span class="w"> </span><span class="err">$$</span>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="k">DECLARE</span>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">    </span><span class="n">kq</span><span class="w">        </span><span class="nb">text</span><span class="p">[]</span><span class="w">   </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="nb">ARRAY</span><span class="p">[</span><span class="s1">'ma_hs'</span><span class="p">,</span><span class="s1">'ten_mon'</span><span class="p">];</span><span class="w">   </span><span class="c1">-- ← đổi X ở đây</span>
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">    </span><span class="n">buoc</span><span class="w">      </span><span class="nb">smallint</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">    </span><span class="n">thay_doi</span><span class="w">  </span><span class="nb">boolean</span><span class="w">  </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">    </span><span class="n">f</span><span class="w">         </span><span class="n">record</span><span class="p">;</span>
+</span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="k">BEGIN</span>
+</span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="w">    </span><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">b16_ket_qua</span><span class="w"> </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="n">buoc</span><span class="p">,</span><span class="w"> </span><span class="s1">'Bước 1 — khởi tạo KQ ← X'</span><span class="p">,</span><span class="w"> </span><span class="n">kq</span><span class="p">);</span>
+</span><span id="__span-8-11"><a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="w">    </span><span class="n">WHILE</span><span class="w"> </span><span class="n">thay_doi</span><span class="w"> </span><span class="n">LOOP</span>
+</span><span id="__span-8-12"><a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="w">        </span><span class="n">thay_doi</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+</span><span id="__span-8-13"><a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="w">        </span><span class="k">FOR</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">b16_pth</span><span class="w"> </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">ma</span><span class="w"> </span><span class="n">LOOP</span>
+</span><span id="__span-8-14"><a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="w">            </span><span class="k">IF</span><span class="w"> </span><span class="n">f</span><span class="p">.</span><span class="n">ve_trai</span><span class="w"> </span><span class="o">&lt;@</span><span class="w"> </span><span class="n">kq</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="p">(</span><span class="n">f</span><span class="p">.</span><span class="n">ve_phai</span><span class="w"> </span><span class="o">&lt;@</span><span class="w"> </span><span class="n">kq</span><span class="p">)</span><span class="w"> </span><span class="k">THEN</span>
+</span><span id="__span-8-15"><a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="w">                </span><span class="n">kq</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">array_agg</span><span class="p">(</span><span class="k">DISTINCT</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">x</span><span class="p">)</span>
+</span><span id="__span-8-16"><a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="w">                       </span><span class="k">FROM</span><span class="w"> </span><span class="k">unnest</span><span class="p">(</span><span class="n">kq</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">f</span><span class="p">.</span><span class="n">ve_phai</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">t</span><span class="p">(</span><span class="n">x</span><span class="p">));</span>
+</span><span id="__span-8-17"><a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="w">                </span><span class="n">buoc</span><span class="w">     </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="n">buoc</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+</span><span id="__span-8-18"><a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a><span class="w">                </span><span class="n">thay_doi</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+</span><span id="__span-8-19"><a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a><span class="w">                </span><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">b16_ket_qua</span>
+</span><span id="__span-8-20"><a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a><span class="w">                </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="n">buoc</span><span class="p">,</span><span class="w"> </span><span class="s1">'áp dụng PTH số '</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">f</span><span class="p">.</span><span class="n">ma</span><span class="p">,</span><span class="w"> </span><span class="n">kq</span><span class="p">);</span>
+</span><span id="__span-8-21"><a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a><span class="w">            </span><span class="k">END</span><span class="w"> </span><span class="k">IF</span><span class="p">;</span>
+</span><span id="__span-8-22"><a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a><span class="w">        </span><span class="k">END</span><span class="w"> </span><span class="n">LOOP</span><span class="p">;</span>
+</span><span id="__span-8-23"><a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a><span class="w">    </span><span class="k">END</span><span class="w"> </span><span class="n">LOOP</span><span class="p">;</span>
+</span><span id="__span-8-24"><a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a><span class="k">END</span><span class="w"> </span><span class="err">$$</span><span class="p">;</span>
+</span><span id="__span-8-25"><a id="__codelineno-8-25" name="__codelineno-8-25" href="#__codelineno-8-25"></a>
+</span><span id="__span-8-26"><a id="__codelineno-8-26" name="__codelineno-8-26" href="#__codelineno-8-26"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">buoc</span><span class="p">,</span><span class="w"> </span><span class="n">ap_dung</span><span class="p">,</span>
+</span><span id="__span-8-27"><a id="__codelineno-8-27" name="__codelineno-8-27" href="#__codelineno-8-27"></a><span class="w">       </span><span class="k">cardinality</span><span class="p">(</span><span class="n">kq</span><span class="p">)</span><span class="w">                </span><span class="k">AS</span><span class="w"> </span><span class="n">so_thuoc_tinh</span><span class="p">,</span>
+</span><span id="__span-8-28"><a id="__codelineno-8-28" name="__codelineno-8-28" href="#__codelineno-8-28"></a><span class="w">       </span><span class="n">array_to_string</span><span class="p">(</span><span class="n">kq</span><span class="p">,</span><span class="w"> </span><span class="s1">', '</span><span class="p">)</span><span class="w">      </span><span class="k">AS</span><span class="w"> </span><span class="n">bao_dong</span>
+</span><span id="__span-8-29"><a id="__codelineno-8-29" name="__codelineno-8-29" href="#__codelineno-8-29"></a><span class="k">FROM</span><span class="w"> </span><span class="n">b16_ket_qua</span>
+</span><span id="__span-8-30"><a id="__codelineno-8-30" name="__codelineno-8-30" href="#__codelineno-8-30"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">buoc</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Năm dòng, <code>so_thuoc_tinh</code> tăng dần <code>2 → 6 → 7 → 8 → 9</code>.</p>
+<h3 id="7-tu-bao-ong-ra-khoa-du-tuyen">7. Từ bao đóng ra khoá dự tuyển<a class="headerlink" href="#7-tu-bao-ong-ra-khoa-du-tuyen" title="Permanent link">&para;</a></h3>
+<p>Bao đóng mới chỉ cho biết <em>siêu khoá hay không</em>. Muốn ra <strong>khoá dự tuyển</strong> (siêu khoá tối giản — <a href="../../cap-1-mo-hinh-er/12-bay-loai-khoa/">Bài 12</a> mục 2) thì dùng thuật toán này:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>THUẬT TOÁN: TIM-KHOA-DU-TUYEN(U, F)
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>  Vào : U — toàn bộ thuộc tính của lược đồ
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>        F — tập phụ thuộc hàm
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>  Bước 1.  L ← các thuộc tính CHỈ xuất hiện ở vế TRÁI,
+</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>                hoặc không xuất hiện trong F lần nào
+</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>  Bước 2.  R ← các thuộc tính CHỈ xuất hiện ở vế PHẢI
+</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>  Bước 3.  Mọi khoá dự tuyển đều PHẢI chứa toàn bộ L
+</span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>                và KHÔNG chứa thuộc tính nào của R
+</span><span id="__span-9-10"><a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>  Bước 4.  Nếu BAO-DONG(L, F) = U
+</span><span id="__span-9-11"><a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>               thì L là khoá dự tuyển DUY NHẤT → dừng
+</span><span id="__span-9-12"><a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>  Bước 5.  Ngược lại, với mọi tập con S của (U − L − R),
+</span><span id="__span-9-13"><a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>                duyệt theo kích thước tăng dần:
+</span><span id="__span-9-14"><a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>  Bước 6.      Nếu BAO-DONG(L ∪ S, F) = U
+</span><span id="__span-9-15"><a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>                   và L ∪ S không chứa khoá dự tuyển nào đã tìm được
+</span><span id="__span-9-16"><a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>  Bước 7.          thì ghi nhận L ∪ S là một khoá dự tuyển
+</span></code></pre></div>
+<p>Vì sao Bước 3 đúng? Nếu một thuộc tính <code>A</code> <strong>không bao giờ</strong> nằm ở vế phải, thì không PTH nào sinh ra được <code>A</code>. Muốn <code>A</code> có mặt trong bao đóng, cách duy nhất là cho <code>A</code> vào <code>X</code> ngay từ đầu. Vậy <code>A</code> phải nằm trong mọi khoá.</p>
+<p><strong>Áp dụng cho <code>F_1nf</code>:</strong></p>
+<ul>
+<li><strong>Bước 1</strong> — thuộc tính chỉ xuất hiện ở vế trái: <code>ma_hs</code> (vế trái của PTH 1 và 6, không bao giờ ở vế phải) và <code>ten_mon</code> (vế trái của PTH 6). Vậy <code>L = {ma_hs, ten_mon}</code>.</li>
+<li><strong>Bước 4</strong> — mục 6 vừa tính: <code>{ma_hs, ten_mon}⁺</code> = toàn bộ 9 thuộc tính.</li>
+<li>→ <strong><code>{ma_hs, ten_mon}</code> là khoá dự tuyển duy nhất.</strong> Thuật toán dừng ngay, khỏi phải duyệt tập con nào.</li>
+</ul>
+<p>Suy ra luôn:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Thuộc tính</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Thuộc tính khoá</strong></td>
+<td><code>ma_hs</code>, <code>ten_mon</code></td>
+</tr>
+<tr>
+<td><strong>Thuộc tính không khoá</strong></td>
+<td><code>ho_ten_hs</code>, <code>ngay_sinh_hs</code>, <code>dia_chi</code>, <code>ten_lop</code>, <code>gvcn</code>, <code>email_gvcn</code>, <code>diem_so</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Áp dụng cho <code>F_bet</code></strong> (bảng bẹt gốc, 12 thuộc tính):</p>
+<ul>
+<li><strong>Bước 1</strong> — <code>stt</code> là thuộc tính duy nhất không bao giờ xuất hiện ở vế phải. <code>L = {stt}</code>.</li>
+<li><strong>Bước 4</strong> — <code>{stt}⁺</code>: PTH f1 kéo ngay 11 thuộc tính còn lại vào → đủ 12.</li>
+<li>→ <strong><code>{stt}</code> là khoá dự tuyển duy nhất</strong> của <code>bang_bet</code>. Mọi thuộc tính khác đều là thuộc tính không khoá.</li>
+</ul>
+<div class="admonition danger">
+<p class="admonition-title">Ghi nhớ: <code>ho_ten_hs</code> KHÔNG phải khoá, dù 30 dòng đang có 30 tên khác nhau</p>
+<p>Câu SQL dưới đây đếm số họ tên khác nhau:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_dong</span><span class="p">,</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="w">       </span><span class="k">count</span><span class="p">(</span><span class="k">DISTINCT</span><span class="w"> </span><span class="n">ho_ten_hs</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_ho_ten_khac_nhau</span>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="k">FROM</span><span class="w"> </span><span class="n">bang_bet</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Kết quả <code>30</code> và <code>30</code>. Y hệt cái bẫy của <a href="../../cap-1-mo-hinh-er/12-bay-loai-khoa/">Bài 12</a>: con số này <strong>không</strong> biến <code>ho_ten_hs</code> thành khoá. Lược đồ <code>bang_bet</code> không hề có <code>UNIQUE (ho_ten_hs)</code>, và nghiệp vụ thì cho phép hai bạn trùng tên.</p>
+</div>
+<h3 id="8-rut-gon-ve-phu-toi-thieu">8. Rút gọn về phủ tối thiểu<a class="headerlink" href="#8-rut-gon-ve-phu-toi-thieu" title="Permanent link">&para;</a></h3>
+<p>Giả sử người phân tích nghiệp vụ viết thêm một luật nghe rất hợp lý vào <code>F_1nf</code>:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>PTH 7:  ma_hs → gvcn      ("biết học sinh thì biết chủ nhiệm của bạn ấy")
+</span></code></pre></div>
+<p>Luật này <strong>đúng</strong>, nhưng <strong>thừa</strong>. Chạy Bước 3 của phủ tối thiểu: tạm bỏ PTH 7 rồi tính <code>{ma_hs}⁺</code> bằng 6 PTH còn lại.</p>
+<table>
+<thead>
+<tr>
+<th>Bước</th>
+<th><code>KQ</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Khởi tạo</td>
+<td><code>{ma_hs}</code></td>
+</tr>
+<tr>
+<td>PTH 1</td>
+<td><code>{ma_hs, ho_ten_hs, ngay_sinh_hs, dia_chi, ten_lop}</code></td>
+</tr>
+<tr>
+<td>PTH 2</td>
+<td><code>{..., gvcn}</code> ← <strong><code>gvcn</code> đã có mặt</strong></td>
+</tr>
+</tbody>
+</table>
+<p><code>gvcn ∈ {ma_hs}⁺</code> ngay cả khi không có PTH 7 → <strong>PTH 7 là thừa, loại bỏ</strong>.</p>
+<p>Kiểm lại cả ba điều kiện cho <code>F_1nf</code> gốc:</p>
+<table>
+<thead>
+<tr>
+<th>Điều kiện</th>
+<th>Kết quả</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1. Vế phải một thuộc tính</td>
+<td>Chỉ cần tách PTH 1 thành 4 PTH riêng bằng <strong>luật tách</strong></td>
+</tr>
+<tr>
+<td>2. Vế trái không thừa</td>
+<td>PTH 6 là cái duy nhất có vế trái 2 thuộc tính. <code>{ma_hs}⁺</code> không chứa <code>diem_so</code>, <code>{ten_mon}⁺ = {ten_mon}</code> → không bỏ được cột nào</td>
+</tr>
+<tr>
+<td>3. Không PTH thừa</td>
+<td>Bỏ thử từng cái: bỏ PTH 2 thì <code>{ten_lop}⁺ = {ten_lop}</code>; bỏ PTH 3 thì <code>{gvcn}⁺</code> mất <code>ten_lop</code>; bỏ PTH 5 thì <code>{email_gvcn}⁺ = {email_gvcn}</code> → không bỏ được cái nào</td>
+</tr>
+</tbody>
+</table>
+<p>Vậy <code>F_1nf</code> sau khi tách vế phải <strong>chính là một phủ tối thiểu</strong>. <a href="../18-dang-chuan-3nf-bcnf/">Bài 18</a> sẽ đưa đúng tập này vào thuật toán tổng hợp 3NF.</p>
+<h3 id="9-don-dep">9. Dọn dẹp<a class="headerlink" href="#9-don-dep" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">b16_ket_qua</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">;</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">b16_pth</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">;</span>
+</span></code></pre></div>
+<h2 id="loi-thuong-gap">⚠️ Lỗi thường gặp<a class="headerlink" href="#loi-thuong-gap" title="Permanent link">&para;</a></h2>
+<div class="admonition warning">
+<p class="admonition-title">Lỗi 1: Suy ra phụ thuộc hàm từ dữ liệu đang có</p>
+<p><em>"Chạy <code>GROUP BY ho_ten_hs HAVING count(DISTINCT ngay_sinh_hs) &gt; 1</code> ra 0 dòng, vậy <code>ho_ten_hs → ngay_sinh_hs</code>."</em></p>
+<p><strong>Sai.</strong> Đây là lỗi nghiêm trọng nhất của cả Cấp 2, và nó là bản sao y nguyên của cái bẫy Quy tắc vàng ở <a href="../../cap-1-mo-hinh-er/12-bay-loai-khoa/">Bài 12</a>.</p>
+<p>Dữ liệu là <strong>một</strong> trạng thái; phụ thuộc hàm là mệnh đề về <strong>mọi</strong> trạng thái. Chiều suy luận chỉ đi một hướng:</p>
+<table>
+<thead>
+<tr>
+<th>Quan sát trên dữ liệu</th>
+<th>Kết luận được phép rút ra</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Tìm thấy hai dòng vi phạm</td>
+<td>PTH đó <strong>sai</strong>. Chắc chắn, không cãi được.</td>
+</tr>
+<tr>
+<td>Không tìm thấy dòng nào vi phạm</td>
+<td><strong>Không kết luận gì cả.</strong> Phải đi hỏi nghiệp vụ.</td>
+</tr>
+</tbody>
+</table>
+<p>Nguy hiểm gấp đôi khi bảng còn ít dữ liệu: bảng 30 dòng thì gần như cột nào cũng "không thấy vi phạm".</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Lỗi 2: Đọc ngược mũi tên</p>
+<p><code>ma_hs → ho_ten</code> <strong>không</strong> kéo theo <code>ho_ten → ma_hs</code>.</p>
+<p>Phụ thuộc hàm là quan hệ <strong>một chiều</strong>, giống hàm số trong toán: <code>f(x) = x²</code> cho mỗi <code>x</code> đúng một <code>y</code>, nhưng <code>y = 4</code> thì ứng với cả <code>x = 2</code> lẫn <code>x = −2</code>.</p>
+<p>Hai chiều cùng đúng vẫn xảy ra được, nhưng đó là <strong>hai</strong> luật riêng biệt phải khai riêng — như <code>ten_lop → gvcn</code> và <code>gvcn → ten_lop</code> trong <code>F_bet</code>, và đúng hai luật đó cộng lại mới là quan hệ <strong>1:1</strong>.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Lỗi 3: Tưởng <code>X → Y</code> nghĩa là 'X và Y luôn khác nhau từng dòng'</p>
+<p><code>gvcn → email_gvcn</code> đúng, mặc dù <code>gvcn</code> có tới 8 dòng giống hệt nhau.</p>
+<p>Phụ thuộc hàm <strong>không</strong> cấm lặp lại. Nó chỉ cấm <strong>mâu thuẫn</strong>: hai dòng đã giống nhau ở vế trái thì bắt buộc phải giống nhau ở vế phải.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Lỗi 4: Dừng thuật toán bao đóng quá sớm</p>
+<p>Quét hết <code>F</code> một lượt rồi dừng là sai. Phải quét tới khi <strong>một lượt trọn vẹn không thêm được thuộc tính nào</strong>.</p>
+<p>Ví dụ với <code>F = {A → B, C → D, B → C}</code> và <code>X = {A}</code>: lượt một theo thứ tự đã cho thêm <code>B</code>, bỏ qua <code>C → D</code> (vì lúc đó chưa có <code>C</code>), rồi thêm <code>C</code>. Nếu dừng ở đây thì ra <code>{A, B, C}</code> — <strong>thiếu <code>D</code></strong>. Lượt hai mới bắt được <code>C → D</code>. Đáp án đúng là <code>{A, B, C, D}</code>.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Lỗi 5: Nhầm 'phụ thuộc bộ phận' với 'vế trái nhiều cột'</p>
+<p>Khoá phức hợp không tự động sinh ra phụ thuộc bộ phận.</p>
+<p><code>(ma_hs, ten_mon) → diem_so</code> có vế trái hai cột nhưng là phụ thuộc <strong>đầy đủ</strong>, vì bỏ cột nào cũng hỏng. Còn <code>(ma_hs, ten_mon) → dia_chi</code> mới là <strong>bộ phận</strong>, vì <code>ma_hs</code> một mình đã đủ.</p>
+<p>Phép thử: <strong>thử bỏ từng cột ở vế trái</strong>. Còn đúng → bộ phận. Hỏng hết → đầy đủ.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Lỗi 6: Quên điều kiện thứ ba của phụ thuộc bắc cầu</p>
+<p>Trong <code>F_bet</code> ta có <code>ten_lop → gvcn</code> và <code>gvcn → ten_lop</code>. Có phải <code>ten_lop → ten_lop</code> là bắc cầu không?</p>
+<p><strong>Không.</strong> Định nghĩa đòi <code>Y ↛ X</code>, nhưng ở đây <code>gvcn → ten_lop</code> đúng. Khi hai vế xác định lẫn nhau thì chúng là <strong>cùng một trạm</strong>, không có trạm trung gian nào cả — và <a href="../18-dang-chuan-3nf-bcnf/">Bài 18</a> sẽ cho thấy đây chính là chỗ BCNF khác 3NF.</p>
+</div>
+<h2 id="bai-tap">✍️ Bài tập<a class="headerlink" href="#bai-tap" title="Permanent link">&para;</a></h2>
+<ol>
+<li>
+<p>Viết ba luật nghiệp vụ sau thành phụ thuộc hàm trên lược đồ <code>truong_hoc</code>, rồi nói rõ phụ thuộc nào là <strong>đầy đủ</strong>:
+   a) Mỗi môn học có một tên duy nhất và một số tiết/tuần cố định.
+   b) Một buổi điểm danh được xác định bởi học sinh nào, ngày nào.
+   c) Mỗi giáo viên có đúng một email.</p>
+</li>
+<li>
+<p>Cho <code>F = {A → B, B → C, CD → E}</code> trên lược đồ <code>R(A, B, C, D, E)</code>. Tính <code>{A, D}⁺</code> bằng tay, ghi rõ từng bước.</p>
+</li>
+<li>
+<p>Vẫn <code>F</code> ở bài 2. Tìm <strong>mọi</strong> khoá dự tuyển của <code>R</code>, dùng thuật toán <code>TIM-KHOA-DU-TUYEN</code>. Chỉ ra thuộc tính khoá và thuộc tính không khoá.</p>
+</li>
+<li>
+<p><code>A → B</code> có suy ra được <code>AC → BC</code> không? Nếu có, dùng tiên đề nào?</p>
+</li>
+<li>
+<p>Viết một truy vấn SQL <strong>bác bỏ</strong> giả thuyết <code>ngay_sinh_hs → ten_lop</code> trên <code>bang_bet</code>. Nếu truy vấn trả về 0 dòng, bạn kết luận gì?</p>
+</li>
+<li>
+<p>Trong <code>F_bet</code>, <code>stt → email_gvcn</code> có phải phụ thuộc bắc cầu không? Chỉ rõ <code>X</code>, <code>Y</code>, <code>Z</code> và kiểm cả ba điều kiện.</p>
+</li>
+</ol>
+<details class="success">
+<summary>Đáp án</summary>
+<p><strong>1.</strong></p>
+<p>a) <code>ma_mon → ten_mon, so_tiet_tuan</code> và <code>ten_mon → ma_mon</code> (vì <code>ten_mon</code> có <code>UNIQUE</code>, ràng buộc <code>mon_hoc_ten_mon_key</code>). Cả hai đều <strong>đầy đủ</strong> — vế trái chỉ một thuộc tính nên không bỏ bớt được gì.</p>
+<p>b) <code>(ma_hs, ngay) → trang_thai, ly_do</code>. <strong>Đầy đủ</strong>: chỉ biết <code>ma_hs</code> thì không biết ngày nào; chỉ biết <code>ngay</code> thì không biết của ai. Đây chính là ràng buộc <code>diem_danh_ma_hs_ngay_key</code>, và <a href="../../cap-1-mo-hinh-er/12-bay-loai-khoa/">Bài 12</a> đã xếp <code>(ma_hs, ngay)</code> là khoá tự nhiên hợp lệ duy nhất trong bốn bảng khảo sát.</p>
+<p>c) <code>ma_gv → email</code>, và chiều ngược <code>email → ma_gv</code> (ràng buộc <code>giao_vien_email_key</code>). Cả hai <strong>đầy đủ</strong>.</p>
+<p><strong>2.</strong> <code>{A, D}⁺</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Bước</th>
+<th>Việc làm</th>
+<th><code>KQ</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Khởi tạo</td>
+<td><code>{A, D}</code></td>
+</tr>
+<tr>
+<td>4–7</td>
+<td><code>A → B</code>: vế trái ⊆ KQ → thêm <code>B</code></td>
+<td><code>{A, B, D}</code></td>
+</tr>
+<tr>
+<td>4–7</td>
+<td><code>B → C</code>: vế trái ⊆ KQ → thêm <code>C</code></td>
+<td><code>{A, B, C, D}</code></td>
+</tr>
+<tr>
+<td>4–7</td>
+<td><code>CD → E</code>: cả <code>C</code> lẫn <code>D</code> đã có → thêm <code>E</code></td>
+<td><code>{A, B, C, D, E}</code></td>
+</tr>
+<tr>
+<td>8–9</td>
+<td>Quét lượt hai không thêm gì → dừng</td>
+<td><code>{A, B, C, D, E}</code></td>
+</tr>
+</tbody>
+</table>
+<p><code>{A, D}⁺ = R</code> → <code>{A, D}</code> là <strong>siêu khoá</strong>.</p>
+<p><strong>3.</strong></p>
+<ul>
+<li>Bước 1: thuộc tính chỉ ở vế trái → <code>A</code> (chỉ ở vế trái của <code>A → B</code>) và <code>D</code> (chỉ ở vế trái của <code>CD → E</code>). Vậy <code>L = {A, D}</code>.</li>
+<li>Bước 2: chỉ ở vế phải → <code>E</code>.</li>
+<li>Bước 4: bài 2 vừa tính <code>{A, D}⁺ = R</code>.</li>
+<li>→ <code>{A, D}</code> là <strong>khoá dự tuyển duy nhất</strong>.</li>
+</ul>
+<p>Thuộc tính khoá: <code>A</code>, <code>D</code>. Thuộc tính không khoá: <code>B</code>, <code>C</code>, <code>E</code>.</p>
+<p><strong>4.</strong> Có. Đúng một bước <strong>tiên đề tăng trưởng</strong> với <code>Z = C</code>: từ <code>A → B</code> suy ra <code>AC → BC</code>.</p>
+<p><strong>5.</strong></p>
+<div class="highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">ngay_sinh_hs</span><span class="p">,</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="k">DISTINCT</span><span class="w"> </span><span class="n">ten_lop</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_lop</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="k">FROM</span><span class="w"> </span><span class="n">bang_bet</span>
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">ngay_sinh_hs</span>
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="k">HAVING</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="k">DISTINCT</span><span class="w"> </span><span class="n">ten_lop</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Truy vấn trả về <strong>0 dòng</strong> — vì 30 học sinh trong <code>bang_bet</code> có 30 ngày sinh khác nhau, nên mỗi nhóm chỉ có một dòng.</p>
+<p>Kết luận đúng: <strong>không kết luận được gì cả</strong>. Không tìm thấy phản ví dụ thì chỉ có nghĩa là chưa tìm thấy. Về mặt nghiệp vụ, <code>ngay_sinh_hs → ten_lop</code> hiển nhiên <strong>sai</strong>: hai bạn sinh cùng ngày mà học khác lớp là chuyện quá bình thường. Sang năm tuyển sinh thêm là dữ liệu sẽ tự bác bỏ nó.</p>
+<p><strong>6.</strong> Có.</p>
+<ul>
+<li><code>X = {stt}</code>, <code>Y = {ten_lop}</code>, <code>Z = {email_gvcn}</code>.</li>
+<li>Điều kiện 1: <code>stt → ten_lop</code> ✅ (nằm trong f1).</li>
+<li>Điều kiện 2: <code>ten_lop → email_gvcn</code> ✅ (bắc cầu qua f2 rồi f4, đúng như mục 4 đã tính: <code>email_gvcn ∈ {ten_lop}⁺</code>).</li>
+<li>Điều kiện 3: <code>ten_lop ↛ stt</code> ✅ (<code>{ten_lop}⁺</code> chỉ có 3 thuộc tính, không chứa <code>stt</code>); và <code>email_gvcn ∉ {stt, ten_lop}</code> ✅.</li>
+</ul>
+<p>Cả ba đều thoả → <code>stt → email_gvcn</code> là <strong>phụ thuộc bắc cầu</strong>. Đây đúng là căn bệnh mà <a href="../18-dang-chuan-3nf-bcnf/">Bài 18</a> sẽ chữa bằng Dạng chuẩn 3.</p>
+</details>
+<h2 id="tom-tat">🔑 Tóm tắt<a class="headerlink" href="#tom-tat" title="Permanent link">&para;</a></h2>
+<ol>
+<li><strong>Phụ thuộc hàm</strong> <code>X → Y</code> là luật <em>"hai dòng giống nhau trên X thì bắt buộc giống nhau trên Y"</em>, đúng với <strong>mọi</strong> trạng thái dữ liệu. Vế trái <code>X</code> gọi là <strong>định thức</strong>. Nó đến từ <strong>luật nghiệp vụ</strong>; dữ liệu chỉ <strong>bác bỏ</strong> được nó chứ không bao giờ chứng minh được — đúng Quy tắc vàng của Bài 12.</li>
+<li>Ba <strong>tiên đề Armstrong</strong> — <strong>phản xạ</strong> (<code>Y ⊆ X ⟹ X → Y</code>), <strong>tăng trưởng</strong> (<code>X → Y ⟹ XZ → YZ</code>), <strong>bắc cầu</strong> (<code>X → Y</code>, <code>Y → Z ⟹ X → Z</code>) — vừa đúng đắn vừa đầy đủ: mọi phụ thuộc hàm hợp lệ đều suy ra được từ đúng ba luật này.</li>
+<li><strong>Bao đóng thuộc tính</strong> <code>X⁺</code> là tập mọi thuộc tính suy ra được khi đã biết <code>X</code>. Thuật toán 9 bước chỉ là quét đi quét lại tập PTH cho tới khi <strong>một lượt trọn vẹn không thêm được gì</strong>. <code>X</code> là <strong>siêu khoá</strong> khi và chỉ khi <code>X⁺</code> bằng toàn bộ thuộc tính.</li>
+<li>Tìm <strong>khoá dự tuyển</strong>: những thuộc tính không bao giờ xuất hiện ở vế phải <strong>bắt buộc</strong> nằm trong mọi khoá; nếu bao đóng của riêng chúng đã phủ hết lược đồ thì đó là khoá dự tuyển duy nhất. <code>bang_bet</code> có đúng một khoá dự tuyển là <code>{stt}</code>. Thuộc tính trong khoá gọi là <strong>thuộc tính khoá</strong>, còn lại là <strong>thuộc tính không khoá</strong>.</li>
+<li><strong>Phụ thuộc đầy đủ / bộ phận / bắc cầu</strong> là ba hình dạng mà Cấp 2 sẽ truy lùng: bộ phận là bệnh của <strong>2NF</strong> (<a href="../17-dang-chuan-1nf-2nf/">Bài 17</a>), bắc cầu là bệnh của <strong>3NF</strong> (<a href="../18-dang-chuan-3nf-bcnf/">Bài 18</a>). <strong>Phủ tối thiểu</strong> là bản rút gọn hết cỡ của tập PTH, và là đầu vào của thuật toán tổng hợp lược đồ 3NF.</li>
+</ol>
+<hr />
+<p>⬅️ <a href="../../cap-1-mo-hinh-er/15-rang-buoc-toan-ven/">Bài 15 — Ràng buộc toàn vẹn</a> · ➡️ <a href="../17-dang-chuan-1nf-2nf/">Bài 17 — Dạng chuẩn 1 (1NF) và Dạng chuẩn 2 (2NF)</a></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Trở lại mục lục
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Chân trang" >
+        
+          
+          <a href="../../cap-1-mo-hinh-er/15-rang-buoc-toan-ven/" class="md-footer__link md-footer__link--prev" aria-label="Trước: Bài 15 — Ràng buộc toàn vẹn (Integrity Constraints)">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Trước
+              </span>
+              <div class="md-ellipsis">
+                Bài 15 — Ràng buộc toàn vẹn (Integrity Constraints)
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../17-dang-chuan-1nf-2nf/" class="md-footer__link md-footer__link--next" aria-label="Sau: Bài 17 — Dạng chuẩn 1 (1NF) và Dạng chuẩn 2 (2NF)">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Sau
+              </span>
+              <div class="md-ellipsis">
+                Bài 17 — Dạng chuẩn 1 (1NF) và Dạng chuẩn 2 (2NF)
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Nội dung theo giấy phép CC BY 4.0
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/hungnguyen010518/database-tu-a-z" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.sections", "navigation.top", "navigation.footer", "navigation.indexes", "navigation.tracking", "toc.follow", "content.code.copy", "content.code.annotate", "search.highlight", "search.suggest"], "search": "../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "\u0110\u00e3 sao ch\u00e9p", "clipboard.copy": "Sao ch\u00e9p v\u00e0o b\u1ed9 nh\u1edb t\u1ea1m", "search.result.more.one": "1 t\u1eeb kh\u00e1c trong trang", "search.result.more.other": "# t\u1eeb kh\u00e1c trong trang", "search.result.none": "Kh\u00f4ng t\u00ecm th\u1ea5y t\u00e0i li\u1ec7u li\u00ean quan", "search.result.one": "1 t\u00e0i li\u1ec7u li\u00ean quan", "search.result.other": "# t\u00e0i li\u1ec7u li\u00ean quan", "search.result.placeholder": "Nh\u1eadp \u0111\u1ec3 b\u1eaft \u0111\u1ea7u t\u00ecm ki\u1ebfm", "search.result.term.missing": "Kh\u00f4ng", "select.version": "Ch\u1ecdn phi\u00ean b\u1ea3n"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.525ec568.min.js"></script>
+      
+    
+  </body>
+</html>
