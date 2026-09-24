@@ -19,10 +19,21 @@ CUỐI CÙNG của khối:
     SELECT ho_ten_hs FROM bang_bet WHERE ... ORDER BY ho_ten_hs;
     ```
 
-Script sẽ sinh thêm một khối kiểm tra khiến CI đỏ nếu số dòng thật khác con số khai báo.
+Với truy vấn tổng hợp chỉ trả về một dòng, "1 dòng" không kiểm được gì. Khi đó hãy
+khẳng định GIÁ TRỊ của cột, một dòng cho mỗi cột cần kiểm:
+
+    ```sql
+    -- KỲ VỌNG: so_dong = 90
+    SELECT count(*) AS so_dong FROM b17_bet_1nf;
+    ```
+
+Giá trị được so sánh dưới dạng text với dòng ĐẦU TIÊN của kết quả. Dùng `NULL` để
+khẳng định ô rỗng. Hai kiểu đánh dấu kết hợp được: khai số dòng rồi khai giá trị cột.
+
+Script sẽ sinh thêm khối kiểm tra khiến CI đỏ nếu thực tế khác điều khai báo.
 Comment này hiện trên website, và đó là điều tốt: người học biết mình phải thấy gì.
 
-Ràng buộc: đánh dấu phải nằm ngay trên MỘT câu SELECT duy nhất kết thúc khối.
+Ràng buộc: các đánh dấu phải nằm ngay trên MỘT câu SELECT duy nhất kết thúc khối.
 
 Cách dùng:  python3 scripts/trich_sql.py > /tmp/sql_bai_hoc.sql
 """
@@ -33,7 +44,10 @@ import sys
 
 DANH_DAU = ("<!-- sql:khong-chay -->", "<!-- sql:co-y-loi -->")
 KHOI_SQL = re.compile(r"```sql\n(.*?)```", re.S)
-KY_VONG = re.compile(r"^[ \t]*--[ \t]*KỲ VỌNG:[ \t]*(\d+)[ \t]*dòng[ \t]*$", re.M)
+KY_VONG_DONG = re.compile(r"^[ \t]*--[ \t]*KỲ VỌNG:[ \t]*(\d+)[ \t]*dòng[ \t]*$", re.M)
+KY_VONG_COT = re.compile(
+    r"^[ \t]*--[ \t]*KỲ VỌNG:[ \t]*([A-Za-z_][A-Za-z0-9_]*)[ \t]*=[ \t]*(.+?)[ \t]*$", re.M)
+KY_VONG_BAT_KY = re.compile(r"^[ \t]*--[ \t]*KỲ VỌNG:.*$", re.M)
 # Khoảng văn bản ngay trước khối, đủ dài để chứa đánh dấu và vài dòng trống.
 CUA_SO_TRUOC = 120
 
@@ -59,29 +73,51 @@ def main() -> int:
             print(noi_khoi)
             print()
 
-            kv = list(KY_VONG.finditer(noi_khoi))
-            if kv:
-                cuoi = kv[-1]
-                truy_van = noi_khoi[cuoi.end():].strip().rstrip(";").strip()
-                mong_doi = int(cuoi.group(1))
+            moc = list(KY_VONG_BAT_KY.finditer(noi_khoi))
+            if moc:
+                truy_van = noi_khoi[moc[-1].end():].strip().rstrip(";").strip()
                 if not truy_van:
                     print(f"-- !! KỲ VỌNG ở {ten} không có câu lệnh nào theo sau", file=sys.stderr)
                     continue
-                so_kv += 1
-                nhan = f"{ten} (kỳ vọng {mong_doi} dòng)"
-                print(f"-- kiểm tra số dòng cho {ten}")
+
+                khoi_moc = noi_khoi[moc[0].start():moc[-1].end()]
+                so_dong = [int(m.group(1)) for m in KY_VONG_DONG.finditer(khoi_moc)]
+                gia_tri = [(m.group(1), m.group(2)) for m in KY_VONG_COT.finditer(khoi_moc)]
+
+                if not so_dong and not gia_tri:
+                    print(f"-- !! KỲ VỌNG ở {ten} sai cú pháp, không nhận dạng được", file=sys.stderr)
+                    continue
+
+                so_kv += len(so_dong) + len(gia_tri)
+                print(f"-- kiểm tra kết quả cho {ten}")
                 print("DO $kiemtra$")
-                print("DECLARE n bigint;")
+                print("DECLARE n bigint; v text;")
                 print("BEGIN")
-                print(f"  SELECT count(*) INTO n FROM ({truy_van}) AS t_kiem_tra;")
-                print(f"  IF n <> {mong_doi} THEN")
-                print(f"    RAISE EXCEPTION 'SAI SO DONG: {nhan} nhung thuc te tra ve % dong', n;")
-                print("  END IF;")
+                for mong_doi in so_dong:
+                    print(f"  SELECT count(*) INTO n FROM ({truy_van}) AS t_kiem_tra;")
+                    print(f"  IF n <> {mong_doi} THEN")
+                    print(f"    RAISE EXCEPTION 'SAI SO DONG: {ten} ky vong {mong_doi} dong, "
+                          f"thuc te %', n;")
+                    print("  END IF;")
+                for cot, gt in gia_tri:
+                    if gt.upper() == "NULL":
+                        print(f"  SELECT ({cot})::text INTO v FROM ({truy_van}) AS t_kiem_tra LIMIT 1;")
+                        print("  IF v IS NOT NULL THEN")
+                        print(f"    RAISE EXCEPTION 'SAI GIA TRI: {ten} cot {cot} ky vong NULL, "
+                              f"thuc te %', v;")
+                        print("  END IF;")
+                    else:
+                        gt_sql = gt.replace("'", "''")
+                        print(f"  SELECT ({cot})::text INTO v FROM ({truy_van}) AS t_kiem_tra LIMIT 1;")
+                        print(f"  IF v IS DISTINCT FROM '{gt_sql}' THEN")
+                        print(f"    RAISE EXCEPTION 'SAI GIA TRI: {ten} cot {cot} ky vong {gt_sql}, "
+                              f"thuc te %', coalesce(v, 'NULL');")
+                        print("  END IF;")
                 print("END $kiemtra$;")
                 print()
 
     print(f"-- Trích {so_chay} khối SQL để chạy, bỏ qua {so_bo_qua} khối đã đánh dấu, "
-          f"{so_kv} khẳng định số dòng.", file=sys.stderr)
+          f"{so_kv} khẳng định kết quả.", file=sys.stderr)
     return 0
 
 
