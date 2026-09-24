@@ -52,6 +52,33 @@ KY_VONG_BAT_KY = re.compile(r"^[ \t]*--[ \t]*KỲ VỌNG:.*$", re.M)
 CUA_SO_TRUOC = 120
 
 
+def _co_order_by_tang_ngoai(truy_van: str) -> bool:
+    """Có ORDER BY ở tầng ngoài cùng không (ngoài mọi ngoặc, ngoài mọi chuỗi nháy)."""
+    sau = 0
+    trong_nhay = False
+    i = 0
+    thap = truy_van.lower()
+    while i < len(truy_van):
+        c = truy_van[i]
+        if trong_nhay:
+            if c == "'":
+                trong_nhay = False
+            i += 1
+            continue
+        if c == "'":
+            trong_nhay = True
+        elif c == "(":
+            sau += 1
+        elif c == ")":
+            sau -= 1
+        elif sau == 0 and thap.startswith("order", i):
+            con = thap[i:i + 20]
+            if re.match(r"order\s+by\b", con):
+                return True
+        i += 1
+    return False
+
+
 def main() -> int:
     goc = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
     duong_dan = sorted(glob.glob(os.path.join(goc, "docs", "**", "*.md"), recursive=True))
@@ -139,16 +166,24 @@ def main() -> int:
                     print(f"    RAISE EXCEPTION 'SAI SO DONG: {ten} ky vong {mong_doi} dong, "
                           f"thuc te %', n;")
                     print("  END IF;")
+                # Khẳng định giá trị đọc MỘT dòng. Nếu truy vấn không có ORDER BY ở tầng
+                # ngoài cùng thì "dòng đầu tiên" là khái niệm không xác định — hôm nay xanh,
+                # sau một lần VACUUM có thể đỏ. Khi đó dùng INTO STRICT: PostgreSQL báo lỗi
+                # ngay nếu kết quả không phải đúng một dòng, nên không còn chỗ cho nhập nhằng.
+                # Có ORDER BY tầng ngoài thì tác giả đã chủ động chọn dòng đầu -> giữ LIMIT 1.
+                co_order_by_tang_ngoai = _co_order_by_tang_ngoai(truy_van)
+                doc = "INTO v" if co_order_by_tang_ngoai else "INTO STRICT v"
+                hau = " LIMIT 1" if co_order_by_tang_ngoai else ""
                 for cot, gt in gia_tri:
                     if gt.upper() == "NULL":
-                        print(f"  SELECT ({cot})::text INTO v FROM ({truy_van}) AS t_kiem_tra LIMIT 1;")
+                        print(f"  SELECT ({cot})::text {doc} FROM ({truy_van}) AS t_kiem_tra{hau};")
                         print("  IF v IS NOT NULL THEN")
                         print(f"    RAISE EXCEPTION 'SAI GIA TRI: {ten} cot {cot} ky vong NULL, "
                               f"thuc te %', v;")
                         print("  END IF;")
                     else:
                         gt_sql = gt.replace("'", "''")
-                        print(f"  SELECT ({cot})::text INTO v FROM ({truy_van}) AS t_kiem_tra LIMIT 1;")
+                        print(f"  SELECT ({cot})::text {doc} FROM ({truy_van}) AS t_kiem_tra{hau};")
                         print(f"  IF v IS DISTINCT FROM '{gt_sql}' THEN")
                         print(f"    RAISE EXCEPTION 'SAI GIA TRI: {ten} cot {cot} ky vong {gt_sql}, "
                               f"thuc te %', coalesce(v, 'NULL');")
