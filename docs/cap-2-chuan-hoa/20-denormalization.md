@@ -573,4 +573,4 @@ Năm dòng: `bang_bet 30`, `diem 480`, `giao_vien 8`, `hoc_sinh 40`, `lop 6`. Đ
 
 ---
 
-⬅️ [Bài 19 — 4NF, 5NF và 6NF](19-dang-chuan-4nf-5nf-6nf.md) · ➡️ **Bài 21 — Đại số quan hệ** *(sắp có)*
+⬅️ [Bài 19 — 4NF, 5NF và 6NF](19-dang-chuan-4nf-5nf-6nf.md) · ➡️ [Bài 21 — Đại số quan hệ](../cap-3-sql/21-dai-so-quan-he.md)
