@@ -659,6 +659,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#mot-khoa-bo-phan-hop-le-trong-nhu-the-nao" class="md-nav__link">
+    <span class="md-ellipsis">
+      Một khoá bộ phận HỢP LỆ trông như thế nào
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#mot-ieu-trung-thuc-ve-phu_huynh" class="md-nav__link">
     <span class="md-ellipsis">
       Một điều trung thực về phu_huynh
@@ -737,9 +746,18 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#khoa-bo-phan-co-that-su-u-e-phan-biet-khong" class="md-nav__link">
+  <a href="#khoa-bo-phan-hop-le-kiem-chung-tren-diem_danh" class="md-nav__link">
     <span class="md-ellipsis">
-      Khoá bộ phận có thật sự đủ để phân biệt không?
+      Khoá bộ phận hợp lệ — kiểm chứng trên diem_danh
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#con-quan_he-thi-khong-hop-le-va-ay-la-bang-chung" class="md-nav__link">
+    <span class="md-ellipsis">
+      Còn quan_he thì KHÔNG hợp lệ — và đây là bằng chứng
     </span>
   </a>
   
@@ -945,6 +963,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#mot-khoa-bo-phan-hop-le-trong-nhu-the-nao" class="md-nav__link">
+    <span class="md-ellipsis">
+      Một khoá bộ phận HỢP LỆ trông như thế nào
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#mot-ieu-trung-thuc-ve-phu_huynh" class="md-nav__link">
     <span class="md-ellipsis">
       Một điều trung thực về phu_huynh
@@ -1023,9 +1050,18 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#khoa-bo-phan-co-that-su-u-e-phan-biet-khong" class="md-nav__link">
+  <a href="#khoa-bo-phan-hop-le-kiem-chung-tren-diem_danh" class="md-nav__link">
     <span class="md-ellipsis">
-      Khoá bộ phận có thật sự đủ để phân biệt không?
+      Khoá bộ phận hợp lệ — kiểm chứng trên diem_danh
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#con-quan_he-thi-khong-hop-le-va-ay-la-bang-chung" class="md-nav__link">
+    <span class="md-ellipsis">
+      Còn quan_he thì KHÔNG hợp lệ — và đây là bằng chứng
     </span>
   </a>
   
@@ -1096,7 +1132,7 @@
 <ul>
 <li>Phân biệt <strong>ràng buộc tham gia</strong> với <strong>bản số</strong> — giới hạn dưới và giới hạn trên</li>
 <li>Đọc được <strong>tham gia toàn phần</strong> và <strong>tham gia bộ phận</strong> từ lược đồ, chỉ bằng cách nhìn <code>NOT NULL</code></li>
-<li>Nhận ra <strong>thực thể yếu</strong>, <strong>thực thể chủ</strong>, <strong>quan hệ nhận diện</strong> và <strong>khoá bộ phận</strong></li>
+<li>Nhận ra <strong>thực thể yếu</strong>, <strong>thực thể chủ</strong>, <strong>quan hệ nhận diện</strong> và <strong>khoá bộ phận</strong> — và kiểm tra được một khoá bộ phận có hợp lệ hay không</li>
 <li>Chứng minh từng khái niệm trên bằng dữ liệu thật của <code>truong_hoc</code></li>
 <li>Biết vì sao phụ huynh phải "biến mất" khi học sinh bị xoá</li>
 </ul>
@@ -1193,7 +1229,7 @@
 </tr>
 <tr>
 <td><code>lop.ma_gvcn</code></td>
-<td><code>REFERENCES giao_vien</code> (cho phép <code>NULL</code>)</td>
+<td><code>UNIQUE REFERENCES giao_vien</code> — cho phép <code>NULL</code></td>
 <td>LỚP tham gia <strong>bộ phận</strong> — lớp có thể chưa có chủ nhiệm</td>
 </tr>
 <tr>
@@ -1204,6 +1240,10 @@
 </tbody>
 </table>
 <p>Hai lời dặn của cô văn thư ở đầu bài đã được ghi thẳng vào lược đồ, bằng đúng hai từ <code>NOT NULL</code>.</p>
+<div class="admonition note">
+<p class="admonition-title"><code>UNIQUE</code> trên <code>lop.ma_gvcn</code> nói chuyện khác</p>
+<p>Trong dòng thứ hai của bảng, <code>UNIQUE</code> <strong>không</strong> liên quan gì tới ràng buộc tham gia — nó là thứ ép <strong>bản số 1:1</strong> mà <a href="../08-moi-quan-he-va-cardinality/">Bài 8</a> đã phân tích. Nhắc lại cho khỏi lẫn: <code>UNIQUE</code> lo <strong>giới hạn trên</strong>, <code>NOT NULL</code> lo <strong>giới hạn dưới</strong>. Cùng nằm trên một dòng khai báo, nhưng trả lời hai câu hỏi khác nhau.</p>
+</div>
 <div class="admonition warning">
 <p class="admonition-title">Phía 'nhiều' thì SQL không ép được</p>
 <p>Câu <em>"mỗi lớp phải có ít nhất một học sinh"</em> <strong>không</strong> diễn đạt nổi bằng <code>NOT NULL</code>, vì nó là ràng buộc trên phía <em>nhiều</em>. Trong <code>truong_hoc</code> cả 6 lớp đều có học sinh, nhưng đó là do dữ liệu, không do lược đồ cưỡng chế.</p>
@@ -1236,20 +1276,25 @@
 <td><em>"là phụ huynh của"</em></td>
 </tr>
 <tr>
-<td>Khoá bộ phận</td>
+<td>Ứng viên khoá bộ phận</td>
 <td><code>quan_he</code> — Bố / Mẹ / Ông / Bà / Khác</td>
 </tr>
 <tr>
-<td>Khoá đầy đủ trên lý thuyết</td>
+<td>Khoá đầy đủ nếu ứng viên đó hợp lệ</td>
 <td><code>(ma_hs, quan_he)</code></td>
 </tr>
 </tbody>
 </table>
 <p>Đọc theo lời của cô văn thư: <em>"tờ khai phụ huynh không tự đứng một mình được"</em>. Nói <em>"Bố"</em> thì chẳng ai biết bố của ai. Phải nói <em>"Bố của HS001"</em> mới định danh được.</p>
+<div class="admonition warning">
+<p class="admonition-title">Chữ 'ứng viên' trong bảng trên là có chủ ý</p>
+<p><code>quan_he</code> <strong>trông</strong> giống khoá bộ phận, nhưng ở phần Thực hành bạn sẽ tự chạy một câu SQL và thấy nó <strong>không</strong> phân biệt được: học sinh <code>HS029</code> có <strong>hai</strong> người cùng ghi <code>Bố</code>.</p>
+<p>Một khoá bộ phận phải phân biệt được <strong>mọi</strong> thực thể yếu cùng chủ. Không làm được điều đó thì nó <strong>không phải</strong> khoá bộ phận hợp lệ — chứ không phải chỉ là "hơi bất tiện". Mục <em>"Một điều trung thực về <code>phu_huynh</code>"</em> ở dưới sẽ nói cái gì mới đúng.</p>
+</div>
 <div class="admonition note">
 <p class="admonition-title">Ba dấu hiệu nhận ra thực thể yếu</p>
 <ol>
-<li><strong>Không tự định danh được</strong> nếu thiếu thực thể chủ.</li>
+<li><strong>Không có thuộc tính khoá tự nhiên</strong> — tức là ở mức ý niệm, không có đặc điểm nào của bản thân nó đủ sức định danh nó khi thiếu thực thể chủ.</li>
 <li><strong>Luôn tham gia toàn phần</strong> vào quan hệ nhận diện — đây là hệ quả tất yếu, không phải lựa chọn.</li>
 <li><strong>Chết theo chủ</strong>: xoá thực thể chủ thì thực thể yếu cũng phải biến mất, vì nó không còn ý nghĩa gì. Trong SQL, điều này được viết là <code>ON DELETE CASCADE</code>.</li>
 </ol>
@@ -1259,7 +1304,7 @@
 </span></code></pre></div>
 <p><code>NOT NULL</code> ⇒ tham gia toàn phần. <code>ON DELETE CASCADE</code> ⇒ chết theo chủ. Hai đặc trưng của thực thể yếu, viết trên đúng một dòng SQL. Bài 15 sẽ so sánh <code>CASCADE</code> với <code>RESTRICT</code> và <code>SET NULL</code>.</p>
 <h3 id="thuc-the-yeu-khac-thuc-the-manh-the-nao">Thực thể yếu khác thực thể mạnh thế nào<a class="headerlink" href="#thuc-the-yeu-khac-thuc-the-manh-the-nao" title="Permanent link">&para;</a></h3>
-<p><strong>Thực thể mạnh</strong> (<em>strong entity</em>, hay <em>regular entity</em>) là thực thể có khoá riêng, tự đứng được. HỌC SINH, GIÁO VIÊN, LỚP, MÔN HỌC, SÁCH đều là thực thể mạnh.</p>
+<p><strong>Thực thể mạnh</strong> (<em>strong entity</em>, hay <em>regular entity</em>) là thực thể có <strong>thuộc tính khoá tự nhiên</strong>, tự đứng được. HỌC SINH, GIÁO VIÊN, LỚP, MÔN HỌC, SÁCH đều là thực thể mạnh.</p>
 <table>
 <thead>
 <tr>
@@ -1270,9 +1315,9 @@
 </thead>
 <tbody>
 <tr>
-<td>Có khoá riêng</td>
+<td>Có thuộc tính khoá tự nhiên (mức ý niệm)</td>
 <td>Có</td>
-<td>Không — phải mượn</td>
+<td>Không — phải mượn khoá chủ</td>
 </tr>
 <tr>
 <td>Ký hiệu Chen</td>
@@ -1296,11 +1341,77 @@
 </tr>
 </tbody>
 </table>
+<h3 id="mot-khoa-bo-phan-hop-le-trong-nhu-the-nao">Một khoá bộ phận HỢP LỆ trông như thế nào<a class="headerlink" href="#mot-khoa-bo-phan-hop-le-trong-nhu-the-nao" title="Permanent link">&para;</a></h3>
+<p>Trước khi bàn chỗ trục trặc của <code>phu_huynh</code>, hãy xem một thực thể yếu thứ hai trong <code>truong_hoc</code> mà mọi thứ khớp hoàn hảo: <strong>BUỔI ĐIỂM DANH</strong>.</p>
+<p>Một buổi điểm danh là <em>"ngày 15/09, bạn An có mặt"</em>. Nói trống không <em>"ngày 15/09"</em> thì chưa định danh được buổi nào — phải kèm học sinh. Vậy nó là thực thể yếu.</p>
+<table>
+<thead>
+<tr>
+<th>Thành phần</th>
+<th>Trong <code>truong_hoc</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Thực thể yếu</td>
+<td>BUỔI ĐIỂM DANH</td>
+</tr>
+<tr>
+<td>Thực thể chủ</td>
+<td>HỌC SINH</td>
+</tr>
+<tr>
+<td>Quan hệ nhận diện</td>
+<td><em>"được điểm danh"</em></td>
+</tr>
+<tr>
+<td>Khoá bộ phận</td>
+<td><code>ngay</code></td>
+</tr>
+<tr>
+<td>Khoá đầy đủ</td>
+<td><code>(ma_hs, ngay)</code></td>
+</tr>
+</tbody>
+</table>
+<p>Và lần này khoá bộ phận <strong>được lược đồ cưỡng chế thật</strong>, bằng ràng buộc <code>UNIQUE (ma_hs, ngay)</code> trong <code>dataset/02-chuan-hoa.sql</code>. Đúng nghĩa <em>"trong phạm vi một học sinh, ngày phân biệt được mọi buổi điểm danh"</em>.</p>
+<div class="admonition note">
+<p class="admonition-title">NGÀY không phải một tập thực thể</p>
+<p>Đừng vẽ một hình chữ nhật <code>NGÀY</code> rồi nối <code>HỌC SINH</code> với nó. Trường không lưu dữ liệu gì về bản thân ngày 15/09/2026 cả — không tên, không mô tả, không gì hết. <code>ngay</code> chỉ là một <strong>thuộc tính</strong>. Bài 10 sẽ vẽ BUỔI ĐIỂM DANH đúng cách.</p>
+</div>
 <h3 id="mot-ieu-trung-thuc-ve-phu_huynh">Một điều trung thực về <code>phu_huynh</code><a class="headerlink" href="#mot-ieu-trung-thuc-ve-phu_huynh" title="Permanent link">&para;</a></h3>
-<p>Trên lý thuyết ER, khoá của PHỤ HUYNH phải là <code>(ma_hs, quan_he)</code>. Nhưng bảng thật lại có cột <code>ma_ph</code> làm khoá chính, và <strong>không</strong> có ràng buộc <code>UNIQUE (ma_hs, quan_he)</code>.</p>
-<p>Vì sao? Vì thực tế không sạch như lý thuyết: một học sinh hoàn toàn có thể có <strong>hai người đều ghi quan hệ là "Bố"</strong> — bố đẻ và bố dượng chẳng hạn. Khi đó <code>quan_he</code> không còn đủ sức phân biệt.</p>
-<p>Bạn sẽ <strong>tự kiểm chứng trường hợp này bằng dữ liệu thật</strong> ở phần Thực hành. Cách xử lý mà lược đồ mẫu chọn là dùng một mã tự sinh <code>ma_ph</code> — Bài 12 sẽ gọi đó là <strong>khoá nhân tạo</strong> (<em>surrogate key</em>).</p>
-<p>Điều này <strong>không</strong> làm PHỤ HUYNH hết là thực thể yếu. Nó vẫn phụ thuộc tồn tại vào HỌC SINH, vẫn <code>NOT NULL</code>, vẫn <code>ON DELETE CASCADE</code>. Chỉ là người thiết kế đã thay khoá bộ phận bằng một mã nhân tạo cho chắc ăn — một lựa chọn rất phổ biến trong hệ thống thật.</p>
+<p>Bây giờ quay lại <code>phu_huynh</code>, nơi mọi thứ <strong>không</strong> khớp đẹp như vậy.</p>
+<p>Nếu <code>quan_he</code> là khoá bộ phận hợp lệ thì khoá của PHỤ HUYNH sẽ là <code>(ma_hs, quan_he)</code>, và lược đồ sẽ phải có <code>UNIQUE (ma_hs, quan_he)</code> — đúng như <code>diem_danh</code> có <code>UNIQUE (ma_hs, ngay)</code>. Nhưng bảng thật <strong>không</strong> có ràng buộc đó, mà lại có một cột <code>ma_ph</code> làm khoá chính.</p>
+<p>Vì sao? Vì thực tế không sạch như lý thuyết: một học sinh hoàn toàn có thể có <strong>hai người đều ghi quan hệ là "Bố"</strong> — bố đẻ và bố dượng chẳng hạn. Bạn sẽ <strong>tự kiểm chứng bằng dữ liệu thật</strong> ở phần Thực hành.</p>
+<p>Kết luận thẳng thắn: <strong><code>quan_he</code> KHÔNG phải khoá bộ phận hợp lệ của PHỤ HUYNH.</strong> Có hai cách chữa đúng:</p>
+<table>
+<thead>
+<tr>
+<th>Cách</th>
+<th>Khoá bộ phận</th>
+<th>Khoá đầy đủ</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>1. Thêm một số thứ tự</strong> trong phạm vi từng học sinh</td>
+<td><code>so_thu_tu</code> — 1, 2, 3...</td>
+<td><code>(ma_hs, so_thu_tu)</code></td>
+</tr>
+<tr>
+<td><strong>2. Dùng khoá nhân tạo</strong> cho cả bảng</td>
+<td>không còn khoá bộ phận</td>
+<td><code>ma_ph</code></td>
+</tr>
+</tbody>
+</table>
+<p>Lược đồ mẫu chọn <strong>cách 2</strong>. Bài 12 sẽ gọi <code>ma_ph</code> là <strong>khoá nhân tạo</strong> (<em>surrogate key</em>).</p>
+<div class="admonition danger">
+<p class="admonition-title"><code>ma_ph</code> KHÔNG phải một thuộc tính trong biểu đồ ER</p>
+<p>Đây là chỗ rất dễ nhầm, và nó quyết định cách bạn trả lời câu <em>"PHỤ HUYNH mạnh hay yếu?"</em>.</p>
+<p><code>ma_ph</code> là một cột được <strong>thêm vào ở bước chuyển ER sang bảng</strong> (Bài 14), không phải một đặc điểm có thật ngoài đời của người phụ huynh. Ngoài đời, bố mẹ học sinh không mang theo mã số nào cả. Vì vậy ở <strong>mức ý niệm</strong>, PHỤ HUYNH vẫn <strong>không có thuộc tính khoá tự nhiên</strong> — nó vẫn là <strong>thực thể yếu</strong>.</p>
+<p>Cái thay đổi chỉ là ở <strong>mức bảng</strong>: thay vì ghép khoá chủ với khoá bộ phận, người thiết kế phát sinh một mã mới. Sự phụ thuộc tồn tại thì vẫn còn nguyên trong <code>NOT NULL</code> và <code>ON DELETE CASCADE</code>.</p>
+</div>
 <h3 id="bang-thuat-ngu">Bảng thuật ngữ<a class="headerlink" href="#bang-thuat-ngu" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -1329,12 +1440,12 @@
 <tr>
 <td>Thực thể mạnh</td>
 <td><em>strong entity</em></td>
-<td>Có khoá riêng, tự đứng được</td>
+<td>Có thuộc tính khoá tự nhiên, tự đứng được</td>
 </tr>
 <tr>
 <td>Thực thể yếu</td>
 <td><em>weak entity</em></td>
-<td>Không có khoá riêng, phải mượn khoá của chủ</td>
+<td>Không có thuộc tính khoá tự nhiên, phải mượn khoá của chủ</td>
 </tr>
 <tr>
 <td>Thực thể chủ</td>
@@ -1387,21 +1498,22 @@
     style N2 fill:#e8f5e9,stroke:#2e7d32
     style N3 fill:#e8f5e9,stroke:#2e7d32
     style N4 fill:#e8f5e9,stroke:#2e7d32</code></pre>
-<p>Còn đây là thực thể yếu. Hình chữ nhật đôi được mô phỏng bằng <code>[[ ]]</code>, hình thoi đôi bằng hình lục giác <code>{{ }}</code>:</p>
+<p>Còn đây là thực thể yếu. Hình chữ nhật đôi được mô phỏng bằng <code>[[ ]]</code>, hình thoi đôi bằng hình lục giác <code>{{ }}</code>.</p>
+<p>Ví dụ được chọn là <strong>BUỔI ĐIỂM DANH</strong> chứ không phải PHỤ HUYNH, vì đây là thực thể yếu duy nhất trong <code>truong_hoc</code> có khoá bộ phận <strong>hợp lệ và được lược đồ cưỡng chế</strong>:</p>
 <pre class="mermaid"><code>flowchart LR
-    HS["&lt;b&gt;HỌC SINH&lt;/b&gt;&lt;br/&gt;thực thể mạnh · thực thể chủ&lt;br/&gt;khoá riêng ma_hs"]
-    R{{"&lt;b&gt;LÀ PHỤ HUYNH CỦA&lt;/b&gt;&lt;br/&gt;quan hệ nhận diện"}}
-    PH[["&lt;b&gt;PHỤ HUYNH&lt;/b&gt;&lt;br/&gt;thực thể yếu&lt;br/&gt;không có khoá riêng"]]
+    HS["&lt;b&gt;HỌC SINH&lt;/b&gt;&lt;br/&gt;thực thể mạnh · thực thể chủ&lt;br/&gt;thuộc tính khoá ma_hs"]
+    R{{"&lt;b&gt;ĐƯỢC ĐIỂM DANH&lt;/b&gt;&lt;br/&gt;quan hệ nhận diện"}}
+    PH[["&lt;b&gt;BUỔI ĐIỂM DANH&lt;/b&gt;&lt;br/&gt;thực thể yếu&lt;br/&gt;không có thuộc tính khoá tự nhiên"]]
 
-    K1(["ma_hs&lt;br/&gt;khoá chính"])
-    K2(["quan_he&lt;br/&gt;khoá bộ phận"])
+    K1(["ma_hs&lt;br/&gt;thuộc tính khoá của chủ"])
+    K2(["ngay&lt;br/&gt;khoá bộ phận"])
 
     HS --- K1
     HS --- R
     R === PH
     PH --- K2
 
-    KQ["Khoá đầy đủ của PHỤ HUYNH&lt;br/&gt;= ma_hs của chủ + quan_he&lt;br/&gt;= &lt;b&gt;ma_hs + quan_he&lt;/b&gt;"]
+    KQ["Khoá đầy đủ của BUỔI ĐIỂM DANH&lt;br/&gt;= khoá chủ + khoá bộ phận&lt;br/&gt;= &lt;b&gt;ma_hs + ngay&lt;/b&gt;&lt;br/&gt;lược đồ ép bằng UNIQUE ma_hs ngay"]
     K2 -.-&gt; KQ
     K1 -.-&gt; KQ
 
@@ -1411,6 +1523,11 @@
     style K1 fill:#fff3e0,stroke:#ef6c00
     style K2 fill:#fff3e0,stroke:#ef6c00
     style KQ fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px</code></pre>
+<div class="admonition warning">
+<p class="admonition-title">Vẽ PHỤ HUYNH theo đúng khuôn này thì sẽ SAI ở một chỗ</p>
+<p>Hình dạng thì giống hệt: chữ nhật đôi <code>PHỤ HUYNH</code>, thoi đôi <code>LÀ PHỤ HUYNH CỦA</code>, đường đôi, thực thể chủ <code>HỌC SINH</code>.</p>
+<p>Chỗ khác duy nhất nằm ở ô khoá bộ phận. Nếu bạn điền <code>quan_he</code> vào đó thì ô "khoá đầy đủ" sẽ ghi <code>(ma_hs, quan_he)</code> — và điều đó <strong>không đúng</strong>, vì cặp ấy không phân biệt được (phần Thực hành sẽ chứng minh). Khoá bộ phận hợp lệ phải là một <strong>số thứ tự trong phạm vi từng học sinh</strong>, hoặc bảng phải chuyển sang dùng khoá nhân tạo như <code>ma_ph</code>.</p>
+</div>
 <h2 id="thuc-hanh">💻 Thực hành<a class="headerlink" href="#thuc-hanh" title="Permanent link">&para;</a></h2>
 <h3 id="tham-gia-toan-phan-soat-tap-ho-so-thu-nhat">Tham gia toàn phần — soát tập hồ sơ thứ nhất<a class="headerlink" href="#tham-gia-toan-phan-soat-tap-ho-so-thu-nhat" title="Permanent link">&para;</a></h3>
 <p>Đúng việc cô văn thư nhờ bạn làm:</p>
@@ -1492,19 +1609,59 @@
 </tbody>
 </table>
 <p>Đây chính là cặp ví dụ đẹp nhất của bài: <strong>cùng một mối quan hệ, hai phía hai luật khác nhau</strong>.</p>
-<h3 id="khoa-bo-phan-co-that-su-u-e-phan-biet-khong">Khoá bộ phận có thật sự đủ để phân biệt không?<a class="headerlink" href="#khoa-bo-phan-co-that-su-u-e-phan-biet-khong" title="Permanent link">&para;</a></h3>
-<p>Lý thuyết nói khoá của PHỤ HUYNH là <code>(ma_hs, quan_he)</code>. Hãy tự kiểm tra trên dữ liệu thật:</p>
-<div class="highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">ma_hs</span><span class="p">,</span><span class="w"> </span><span class="n">quan_he</span><span class="p">,</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_dong</span>
-</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="k">FROM</span><span class="w"> </span><span class="n">phu_huynh</span>
-</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">ma_hs</span><span class="p">,</span><span class="w"> </span><span class="n">quan_he</span>
-</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="k">HAVING</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">1</span>
-</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">ma_hs</span><span class="p">;</span>
+<h3 id="khoa-bo-phan-hop-le-kiem-chung-tren-diem_danh">Khoá bộ phận hợp lệ — kiểm chứng trên <code>diem_danh</code><a class="headerlink" href="#khoa-bo-phan-hop-le-kiem-chung-tren-diem_danh" title="Permanent link">&para;</a></h3>
+<p>Với BUỔI ĐIỂM DANH, khoá bộ phận <code>ngay</code> được lược đồ cưỡng chế thật:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">conname</span><span class="p">,</span><span class="w"> </span><span class="n">contype</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="k">FROM</span><span class="w"> </span><span class="n">pg_constraint</span>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">conrelid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'diem_danh'</span><span class="p">::</span><span class="n">regclass</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">contype</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'u'</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Một dòng: <code>diem_danh_ma_hs_ngay_key</code> với <code>contype = 'u'</code> — đó là <code>UNIQUE (ma_hs, ngay)</code>. Nhờ nó, cặp <code>(ma_hs, ngay)</code> <strong>không thể</strong> trùng, dù dữ liệu tương lai có thế nào đi nữa.</p>
+<h3 id="con-quan_he-thi-khong-hop-le-va-ay-la-bang-chung">Còn <code>quan_he</code> thì KHÔNG hợp lệ — và đây là bằng chứng<a class="headerlink" href="#con-quan_he-thi-khong-hop-le-va-ay-la-bang-chung" title="Permanent link">&para;</a></h3>
+<p>Nếu <code>quan_he</code> là khoá bộ phận đúng, câu lệnh sau phải trả về <strong>0 dòng</strong>:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">ma_hs</span><span class="p">,</span><span class="w"> </span><span class="n">quan_he</span><span class="p">,</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_dong</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="k">FROM</span><span class="w"> </span><span class="n">phu_huynh</span>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">ma_hs</span><span class="p">,</span><span class="w"> </span><span class="n">quan_he</span>
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="k">HAVING</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">1</span>
+</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">ma_hs</span><span class="p">;</span>
 </span></code></pre></div>
 <p>Kết quả: đúng <strong>1 dòng</strong> — <code>HS029</code> | <code>Bố</code> | <code>2</code>.</p>
-<p>Học sinh <code>HS029</code> có <strong>hai</strong> người cùng ghi quan hệ là <em>Bố</em>. Nghĩa là cặp <code>(ma_hs, quan_he)</code> <strong>không đủ</strong> để phân biệt trong dữ liệu thật, đúng như đã cảnh báo ở phần khái niệm.</p>
-<p>Đó là lý do bảng thật dùng <code>ma_ph</code> làm khoá chính:</p>
-<div class="highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">tong_so_dong</span><span class="p">,</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="k">DISTINCT</span><span class="w"> </span><span class="n">ma_ph</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_ma_ph_khac_nhau</span>
-</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="k">FROM</span><span class="w"> </span><span class="n">phu_huynh</span><span class="p">;</span>
+<p>Học sinh <code>HS029</code> có <strong>hai</strong> người cùng ghi quan hệ là <em>Bố</em>. Vậy cặp <code>(ma_hs, quan_he)</code> <strong>không phân biệt được</strong> mọi phụ huynh của cùng một học sinh.</p>
+<p>Kết luận theo đúng định nghĩa: <strong><code>quan_he</code> không phải khoá bộ phận hợp lệ của PHỤ HUYNH.</strong> Đây không phải chuyện "hơi bất tiện" mà là sai định nghĩa — một khoá bộ phận bắt buộc phải phân biệt được <strong>mọi</strong> thực thể yếu cùng chủ.</p>
+<p>So sánh hai thực thể yếu của bài để thấy rõ:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>BUỔI ĐIỂM DANH</th>
+<th>PHỤ HUYNH</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Ứng viên khoá bộ phận</td>
+<td><code>ngay</code></td>
+<td><code>quan_he</code></td>
+</tr>
+<tr>
+<td>Lược đồ có ép duy nhất không</td>
+<td><strong>Có</strong> — <code>UNIQUE (ma_hs, ngay)</code></td>
+<td><strong>Không</strong></td>
+</tr>
+<tr>
+<td>Dữ liệu thật có trùng không</td>
+<td>Không</td>
+<td><strong>Có</strong> — <code>HS029</code> hai lần <code>Bố</code></td>
+</tr>
+<tr>
+<td>Kết luận</td>
+<td>Khoá bộ phận <strong>hợp lệ</strong></td>
+<td><strong>Không hợp lệ</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Vì không có khoá bộ phận hợp lệ, bảng <code>phu_huynh</code> chuyển sang dùng khoá nhân tạo:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">tong_so_dong</span><span class="p">,</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="k">DISTINCT</span><span class="w"> </span><span class="n">ma_ph</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_ma_ph_khac_nhau</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="k">FROM</span><span class="w"> </span><span class="n">phu_huynh</span><span class="p">;</span>
 </span></code></pre></div>
 <p>Kết quả: <code>45</code> và <code>45</code> — mã nhân tạo thì không bao giờ trùng.</p>
 <div class="admonition tip">
@@ -1513,15 +1670,15 @@
 </div>
 <h3 id="chet-theo-chu-kiem-chung-on-delete-cascade-ma-khong-xoa-gi">Chết theo chủ — kiểm chứng <code>ON DELETE CASCADE</code> mà không xoá gì<a class="headerlink" href="#chet-theo-chu-kiem-chung-on-delete-cascade-ma-khong-xoa-gi" title="Permanent link">&para;</a></h3>
 <p>Bạn có thể đọc chính sách xoá này ra từ hệ thống, không cần xoá thật:</p>
-<div class="highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">conname</span><span class="p">,</span><span class="w"> </span><span class="n">confdeltype</span>
-</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="k">FROM</span><span class="w"> </span><span class="n">pg_constraint</span>
-</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">conrelid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'phu_huynh'</span><span class="p">::</span><span class="n">regclass</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">contype</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'f'</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">conname</span><span class="p">,</span><span class="w"> </span><span class="n">confdeltype</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="k">FROM</span><span class="w"> </span><span class="n">pg_constraint</span>
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">conrelid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'phu_huynh'</span><span class="p">::</span><span class="n">regclass</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">contype</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'f'</span><span class="p">;</span>
 </span></code></pre></div>
 <p>Kết quả có <code>phu_huynh_ma_hs_fkey</code> với <code>confdeltype = 'c'</code> — chữ <code>c</code> là viết tắt của <strong>cascade</strong>. Xoá một học sinh thì mọi phụ huynh của bạn ấy tự động bị xoá theo, đúng như lời cô văn thư: <em>"bạn nào chuyển trường thì rút luôn tờ phụ huynh của bạn ấy ra"</em>.</p>
 <p>So sánh với bảng <code>hoc_sinh</code>:</p>
-<div class="highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">conname</span><span class="p">,</span><span class="w"> </span><span class="n">confdeltype</span>
-</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="k">FROM</span><span class="w"> </span><span class="n">pg_constraint</span>
-</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">conrelid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'hoc_sinh'</span><span class="p">::</span><span class="n">regclass</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">contype</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'f'</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">conname</span><span class="p">,</span><span class="w"> </span><span class="n">confdeltype</span>
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="k">FROM</span><span class="w"> </span><span class="n">pg_constraint</span>
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">conrelid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'hoc_sinh'</span><span class="p">::</span><span class="n">regclass</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">contype</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'f'</span><span class="p">;</span>
 </span></code></pre></div>
 <p>Ở đây <code>hoc_sinh_ma_lop_fkey</code> có <code>confdeltype = 'r'</code> — <strong>restrict</strong>, nghĩa là <strong>cấm</strong> xoá một lớp đang có học sinh. Khác hẳn. Lý do: HỌC SINH <strong>không phải</strong> thực thể yếu của LỚP; bạn ấy vẫn là một con người có thật kể cả khi lớp bị giải thể, nên hệ thống bắt bạn xử lý tay thay vì xoá ngầm. <strong>Bài 15</strong> sẽ dạy đủ cả năm hành vi <code>ON DELETE</code>.</p>
 <h2 id="loi-thuong-gap">⚠️ Lỗi thường gặp<a class="headerlink" href="#loi-thuong-gap" title="Permanent link">&para;</a></h2>
@@ -1541,23 +1698,58 @@
 <p><strong>Tham gia toàn phần trên giấy phải thành <code>NOT NULL</code> trong SQL.</strong> Không có ngoại lệ.</p>
 </div>
 <div class="admonition warning">
-<p class="admonition-title">Lỗi 3: Cho thực thể yếu một khoá riêng rồi quên mất nó là thực thể yếu</p>
-<p>Thêm <code>ma_ph</code> làm khoá chính là hợp lý. Nhưng nhiều người làm xong thì bỏ luôn <code>NOT NULL</code> và <code>ON DELETE CASCADE</code>, nghĩ rằng "đã có khoá riêng rồi thì nó mạnh rồi".</p>
+<p class="admonition-title">Lỗi 3: Cho thực thể yếu một khoá nhân tạo rồi quên mất nó là thực thể yếu</p>
+<p>Thêm <code>ma_ph</code> làm khoá chính là hợp lý. Nhưng nhiều người làm xong thì bỏ luôn <code>NOT NULL</code> và <code>ON DELETE CASCADE</code>, nghĩ rằng "đã có khoá chính rồi thì nó mạnh rồi".</p>
 <p>Hậu quả: xoá một học sinh xong, hồ sơ phụ huynh vẫn nằm lại trong bảng, trỏ vào một mã học sinh không còn tồn tại — hoặc tệ hơn, <code>ma_hs</code> bị để <code>NULL</code> và không ai biết đó là phụ huynh của ai nữa. Dữ liệu rác kiểu này gần như không dọn được về sau.</p>
 </div>
 <div class="admonition warning">
 <p class="admonition-title">Lỗi 4: Coi mọi bảng có khoá ngoại đều là thực thể yếu</p>
 <p><code>hoc_sinh</code> có khoá ngoại <code>ma_lop</code>, <code>NOT NULL</code> hẳn hoi. Vậy HỌC SINH có phải thực thể yếu của LỚP không? <strong>Không.</strong></p>
-<p>Phép thử: <em>thực thể này có khoá của riêng nó không?</em> HỌC SINH có <code>ma_hs</code>, tự định danh được, không cần biết lớp nào. Vậy nó <strong>mạnh</strong>.</p>
-<p>Còn PHỤ HUYNH thì nói <em>"Bố"</em> không định danh nổi ai — phải mượn <code>ma_hs</code>. Vậy nó <strong>yếu</strong>.</p>
-<p>Khoá ngoại nói về <strong>liên kết</strong>; thực thể yếu nói về <strong>khả năng tự định danh</strong>. Hai chuyện khác nhau.</p>
+<p>Phép thử đúng — và hãy đọc kỹ từng chữ:</p>
+<blockquote>
+<p><em>Ở </em><em>mức ý niệm</em><em>, thực thể này có </em><em>thuộc tính khoá tự nhiên</em><em> không? Tức là ngoài đời, bản thân nó có sẵn đặc điểm nào đủ sức định danh nó mà không cần nhắc tới thực thể khác?</em></p>
+</blockquote>
+<ul>
+<li><strong>HỌC SINH</strong>: có. Nhà trường cấp cho mỗi bạn một mã học sinh, và mã đó tồn tại độc lập với việc bạn ấy học lớp nào — chuyển lớp thì mã vẫn thế. → <strong>mạnh</strong>.</li>
+<li><strong>PHỤ HUYNH</strong>: không. Ngoài đời người phụ huynh không mang theo mã số nào cả; nói <em>"Bố"</em> thì không định danh nổi ai. → <strong>yếu</strong>.</li>
+<li><strong>BUỔI ĐIỂM DANH</strong>: không. <em>"Ngày 15/09"</em> trống không thì chưa là buổi điểm danh của ai. → <strong>yếu</strong>.</li>
+</ul>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Lỗi 5: Dùng 'bảng này có khoá chính riêng không' làm phép thử</p>
+<p>Đây là biến thể tinh vi hơn của Lỗi 4, và nó <strong>phá đúng ví dụ trung tâm của bài</strong>.</p>
+<p>Bảng <code>phu_huynh</code> có khoá chính <code>ma_ph</code> của riêng nó. Áp phép thử sai này thì ra kết luận <em>"PHỤ HUYNH là thực thể mạnh"</em> — trái ngược hoàn toàn với mọi thứ bài vừa dạy.</p>
+<p>Sai ở đâu? Ở chỗ trộn <strong>hai mức</strong> vào nhau:</p>
+<table>
+<thead>
+<tr>
+<th>Mức</th>
+<th>Câu hỏi</th>
+<th>Trả lời cho PHỤ HUYNH</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Ý niệm</strong> (biểu đồ ER)</td>
+<td>Có thuộc tính khoá tự nhiên không?</td>
+<td><strong>Không</strong> → thực thể <strong>yếu</strong></td>
+</tr>
+<tr>
+<td><strong>Bảng</strong> (sau Bài 14)</td>
+<td>Bảng có cột khoá chính không?</td>
+<td>Có — <code>ma_ph</code>, một mã <strong>được thêm vào lúc chuyển đổi</strong></td>
+</tr>
+</tbody>
+</table>
+<p><code>ma_ph</code> không phải một thuộc tính trong biểu đồ ER. Nó là sản phẩm của bước chuyển ER sang bảng, chọn ra vì <code>quan_he</code> không làm nổi khoá bộ phận.</p>
+<p>Dấu hiệu nhận ra sự phụ thuộc vẫn còn nguyên trong lược đồ: <code>ma_hs NOT NULL</code> và <code>ON DELETE CASCADE</code>.</p>
 </div>
 <h2 id="bai-tap">✍️ Bài tập<a class="headerlink" href="#bai-tap" title="Permanent link">&para;</a></h2>
 <ol>
 <li>
 <p>Với mỗi mối quan hệ dưới đây trong <code>truong_hoc</code>, hãy nói ràng buộc tham gia ở <strong>cả hai phía</strong> và chỉ ra bằng chứng trong lược đồ hoặc dữ liệu:</p>
 <p>a. HỌC SINH — <em>mượn</em> — SÁCH
-b. HỌC SINH — <em>được điểm danh</em> — (bảng <code>diem_danh</code>)</p>
+b. HỌC SINH — <em>được điểm danh</em> — BUỔI ĐIỂM DANH</p>
 </li>
 <li>
 <p>Trường mở thêm hệ thống quản lý <strong>phòng học</strong>, và ghi lại <strong>thiết bị</strong> trong từng phòng: <em>"máy chiếu số 1 của phòng A101"</em>, <em>"máy chiếu số 1 của phòng A102"</em>. Thiết bị chỉ được đánh số trong phạm vi từng phòng. Hãy xác định: thực thể yếu, thực thể chủ, quan hệ nhận diện, khoá bộ phận, và khoá đầy đủ.</p>
@@ -1610,12 +1802,12 @@ b. HỌC SINH — <em>được điểm danh</em> — (bảng <code>diem_danh</co
 <tr>
 <td>HỌC SINH</td>
 <td><strong>Bộ phận</strong> về mặt lược đồ</td>
-<td>Không có gì ép mỗi học sinh phải có ít nhất một dòng điểm danh. Dữ liệu mẫu tình cờ đủ cả 40 bạn × 5 ngày = 200 dòng, nhưng đó là do dữ liệu, không do ràng buộc</td>
+<td>Không có gì ép mỗi học sinh phải có ít nhất một buổi điểm danh. Dữ liệu mẫu tình cờ đủ cả 40 bạn × 5 ngày = 200 dòng, nhưng đó là do dữ liệu, không do ràng buộc</td>
 </tr>
 <tr>
-<td>Dòng <code>diem_danh</code></td>
+<td>BUỔI ĐIỂM DANH</td>
 <td><strong>Toàn phần</strong></td>
-<td><code>diem_danh.ma_hs</code> là <code>NOT NULL</code></td>
+<td><code>diem_danh.ma_hs</code> là <code>NOT NULL</code> — và bắt buộc phải vậy, vì đây là <strong>thực thể yếu</strong>, tham gia toàn phần vào quan hệ nhận diện là hệ quả tất yếu</td>
 </tr>
 </tbody>
 </table>
@@ -1651,32 +1843,32 @@ b. HỌC SINH — <em>được điểm danh</em> — (bảng <code>diem_danh</co
 </tbody>
 </table>
 <p>Lược đồ tương ứng:</p>
-<div class="highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>phong_hoc(ma_phong, ten_phong, suc_chua)
-</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>thiet_bi(ma_phong, so_thu_tu, ten_thiet_bi, tinh_trang)
-</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>    PRIMARY KEY (ma_phong, so_thu_tu)
-</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>    FOREIGN KEY (ma_phong) REFERENCES phong_hoc ON DELETE CASCADE
+<div class="highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>phong_hoc(ma_phong, ten_phong, suc_chua)
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>thiet_bi(ma_phong, so_thu_tu, ten_thiet_bi, tinh_trang)
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>    PRIMARY KEY (ma_phong, so_thu_tu)
+</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>    FOREIGN KEY (ma_phong) REFERENCES phong_hoc ON DELETE CASCADE
 </span></code></pre></div>
 <p>Dấu hiệu nhận ra đây là thực thể yếu: <em>"máy chiếu số 1"</em> nói trống không thì vô nghĩa — phải hỏi <em>"số 1 của phòng nào?"</em>.</p>
 <p><strong>Câu 3.</strong></p>
-<div class="highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">ma_hs</span><span class="p">,</span><span class="w"> </span><span class="n">ho_ten</span>
-</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span><span class="w"> </span><span class="n">h</span>
-</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="k">WHERE</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="p">(</span>
-</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="w">    </span><span class="k">SELECT</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">muon_sach</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">m</span><span class="p">.</span><span class="n">ma_hs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">ma_hs</span>
-</span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="p">)</span>
-</span><span id="__span-15-6"><a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">ma_hs</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">ma_hs</span><span class="p">,</span><span class="w"> </span><span class="n">ho_ten</span>
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span><span class="w"> </span><span class="n">h</span>
+</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="k">WHERE</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="p">(</span>
+</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="w">    </span><span class="k">SELECT</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">muon_sach</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">m</span><span class="p">.</span><span class="n">ma_hs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">ma_hs</span>
+</span><span id="__span-16-5"><a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="p">)</span>
+</span><span id="__span-16-6"><a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">ma_hs</span><span class="p">;</span>
 </span></code></pre></div>
 <p>Kết quả là 15 bạn từ <code>HS026</code> tới <code>HS040</code>. (<code>NOT EXISTS</code> sẽ được dạy kỹ ở <strong>Bài 27</strong>; tạm đọc là <em>"giữ những học sinh mà không tồn tại dòng mượn sách nào của họ"</em>.)</p>
 <p>Kết quả khác rỗng chứng minh HỌC SINH tham gia <strong>bộ phận</strong> vào mối quan hệ <em>mượn sách</em>: có học sinh thật, hợp lệ, nhưng chưa từng tham gia mối quan hệ đó. Nếu tham gia là toàn phần thì câu truy vấn này bắt buộc phải trả về 0 dòng.</p>
 <p><strong>Câu 4.</strong>
 Cần đổi ràng buộc tham gia của LỚP từ bộ phận sang toàn phần, tức thêm <code>NOT NULL</code>:</p>
 <p><!-- sql:khong-chay -->
-<div class="highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="k">ALTER</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">lop</span><span class="w"> </span><span class="k">ALTER</span><span class="w"> </span><span class="k">COLUMN</span><span class="w"> </span><span class="n">ma_gvcn</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="k">ALTER</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">lop</span><span class="w"> </span><span class="k">ALTER</span><span class="w"> </span><span class="k">COLUMN</span><span class="w"> </span><span class="n">ma_gvcn</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">;</span>
 </span></code></pre></div></p>
 <p><strong>Chạy ngay thì thất bại</strong>, vì lớp <code>L06</code> (9A3) đang có <code>ma_gvcn</code> là <code>NULL</code>. PostgreSQL sẽ từ chối với lỗi cho biết cột chứa giá trị null.</p>
 <p>Muốn thành công phải xử lý dữ liệu cũ trước — phân công một giáo viên cho lớp 9A3 — rồi mới <code>ALTER</code>. Đây là bài học rất thật: <strong>đổi ràng buộc trên một database đang chạy luôn phải dọn dữ liệu cũ trước.</strong></p>
 <p><strong>Câu 5.</strong>
-Vì định nghĩa của thực thể yếu là <em>"không có khoá riêng, phải mượn khoá của thực thể chủ"</em>.</p>
-<p>Giả sử có một thực thể yếu <strong>không</strong> tham gia quan hệ nhận diện — tức là không có chủ. Khi đó nó không mượn được khoá của ai, mà bản thân nó lại không có khoá riêng. Kết quả: <strong>không cách nào định danh nó</strong>, nên nó không thể là một dòng hợp lệ trong bất kỳ bảng nào.</p>
+Vì định nghĩa của thực thể yếu là <em>"không có thuộc tính khoá tự nhiên, phải mượn khoá của thực thể chủ"</em>.</p>
+<p>Giả sử có một thực thể yếu <strong>không</strong> tham gia quan hệ nhận diện — tức là không có chủ. Khi đó nó không mượn được khoá của ai, mà bản thân nó lại không có thuộc tính khoá nào. Kết quả: <strong>không cách nào định danh nó</strong>, nên nó không thể là một thực thể hợp lệ.</p>
 <p>Suy ra tham gia toàn phần không phải là một lựa chọn thiết kế, mà là <strong>hệ quả logic bắt buộc</strong>. Không có ngoại lệ.</p>
 <p>Cũng chính vì thế mà <code>ON DELETE CASCADE</code> là lựa chọn tự nhiên: xoá chủ đi thì thực thể yếu mất luôn khả năng định danh, giữ lại cũng vô nghĩa.</p>
 </details>
@@ -1685,8 +1877,8 @@ Vì định nghĩa của thực thể yếu là <em>"không có khoá riêng, ph
 <li><strong>Ràng buộc tham gia</strong> trả lời <em>"tối thiểu bao nhiêu"</em>, còn <strong>bản số</strong> trả lời <em>"tối đa bao nhiêu"</em> — hai câu hỏi độc lập, phải hỏi cho cả hai phía.</li>
 <li><strong>Tham gia toàn phần</strong> nghĩa là mọi thực thể đều phải tham gia; trong SQL nó chính là <code>NOT NULL</code> trên cột khoá ngoại.</li>
 <li><strong>Tham gia bộ phận</strong> cho phép đứng ngoài — lớp 9A3 chưa có chủ nhiệm và học sinh <code>HS040</code> chưa có phụ huynh đều hợp lệ.</li>
-<li><strong>Thực thể yếu</strong> không có khoá riêng, phải ghép <strong>khoá chủ + khoá bộ phận</strong>; nó luôn tham gia toàn phần vào <strong>quan hệ nhận diện</strong> và bị xoá theo chủ bằng <code>ON DELETE CASCADE</code>.</li>
-<li>Khi khoá bộ phận không chắc đủ phân biệt — như <code>quan_he</code> của <code>HS029</code> — người ta thay bằng <strong>khoá nhân tạo</strong>, nhưng bản chất thực thể yếu thì vẫn giữ nguyên.</li>
+<li><strong>Thực thể yếu</strong> không có thuộc tính khoá tự nhiên, phải ghép <strong>khoá chủ + khoá bộ phận</strong>; nó luôn tham gia toàn phần vào <strong>quan hệ nhận diện</strong> và bị xoá theo chủ bằng <code>ON DELETE CASCADE</code>.</li>
+<li>Khoá bộ phận phải phân biệt được <strong>mọi</strong> thực thể yếu cùng chủ: <code>ngay</code> của BUỔI ĐIỂM DANH đạt (có <code>UNIQUE</code>), <code>quan_he</code> của PHỤ HUYNH <strong>không</strong> đạt — nên bảng phải dùng <strong>khoá nhân tạo</strong> <code>ma_ph</code>, một cột chỉ tồn tại ở mức bảng chứ không có trong biểu đồ ER.</li>
 </ol>
 <hr />
 <p>⬅️ <a href="../08-moi-quan-he-va-cardinality/">Bài 8 — Mối quan hệ, bậc và bản số</a> · ➡️ <a href="../10-bieu-do-er-ky-hieu-chen/">Bài 10 — Biểu đồ ER ký hiệu Chen</a></p>

@@ -1460,7 +1460,7 @@
 </tr>
 <tr>
 <td><code>so_dien_thoai_lien_lac</code> là hình tròn tím</td>
-<td>Thuộc tính <strong>đa trị</strong> — phải tách bảng riêng</td>
+<td>Thuộc tính <strong>đa trị</strong> — khi chuyển sang bảng phải tách ra bảng 2 cột</td>
 </tr>
 <tr>
 <td><code>HỌC TẠI</code> hình thoi đơn</td>
@@ -1484,7 +1484,44 @@
 </tr>
 </tbody>
 </table>
-<p>Chú ý <code>so_dien_thoai_lien_lac</code>: sơ đồ ER <strong>được phép</strong> có thuộc tính đa trị, vì nó mô tả thế giới thực. Chỉ khi chuyển sang bảng thì nó mới buộc phải tách ra — và trong <code>truong_hoc</code> nó đã tách thành bảng <code>phu_huynh</code>. <strong>Bài 14</strong> dạy phép chuyển đổi này.</p>
+<p>Trước hết, chú ý một điều chung: sơ đồ ER <strong>được phép</strong> có thuộc tính đa trị và thuộc tính dẫn xuất, vì nó mô tả thế giới thực chứ không mô tả bảng. Chỉ tới bước chuyển sang bảng thì chúng mới buộc phải xử lý — <strong>Bài 14</strong> dạy phép chuyển đổi đó.</p>
+<div class="admonition danger">
+<p class="admonition-title">Sơ đồ 1 cố ý vẽ HAI cách mô hình hoá cho CÙNG một nhu cầu</p>
+<p>Nhu cầu đời thực chỉ có một: <em>"trường phải liên lạc được với gia đình học sinh"</em>. Sơ đồ trên cố ý vẽ đồng thời <strong>hai cách giải quyết khác nhau</strong> để bạn thấy chúng khác nhau chỗ nào:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Cách 1 — thuộc tính đa trị</th>
+<th>Cách 2 — thực thể yếu</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Vẽ ra sao</td>
+<td>elip đôi <code>so_dien_thoai_lien_lac</code> treo thẳng vào <code>HỌC SINH</code></td>
+<td>chữ nhật đôi <code>PHỤ HUYNH</code> + thoi đôi</td>
+</tr>
+<tr>
+<td>Lưu được gì</td>
+<td>chỉ dãy số</td>
+<td>dãy số <strong>và</strong> <code>ho_ten</code>, <code>quan_he</code></td>
+</tr>
+<tr>
+<td>Chuyển sang bảng thành</td>
+<td><code>hoc_sinh_sdt(ma_hs, so_dien_thoai)</code> — đúng 2 cột</td>
+<td><code>phu_huynh(ma_ph, ho_ten, so_dien_thoai, quan_he, ma_hs)</code></td>
+</tr>
+<tr>
+<td>Bước trong thuật toán Bài 14</td>
+<td>Bước 6</td>
+<td>Bước 2</td>
+</tr>
+</tbody>
+</table>
+<p>Database mẫu <code>truong_hoc</code> chọn <strong>cách 2</strong> — nên nó có bảng <code>phu_huynh</code> chứ <strong>không</strong> có bảng <code>hoc_sinh_sdt</code>. Lý do: trường cần biết cả tên lẫn quan hệ của người liên lạc, chứ không chỉ một dãy số trơ.</p>
+<p>Quy tắc chọn, đã nêu ở <a href="../07-thuc-the-va-thuoc-tinh/">Bài 7</a>: thứ lặp lại mà <strong>chỉ là một giá trị trơ</strong> thì dùng thuộc tính đa trị; thứ lặp lại mà <strong>có đặc điểm riêng cần mô tả</strong> thì đó là một thực thể.</p>
+</div>
 <h3 id="so-o-2-toan-bo-truong_hoc-theo-ky-hieu-chen">Sơ đồ 2 — Toàn bộ <code>truong_hoc</code> theo ký hiệu Chen<a class="headerlink" href="#so-o-2-toan-bo-truong_hoc-theo-ky-hieu-chen" title="Permanent link">&para;</a></h3>
 <p>Vẽ đủ cả thuộc tính của 10 bảng thì sơ đồ sẽ không đọc nổi. Nên ở đây chỉ vẽ <strong>thực thể và mối quan hệ</strong>; thuộc tính tra ở trang <a href="../../dataset/">Database mẫu</a>.</p>
 <pre class="mermaid"><code>flowchart TB
@@ -1501,12 +1538,16 @@
     RPC{"&lt;b&gt;PHÂN CÔNG DẠY&lt;/b&gt;&lt;br/&gt;bậc 3 · M — N — P"}
     RD{"&lt;b&gt;CÓ ĐIỂM&lt;/b&gt;&lt;br/&gt;M — N"}
     RM{"&lt;b&gt;MƯỢN&lt;/b&gt;&lt;br/&gt;M — N"}
-    RDD{"&lt;b&gt;ĐƯỢC ĐIỂM DANH&lt;/b&gt;&lt;br/&gt;1 — N"}
+    RDD{{"&lt;b&gt;ĐƯỢC ĐIỂM DANH&lt;/b&gt;&lt;br/&gt;1 — N"}}
+
+    DD[["&lt;b&gt;BUỔI ĐIỂM DANH&lt;/b&gt;"]]
 
     HKY(["hoc_ky"])
+    HKD(["hoc_ky"])
     DSO(["diem_so"])
     LDI(["loai_diem"])
     NMU(["ngay_muon"])
+    NTD(["ngay_tra_du_kien"])
     NTR(["ngay_tra_thuc_te"])
     NGA(["ngay"])
     TTH(["trang_thai"])
@@ -1527,17 +1568,20 @@
 
     HS --- RD
     MH --- RD
+    RD --- HKD
     RD --- DSO
     RD --- LDI
 
     HS --- RM
     S --- RM
     RM --- NMU
+    RM --- NTD
     RM --- NTR
 
     HS --- RDD
-    RDD --- NGA
-    RDD --- TTH
+    RDD === DD
+    DD --- NGA
+    DD --- TTH
 
     style GV fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
     style L fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
@@ -1545,20 +1589,29 @@
     style MH fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
     style S fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
     style PH fill:#e3f2fd,stroke:#1565c0,stroke-width:4px
+    style DD fill:#e3f2fd,stroke:#1565c0,stroke-width:4px
     style RCN fill:#fff8e1,stroke:#f9a825,stroke-width:2px
     style RHT fill:#fff8e1,stroke:#f9a825,stroke-width:2px
     style RPC fill:#ffe0b2,stroke:#ef6c00,stroke-width:3px
     style RD fill:#fff8e1,stroke:#f9a825,stroke-width:2px
     style RM fill:#fff8e1,stroke:#f9a825,stroke-width:2px
-    style RDD fill:#fff8e1,stroke:#f9a825,stroke-width:2px
+    style RDD fill:#fff8e1,stroke:#f9a825,stroke-width:4px
     style RPH fill:#fff8e1,stroke:#f9a825,stroke-width:4px</code></pre>
 <p>Vài điểm đáng chú ý khi đọc sơ đồ này:</p>
 <ul>
 <li><strong><code>PHÂN CÔNG DẠY</code> nối vào ba hình chữ nhật</strong> — đó là mối quan hệ <strong>bậc ba</strong> của Bài 8. Ký hiệu Chen vẽ được điều này rất tự nhiên; Crow's Foot ở Bài 11 thì không.</li>
 <li><strong><code>hoc_ky</code>, <code>diem_so</code>, <code>ngay_muon</code>... treo vào hình thoi chứ không treo vào hình chữ nhật.</strong> Đó là <strong>thuộc tính của mối quan hệ</strong> — chúng chỉ có nghĩa khi cả hai (hoặc ba) phía đã được xác định.</li>
-<li><strong><code>ĐƯỢC ĐIỂM DANH</code> là 1:N</strong>, vì mỗi buổi điểm danh gắn với đúng một học sinh. Ràng buộc <code>UNIQUE (ma_hs, ngay)</code> là cách bảng bảo đảm một bạn chỉ được điểm danh một lần mỗi ngày.</li>
-<li>Sơ đồ có <strong>6 hình chữ nhật</strong> nhưng database có <strong>10 bảng</strong>. Bốn bảng chênh lệch — <code>phan_cong_day</code>, <code>diem</code>, <code>muon_sach</code>, <code>diem_danh</code> — chính là các <strong>hình thoi đã hoá thành bảng</strong>. Đây là điều quan trọng nhất của toàn bộ Cấp 1, và Bài 14 sẽ biến nó thành thuật toán 7 bước.</li>
+<li><strong>Có hai hình chữ nhật đôi, không phải một</strong>: <code>PHỤ HUYNH</code> và <code>BUỔI ĐIỂM DANH</code>. Cả hai đều là <strong>thực thể yếu</strong> của <code>HỌC SINH</code>, và cả hai đều nối bằng <strong>hình thoi đôi</strong> với <strong>đường đôi</strong> ở phía thực thể yếu. <a href="../09-participation-va-thuc-the-yeu/">Bài 9</a> đã phân tích kỹ cặp này.</li>
+<li><strong><code>BUỔI ĐIỂM DANH</code> là hình chữ nhật chứ không phải hình thoi</strong> — đây là chỗ dễ vẽ sai nhất của sơ đồ này. Xem hộp cảnh báo ngay dưới đây.</li>
+<li>Sơ đồ có <strong>7 hình chữ nhật</strong> (5 đơn + 2 đôi) và <strong>3 hình thoi sẽ hoá thành bảng</strong> (<code>PHÂN CÔNG DẠY</code>, <code>CÓ ĐIỂM</code>, <code>MƯỢN</code>). Cộng lại vừa đúng <strong>10 bảng</strong> của database. Đây là điều quan trọng nhất của toàn bộ Cấp 1, và Bài 14 sẽ biến nó thành thuật toán 7 bước.</li>
 </ul>
+<div class="admonition warning">
+<p class="admonition-title">Vì sao <code>ĐIỂM DANH</code> là thực thể yếu chứ không phải một mối quan hệ</p>
+<p>Cách vẽ sai mà nhiều người mắc: một hình thoi <code>ĐIỂM DANH</code> nối <code>HỌC SINH</code> với một hình chữ nhật <code>NGÀY</code>.</p>
+<p>Sai vì <strong>NGÀY không phải một tập thực thể</strong>. Trường không lưu dữ liệu gì về bản thân ngày 15/09/2026 — không tên, không mô tả, không gì cả. Vẽ nó thành hình chữ nhật là bịa ra một thực thể không tồn tại.</p>
+<p>Cách vẽ sai thứ hai: bỏ <code>NGÀY</code> đi, để hình thoi <code>ĐIỂM DANH</code> chỉ nối vào <strong>một</strong> hình chữ nhật <code>HỌC SINH</code>. Trong ký hiệu Chen, hình thoi nối đúng một tập thực thể là <strong>mối quan hệ một ngôi</strong> — mà Bài 8 đã nói rõ <code>truong_hoc</code> không có mối quan hệ một ngôi nào.</p>
+<p>Cách đúng: <em>"ngày 15/09, bạn An có mặt"</em> là một <strong>sự việc</strong> có đặc điểm riêng (<code>trang_thai</code>, <code>ly_do</code>) nhưng <strong>không tự định danh được</strong> nếu thiếu học sinh. Đó đúng là định nghĩa <strong>thực thể yếu</strong>, với <code>HỌC SINH</code> là thực thể chủ và <code>ngay</code> là <strong>khoá bộ phận</strong>. Ràng buộc <code>UNIQUE (ma_hs, ngay)</code> trong lược đồ chính là khoá bộ phận đó được cưỡng chế.</p>
+</div>
 <h3 id="bieu-o-er-dung-e-lam-gi">Biểu đồ ER dùng để làm gì<a class="headerlink" href="#bieu-o-er-dung-e-lam-gi" title="Permanent link">&para;</a></h3>
 <p>Biểu đồ ER là bản vẽ ở <strong>mức ý niệm</strong> (<em>conceptual level</em>) — mức mà bạn đã gặp trong kiến trúc ba mức ở <a href="../../cap-0-nhap-mon/03-dbms-la-gi/">Bài 3</a>. Nó cố tình <strong>không</strong> nói tới kiểu dữ liệu, chỉ mục hay hệ quản trị nào.</p>
 <p>Trong một dự án thật, nó phục vụ ba việc:</p>
@@ -1618,6 +1671,11 @@
 <td>Thực thể <strong>yếu</strong></td>
 </tr>
 <tr>
+<td><code>BUỔI ĐIỂM DANH</code> (chữ nhật đôi)</td>
+<td><code>diem_danh</code></td>
+<td>Thực thể <strong>yếu</strong></td>
+</tr>
+<tr>
 <td><code>PHÂN CÔNG DẠY</code> (thoi, bậc 3)</td>
 <td><code>phan_cong_day</code></td>
 <td>Mối quan hệ hoá bảng</td>
@@ -1632,14 +1690,41 @@
 <td><code>muon_sach</code></td>
 <td>Mối quan hệ hoá bảng</td>
 </tr>
+</tbody>
+</table>
+<p>Bảy hình chữ nhật cộng ba hình thoi hoá bảng — vừa đúng 10.</p>
+<p>Còn <code>CHỦ NHIỆM</code>, <code>HỌC TẠI</code>, <code>LÀ PHỤ HUYNH CỦA</code> và <code>ĐƯỢC ĐIỂM DANH</code> thì <strong>không</strong> sinh ra bảng nào cả. Chúng chỉ để lại dấu vết là <strong>một cột khoá ngoại</strong>:</p>
+<table>
+<thead>
 <tr>
-<td><code>ĐƯỢC ĐIỂM DANH</code> (thoi, 1:N)</td>
-<td><code>diem_danh</code></td>
-<td>Mối quan hệ hoá bảng</td>
+<th>Mối quan hệ</th>
+<th>Bản số</th>
+<th>Dấu vết trong bảng</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>CHỦ NHIỆM</code></td>
+<td>1:1</td>
+<td><code>lop.ma_gvcn</code>, có thêm <code>UNIQUE</code></td>
+</tr>
+<tr>
+<td><code>HỌC TẠI</code></td>
+<td>1:N</td>
+<td><code>hoc_sinh.ma_lop</code>, <code>NOT NULL</code></td>
+</tr>
+<tr>
+<td><code>LÀ PHỤ HUYNH CỦA</code></td>
+<td>nhận diện</td>
+<td><code>phu_huynh.ma_hs</code>, <code>NOT NULL</code> + <code>ON DELETE CASCADE</code></td>
+</tr>
+<tr>
+<td><code>ĐƯỢC ĐIỂM DANH</code></td>
+<td>nhận diện</td>
+<td><code>diem_danh.ma_hs</code>, <code>NOT NULL</code> + <code>ON DELETE CASCADE</code></td>
 </tr>
 </tbody>
 </table>
-<p>Còn <code>CHỦ NHIỆM</code> và <code>HỌC TẠI</code> thì <strong>không</strong> thành bảng — chúng chỉ là một cột khoá ngoại, vì bản số của chúng là 1:1 và 1:N.</p>
 <h3 id="chu-nhat-oi-hien-ra-trong-luoc-o-nhu-the-nao">Chữ nhật đôi hiện ra trong lược đồ như thế nào<a class="headerlink" href="#chu-nhat-oi-hien-ra-trong-luoc-o-nhu-the-nao" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">column_name</span><span class="p">,</span><span class="w"> </span><span class="n">is_nullable</span><span class="p">,</span><span class="w"> </span><span class="n">data_type</span>
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="k">FROM</span><span class="w"> </span><span class="n">information_schema</span><span class="p">.</span><span class="n">columns</span>
@@ -1818,12 +1903,12 @@ d. Một tiết học chỉ định danh được khi biết nó thuộc thời 
 <li>Ba thuộc tính ngày tháng treo vào <strong>hình thoi</strong>, không treo vào hình chữ nhật nào — vì chúng mô tả <em>lượt mượn</em>, không mô tả học sinh cũng không mô tả sách.</li>
 </ul>
 <p><strong>Câu 3.</strong>
-Quy tắc chung: <strong>chỉ mối quan hệ M:N (và mọi mối quan hệ bậc từ 3 trở lên) mới bắt buộc thành bảng riêng.</strong> Mối quan hệ 1:1 và 1:N thì chỉ cần một cột khoá ngoại là đủ.</p>
+Quy tắc chung: <strong>chỉ mối quan hệ M:N (và mọi mối quan hệ bậc từ 3 trở lên) mới bắt buộc thành bảng riêng.</strong> Mối quan hệ 1:1 và 1:N thì một cột khoá ngoại là đủ — khác nhau ở chỗ 1:1 phải kèm <code>UNIQUE</code>, còn 1:N thì không.</p>
 <ul>
-<li><code>CHỦ NHIỆM</code> là <strong>1:1</strong> → nhúng khoá ngoại <code>ma_gvcn</code> vào bảng <code>lop</code>. Một cột là xong.</li>
+<li><code>CHỦ NHIỆM</code> là <strong>1:1</strong> → nhúng khoá ngoại <code>ma_gvcn</code> vào bảng <code>lop</code>, <strong>kèm ràng buộc <code>UNIQUE</code></strong> trên chính cột đó. Thiếu <code>UNIQUE</code> thì cột này chỉ hiện thực được 1:N chứ không phải 1:1 — xem <a href="../08-moi-quan-he-va-cardinality/">Bài 8</a>.</li>
 <li><code>CÓ ĐIỂM</code> là <strong>M:N</strong> → không có chỗ nào nhét nổi khoá ngoại (Bài 8 đã phân tích), nên buộc phải sinh bảng <code>diem</code>.</li>
 </ul>
-<p><code>HỌC TẠI</code> là 1:N cũng vậy — chỉ cần cột <code>hoc_sinh.ma_lop</code>. Bài 14 sẽ viết quy tắc này thành các bước 3, 4, 5, 7 của thuật toán chuyển đổi.</p>
+<p><code>HỌC TẠI</code> là 1:N cũng vậy — chỉ cần cột <code>hoc_sinh.ma_lop</code>, và lần này <strong>không</strong> có <code>UNIQUE</code>, vì nhiều học sinh được phép chung một lớp. Đúng một chữ <code>UNIQUE</code> là toàn bộ khác biệt giữa hai cách hiện thực. Bài 14 sẽ viết quy tắc này thành các bước 3, 4, 5, 7 của thuật toán chuyển đổi.</p>
 <p><strong>Câu 4.</strong>
 Hai lỗi:</p>
 <ol>
@@ -1881,7 +1966,7 @@ Hai lỗi:</p>
 <li><strong>Ký hiệu Chen</strong> cho mỗi thứ một hình riêng: chữ nhật = thực thể, elip = thuộc tính, thoi = mối quan hệ; cái gì <strong>đôi</strong> thì chặt hơn.</li>
 <li>Mermaid <strong>mô phỏng</strong> Chen chứ không vẽ đúng chuẩn — ba chỗ khác rõ nhất là elip đôi, elip nét đứt và thoi đôi.</li>
 <li>Trong biểu đồ ER <strong>không có khoá ngoại</strong>; mối quan hệ luôn được vẽ bằng hình thoi, và thuộc tính của mối quan hệ treo vào hình thoi đó.</li>
-<li>Sơ đồ <code>truong_hoc</code> có 6 hình chữ nhật nhưng database có 10 bảng — bốn bảng chênh lệch chính là các hình thoi đã hoá thành bảng.</li>
+<li>Sơ đồ <code>truong_hoc</code> có 7 hình chữ nhật (2 trong đó là thực thể yếu) cộng 3 hình thoi hoá thành bảng — vừa đúng 10 bảng của database.</li>
 </ol>
 <hr />
 <p>⬅️ <a href="../09-participation-va-thuc-the-yeu/">Bài 9 — Ràng buộc tham gia và Thực thể yếu</a> · ➡️ <strong>Bài 11 — Crow's Foot và Mermaid</strong> <em>(sắp có)</em></p>

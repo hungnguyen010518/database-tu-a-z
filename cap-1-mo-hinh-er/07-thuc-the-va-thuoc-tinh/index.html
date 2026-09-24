@@ -668,9 +668,9 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#thuoc-tinh-a-tri-a-uoc-tach-ra-bang-rieng" class="md-nav__link">
+  <a href="#nhieu-gia-tri-thi-nhieu-dong-khong-bao-gio-nhet-chung-mot-o" class="md-nav__link">
     <span class="md-ellipsis">
-      Thuộc tính đa trị — đã được tách ra bảng riêng
+      Nhiều giá trị thì nhiều dòng — không bao giờ nhét chung một ô
     </span>
   </a>
   
@@ -969,9 +969,9 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#thuoc-tinh-a-tri-a-uoc-tach-ra-bang-rieng" class="md-nav__link">
+  <a href="#nhieu-gia-tri-thi-nhieu-dong-khong-bao-gio-nhet-chung-mot-o" class="md-nav__link">
     <span class="md-ellipsis">
-      Thuộc tính đa trị — đã được tách ra bảng riêng
+      Nhiều giá trị thì nhiều dòng — không bao giờ nhét chung một ô
     </span>
   </a>
   
@@ -1106,7 +1106,7 @@
 </div>
 <p>Trong lời nói hằng ngày, người ta hay nói tắt "thực thể HỌC SINH" khi thực ra đang nói tới <em>tập thực thể</em>. Khóa học này cũng nói tắt như vậy khi ngữ cảnh đã rõ.</p>
 <h3 id="thuoc-tinh-va-ba-cap-phan-loai">Thuộc tính — và ba cặp phân loại<a class="headerlink" href="#thuoc-tinh-va-ba-cap-phan-loai" title="Permanent link">&para;</a></h3>
-<p><strong>Thuộc tính</strong> (<em>attribute</em>) là một đặc điểm mô tả thực thể. Bạn đã gặp từ này ở Bài 6 với nghĩa "một cột của bảng"; ở đây là cùng một khái niệm, nhìn từ phía thế giới thực.</p>
+<p><strong>Thuộc tính</strong> là một đặc điểm mô tả thực thể. Bạn đã gặp từ này ở <a href="../06-mo-hinh-quan-he/">Bài 6</a> với nghĩa "một cột của bảng"; ở đây là cùng một khái niệm, nhìn từ phía thế giới thực.</p>
 <p>Ba rắc rối trong câu chuyện đầu bài tương ứng đúng ba cặp phân loại sau.</p>
 <h4 id="cap-1-on-phuc-hop">Cặp 1 — Đơn ↔ Phức hợp<a class="headerlink" href="#cap-1-on-phuc-hop" title="Permanent link">&para;</a></h4>
 <p><strong>Thuộc tính đơn</strong> (<em>simple attribute</em>, còn gọi <em>atomic</em>) là thuộc tính <strong>không tách nhỏ thêm được</strong> mà vẫn giữ nghĩa. Ví dụ: <code>gioi_tinh</code>, <code>so_tiet_tuan</code>, <code>diem_so</code>.</p>
@@ -1146,7 +1146,44 @@
 <p class="admonition-title">Thuộc tính đa trị KHÔNG được nhét chung một ô</p>
 <p>Ghi <code>0912345001, 0912345002</code> vào một ô là vi phạm <strong>tính nguyên tử</strong> đã học ở <a href="../06-mo-hinh-quan-he/">Bài 6</a>.</p>
 <p>Mô hình quan hệ chỉ có <strong>một</strong> cách xử lý đúng: <strong>tách ra bảng riêng</strong>, mỗi giá trị một dòng.</p>
-<p>Đó chính xác là lý do database mẫu có bảng <code>phu_huynh</code> riêng thay vì nhét cột <code>sdt_phu_huynh</code> vào bảng <code>hoc_sinh</code>. Bài 14 sẽ biến quy tắc này thành <strong>Bước 6</strong> của thuật toán chuyển ER sang bảng.</p>
+<p>Ví dụ: thuộc tính đa trị <code>so_dien_thoai</code> của HỌC SINH phải thành một bảng riêng <code>hoc_sinh_sdt(ma_hs, so_dien_thoai)</code> — đúng <strong>hai</strong> cột, mỗi số một dòng. Bài 14 sẽ biến quy tắc này thành <strong>Bước 6</strong> của thuật toán chuyển ER sang bảng.</p>
+</div>
+<div class="admonition danger">
+<p class="admonition-title">Bảng <code>phu_huynh</code> KHÔNG phải kết quả của quy tắc này</p>
+<p>Rất dễ nhìn <code>phu_huynh</code> rồi nghĩ <em>"à, đây chính là thuộc tính đa trị số điện thoại đã được tách ra"</em>. <strong>Không phải</strong>, và nhầm chỗ này sẽ làm bạn trả lời sai ở Bài 9 lẫn Bài 14.</p>
+<p>Nếu chỉ là tách thuộc tính đa trị, bảng sinh ra sẽ đúng hai cột <code>(ma_hs, so_dien_thoai)</code>. Nhưng <code>phu_huynh</code> còn có <code>ho_ten</code> và <code>quan_he</code> — tức bản thân người liên lạc là một <strong>đối tượng có đặc điểm riêng</strong>, chứ không phải một dãy số trơ.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Thuộc tính đa trị</th>
+<th>Thực thể</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Thứ lặp lại là</td>
+<td>một <strong>giá trị</strong> trơ</td>
+<td>một <strong>đối tượng</strong> có đặc điểm riêng</td>
+</tr>
+<tr>
+<td>Ví dụ</td>
+<td><code>so_dien_thoai</code>, <code>the_loai</code> của sách</td>
+<td>người phụ huynh</td>
+</tr>
+<tr>
+<td>Chuyển sang bảng thành</td>
+<td>bảng 2 cột <code>(khoá chủ, giá trị)</code></td>
+<td>bảng đầy đủ, có thuộc tính riêng</td>
+</tr>
+<tr>
+<td>Bước trong thuật toán Bài 14</td>
+<td>Bước 6</td>
+<td>Bước 1 hoặc Bước 2</td>
+</tr>
+</tbody>
+</table>
+<p><a href="../09-participation-va-thuc-the-yeu/">Bài 9</a> sẽ gọi đúng tên <code>phu_huynh</code>: <strong>thực thể yếu</strong>. Phép thử nhanh để khỏi nhầm: <em>"thứ lặp lại này có cần mô tả gì thêm ngoài chính nó không?"</em> — cần thì đó là thực thể, không cần thì đó là thuộc tính đa trị.</p>
 </div>
 <h4 id="cap-3-luu-tru-dan-xuat">Cặp 3 — Lưu trữ ↔ Dẫn xuất<a class="headerlink" href="#cap-3-luu-tru-dan-xuat" title="Permanent link">&para;</a></h4>
 <p><strong>Thuộc tính lưu trữ</strong> (<em>stored attribute</em>) là thuộc tính phải ghi thật vào database, vì không có cách nào tính ra nó. <code>ngay_sinh</code> là lưu trữ.</p>
@@ -1276,7 +1313,7 @@
     P2 --&gt; L2["phức hợp · đơn trị · lưu trữ"]
     P3 --&gt; L3["đơn · đơn trị · lưu trữ"]
     P4 --&gt; L4["phức hợp · đơn trị · lưu trữ"]
-    P5 --&gt; L5["ĐA TRỊ → tách sang bảng phu_huynh"]
+    P5 --&gt; L5["ĐA TRỊ → tách sang bảng riêng&lt;br/&gt;hoc_sinh_sdt · 2 cột"]
     P6 --&gt; L6["DẪN XUẤT → không lưu · tính từ ngay_sinh"]
 
     style HS fill:#e3f2fd,stroke:#1565c0,stroke-width:3px
@@ -1350,8 +1387,8 @@
 </span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">table_schema</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'public'</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="k">table_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'hoc_sinh'</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="k">column_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'tuoi'</span><span class="p">;</span>
 </span></code></pre></div>
 <p>Kết quả: <code>0</code>. Không có cột <code>tuoi</code> nào cả — đúng như thiết kế.</p>
-<h3 id="thuoc-tinh-a-tri-a-uoc-tach-ra-bang-rieng">Thuộc tính đa trị — đã được tách ra bảng riêng<a class="headerlink" href="#thuoc-tinh-a-tri-a-uoc-tach-ra-bang-rieng" title="Permanent link">&para;</a></h3>
-<p>Số điện thoại liên lạc của học sinh nằm ở bảng <code>phu_huynh</code>, mỗi người liên lạc một dòng:</p>
+<h3 id="nhieu-gia-tri-thi-nhieu-dong-khong-bao-gio-nhet-chung-mot-o">Nhiều giá trị thì nhiều dòng — không bao giờ nhét chung một ô<a class="headerlink" href="#nhieu-gia-tri-thi-nhieu-dong-khong-bao-gio-nhet-chung-mot-o" title="Permanent link">&para;</a></h3>
+<p><code>truong_hoc</code> không có bảng <code>hoc_sinh_sdt</code>: nó mô hình hoá người liên lạc thành một <strong>thực thể riêng</strong> (<code>phu_huynh</code>) chứ không phải một thuộc tính đa trị — đúng như hộp cảnh báo ở trên. Nhưng nguyên tắc <em>mỗi giá trị một dòng</em> thì giống hệt nhau, và bảng <code>phu_huynh</code> minh hoạ được nguyên tắc đó:</p>
 <div class="highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">ma_ph</span><span class="p">,</span><span class="w"> </span><span class="n">ho_ten</span><span class="p">,</span><span class="w"> </span><span class="n">quan_he</span><span class="p">,</span><span class="w"> </span><span class="n">so_dien_thoai</span>
 </span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="k">FROM</span><span class="w"> </span><span class="n">phu_huynh</span>
 </span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">ma_hs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'HS001'</span>
@@ -1420,7 +1457,7 @@
 <p class="admonition-title">Lỗi 1: Nhét thuộc tính đa trị vào một ô</p>
 <p>Thêm cột <code>sdt_phu_huynh</code> vào <code>hoc_sinh</code> rồi ghi <code>0912345001, 0912345002</code>.</p>
 <p>Ba hậu quả cụ thể: không tìm được ai theo số điện thoại bằng phép so sánh thường; không ràng buộc nổi "mỗi số phải đủ 10 chữ số"; và bạn thứ ba trong nhà thì hết chỗ ghi.</p>
-<p>Cách sửa duy nhất đúng: <strong>một bảng riêng, mỗi giá trị một dòng</strong> — đúng như <code>phu_huynh</code>.</p>
+<p>Cách sửa duy nhất đúng: <strong>một bảng riêng, mỗi giá trị một dòng</strong> — ở đây là <code>hoc_sinh_sdt(ma_hs, so_dien_thoai)</code>. Nếu người liên lạc còn cần lưu cả tên và quan hệ thì đó không còn là thuộc tính đa trị nữa, mà là một thực thể — và bảng đúng chính là <code>phu_huynh</code>.</p>
 </div>
 <div class="admonition warning">
 <p class="admonition-title">Lỗi 2: Thêm cột <code>so_hoc_sinh</code> vào bảng <code>lop</code></p>

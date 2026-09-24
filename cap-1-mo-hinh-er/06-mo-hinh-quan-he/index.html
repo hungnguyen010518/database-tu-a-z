@@ -1364,25 +1364,50 @@
 <h2 id="thuc-hanh">💻 Thực hành<a class="headerlink" href="#thuc-hanh" title="Permanent link">&para;</a></h2>
 <p>Bạn đã nạp xong <code>dataset/02-chuan-hoa.sql</code> ở Bài 5. Mở <code>psql</code> và làm theo.</p>
 <h3 id="xem-luoc-o-bang-lenh-d">Xem lược đồ bằng lệnh <code>\d</code><a class="headerlink" href="#xem-luoc-o-bang-lenh-d" title="Permanent link">&para;</a></h3>
-<p><code>\d</code> là <strong>lệnh riêng của psql</strong>, không phải SQL. Nó in ra lược đồ của một bảng:</p>
+<p><code>\d</code> là <strong>lệnh riêng của psql</strong>, không phải SQL. Gõ vào dấu nhắc <code>psql</code>:</p>
 <div class="highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>truong_hoc=# \d hoc_sinh
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>                        Table "public.hoc_sinh"
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  Column   |          Type          | Nullable |
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>-----------+------------------------+----------+
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a> ma_hs     | character(5)           | not null |
-</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a> ho_ten    | character varying(60)  | not null |
-</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a> ngay_sinh | date                   | not null |
-</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a> gioi_tinh | character varying(3)   | not null |
-</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a> dia_chi   | character varying(120) |          |
-</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a> ma_lop    | character(3)           | not null |
-</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>Indexes:
-</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>    "hoc_sinh_pkey" PRIMARY KEY, btree (ma_hs)
-</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>Check constraints:
-</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>    "hoc_sinh_gioi_tinh_check" CHECK (gioi_tinh::text = ANY (ARRAY['Nam'::character varying, 'Nữ'::character varying]::text[]))
-</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>Foreign-key constraints:
-</span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>    "hoc_sinh_ma_lop_fkey" FOREIGN KEY (ma_lop) REFERENCES lop(ma_lop) ON DELETE RESTRICT
 </span></code></pre></div>
-<p>Toàn bộ thứ bạn vừa nhìn thấy <strong>là lược đồ</strong>. Chưa có một dòng dữ liệu nào cả.</p>
+<p>psql in ra một bảng mô tả gồm các phần sau — hãy đối chiếu ngay với những khái niệm vừa học:</p>
+<table>
+<thead>
+<tr>
+<th>Phần psql in ra</th>
+<th>Khái niệm của bài này</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Danh sách tên cột</td>
+<td>Danh sách <strong>thuộc tính</strong></td>
+</tr>
+<tr>
+<td>Cột <code>Type</code> (<code>character(5)</code>, <code>date</code>, ...)</td>
+<td><strong>Miền giá trị</strong>, tầng kiểu dữ liệu</td>
+</tr>
+<tr>
+<td>Cột <code>Nullable</code> (<code>not null</code> hay để trống)</td>
+<td>Cột này có được phép rỗng không</td>
+</tr>
+<tr>
+<td>Cột <code>Default</code></td>
+<td>Giá trị mặc định khi không nhập</td>
+</tr>
+<tr>
+<td>Mục <code>Indexes</code> với <code>hoc_sinh_pkey</code></td>
+<td>Ràng buộc định danh — <strong>Bài 12</strong> gọi là khoá chính</td>
+</tr>
+<tr>
+<td>Mục <code>Check constraints</code></td>
+<td><strong>Miền giá trị</strong>, tầng thu hẹp thêm</td>
+</tr>
+<tr>
+<td>Mục <code>Foreign-key constraints</code></td>
+<td>Liên kết sang bảng khác — <strong>Bài 12</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Đếm số dòng trong phần danh sách cột, bạn được <strong>6</strong> — đó là <strong>bậc</strong> của quan hệ <code>hoc_sinh</code>.</p>
+<p>Điều quan trọng nhất: <strong>toàn bộ những gì <code>\d</code> in ra đều là lược đồ.</strong> Không có một dòng dữ liệu học sinh nào cả.</p>
 <h3 id="xem-the-hien">Xem thể hiện<a class="headerlink" href="#xem-the-hien" title="Permanent link">&para;</a></h3>
 <p>Bây giờ mới là dữ liệu — tức thể hiện:</p>
 <div class="highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span><span class="w"> </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">ma_hs</span><span class="w"> </span><span class="k">LIMIT</span><span class="w"> </span><span class="mi">5</span><span class="p">;</span>
@@ -1488,7 +1513,7 @@
 - <strong>Bậc = 4</strong> — bốn thuộc tính: <code>Thứ</code>, <code>Quét lớp</code>, <code>Lau bảng</code>, <code>Đổ rác</code>.
 - <strong>Lực lượng = 3</strong> — ba bộ, ứng với thứ Hai, thứ Ba, thứ Tư.
 - <strong>Miền giá trị của <code>Thứ</code></strong>: tập 7 giá trị <code>{Hai, Ba, Tư, Năm, Sáu, Bảy, Chủ nhật}</code>. Trong PostgreSQL có thể diễn đạt bằng <code>VARCHAR(10) CHECK (thu IN ('Hai','Ba','Tư','Năm','Sáu','Bảy','Chủ nhật'))</code>.</p>
-<div class="highlight"><pre><span></span><code>(Miền giá trị của ba cột còn lại là "tên học sinh trong lớp" — chặt chẽ hơn nữa thì đó phải là một **khoá ngoại** trỏ về bảng `hoc_sinh`, thứ bạn sẽ học ở Bài 8 và Bài 15.)
+<div class="highlight"><pre><span></span><code>(Miền giá trị của ba cột còn lại là "tên học sinh trong lớp" — chặt chẽ hơn nữa thì đó phải là một **khoá ngoại** trỏ về bảng `hoc_sinh`, thứ bạn sẽ học ở **Bài 12**.)
 </code></pre></div>
 <p><strong>Câu 2.</strong>
 Lược đồ: <code>mon_hoc(ma_mon, ten_mon, so_tiet_tuan)</code></p>
@@ -1522,8 +1547,8 @@ Vi phạm <strong>tính nguyên tử</strong>: ô <code>cac_diem_toan</code> ch�
 </details>
 <h2 id="tom-tat">🔑 Tóm tắt<a class="headerlink" href="#tom-tat" title="Permanent link">&para;</a></h2>
 <ol>
-<li><strong>Quan hệ</strong> (<em>relation</em>) là tên học thuật của "bảng"; mỗi hàng là một <strong>bộ</strong> (<em>tuple</em>), mỗi cột là một <strong>thuộc tính</strong> (<em>attribute</em>).</li>
-<li><strong>Miền giá trị</strong> (<em>domain</em>) là tập mọi giá trị hợp lệ của một cột, gồm hai tầng: kiểu dữ liệu và ràng buộc thu hẹp thêm.</li>
+<li><strong>Quan hệ</strong> là tên học thuật của "bảng"; mỗi hàng là một <strong>bộ</strong>, mỗi cột là một <strong>thuộc tính</strong>.</li>
+<li><strong>Miền giá trị</strong> là tập mọi giá trị hợp lệ của một cột, gồm hai tầng: kiểu dữ liệu và ràng buộc thu hẹp thêm.</li>
 <li><strong>Bậc</strong> là số cột, <strong>lực lượng</strong> là số dòng — bậc gần như không đổi, lực lượng đổi liên tục.</li>
 <li><strong>Lược đồ</strong> là cái khung, <strong>thể hiện</strong> là dữ liệu đang nằm trong khung; một lược đồ ứng với vô số thể hiện theo thời gian.</li>
 <li>Quan hệ là một tập hợp nên: không có bộ trùng lặp, thứ tự bộ không mang ý nghĩa, và mỗi ô chỉ chứa <strong>một</strong> giá trị đơn.</li>
