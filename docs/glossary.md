@@ -20,7 +20,7 @@ Bảng được sắp xếp theo thứ tự chữ cái của **thuật ngữ ti�
 
 | Tiếng Việt | English | Nghĩa trong một câu | Học ở bài |
 |---|---|---|---|
-| Ràng buộc giới hạn tổng | *aggregate constraint* — Bài 14 nêu ví dụ *"một giáo viên không dạy quá 20 tiết mỗi tuần"* | Luật nghiệp vụ phải cộng hoặc đếm qua nhiều dòng mới kiểm được, nên khoá ngoại và `UNIQUE` không cưỡng chế nổi | [Bài 14](cap-1-mo-hinh-er/14-chuyen-er-sang-bang.md) |
+| Ràng buộc giới hạn tổng | *aggregate constraint* | Luật nghiệp vụ phải cộng hoặc đếm qua nhiều dòng mới kiểm được, nên khoá ngoại và `UNIQUE` không cưỡng chế nổi | [Bài 14](cap-1-mo-hinh-er/14-chuyen-er-sang-bang.md) |
 | Kết tập | *aggregation* | Coi cả một mối quan hệ như một thực thể duy nhất, để nó tham gia được vào một mối quan hệ khác | [Bài 13](cap-1-mo-hinh-er/13-mo-hinh-eer.md) |
 | Khoá thay thế | *alternate key* | Khoá dự tuyển không được chọn làm khoá chính, thường giữ bằng `UNIQUE` | [Bài 12](cap-1-mo-hinh-er/12-bay-loai-khoa.md) |
 | Mô hình neo | *anchor modeling* | Kiểu thiết kế kho dữ liệu theo 6NF: mỗi thuộc tính một bảng riêng, nên thêm thuộc tính mới không phải đụng bảng cũ | [Bài 19](cap-2-chuan-hoa/19-dang-chuan-4nf-5nf-6nf.md) |
@@ -57,6 +57,7 @@ Bảng được sắp xếp theo thứ tự chữ cái của **thuật ngữ ti�
 | Cụm cơ sở dữ liệu | *cluster* | Tập hợp các database do một máy chủ PostgreSQL quản lý | [Bài 5](cap-0-nhap-mon/05-cai-dat-postgresql.md) |
 | Cột | *column* | Cách gọi khác của *field* (trường) và *attribute* (thuộc tính) | [Bài 1](cap-0-nhap-mon/01-du-lieu-va-thong-tin.md) |
 | Cột rộng | *column-family* | Họ NoSQL lưu bảng khổng lồ mà mỗi dòng có bộ cột riêng | [Bài 4](cap-0-nhap-mon/04-cac-mo-hinh-du-lieu.md) |
+| Đầy đủ (của hệ tiên đề) | *complete* | Mọi phụ thuộc hàm thật sự đúng đều suy ra được từ ba tiên đề Armstrong | [Bài 16](cap-2-chuan-hoa/16-phu-thuoc-ham.md) |
 | Thuộc tính phức hợp | *composite attribute* | Thuộc tính tách được thành nhiều thuộc tính con có ý nghĩa riêng | [Bài 7](cap-1-mo-hinh-er/07-thuc-the-va-thuoc-tinh.md) |
 | Khoá phức hợp | *composite key* | Khoá gồm từ hai cột trở lên | [Bài 12](cap-1-mo-hinh-er/12-bay-loai-khoa.md) |
 | Mức khái niệm (mức ý niệm) | *conceptual level* | Mức mô tả toàn bộ database — có bảng nào, cột nào, ràng buộc gì — dùng chung cho mọi người | [Bài 3](cap-0-nhap-mon/03-dbms-la-gi.md) |
@@ -100,7 +101,7 @@ Bảng được sắp xếp theo thứ tự chữ cái của **thuật ngữ ti�
 
 | Tiếng Việt | English | Nghĩa trong một câu | Học ở bài |
 |---|---|---|---|
-| Mô hình ER mở rộng | *EER — Enhanced / Extended ER* | Mô hình ER cơ bản cộng thêm lớp cha – lớp con, các ràng buộc chuyên biệt hoá, và kết tập | [Bài 13](cap-1-mo-hinh-er/13-mo-hinh-eer.md) |
+| Mô hình ER mở rộng | *EER — Enhanced ER / Extended ER* | Mô hình ER cơ bản cộng thêm lớp cha – lớp con, các ràng buộc chuyên biệt hoá, và kết tập | [Bài 13](cap-1-mo-hinh-er/13-mo-hinh-eer.md) |
 | Thực thể | *entity* | Một đối tượng cụ thể ngoài đời mà ta muốn lưu dữ liệu, và phân biệt được với đối tượng khác | [Bài 7](cap-1-mo-hinh-er/07-thuc-the-va-thuoc-tinh.md) |
 | Toàn vẹn thực thể | *entity integrity* | Khoá chính không bao giờ được `NULL`, và không bao giờ được trùng | [Bài 15](cap-1-mo-hinh-er/15-rang-buoc-toan-ven.md) |
 | Tập thực thể | *entity set* | Tập hợp mọi thực thể cùng loại — chính nó mới là thứ trở thành một bảng | [Bài 7](cap-1-mo-hinh-er/07-thuc-the-va-thuoc-tinh.md) |
@@ -121,7 +122,7 @@ Bảng được sắp xếp theo thứ tự chữ cái của **thuật ngữ ti�
 | Khoá ngoại | *foreign key* | Cột mang giá trị khoá chính của bảng khác, và chỉ được chứa giá trị có thật ở bảng đó | [Bài 2](cap-0-nhap-mon/02-tu-so-giay-den-excel.md) |
 | Dạng chuẩn 4 | *Fourth Normal Form — 4NF* | Bảng đã ở BCNF và mọi định thức đa trị đều là siêu khoá | [Bài 19](cap-2-chuan-hoa/19-dang-chuan-4nf-5nf-6nf.md) |
 | Phụ thuộc đầy đủ | *full functional dependency* | `X → Y` mà bỏ bất kỳ thuộc tính nào khỏi `X` là luật không còn đúng | [Bài 16](cap-2-chuan-hoa/16-phu-thuoc-ham.md) |
-| Phụ thuộc hàm | *functional dependency* | Luật *biết `X` thì biết chắc `Y`*, đúng với mọi trạng thái dữ liệu | [Bài 16](cap-2-chuan-hoa/16-phu-thuoc-ham.md) |
+| Phụ thuộc hàm | *functional dependency* | Luật *biết `X` thì biết chắc `Y`*, đúng với mọi trạng thái dữ liệu — Cấp 2 viết tắt là **PTH** | [Bài 16](cap-2-chuan-hoa/16-phu-thuoc-ham.md) |
 
 ## G
 
@@ -158,7 +159,7 @@ Bảng được sắp xếp theo thứ tự chữ cái của **thuật ngữ ti�
 | Tiếng Việt | English | Nghĩa trong một câu | Học ở bài |
 |---|---|---|---|
 | Phụ thuộc kết nối | *join dependency* | Bảng luôn bằng đúng phép nối tự nhiên của các hình chiếu của chính nó | [Bài 19](cap-2-chuan-hoa/19-dang-chuan-4nf-5nf-6nf.md) |
-| Bảng trung gian | *junction / associative table* | Bảng thứ ba sinh ra để hiện thực một mối quan hệ M:N | [Bài 8](cap-1-mo-hinh-er/08-moi-quan-he-va-cardinality.md) |
+| Bảng trung gian | *junction table / associative table* | Bảng thứ ba sinh ra để hiện thực một mối quan hệ M:N | [Bài 8](cap-1-mo-hinh-er/08-moi-quan-he-va-cardinality.md) |
 
 ## K
 
@@ -267,6 +268,7 @@ Bảng được sắp xếp theo thứ tự chữ cái của **thuật ngữ ti�
 | Thuộc tính đơn trị | *single-valued attribute* | Với mỗi thực thể, thuộc tính chỉ có đúng một giá trị | [Bài 7](cap-1-mo-hinh-er/07-thuc-the-va-thuoc-tinh.md) |
 | Dạng chuẩn 6 | *Sixth Normal Form — 6NF* | Mọi phụ thuộc kết nối của bảng đều tầm thường — bảng chỉ còn khoá cộng tối đa một thuộc tính không khoá | [Bài 19](cap-2-chuan-hoa/19-dang-chuan-4nf-5nf-6nf.md) |
 | Xoá mềm | *soft delete* | Đánh dấu một dòng là đã bỏ bằng cột trạng thái, thay vì `DELETE` thật | [Bài 15](cap-1-mo-hinh-er/15-rang-buoc-toan-ven.md) |
+| Đúng đắn (của hệ tiên đề) | *sound* | Mọi phụ thuộc hàm suy ra được từ ba tiên đề Armstrong đều thật sự đúng | [Bài 16](cap-2-chuan-hoa/16-phu-thuoc-ham.md) |
 | Chuyên biệt hoá | *specialization* | Đi từ lớp cha xuống: nhận ra các nhóm khác nhau bên trong rồi tách thành lớp con | [Bài 13](cap-1-mo-hinh-er/13-mo-hinh-eer.md) |
 | Dòng ma | *spurious tuple* | Dòng do phép nối sinh ra nhưng chưa từng có trong bảng gốc | [Bài 18](cap-2-chuan-hoa/18-dang-chuan-3nf-bcnf.md) |
 | Ngôn ngữ truy vấn có cấu trúc | *SQL — Structured Query Language* | Ngôn ngữ chuẩn để đặt câu hỏi và ra lệnh cho cơ sở dữ liệu quan hệ | [Bài 1](cap-0-nhap-mon/01-du-lieu-va-thong-tin.md) |

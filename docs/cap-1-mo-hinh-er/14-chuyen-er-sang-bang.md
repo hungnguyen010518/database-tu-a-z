@@ -296,7 +296,7 @@ Ba cột đầu là ba phía của hình thoi; cột thứ tư là thuộc tính
 | Bản số 1:1 | **Có** — `UNIQUE` |
 | Bản số 1 trên một nhánh của quan hệ bậc ba | **Có** — nhưng phải thêm `UNIQUE` bằng tay, xem hộp dưới |
 | Tham gia toàn phần ở phía **N** (mỗi lớp ít nhất một học sinh) | **Không** — cần trigger |
-| Ràng buộc **giới hạn tổng** (*"một giáo viên không dạy quá 20 tiết mỗi tuần"*) | **Không** — cần cộng qua nhiều dòng, nhiều bảng |
+| **Ràng buộc giới hạn tổng** (*aggregate constraint*) — ví dụ *"một giáo viên không dạy quá 20 tiết mỗi tuần"* | **Không** — cần cộng qua nhiều dòng, nhiều bảng |
 | Chuyên biệt hoá toàn phần / disjoint ([Bài 13](13-mo-hinh-eer.md)) | **Không** — cần trigger hoặc mẹo khoá |
 
 Khoảng cách này là **cố hữu**, không phải lỗi của ai. Cách xử lý đúng trong dự án thật: ghi rõ những ràng buộc không cưỡng chế được vào **tài liệu** và kiểm tra ở tầng ứng dụng, chứ đừng giả vờ là database đang lo hộ.
