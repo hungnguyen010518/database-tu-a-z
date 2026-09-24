@@ -228,6 +228,10 @@ Hai cột cuối cùng là hai vi phạm 1NF, mỗi cột một kiểu.
 
 ```sql
 -- KỲ VỌNG: 1 dòng
+-- KỲ VỌNG: tong_so_dong = 30
+-- KỲ VỌNG: co_phu_huynh_1 = 30
+-- KỲ VỌNG: co_phu_huynh_2 = 6
+-- KỲ VỌNG: o_trong_lang_phi = 24
 SELECT count(*)                       AS tong_so_dong,
        count(ho_ten_ph1)              AS co_phu_huynh_1,
        count(ho_ten_ph2)              AS co_phu_huynh_2,
@@ -278,6 +282,7 @@ FROM bang_bet AS b,
      unnest(string_to_array(b.cac_mon_va_diem, ',')) AS t(md);
 
 -- KỲ VỌNG: 1 dòng
+-- KỲ VỌNG: so_dong = 90
 SELECT count(*) AS so_dong FROM b17_bet_1nf;
 ```
 
@@ -340,6 +345,7 @@ FROM bang_bet
 WHERE ho_ten_ph2 IS NOT NULL;
 
 -- KỲ VỌNG: 1 dòng
+-- KỲ VỌNG: so_phu_huynh = 36
 SELECT count(*) AS so_phu_huynh FROM b17_phu_huynh;
 ```
 
@@ -489,6 +495,10 @@ Tách xong phải chứng minh nối lại ra đúng bảng cũ, không thiếu 
 
 ```sql
 -- KỲ VỌNG: 1 dòng
+-- KỲ VỌNG: goc = 90
+-- KỲ VỌNG: noi_lai = 90
+-- KỲ VỌNG: dong_la_sinh_ra = 0
+-- KỲ VỌNG: dong_bi_mat = 0
 SELECT (SELECT count(*) FROM b17_bet_1nf)                       AS goc,
        (SELECT count(*) FROM b17_hoc_sinh h
           JOIN b17_diem d ON d.ma_hs = h.ma_hs)                 AS noi_lai,
