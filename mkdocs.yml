@@ -1,0 +1,87 @@
+site_name: Database từ A-Z
+site_description: >-
+  Khóa học cơ sở dữ liệu tiếng Việt, từ con số 0 tới mức siêu nâng cao —
+  giải thích để học sinh cấp 2 cũng hiểu được.
+site_url: https://hungnguyen010518.github.io/database-tu-a-z/
+repo_url: https://github.com/hungnguyen010518/database-tu-a-z
+repo_name: database-tu-a-z
+edit_uri: edit/main/docs/
+copyright: Nội dung theo giấy phép CC BY 4.0
+
+theme:
+  name: material
+  language: vi
+  icon:
+    logo: material/database
+    repo: fontawesome/brands/github
+  features:
+    - navigation.sections
+    - navigation.top
+    - navigation.footer
+    - navigation.indexes
+    - navigation.tracking
+    - toc.follow
+    - content.code.copy
+    - content.code.annotate
+    - search.highlight
+    - search.suggest
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/weather-night
+        name: Chuyển sang chế độ tối
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/weather-sunny
+        name: Chuyển sang chế độ sáng
+
+markdown_extensions:
+  - abbr
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+      toc_depth: 3
+  - pymdownx.details
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.caret
+  - pymdownx.mark
+  - pymdownx.tilde
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+
+plugins:
+  - search:
+      lang:
+        - vi
+        - en
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/hungnguyen010518/database-tu-a-z
+
+nav:
+  - Trang chủ: index.md
+  - "Cấp 0 — Nhập môn":
+      - "Bài 1 — Dữ liệu, thông tin và tại sao phải lưu trữ": cap-0-nhap-mon/01-du-lieu-va-thong-tin.md
+  - "Bảng thuật ngữ": glossary.md
