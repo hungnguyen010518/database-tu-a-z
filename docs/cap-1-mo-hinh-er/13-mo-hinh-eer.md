@@ -222,6 +222,7 @@ nhan_vien(ma_nv, ho_ten, ngay_sinh, gioi_tinh, bo_phan)
 | Chuyên biệt hoá toàn phần | *total specialization* | Mọi thực thể cha phải thuộc ít nhất một lớp con — gạch đôi |
 | Chuyên biệt hoá bộ phận | *partial specialization* | Được phép chỉ thuộc lớp cha — gạch đơn |
 | Kết tập | *aggregation* | Coi cả một mối quan hệ như một thực thể để nối tiếp |
+| Chuyên biệt hoá theo thuộc tính | *attribute-defined specialization* | Lớp con được xác định bằng giá trị của một thuộc tính, không cần bảng riêng |
 
 ## 🖼️ Sơ đồ
 
