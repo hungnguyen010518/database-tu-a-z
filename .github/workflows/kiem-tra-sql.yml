@@ -87,6 +87,13 @@ jobs:
             WHERE conrelid = 'lop'::regclass AND contype = 'u'
               AND conkey = ARRAY[(SELECT attnum FROM pg_attribute
                                   WHERE attrelid = 'lop'::regclass AND attname = 'ma_gvcn')];"
+          echo '--- Tên ràng buộc tự sinh mà bài học viện dẫn đích danh ---'
+          for ten in lop_ma_gvcn_key lop_ten_lop_key diem_danh_ma_hs_ngay_key giao_vien_email_key; do
+            psql -v ON_ERROR_STOP=1 -t -A -c \
+              "SELECT CASE WHEN count(*) = 1 THEN 'OK: tồn tại ràng buộc $ten'
+                           ELSE 'LỖI: không có ràng buộc tên $ten — bài học đang viện dẫn sai' END
+               FROM pg_constraint WHERE conname = '$ten';"
+          done
 
       - name: Chạy mọi câu SQL trích từ bài học
         run: |
