@@ -884,6 +884,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#thuat-toan-tinh-bao-ong" class="md-nav__link">
+    <span class="md-ellipsis">
+      Thuật toán tính bao đóng
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#thuoc-tinh-khoa-va-khong-khoa" class="md-nav__link">
     <span class="md-ellipsis">
       Thuộc tính khoá và không khoá
@@ -992,15 +1001,6 @@
   <a href="#7-tu-bao-ong-ra-khoa-du-tuyen" class="md-nav__link">
     <span class="md-ellipsis">
       7. Từ bao đóng ra khoá dự tuyển
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#8-rut-gon-ve-phu-toi-thieu" class="md-nav__link">
-    <span class="md-ellipsis">
-      8. Rút gọn về phủ tối thiểu
     </span>
   </a>
   
@@ -1278,6 +1278,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#thuat-toan-tinh-bao-ong" class="md-nav__link">
+    <span class="md-ellipsis">
+      Thuật toán tính bao đóng
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#thuoc-tinh-khoa-va-khong-khoa" class="md-nav__link">
     <span class="md-ellipsis">
       Thuộc tính khoá và không khoá
@@ -1386,15 +1395,6 @@
   <a href="#7-tu-bao-ong-ra-khoa-du-tuyen" class="md-nav__link">
     <span class="md-ellipsis">
       7. Từ bao đóng ra khoá dự tuyển
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#8-rut-gon-ve-phu-toi-thieu" class="md-nav__link">
-    <span class="md-ellipsis">
-      8. Rút gọn về phủ tối thiểu
     </span>
   </a>
   
@@ -1661,11 +1661,72 @@
 <td>Đúng khi và chỉ khi <code>Y ⊆ X⁺</code></td>
 </tr>
 <tr>
-<td><code>X</code> có phải <strong>siêu khoá</strong> không?</td>
+<td><code>X</code> có phải <strong>siêu khoá</strong> (<a href="../../cap-1-mo-hinh-er/12-bay-loai-khoa/">Bài 12</a> mục 1) không?</td>
 <td>Đúng khi và chỉ khi <code>X⁺</code> = toàn bộ thuộc tính của bảng</td>
 </tr>
 </tbody>
 </table>
+<h3 id="thuat-toan-tinh-bao-ong">Thuật toán tính bao đóng<a class="headerlink" href="#thuat-toan-tinh-bao-ong" title="Permanent link">&para;</a></h3>
+<p>Đây là thuật toán bạn sẽ dùng đi dùng lại suốt Cấp 2. Nó chỉ có <strong>9 bước</strong>:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>THUẬT TOÁN: BAO-DONG(X, F)
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  Vào : X — một tập thuộc tính của lược đồ
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>        F — tập phụ thuộc hàm
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  Ra  : X⁺ — bao đóng của X đối với F
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>  Bước 1.  KQ ← X
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>  Bước 2.  Lặp lại:
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>  Bước 3.      thay_doi ← sai
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>  Bước 4.      Với mỗi phụ thuộc hàm (VT → VP) trong F:
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>  Bước 5.          Nếu VT ⊆ KQ và VP ⊄ KQ thì
+</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>  Bước 6.              KQ ← KQ ∪ VP
+</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>  Bước 7.              thay_doi ← đúng
+</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>  Bước 8.  Cho tới khi thay_doi = sai
+</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>  Bước 9.  Trả về KQ
+</span></code></pre></div>
+<p>Đọc từng bước thành lời:</p>
+<table>
+<thead>
+<tr>
+<th>Bước</th>
+<th>Ý nghĩa</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Bắt đầu với đúng những gì đã biết: chính <code>X</code></td>
+</tr>
+<tr>
+<td><strong>2</strong> và <strong>8</strong></td>
+<td>Một vòng lặp <em>"lặp lại … cho tới khi"</em>: quét trọn <code>F</code> một <strong>lượt</strong>, rồi hỏi lượt đó có thêm được gì không. Có thì quét lại từ đầu</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Đầu mỗi lượt, giả định lượt này sẽ không thêm được gì</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Duyệt <strong>mọi</strong> phụ thuộc hàm, không bỏ sót cái nào</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Điều kiện kép: vế trái đã biết hết (<code>VT ⊆ KQ</code>), <strong>và</strong> vế phải còn có cái mới (<code>VP ⊄ KQ</code>)</td>
+</tr>
+<tr>
+<td>6–7</td>
+<td>Thu nạp vế phải, và đánh dấu là lượt này có thay đổi</td>
+</tr>
+<tr>
+<td>9</td>
+<td>Khi một lượt trọn vẹn không thêm được gì nữa thì <code>KQ</code> chính là <code>X⁺</code></td>
+</tr>
+</tbody>
+</table>
+<p>Hai điều bảo đảm thuật toán luôn dừng và luôn đúng:</p>
+<ul>
+<li><strong>Luôn dừng</strong>: <code>KQ</code> chỉ có lớn lên, không bao giờ nhỏ đi, mà nó bị chặn trên bởi tập toàn bộ thuộc tính. Nên số lượt lặp nhiều nhất bằng số thuộc tính.</li>
+<li><strong>Luôn đúng</strong>: mỗi lần thêm ở Bước 6 chính là một lần dùng <strong>tiên đề bắc cầu</strong>; và khi dừng thì không còn tiên đề nào áp được nữa, nên không sót thuộc tính nào.</li>
+</ul>
 <h3 id="thuoc-tinh-khoa-va-khong-khoa">Thuộc tính khoá và không khoá<a class="headerlink" href="#thuoc-tinh-khoa-va-khong-khoa" title="Permanent link">&para;</a></h3>
 <p><strong>Thuộc tính khoá</strong> (<em>prime attribute</em>) là thuộc tính nằm trong <strong>ít nhất một</strong> khoá dự tuyển của lược đồ.</p>
 <p><strong>Thuộc tính không khoá</strong> (<em>non-prime attribute</em>) là thuộc tính <strong>không nằm trong bất kỳ</strong> khoá dự tuyển nào.</p>
@@ -1718,7 +1779,7 @@
 <tr>
 <td>Phụ thuộc bắc cầu</td>
 <td><em>transitive dependency</em></td>
-<td><code>X → Y → Z</code> mà X phải đi vòng qua trạm trung gian Y, và Y <strong>không</strong> xác định ngược lại X</td>
+<td><code>X → Y</code> và <code>Y → Z</code> mà <code>Y ↛ X</code>, và <code>Z</code> không nằm trong <code>X ∪ Y</code> — X phải đi vòng qua trạm trung gian Y</td>
 </tr>
 <tr>
 <td>Tiên đề Armstrong</td>
@@ -1768,7 +1829,7 @@
 </tbody>
 </table>
 <h2 id="so-o">🖼️ Sơ đồ<a class="headerlink" href="#so-o" title="Permanent link">&para;</a></h2>
-<p>Thuật toán tính bao đóng là một vòng lặp rất đơn giản — cứ quét đi quét lại tập PTH cho tới khi không thêm được gì nữa:</p>
+<p>Chín bước giả mã ở khối 📖 vẽ thành hình thì như sau. Số bước trong hình khớp đúng với số bước trong giả mã; vòng <strong>Bước 2 ↔ Bước 8</strong> chính là cái vòng <em>"lặp lại … cho tới khi"</em>:</p>
 <pre class="mermaid"><code>flowchart TB
     A["&lt;b&gt;Bước 1&lt;/b&gt;&lt;br/&gt;KQ ← X"]
     B["&lt;b&gt;Bước 3&lt;/b&gt;&lt;br/&gt;thay_doi ← sai"]
@@ -1831,6 +1892,12 @@
 <p>Ngược lại, mũi tên <code>email_gvcn → gvcn</code> thì <strong>chắc chắn</strong> đúng: lược đồ đích khai <code>email</code> là <code>UNIQUE</code> (ràng buộc <code>giao_vien_email_key</code>), nên email là một khoá dự tuyển của giáo viên.</p>
 </div>
 <h2 id="thuc-hanh">💻 Thực hành<a class="headerlink" href="#thuc-hanh" title="Permanent link">&para;</a></h2>
+<div class="admonition info">
+<p class="admonition-title">Dòng <code>-- KỲ VỌNG: N dòng</code> trong các khối SQL là gì?</p>
+<p>Từ Cấp 2 trở đi, nhiều khối SQL mở đầu bằng một dòng chú thích như <code>-- KỲ VỌNG: 5 dòng</code>.</p>
+<p>Nó nói cho bạn biết <strong>truy vấn phải trả về bao nhiêu dòng</strong>. Chạy ra khác là bạn gõ nhầm ở đâu đó — hoặc dữ liệu của bạn đã bị sửa.</p>
+<p>Dòng này cũng được máy chủ kiểm thử của khóa học đọc: mỗi lần bài học được cập nhật, nó chạy lại toàn bộ truy vấn trên một PostgreSQL thật và <strong>báo lỗi nếu số dòng không khớp</strong>. Nhờ vậy những con số bạn đọc trong bài không bao giờ là con số bịa.</p>
+</div>
 <h3 id="1-tap-phu-thuoc-ham-cua-bang_bet">1. Tập phụ thuộc hàm của <code>bang_bet</code><a class="headerlink" href="#1-tap-phu-thuoc-ham-cua-bang_bet" title="Permanent link">&para;</a></h3>
 <p>Trước khi tính gì, phải <strong>viết luật nghiệp vụ ra giấy</strong>. Đây là tập <code>F_bet</code> gồm 5 phụ thuộc hàm, kèm nguồn gốc nghiệp vụ của từng cái:</p>
 <table>
@@ -1872,26 +1939,27 @@
 <p>Không có PTH nào khác. Đặc biệt <strong>không</strong> có <code>ho_ten_hs → ngay_sinh_hs</code>: hai học sinh trùng tên là chuyện bình thường.</p>
 <h3 id="2-du-lieu-chi-dung-e-bac-bo">2. Dữ liệu chỉ dùng để BÁC BỎ<a class="headerlink" href="#2-du-lieu-chi-dung-e-bac-bo" title="Permanent link">&para;</a></h3>
 <p>Ta không chứng minh được PTH bằng SQL, nhưng ta <strong>săn phản ví dụ</strong> được. Mẫu truy vấn: gom nhóm theo vế trái, rồi đếm xem trong một nhóm có mấy giá trị vế phải khác nhau.</p>
-<div class="highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="s1">'ten_lop -&gt; gvcn'</span><span class="w">      </span><span class="k">AS</span><span class="w"> </span><span class="n">phu_thuoc_ham</span><span class="p">,</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">       </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w">               </span><span class="k">AS</span><span class="w"> </span><span class="n">so_nhom_vi_pham</span>
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="k">FROM</span><span class="w">  </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">ten_lop</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">bang_bet</span>
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">       </span><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">ten_lop</span><span class="w"> </span><span class="k">HAVING</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="k">DISTINCT</span><span class="w"> </span><span class="n">gvcn</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="n">t</span>
-</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="k">UNION</span><span class="w"> </span><span class="k">ALL</span>
-</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="k">SELECT</span><span class="w"> </span><span class="s1">'gvcn -&gt; ten_lop'</span><span class="p">,</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span>
-</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="k">FROM</span><span class="w">  </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">gvcn</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">bang_bet</span>
-</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">       </span><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">gvcn</span><span class="w"> </span><span class="k">HAVING</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="k">DISTINCT</span><span class="w"> </span><span class="n">ten_lop</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="n">t</span>
-</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="k">UNION</span><span class="w"> </span><span class="k">ALL</span>
-</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="k">SELECT</span><span class="w"> </span><span class="s1">'gvcn -&gt; email_gvcn'</span><span class="p">,</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span>
-</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="k">FROM</span><span class="w">  </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">gvcn</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">bang_bet</span>
-</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">       </span><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">gvcn</span><span class="w"> </span><span class="k">HAVING</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="k">DISTINCT</span><span class="w"> </span><span class="n">email_gvcn</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="n">t</span>
-</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="k">UNION</span><span class="w"> </span><span class="k">ALL</span>
-</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="k">SELECT</span><span class="w"> </span><span class="s1">'email_gvcn -&gt; gvcn'</span><span class="p">,</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span>
-</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="k">FROM</span><span class="w">  </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">email_gvcn</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">bang_bet</span>
-</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="w">       </span><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">email_gvcn</span><span class="w"> </span><span class="k">HAVING</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="k">DISTINCT</span><span class="w"> </span><span class="n">gvcn</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="n">t</span>
-</span><span id="__span-3-17"><a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="k">UNION</span><span class="w"> </span><span class="k">ALL</span>
-</span><span id="__span-3-18"><a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="k">SELECT</span><span class="w"> </span><span class="s1">'ten_lop -&gt; ho_ten_hs'</span><span class="p">,</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span>
-</span><span id="__span-3-19"><a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="k">FROM</span><span class="w">  </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">ten_lop</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">bang_bet</span>
-</span><span id="__span-3-20"><a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="w">       </span><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">ten_lop</span><span class="w"> </span><span class="k">HAVING</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="k">DISTINCT</span><span class="w"> </span><span class="n">ho_ten_hs</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="n">t</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1">-- KỲ VỌNG: 5 dòng</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="s1">'ten_lop -&gt; gvcn'</span><span class="w">      </span><span class="k">AS</span><span class="w"> </span><span class="n">phu_thuoc_ham</span><span class="p">,</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">       </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w">               </span><span class="k">AS</span><span class="w"> </span><span class="n">so_nhom_vi_pham</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="k">FROM</span><span class="w">  </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">ten_lop</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">bang_bet</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">       </span><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">ten_lop</span><span class="w"> </span><span class="k">HAVING</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="k">DISTINCT</span><span class="w"> </span><span class="n">gvcn</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="n">t</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="k">UNION</span><span class="w"> </span><span class="k">ALL</span>
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="k">SELECT</span><span class="w"> </span><span class="s1">'gvcn -&gt; ten_lop'</span><span class="p">,</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span>
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="k">FROM</span><span class="w">  </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">gvcn</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">bang_bet</span>
+</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">       </span><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">gvcn</span><span class="w"> </span><span class="k">HAVING</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="k">DISTINCT</span><span class="w"> </span><span class="n">ten_lop</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="n">t</span>
+</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="k">UNION</span><span class="w"> </span><span class="k">ALL</span>
+</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="k">SELECT</span><span class="w"> </span><span class="s1">'gvcn -&gt; email_gvcn'</span><span class="p">,</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span>
+</span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="k">FROM</span><span class="w">  </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">gvcn</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">bang_bet</span>
+</span><span id="__span-4-13"><a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">       </span><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">gvcn</span><span class="w"> </span><span class="k">HAVING</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="k">DISTINCT</span><span class="w"> </span><span class="n">email_gvcn</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="n">t</span>
+</span><span id="__span-4-14"><a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="k">UNION</span><span class="w"> </span><span class="k">ALL</span>
+</span><span id="__span-4-15"><a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="k">SELECT</span><span class="w"> </span><span class="s1">'email_gvcn -&gt; gvcn'</span><span class="p">,</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span>
+</span><span id="__span-4-16"><a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="k">FROM</span><span class="w">  </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">email_gvcn</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">bang_bet</span>
+</span><span id="__span-4-17"><a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="w">       </span><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">email_gvcn</span><span class="w"> </span><span class="k">HAVING</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="k">DISTINCT</span><span class="w"> </span><span class="n">gvcn</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="n">t</span>
+</span><span id="__span-4-18"><a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="k">UNION</span><span class="w"> </span><span class="k">ALL</span>
+</span><span id="__span-4-19"><a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="k">SELECT</span><span class="w"> </span><span class="s1">'ten_lop -&gt; ho_ten_hs'</span><span class="p">,</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span>
+</span><span id="__span-4-20"><a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="k">FROM</span><span class="w">  </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">ten_lop</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">bang_bet</span>
+</span><span id="__span-4-21"><a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="w">       </span><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">ten_lop</span><span class="w"> </span><span class="k">HAVING</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="k">DISTINCT</span><span class="w"> </span><span class="n">ho_ten_hs</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="n">t</span><span class="p">;</span>
 </span></code></pre></div>
 <p>Bốn dòng đầu ra <code>0</code>, dòng cuối ra <code>5</code>.</p>
 <p>Đọc kết quả cho <strong>thật đúng</strong>:</p>
@@ -1901,10 +1969,11 @@
 </ul>
 <h3 id="3-cai-gia-cua-phu-thuoc-bac-cau">3. Cái giá của phụ thuộc bắc cầu<a class="headerlink" href="#3-cai-gia-cua-phu-thuoc-bac-cau" title="Permanent link">&para;</a></h3>
 <p>Vì <code>email_gvcn</code> phụ thuộc bắc cầu vào khoá, nó bị chép lại y nguyên rất nhiều lần:</p>
-<div class="highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">gvcn</span><span class="p">,</span><span class="w"> </span><span class="n">email_gvcn</span><span class="p">,</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_dong_bi_chep_lai</span>
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="k">FROM</span><span class="w"> </span><span class="n">bang_bet</span>
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">gvcn</span><span class="p">,</span><span class="w"> </span><span class="n">email_gvcn</span>
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">so_dong_bi_chep_lai</span><span class="w"> </span><span class="k">DESC</span><span class="p">,</span><span class="w"> </span><span class="n">gvcn</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1">-- KỲ VỌNG: 5 dòng</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">gvcn</span><span class="p">,</span><span class="w"> </span><span class="n">email_gvcn</span><span class="p">,</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_dong_bi_chep_lai</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="k">FROM</span><span class="w"> </span><span class="n">bang_bet</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">gvcn</span><span class="p">,</span><span class="w"> </span><span class="n">email_gvcn</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">so_dong_bi_chep_lai</span><span class="w"> </span><span class="k">DESC</span><span class="p">,</span><span class="w"> </span><span class="n">gvcn</span><span class="p">;</span>
 </span></code></pre></div>
 <p>Năm dòng. Cô Lê Thị Mai (8A3) có <code>8</code>; ba giáo viên có <code>6</code>; cô Hoàng Thị Nhung (9A2) có <code>4</code>. Tổng đúng <code>30</code> — bằng số dòng của cả bảng.</p>
 <p>Nghĩa là: <strong>cùng một mẩu thông tin "email của cô Mai" được cất giữ 8 bản sao</strong>. Sửa email mà quên một bản là dữ liệu mâu thuẫn ngay. <a href="../17-dang-chuan-1nf-2nf/">Bài 17</a> gọi hiện tượng này bằng tên chính thức của nó — <em>bất thường khi sửa</em>.</p>
@@ -1973,57 +2042,58 @@
 </div>
 <h3 id="5-bao-ong-bang-may">5. Bao đóng bằng máy<a class="headerlink" href="#5-bao-ong-bang-may" title="Permanent link">&para;</a></h3>
 <p>Tính tay dễ sót. Hãy để PostgreSQL kiểm tra hộ. Trước hết, lưu tập PTH thành dữ liệu:</p>
-<div class="highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">b16_pth</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">;</span>
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">b16_ket_qua</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">;</span>
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">b16_pth</span><span class="w"> </span><span class="p">(</span>
-</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">    </span><span class="n">ma</span><span class="w">       </span><span class="nb">SMALLINT</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span>
-</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">    </span><span class="n">ve_trai</span><span class="w">  </span><span class="nb">TEXT</span><span class="p">[]</span><span class="w">   </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
-</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">    </span><span class="n">ve_phai</span><span class="w">  </span><span class="nb">TEXT</span><span class="p">[]</span><span class="w">   </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span>
-</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="p">);</span>
-</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
-</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">b16_ket_qua</span><span class="w"> </span><span class="p">(</span>
-</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">    </span><span class="n">buoc</span><span class="w">     </span><span class="nb">SMALLINT</span><span class="p">,</span>
-</span><span id="__span-5-12"><a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">    </span><span class="n">ap_dung</span><span class="w">  </span><span class="nb">TEXT</span><span class="p">,</span>
-</span><span id="__span-5-13"><a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="w">    </span><span class="n">kq</span><span class="w">       </span><span class="nb">TEXT</span><span class="p">[]</span>
-</span><span id="__span-5-14"><a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="p">);</span>
+<div class="highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">b16_pth</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">;</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">b16_ket_qua</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">;</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">b16_pth</span><span class="w"> </span><span class="p">(</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">    </span><span class="n">ma</span><span class="w">       </span><span class="nb">SMALLINT</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">    </span><span class="n">ve_trai</span><span class="w">  </span><span class="nb">TEXT</span><span class="p">[]</span><span class="w">   </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">    </span><span class="n">ve_phai</span><span class="w">  </span><span class="nb">TEXT</span><span class="p">[]</span><span class="w">   </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span>
+</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="p">);</span>
+</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
+</span><span id="__span-6-10"><a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">b16_ket_qua</span><span class="w"> </span><span class="p">(</span>
+</span><span id="__span-6-11"><a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">    </span><span class="n">buoc</span><span class="w">     </span><span class="nb">SMALLINT</span><span class="p">,</span>
+</span><span id="__span-6-12"><a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="w">    </span><span class="n">ap_dung</span><span class="w">  </span><span class="nb">TEXT</span><span class="p">,</span>
+</span><span id="__span-6-13"><a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="w">    </span><span class="n">kq</span><span class="w">       </span><span class="nb">TEXT</span><span class="p">[]</span>
+</span><span id="__span-6-14"><a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="p">);</span>
 </span></code></pre></div>
 <p>Nạp tập <code>F_1nf</code> — tập phụ thuộc hàm của bảng mà <a href="../17-dang-chuan-1nf-2nf/">Bài 17</a> sẽ dựng sau khi đưa <code>bang_bet</code> về Dạng chuẩn 1. Ta dùng tập này vì nó có khoá gồm <strong>hai</strong> thuộc tính, thú vị hơn:</p>
-<div class="highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">b16_pth</span><span class="w"> </span><span class="p">(</span><span class="n">ma</span><span class="p">,</span><span class="w"> </span><span class="n">ve_trai</span><span class="p">,</span><span class="w"> </span><span class="n">ve_phai</span><span class="p">)</span><span class="w"> </span><span class="k">VALUES</span>
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="nb">ARRAY</span><span class="p">[</span><span class="s1">'ma_hs'</span><span class="p">],</span><span class="w">              </span><span class="nb">ARRAY</span><span class="p">[</span><span class="s1">'ho_ten_hs'</span><span class="p">,</span><span class="s1">'ngay_sinh_hs'</span><span class="p">,</span><span class="s1">'dia_chi'</span><span class="p">,</span><span class="s1">'ten_lop'</span><span class="p">]),</span>
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="nb">ARRAY</span><span class="p">[</span><span class="s1">'ten_lop'</span><span class="p">],</span><span class="w">            </span><span class="nb">ARRAY</span><span class="p">[</span><span class="s1">'gvcn'</span><span class="p">]),</span>
-</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="nb">ARRAY</span><span class="p">[</span><span class="s1">'gvcn'</span><span class="p">],</span><span class="w">               </span><span class="nb">ARRAY</span><span class="p">[</span><span class="s1">'ten_lop'</span><span class="p">]),</span>
-</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="nb">ARRAY</span><span class="p">[</span><span class="s1">'gvcn'</span><span class="p">],</span><span class="w">               </span><span class="nb">ARRAY</span><span class="p">[</span><span class="s1">'email_gvcn'</span><span class="p">]),</span>
-</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="w"> </span><span class="nb">ARRAY</span><span class="p">[</span><span class="s1">'email_gvcn'</span><span class="p">],</span><span class="w">         </span><span class="nb">ARRAY</span><span class="p">[</span><span class="s1">'gvcn'</span><span class="p">]),</span>
-</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="w"> </span><span class="nb">ARRAY</span><span class="p">[</span><span class="s1">'ma_hs'</span><span class="p">,</span><span class="s1">'ten_mon'</span><span class="p">],</span><span class="w">    </span><span class="nb">ARRAY</span><span class="p">[</span><span class="s1">'diem_so'</span><span class="p">]);</span>
+<div class="highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">b16_pth</span><span class="w"> </span><span class="p">(</span><span class="n">ma</span><span class="p">,</span><span class="w"> </span><span class="n">ve_trai</span><span class="p">,</span><span class="w"> </span><span class="n">ve_phai</span><span class="p">)</span><span class="w"> </span><span class="k">VALUES</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="nb">ARRAY</span><span class="p">[</span><span class="s1">'ma_hs'</span><span class="p">],</span><span class="w">              </span><span class="nb">ARRAY</span><span class="p">[</span><span class="s1">'ho_ten_hs'</span><span class="p">,</span><span class="s1">'ngay_sinh_hs'</span><span class="p">,</span><span class="s1">'dia_chi'</span><span class="p">,</span><span class="s1">'ten_lop'</span><span class="p">]),</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="nb">ARRAY</span><span class="p">[</span><span class="s1">'ten_lop'</span><span class="p">],</span><span class="w">            </span><span class="nb">ARRAY</span><span class="p">[</span><span class="s1">'gvcn'</span><span class="p">]),</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="nb">ARRAY</span><span class="p">[</span><span class="s1">'gvcn'</span><span class="p">],</span><span class="w">               </span><span class="nb">ARRAY</span><span class="p">[</span><span class="s1">'ten_lop'</span><span class="p">]),</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="nb">ARRAY</span><span class="p">[</span><span class="s1">'gvcn'</span><span class="p">],</span><span class="w">               </span><span class="nb">ARRAY</span><span class="p">[</span><span class="s1">'email_gvcn'</span><span class="p">]),</span>
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="w"> </span><span class="nb">ARRAY</span><span class="p">[</span><span class="s1">'email_gvcn'</span><span class="p">],</span><span class="w">         </span><span class="nb">ARRAY</span><span class="p">[</span><span class="s1">'gvcn'</span><span class="p">]),</span>
+</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="w"> </span><span class="nb">ARRAY</span><span class="p">[</span><span class="s1">'ma_hs'</span><span class="p">,</span><span class="s1">'ten_mon'</span><span class="p">],</span><span class="w">    </span><span class="nb">ARRAY</span><span class="p">[</span><span class="s1">'diem_so'</span><span class="p">]);</span>
 </span></code></pre></div>
 <p>Bây giờ dịch thẳng 9 bước giả mã thành một khối lệnh:</p>
-<div class="highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="k">DO</span><span class="w"> </span><span class="err">$$</span>
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="k">DECLARE</span>
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">    </span><span class="n">kq</span><span class="w">        </span><span class="nb">text</span><span class="p">[]</span><span class="w">   </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="nb">ARRAY</span><span class="p">[</span><span class="s1">'ten_lop'</span><span class="p">];</span><span class="w">   </span><span class="c1">-- ← X cần tính bao đóng</span>
-</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">    </span><span class="n">buoc</span><span class="w">      </span><span class="nb">smallint</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">    </span><span class="n">thay_doi</span><span class="w">  </span><span class="nb">boolean</span><span class="w">  </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
-</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">    </span><span class="n">f</span><span class="w">         </span><span class="n">record</span><span class="p">;</span>
-</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="k">BEGIN</span>
-</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="w">    </span><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">b16_ket_qua</span><span class="w"> </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="n">buoc</span><span class="p">,</span><span class="w"> </span><span class="s1">'Bước 1 — khởi tạo KQ ← X'</span><span class="p">,</span><span class="w"> </span><span class="n">kq</span><span class="p">);</span>
-</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="w">    </span><span class="n">WHILE</span><span class="w"> </span><span class="n">thay_doi</span><span class="w"> </span><span class="n">LOOP</span><span class="w">                                   </span><span class="c1">-- Bước 2 và 8</span>
-</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="w">        </span><span class="n">thay_doi</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span><span class="w">                                </span><span class="c1">-- Bước 3</span>
-</span><span id="__span-7-11"><a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="w">        </span><span class="k">FOR</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">b16_pth</span><span class="w"> </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">ma</span><span class="w"> </span><span class="n">LOOP</span><span class="w">   </span><span class="c1">-- Bước 4</span>
-</span><span id="__span-7-12"><a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="w">            </span><span class="k">IF</span><span class="w"> </span><span class="n">f</span><span class="p">.</span><span class="n">ve_trai</span><span class="w"> </span><span class="o">&lt;@</span><span class="w"> </span><span class="n">kq</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="p">(</span><span class="n">f</span><span class="p">.</span><span class="n">ve_phai</span><span class="w"> </span><span class="o">&lt;@</span><span class="w"> </span><span class="n">kq</span><span class="p">)</span><span class="w"> </span><span class="k">THEN</span><span class="w">   </span><span class="c1">-- Bước 5</span>
-</span><span id="__span-7-13"><a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="w">                </span><span class="n">kq</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">array_agg</span><span class="p">(</span><span class="k">DISTINCT</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w">  </span><span class="c1">-- Bước 6</span>
-</span><span id="__span-7-14"><a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="w">                       </span><span class="k">FROM</span><span class="w"> </span><span class="k">unnest</span><span class="p">(</span><span class="n">kq</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">f</span><span class="p">.</span><span class="n">ve_phai</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">t</span><span class="p">(</span><span class="n">x</span><span class="p">));</span>
-</span><span id="__span-7-15"><a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="w">                </span><span class="n">buoc</span><span class="w">     </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="n">buoc</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-</span><span id="__span-7-16"><a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="w">                </span><span class="n">thay_doi</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span><span class="w">                         </span><span class="c1">-- Bước 7</span>
-</span><span id="__span-7-17"><a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a><span class="w">                </span><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">b16_ket_qua</span>
-</span><span id="__span-7-18"><a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a><span class="w">                </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="n">buoc</span><span class="p">,</span><span class="w"> </span><span class="s1">'áp dụng PTH số '</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">f</span><span class="p">.</span><span class="n">ma</span><span class="p">,</span><span class="w"> </span><span class="n">kq</span><span class="p">);</span>
-</span><span id="__span-7-19"><a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a><span class="w">            </span><span class="k">END</span><span class="w"> </span><span class="k">IF</span><span class="p">;</span>
-</span><span id="__span-7-20"><a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a><span class="w">        </span><span class="k">END</span><span class="w"> </span><span class="n">LOOP</span><span class="p">;</span>
-</span><span id="__span-7-21"><a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a><span class="w">    </span><span class="k">END</span><span class="w"> </span><span class="n">LOOP</span><span class="p">;</span>
-</span><span id="__span-7-22"><a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a><span class="k">END</span><span class="w"> </span><span class="err">$$</span><span class="p">;</span>
-</span><span id="__span-7-23"><a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>
-</span><span id="__span-7-24"><a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">buoc</span><span class="p">,</span><span class="w"> </span><span class="n">ap_dung</span><span class="p">,</span><span class="w"> </span><span class="n">array_to_string</span><span class="p">(</span><span class="n">kq</span><span class="p">,</span><span class="w"> </span><span class="s1">', '</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">bao_dong</span>
-</span><span id="__span-7-25"><a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a><span class="k">FROM</span><span class="w"> </span><span class="n">b16_ket_qua</span>
-</span><span id="__span-7-26"><a id="__codelineno-7-26" name="__codelineno-7-26" href="#__codelineno-7-26"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">buoc</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="k">DO</span><span class="w"> </span><span class="err">$$</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="k">DECLARE</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">    </span><span class="n">kq</span><span class="w">        </span><span class="nb">text</span><span class="p">[]</span><span class="w">   </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="nb">ARRAY</span><span class="p">[</span><span class="s1">'ten_lop'</span><span class="p">];</span><span class="w">   </span><span class="c1">-- ← X cần tính bao đóng</span>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">    </span><span class="n">buoc</span><span class="w">      </span><span class="nb">smallint</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">    </span><span class="n">thay_doi</span><span class="w">  </span><span class="nb">boolean</span><span class="w">  </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">    </span><span class="n">f</span><span class="w">         </span><span class="n">record</span><span class="p">;</span>
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="k">BEGIN</span>
+</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">    </span><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">b16_ket_qua</span><span class="w"> </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="n">buoc</span><span class="p">,</span><span class="w"> </span><span class="s1">'Bước 1 — khởi tạo KQ ← X'</span><span class="p">,</span><span class="w"> </span><span class="n">kq</span><span class="p">);</span>
+</span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">    </span><span class="n">WHILE</span><span class="w"> </span><span class="n">thay_doi</span><span class="w"> </span><span class="n">LOOP</span><span class="w">                                   </span><span class="c1">-- Bước 2 và 8</span>
+</span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="w">        </span><span class="n">thay_doi</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span><span class="w">                                </span><span class="c1">-- Bước 3</span>
+</span><span id="__span-8-11"><a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="w">        </span><span class="k">FOR</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">b16_pth</span><span class="w"> </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">ma</span><span class="w"> </span><span class="n">LOOP</span><span class="w">   </span><span class="c1">-- Bước 4</span>
+</span><span id="__span-8-12"><a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="w">            </span><span class="k">IF</span><span class="w"> </span><span class="n">f</span><span class="p">.</span><span class="n">ve_trai</span><span class="w"> </span><span class="o">&lt;@</span><span class="w"> </span><span class="n">kq</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="p">(</span><span class="n">f</span><span class="p">.</span><span class="n">ve_phai</span><span class="w"> </span><span class="o">&lt;@</span><span class="w"> </span><span class="n">kq</span><span class="p">)</span><span class="w"> </span><span class="k">THEN</span><span class="w">   </span><span class="c1">-- Bước 5</span>
+</span><span id="__span-8-13"><a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="w">                </span><span class="n">kq</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">array_agg</span><span class="p">(</span><span class="k">DISTINCT</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w">  </span><span class="c1">-- Bước 6</span>
+</span><span id="__span-8-14"><a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="w">                       </span><span class="k">FROM</span><span class="w"> </span><span class="k">unnest</span><span class="p">(</span><span class="n">kq</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">f</span><span class="p">.</span><span class="n">ve_phai</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">t</span><span class="p">(</span><span class="n">x</span><span class="p">));</span>
+</span><span id="__span-8-15"><a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="w">                </span><span class="n">buoc</span><span class="w">     </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="n">buoc</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+</span><span id="__span-8-16"><a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="w">                </span><span class="n">thay_doi</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span><span class="w">                         </span><span class="c1">-- Bước 7</span>
+</span><span id="__span-8-17"><a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="w">                </span><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">b16_ket_qua</span>
+</span><span id="__span-8-18"><a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a><span class="w">                </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="n">buoc</span><span class="p">,</span><span class="w"> </span><span class="s1">'áp dụng PTH số '</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">f</span><span class="p">.</span><span class="n">ma</span><span class="p">,</span><span class="w"> </span><span class="n">kq</span><span class="p">);</span>
+</span><span id="__span-8-19"><a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a><span class="w">            </span><span class="k">END</span><span class="w"> </span><span class="k">IF</span><span class="p">;</span>
+</span><span id="__span-8-20"><a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a><span class="w">        </span><span class="k">END</span><span class="w"> </span><span class="n">LOOP</span><span class="p">;</span>
+</span><span id="__span-8-21"><a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a><span class="w">    </span><span class="k">END</span><span class="w"> </span><span class="n">LOOP</span><span class="p">;</span>
+</span><span id="__span-8-22"><a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a><span class="k">END</span><span class="w"> </span><span class="err">$$</span><span class="p">;</span>
+</span><span id="__span-8-23"><a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a>
+</span><span id="__span-8-24"><a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a><span class="c1">-- KỲ VỌNG: 3 dòng</span>
+</span><span id="__span-8-25"><a id="__codelineno-8-25" name="__codelineno-8-25" href="#__codelineno-8-25"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">buoc</span><span class="p">,</span><span class="w"> </span><span class="n">ap_dung</span><span class="p">,</span><span class="w"> </span><span class="n">array_to_string</span><span class="p">(</span><span class="n">kq</span><span class="p">,</span><span class="w"> </span><span class="s1">', '</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">bao_dong</span>
+</span><span id="__span-8-26"><a id="__codelineno-8-26" name="__codelineno-8-26" href="#__codelineno-8-26"></a><span class="k">FROM</span><span class="w"> </span><span class="n">b16_ket_qua</span>
+</span><span id="__span-8-27"><a id="__codelineno-8-27" name="__codelineno-8-27" href="#__codelineno-8-27"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">buoc</span><span class="p">;</span>
 </span></code></pre></div>
 <p>Ba dòng, và dòng cuối đúng bằng kết quả tính tay ở mục 4: <code>email_gvcn, gvcn, ten_lop</code>.</p>
 <h3 id="6-bao-ong-tinh-bang-tay-vi-du-2-ma_hs-ten_mon">6. Bao đóng tính bằng tay — ví dụ 2: <code>{ma_hs, ten_mon}⁺</code><a class="headerlink" href="#6-bao-ong-tinh-bang-tay-vi-du-2-ma_hs-ten_mon" title="Permanent link">&para;</a></h3>
@@ -2081,56 +2151,57 @@
 </table>
 <p><code>{ma_hs, ten_mon}⁺</code> = <strong>toàn bộ 9 thuộc tính</strong> → đây là một <strong>siêu khoá</strong>.</p>
 <p>Muốn máy xác nhận, chỉ cần sửa đúng một dòng trong khối lệnh ở mục 5:</p>
-<div class="highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="k">TRUNCATE</span><span class="w"> </span><span class="n">b16_ket_qua</span><span class="p">;</span>
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>
-</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="k">DO</span><span class="w"> </span><span class="err">$$</span>
-</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="k">DECLARE</span>
-</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">    </span><span class="n">kq</span><span class="w">        </span><span class="nb">text</span><span class="p">[]</span><span class="w">   </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="nb">ARRAY</span><span class="p">[</span><span class="s1">'ma_hs'</span><span class="p">,</span><span class="s1">'ten_mon'</span><span class="p">];</span><span class="w">   </span><span class="c1">-- ← đổi X ở đây</span>
-</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">    </span><span class="n">buoc</span><span class="w">      </span><span class="nb">smallint</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">    </span><span class="n">thay_doi</span><span class="w">  </span><span class="nb">boolean</span><span class="w">  </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
-</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">    </span><span class="n">f</span><span class="w">         </span><span class="n">record</span><span class="p">;</span>
-</span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="k">BEGIN</span>
-</span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="w">    </span><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">b16_ket_qua</span><span class="w"> </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="n">buoc</span><span class="p">,</span><span class="w"> </span><span class="s1">'Bước 1 — khởi tạo KQ ← X'</span><span class="p">,</span><span class="w"> </span><span class="n">kq</span><span class="p">);</span>
-</span><span id="__span-8-11"><a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="w">    </span><span class="n">WHILE</span><span class="w"> </span><span class="n">thay_doi</span><span class="w"> </span><span class="n">LOOP</span>
-</span><span id="__span-8-12"><a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="w">        </span><span class="n">thay_doi</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
-</span><span id="__span-8-13"><a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="w">        </span><span class="k">FOR</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">b16_pth</span><span class="w"> </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">ma</span><span class="w"> </span><span class="n">LOOP</span>
-</span><span id="__span-8-14"><a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="w">            </span><span class="k">IF</span><span class="w"> </span><span class="n">f</span><span class="p">.</span><span class="n">ve_trai</span><span class="w"> </span><span class="o">&lt;@</span><span class="w"> </span><span class="n">kq</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="p">(</span><span class="n">f</span><span class="p">.</span><span class="n">ve_phai</span><span class="w"> </span><span class="o">&lt;@</span><span class="w"> </span><span class="n">kq</span><span class="p">)</span><span class="w"> </span><span class="k">THEN</span>
-</span><span id="__span-8-15"><a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="w">                </span><span class="n">kq</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">array_agg</span><span class="p">(</span><span class="k">DISTINCT</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">x</span><span class="p">)</span>
-</span><span id="__span-8-16"><a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="w">                       </span><span class="k">FROM</span><span class="w"> </span><span class="k">unnest</span><span class="p">(</span><span class="n">kq</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">f</span><span class="p">.</span><span class="n">ve_phai</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">t</span><span class="p">(</span><span class="n">x</span><span class="p">));</span>
-</span><span id="__span-8-17"><a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="w">                </span><span class="n">buoc</span><span class="w">     </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="n">buoc</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-</span><span id="__span-8-18"><a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a><span class="w">                </span><span class="n">thay_doi</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
-</span><span id="__span-8-19"><a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a><span class="w">                </span><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">b16_ket_qua</span>
-</span><span id="__span-8-20"><a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a><span class="w">                </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="n">buoc</span><span class="p">,</span><span class="w"> </span><span class="s1">'áp dụng PTH số '</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">f</span><span class="p">.</span><span class="n">ma</span><span class="p">,</span><span class="w"> </span><span class="n">kq</span><span class="p">);</span>
-</span><span id="__span-8-21"><a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a><span class="w">            </span><span class="k">END</span><span class="w"> </span><span class="k">IF</span><span class="p">;</span>
-</span><span id="__span-8-22"><a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a><span class="w">        </span><span class="k">END</span><span class="w"> </span><span class="n">LOOP</span><span class="p">;</span>
-</span><span id="__span-8-23"><a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a><span class="w">    </span><span class="k">END</span><span class="w"> </span><span class="n">LOOP</span><span class="p">;</span>
-</span><span id="__span-8-24"><a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a><span class="k">END</span><span class="w"> </span><span class="err">$$</span><span class="p">;</span>
-</span><span id="__span-8-25"><a id="__codelineno-8-25" name="__codelineno-8-25" href="#__codelineno-8-25"></a>
-</span><span id="__span-8-26"><a id="__codelineno-8-26" name="__codelineno-8-26" href="#__codelineno-8-26"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">buoc</span><span class="p">,</span><span class="w"> </span><span class="n">ap_dung</span><span class="p">,</span>
-</span><span id="__span-8-27"><a id="__codelineno-8-27" name="__codelineno-8-27" href="#__codelineno-8-27"></a><span class="w">       </span><span class="k">cardinality</span><span class="p">(</span><span class="n">kq</span><span class="p">)</span><span class="w">                </span><span class="k">AS</span><span class="w"> </span><span class="n">so_thuoc_tinh</span><span class="p">,</span>
-</span><span id="__span-8-28"><a id="__codelineno-8-28" name="__codelineno-8-28" href="#__codelineno-8-28"></a><span class="w">       </span><span class="n">array_to_string</span><span class="p">(</span><span class="n">kq</span><span class="p">,</span><span class="w"> </span><span class="s1">', '</span><span class="p">)</span><span class="w">      </span><span class="k">AS</span><span class="w"> </span><span class="n">bao_dong</span>
-</span><span id="__span-8-29"><a id="__codelineno-8-29" name="__codelineno-8-29" href="#__codelineno-8-29"></a><span class="k">FROM</span><span class="w"> </span><span class="n">b16_ket_qua</span>
-</span><span id="__span-8-30"><a id="__codelineno-8-30" name="__codelineno-8-30" href="#__codelineno-8-30"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">buoc</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="k">TRUNCATE</span><span class="w"> </span><span class="n">b16_ket_qua</span><span class="p">;</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="k">DO</span><span class="w"> </span><span class="err">$$</span>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="k">DECLARE</span>
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="w">    </span><span class="n">kq</span><span class="w">        </span><span class="nb">text</span><span class="p">[]</span><span class="w">   </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="nb">ARRAY</span><span class="p">[</span><span class="s1">'ma_hs'</span><span class="p">,</span><span class="s1">'ten_mon'</span><span class="p">];</span><span class="w">   </span><span class="c1">-- ← đổi X ở đây</span>
+</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="w">    </span><span class="n">buoc</span><span class="w">      </span><span class="nb">smallint</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="w">    </span><span class="n">thay_doi</span><span class="w">  </span><span class="nb">boolean</span><span class="w">  </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="w">    </span><span class="n">f</span><span class="w">         </span><span class="n">record</span><span class="p">;</span>
+</span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="k">BEGIN</span>
+</span><span id="__span-9-10"><a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="w">    </span><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">b16_ket_qua</span><span class="w"> </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="n">buoc</span><span class="p">,</span><span class="w"> </span><span class="s1">'Bước 1 — khởi tạo KQ ← X'</span><span class="p">,</span><span class="w"> </span><span class="n">kq</span><span class="p">);</span>
+</span><span id="__span-9-11"><a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="w">    </span><span class="n">WHILE</span><span class="w"> </span><span class="n">thay_doi</span><span class="w"> </span><span class="n">LOOP</span>
+</span><span id="__span-9-12"><a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="w">        </span><span class="n">thay_doi</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+</span><span id="__span-9-13"><a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="w">        </span><span class="k">FOR</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">b16_pth</span><span class="w"> </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">ma</span><span class="w"> </span><span class="n">LOOP</span>
+</span><span id="__span-9-14"><a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a><span class="w">            </span><span class="k">IF</span><span class="w"> </span><span class="n">f</span><span class="p">.</span><span class="n">ve_trai</span><span class="w"> </span><span class="o">&lt;@</span><span class="w"> </span><span class="n">kq</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="p">(</span><span class="n">f</span><span class="p">.</span><span class="n">ve_phai</span><span class="w"> </span><span class="o">&lt;@</span><span class="w"> </span><span class="n">kq</span><span class="p">)</span><span class="w"> </span><span class="k">THEN</span>
+</span><span id="__span-9-15"><a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a><span class="w">                </span><span class="n">kq</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">array_agg</span><span class="p">(</span><span class="k">DISTINCT</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">x</span><span class="p">)</span>
+</span><span id="__span-9-16"><a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a><span class="w">                       </span><span class="k">FROM</span><span class="w"> </span><span class="k">unnest</span><span class="p">(</span><span class="n">kq</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">f</span><span class="p">.</span><span class="n">ve_phai</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">t</span><span class="p">(</span><span class="n">x</span><span class="p">));</span>
+</span><span id="__span-9-17"><a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a><span class="w">                </span><span class="n">buoc</span><span class="w">     </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="n">buoc</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+</span><span id="__span-9-18"><a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a><span class="w">                </span><span class="n">thay_doi</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+</span><span id="__span-9-19"><a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a><span class="w">                </span><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">b16_ket_qua</span>
+</span><span id="__span-9-20"><a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a><span class="w">                </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="n">buoc</span><span class="p">,</span><span class="w"> </span><span class="s1">'áp dụng PTH số '</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">f</span><span class="p">.</span><span class="n">ma</span><span class="p">,</span><span class="w"> </span><span class="n">kq</span><span class="p">);</span>
+</span><span id="__span-9-21"><a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a><span class="w">            </span><span class="k">END</span><span class="w"> </span><span class="k">IF</span><span class="p">;</span>
+</span><span id="__span-9-22"><a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a><span class="w">        </span><span class="k">END</span><span class="w"> </span><span class="n">LOOP</span><span class="p">;</span>
+</span><span id="__span-9-23"><a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a><span class="w">    </span><span class="k">END</span><span class="w"> </span><span class="n">LOOP</span><span class="p">;</span>
+</span><span id="__span-9-24"><a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a><span class="k">END</span><span class="w"> </span><span class="err">$$</span><span class="p">;</span>
+</span><span id="__span-9-25"><a id="__codelineno-9-25" name="__codelineno-9-25" href="#__codelineno-9-25"></a>
+</span><span id="__span-9-26"><a id="__codelineno-9-26" name="__codelineno-9-26" href="#__codelineno-9-26"></a><span class="c1">-- KỲ VỌNG: 5 dòng</span>
+</span><span id="__span-9-27"><a id="__codelineno-9-27" name="__codelineno-9-27" href="#__codelineno-9-27"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">buoc</span><span class="p">,</span><span class="w"> </span><span class="n">ap_dung</span><span class="p">,</span>
+</span><span id="__span-9-28"><a id="__codelineno-9-28" name="__codelineno-9-28" href="#__codelineno-9-28"></a><span class="w">       </span><span class="k">cardinality</span><span class="p">(</span><span class="n">kq</span><span class="p">)</span><span class="w">                </span><span class="k">AS</span><span class="w"> </span><span class="n">so_thuoc_tinh</span><span class="p">,</span>
+</span><span id="__span-9-29"><a id="__codelineno-9-29" name="__codelineno-9-29" href="#__codelineno-9-29"></a><span class="w">       </span><span class="n">array_to_string</span><span class="p">(</span><span class="n">kq</span><span class="p">,</span><span class="w"> </span><span class="s1">', '</span><span class="p">)</span><span class="w">      </span><span class="k">AS</span><span class="w"> </span><span class="n">bao_dong</span>
+</span><span id="__span-9-30"><a id="__codelineno-9-30" name="__codelineno-9-30" href="#__codelineno-9-30"></a><span class="k">FROM</span><span class="w"> </span><span class="n">b16_ket_qua</span>
+</span><span id="__span-9-31"><a id="__codelineno-9-31" name="__codelineno-9-31" href="#__codelineno-9-31"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">buoc</span><span class="p">;</span>
 </span></code></pre></div>
 <p>Năm dòng, <code>so_thuoc_tinh</code> tăng dần <code>2 → 6 → 7 → 8 → 9</code>.</p>
 <h3 id="7-tu-bao-ong-ra-khoa-du-tuyen">7. Từ bao đóng ra khoá dự tuyển<a class="headerlink" href="#7-tu-bao-ong-ra-khoa-du-tuyen" title="Permanent link">&para;</a></h3>
 <p>Bao đóng mới chỉ cho biết <em>siêu khoá hay không</em>. Muốn ra <strong>khoá dự tuyển</strong> (siêu khoá tối giản — <a href="../../cap-1-mo-hinh-er/12-bay-loai-khoa/">Bài 12</a> mục 2) thì dùng thuật toán này:</p>
-<div class="highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>THUẬT TOÁN: TIM-KHOA-DU-TUYEN(U, F)
-</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>  Vào : U — toàn bộ thuộc tính của lược đồ
-</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>        F — tập phụ thuộc hàm
-</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
-</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>  Bước 1.  L ← các thuộc tính CHỈ xuất hiện ở vế TRÁI,
-</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>                hoặc không xuất hiện trong F lần nào
-</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>  Bước 2.  R ← các thuộc tính CHỈ xuất hiện ở vế PHẢI
-</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>  Bước 3.  Mọi khoá dự tuyển đều PHẢI chứa toàn bộ L
-</span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>                và KHÔNG chứa thuộc tính nào của R
-</span><span id="__span-9-10"><a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>  Bước 4.  Nếu BAO-DONG(L, F) = U
-</span><span id="__span-9-11"><a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>               thì L là khoá dự tuyển DUY NHẤT → dừng
-</span><span id="__span-9-12"><a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>  Bước 5.  Ngược lại, với mọi tập con S của (U − L − R),
-</span><span id="__span-9-13"><a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>                duyệt theo kích thước tăng dần:
-</span><span id="__span-9-14"><a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>  Bước 6.      Nếu BAO-DONG(L ∪ S, F) = U
-</span><span id="__span-9-15"><a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>                   và L ∪ S không chứa khoá dự tuyển nào đã tìm được
-</span><span id="__span-9-16"><a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>  Bước 7.          thì ghi nhận L ∪ S là một khoá dự tuyển
+<div class="highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>THUẬT TOÁN: TIM-KHOA-DU-TUYEN(U, F)
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>  Vào : U — toàn bộ thuộc tính của lược đồ
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>        F — tập phụ thuộc hàm
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>  Bước 1.  L ← các thuộc tính CHỈ xuất hiện ở vế TRÁI,
+</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>                hoặc không xuất hiện trong F lần nào
+</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>  Bước 2.  R ← các thuộc tính CHỈ xuất hiện ở vế PHẢI
+</span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>  Bước 3.  Mọi khoá dự tuyển đều PHẢI chứa toàn bộ L
+</span><span id="__span-10-9"><a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>                và KHÔNG chứa thuộc tính nào của R
+</span><span id="__span-10-10"><a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>  Bước 4.  Nếu BAO-DONG(L, F) = U
+</span><span id="__span-10-11"><a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>               thì L là khoá dự tuyển DUY NHẤT → dừng
+</span><span id="__span-10-12"><a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>  Bước 5.  Ngược lại, với mọi tập con S của (U − L − R),
+</span><span id="__span-10-13"><a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>                duyệt theo kích thước tăng dần:
+</span><span id="__span-10-14"><a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>  Bước 6.      Nếu BAO-DONG(L ∪ S, F) = U
+</span><span id="__span-10-15"><a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>                   và L ∪ S không chứa khoá dự tuyển nào đã tìm được
+</span><span id="__span-10-16"><a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>  Bước 7.          thì ghi nhận L ∪ S là một khoá dự tuyển
 </span></code></pre></div>
 <p>Vì sao Bước 3 đúng? Nếu một thuộc tính <code>A</code> <strong>không bao giờ</strong> nằm ở vế phải, thì không PTH nào sinh ra được <code>A</code>. Muốn <code>A</code> có mặt trong bao đóng, cách duy nhất là cho <code>A</code> vào <code>X</code> ngay từ đầu. Vậy <code>A</code> phải nằm trong mọi khoá.</p>
 <p><strong>Áp dụng cho <code>F_1nf</code>:</strong></p>
@@ -2164,19 +2235,68 @@
 <li><strong>Bước 4</strong> — <code>{stt}⁺</code>: PTH f1 kéo ngay 11 thuộc tính còn lại vào → đủ 12.</li>
 <li>→ <strong><code>{stt}</code> là khoá dự tuyển duy nhất</strong> của <code>bang_bet</code>. Mọi thuộc tính khác đều là thuộc tính không khoá.</li>
 </ul>
+<p><strong>Áp dụng cho một lược đồ có NHIỀU khoá dự tuyển</strong> — lần này Bước 4 không cứu được, phải dùng tới Bước 5–7.</p>
+<p>Bối cảnh: lớp phụ đạo. Mỗi học sinh học một môn với đúng một giáo viên phụ đạo, và mỗi giáo viên phụ đạo chỉ dạy một môn. Lược đồ <code>R(ma_hs, ten_mon, ten_gv)</code> với hai PTH:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>p1:  (ma_hs, ten_mon) → ten_gv
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>p2:  ten_gv → ten_mon
+</span></code></pre></div>
+<ul>
+<li><strong>Bước 1</strong> — <code>ma_hs</code> xuất hiện ở vế trái (p1) và không bao giờ ở vế phải → <code>L = {ma_hs}</code>.</li>
+<li><strong>Bước 2</strong> — <code>ten_gv</code> có mặt cả hai vế (phải ở p1, trái ở p2); <code>ten_mon</code> cũng vậy → <code>R = ∅</code>.</li>
+<li><strong>Bước 4</strong> — <code>{ma_hs}⁺ = {ma_hs}</code>: không PTH nào có vế trái nằm gọn trong <code>{ma_hs}</code>. Chưa phủ hết <code>U</code> → <strong>không dừng được</strong>, phải sang Bước 5.</li>
+<li><strong>Bước 5</strong> — duyệt các tập con của <code>U − L − R = {ten_mon, ten_gv}</code>, theo kích thước tăng dần:</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Kích thước</th>
+<th><code>S</code></th>
+<th><code>(L ∪ S)⁺</code></th>
+<th>Kết luận</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><code>{ten_mon}</code></td>
+<td><code>{ma_hs, ten_mon}</code> rồi p1 thêm <code>ten_gv</code> → <code>U</code></td>
+<td>✅ <strong>Khoá dự tuyển</strong></td>
+</tr>
+<tr>
+<td>1</td>
+<td><code>{ten_gv}</code></td>
+<td><code>{ma_hs, ten_gv}</code> rồi p2 thêm <code>ten_mon</code> → <code>U</code></td>
+<td>✅ <strong>Khoá dự tuyển</strong></td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>{ten_mon, ten_gv}</code></td>
+<td><code>U</code> — nhưng nó <strong>chứa</strong> hai khoá vừa tìm được</td>
+<td>❌ Bước 6 loại: chỉ là siêu khoá, không tối giản</td>
+</tr>
+</tbody>
+</table>
+<p>Kết quả: <code>R</code> có <strong>hai</strong> khoá dự tuyển là <code>{ma_hs, ten_mon}</code> và <code>{ma_hs, ten_gv}</code>.</p>
+<p>Hệ quả rất đáng chú ý: cả ba thuộc tính đều góp mặt trong ít nhất một khoá dự tuyển → <strong>cả ba đều là thuộc tính khoá</strong>, và lược đồ <strong>không có thuộc tính không khoá nào</strong>.</p>
+<p><a href="../18-dang-chuan-3nf-bcnf/">Bài 18</a> sẽ quay lại đúng lược đồ này: chính vì hai khoá dự tuyển <strong>chồng lấn nhau</strong> ở <code>ma_hs</code> mà nó trở thành phản ví dụ kinh điển <em>"ở 3NF nhưng không ở BCNF"</em>.</p>
 <div class="admonition danger">
 <p class="admonition-title">Ghi nhớ: <code>ho_ten_hs</code> KHÔNG phải khoá, dù 30 dòng đang có 30 tên khác nhau</p>
 <p>Câu SQL dưới đây đếm số họ tên khác nhau:</p>
-<div class="highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_dong</span><span class="p">,</span>
-</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="w">       </span><span class="k">count</span><span class="p">(</span><span class="k">DISTINCT</span><span class="w"> </span><span class="n">ho_ten_hs</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_ho_ten_khac_nhau</span>
-</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="k">FROM</span><span class="w"> </span><span class="n">bang_bet</span><span class="p">;</span>
-</span></code></pre></div>
-<p>Kết quả <code>30</code> và <code>30</code>. Y hệt cái bẫy của <a href="../../cap-1-mo-hinh-er/12-bay-loai-khoa/">Bài 12</a>: con số này <strong>không</strong> biến <code>ho_ten_hs</code> thành khoá. Lược đồ <code>bang_bet</code> không hề có <code>UNIQUE (ho_ten_hs)</code>, và nghiệp vụ thì cho phép hai bạn trùng tên.</p>
+<p>```sql
+-- KỲ VỌNG: 1 dòng</p>
 </div>
-<h3 id="8-rut-gon-ve-phu-toi-thieu">8. Rút gọn về phủ tối thiểu<a class="headerlink" href="#8-rut-gon-ve-phu-toi-thieu" title="Permanent link">&para;</a></h3>
-<p>Giả sử người phân tích nghiệp vụ viết thêm một luật nghe rất hợp lý vào <code>F_1nf</code>:</p>
-<div class="highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>PTH 7:  ma_hs → gvcn      ("biết học sinh thì biết chủ nhiệm của bạn ấy")
-</span></code></pre></div>
+<p>SELECT count(*) AS so_dong,
+           count(DISTINCT ho_ten_hs) AS so_ho_ten_khac_nhau
+    FROM bang_bet;
+<div class="highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>    Kết quả `30` và `30`. Y hệt cái bẫy của [Bài 12](../cap-1-mo-hinh-er/12-bay-loai-khoa.md): con số này **không** biến `ho_ten_hs` thành khoá. Lược đồ `bang_bet` không hề có `UNIQUE (ho_ten_hs)`, và nghiệp vụ thì cho phép hai bạn trùng tên.
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>### 8. Rút gọn về phủ tối thiểu
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>
+</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>Giả sử người phân tích nghiệp vụ viết thêm một luật nghe rất hợp lý vào `F_1nf`:
+</span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>
+</span><span id="__span-12-7"><a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>```text
+</span><span id="__span-12-8"><a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>PTH 7:  ma_hs → gvcn      ("biết học sinh thì biết chủ nhiệm của bạn ấy")
+</span></code></pre></div></p>
 <p>Luật này <strong>đúng</strong>, nhưng <strong>thừa</strong>. Chạy Bước 3 của phủ tối thiểu: tạm bỏ PTH 7 rồi tính <code>{ma_hs}⁺</code> bằng 6 PTH còn lại.</p>
 <table>
 <thead>
@@ -2226,8 +2346,8 @@
 </table>
 <p>Vậy <code>F_1nf</code> sau khi tách vế phải <strong>chính là một phủ tối thiểu</strong>. <a href="../18-dang-chuan-3nf-bcnf/">Bài 18</a> sẽ đưa đúng tập này vào thuật toán tổng hợp 3NF.</p>
 <h3 id="9-don-dep">9. Dọn dẹp<a class="headerlink" href="#9-don-dep" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">b16_ket_qua</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">;</span>
-</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">b16_pth</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">b16_ket_qua</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">;</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">b16_pth</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">;</span>
 </span></code></pre></div>
 <h2 id="loi-thuong-gap">⚠️ Lỗi thường gặp<a class="headerlink" href="#loi-thuong-gap" title="Permanent link">&para;</a></h2>
 <div class="admonition warning">
@@ -2360,22 +2480,27 @@
 <p>Thuộc tính khoá: <code>A</code>, <code>D</code>. Thuộc tính không khoá: <code>B</code>, <code>C</code>, <code>E</code>.</p>
 <p><strong>4.</strong> Có. Đúng một bước <strong>tiên đề tăng trưởng</strong> với <code>Z = C</code>: từ <code>A → B</code> suy ra <code>AC → BC</code>.</p>
 <p><strong>5.</strong></p>
-<div class="highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">ngay_sinh_hs</span><span class="p">,</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="k">DISTINCT</span><span class="w"> </span><span class="n">ten_lop</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_lop</span>
-</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="k">FROM</span><span class="w"> </span><span class="n">bang_bet</span>
-</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">ngay_sinh_hs</span>
-</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="k">HAVING</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="k">DISTINCT</span><span class="w"> </span><span class="n">ten_lop</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-</span></code></pre></div>
-<p>Truy vấn trả về <strong>0 dòng</strong> — vì 30 học sinh trong <code>bang_bet</code> có 30 ngày sinh khác nhau, nên mỗi nhóm chỉ có một dòng.</p>
-<p>Kết luận đúng: <strong>không kết luận được gì cả</strong>. Không tìm thấy phản ví dụ thì chỉ có nghĩa là chưa tìm thấy. Về mặt nghiệp vụ, <code>ngay_sinh_hs → ten_lop</code> hiển nhiên <strong>sai</strong>: hai bạn sinh cùng ngày mà học khác lớp là chuyện quá bình thường. Sang năm tuyển sinh thêm là dữ liệu sẽ tự bác bỏ nó.</p>
-<p><strong>6.</strong> Có.</p>
-<ul>
-<li><code>X = {stt}</code>, <code>Y = {ten_lop}</code>, <code>Z = {email_gvcn}</code>.</li>
-<li>Điều kiện 1: <code>stt → ten_lop</code> ✅ (nằm trong f1).</li>
-<li>Điều kiện 2: <code>ten_lop → email_gvcn</code> ✅ (bắc cầu qua f2 rồi f4, đúng như mục 4 đã tính: <code>email_gvcn ∈ {ten_lop}⁺</code>).</li>
-<li>Điều kiện 3: <code>ten_lop ↛ stt</code> ✅ (<code>{ten_lop}⁺</code> chỉ có 3 thuộc tính, không chứa <code>stt</code>); và <code>email_gvcn ∉ {stt, ten_lop}</code> ✅.</li>
-</ul>
-<p>Cả ba đều thoả → <code>stt → email_gvcn</code> là <strong>phụ thuộc bắc cầu</strong>. Đây đúng là căn bệnh mà <a href="../18-dang-chuan-3nf-bcnf/">Bài 18</a> sẽ chữa bằng Dạng chuẩn 3.</p>
+<p>```sql
+-- KỲ VỌNG: 0 dòng</p>
 </details>
+<p>SELECT ngay_sinh_hs, count(DISTINCT ten_lop) AS so_lop
+    FROM bang_bet
+    GROUP BY ngay_sinh_hs
+    HAVING count(DISTINCT ten_lop) &gt; 1;
+```</p>
+<div class="highlight"><pre><span></span><code>Truy vấn trả về **0 dòng** — vì 30 học sinh trong `bang_bet` có 30 ngày sinh khác nhau, nên mỗi nhóm chỉ có một dòng.
+
+Kết luận đúng: **không kết luận được gì cả**. Không tìm thấy phản ví dụ thì chỉ có nghĩa là chưa tìm thấy. Về mặt nghiệp vụ, `ngay_sinh_hs → ten_lop` hiển nhiên **sai**: hai bạn sinh cùng ngày mà học khác lớp là chuyện quá bình thường. Sang năm tuyển sinh thêm là dữ liệu sẽ tự bác bỏ nó.
+
+**6.** Có.
+
+- `X = {stt}`, `Y = {ten_lop}`, `Z = {email_gvcn}`.
+- Điều kiện 1: `stt → ten_lop` ✅ (nằm trong f1).
+- Điều kiện 2: `ten_lop → email_gvcn` ✅ (bắc cầu qua f2 rồi f4, đúng như mục 4 đã tính: `email_gvcn ∈ {ten_lop}⁺`).
+- Điều kiện 3: `ten_lop ↛ stt` ✅ (`{ten_lop}⁺` chỉ có 3 thuộc tính, không chứa `stt`); và `email_gvcn ∉ {stt, ten_lop}` ✅.
+
+Cả ba đều thoả → `stt → email_gvcn` là **phụ thuộc bắc cầu**. Đây đúng là căn bệnh mà [Bài 18](18-dang-chuan-3nf-bcnf.md) sẽ chữa bằng Dạng chuẩn 3.
+</code></pre></div>
 <h2 id="tom-tat">🔑 Tóm tắt<a class="headerlink" href="#tom-tat" title="Permanent link">&para;</a></h2>
 <ol>
 <li><strong>Phụ thuộc hàm</strong> <code>X → Y</code> là luật <em>"hai dòng giống nhau trên X thì bắt buộc giống nhau trên Y"</em>, đúng với <strong>mọi</strong> trạng thái dữ liệu. Vế trái <code>X</code> gọi là <strong>định thức</strong>. Nó đến từ <strong>luật nghiệp vụ</strong>; dữ liệu chỉ <strong>bác bỏ</strong> được nó chứ không bao giờ chứng minh được — đúng Quy tắc vàng của Bài 12.</li>
