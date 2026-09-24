@@ -4,7 +4,7 @@
     - Chia được SQL thành bốn nhóm con **DDL / DML / DCL / TCL** và biết câu lệnh nào thuộc nhóm nào
     - Viết được `CREATE TABLE` đầy đủ ràng buộc, `ALTER TABLE` để sửa bảng đang chạy, và phân biệt `DROP TABLE` với `TRUNCATE`
     - Chọn đúng **kiểu dữ liệu** cho từng cột, thay vì cho tất cả vào `TEXT`
-    - Tránh được ba cái bẫy kinh điển: `CHAR` đệm khoảng trắng, `REAL` làm hỏng tiền và điểm, `TIMESTAMP` mất múi giờ
+    - Tránh được ba cái bẫy kinh điển: `CHAR` đệm khoảng trắng, `REAL` làm hỏng tiền và điểm, và `TIMESTAMP` không neo được vào một thời điểm thật
 
 ## 🧠 Câu chuyện mở đầu
 
@@ -62,6 +62,7 @@ Người ta quen gọi "SQL" như một khối, nhưng chuẩn SQL chia câu l�
 | Có `WHERE` không? | Không | **Không** | **Có** |
 | Kích hoạt trigger dòng? | Không | **Không** | Có |
 | Quay lui được bằng `ROLLBACK`? | Có (trong PostgreSQL) | Có (trong PostgreSQL) | Có |
+| Đặt lại bộ đếm của `SERIAL`? | Không còn bảng nên không có bộ đếm để nói | **Không** — trừ khi viết `TRUNCATE t RESTART IDENTITY` | **Không** |
 
 !!! danger "`TRUNCATE` không có `WHERE` — và đó là điểm mấu chốt"
     `TRUNCATE hoc_sinh;` xoá sạch 40 dòng, không hỏi lại, không cách nào giới hạn.
@@ -111,8 +112,8 @@ Trong PostgreSQL, ba kiểu này **tốc độ như nhau** — không có chuy�
 |---|---|---|
 | `DATE` | Ngày tháng năm | An toàn, dùng thoải mái |
 | `TIME` | Giờ phút giây, **không** có ngày | Không tự biết hôm nay là ngày nào |
-| `TIMESTAMP` | Ngày **và** giờ, **không** có múi giờ | Hai người ở hai múi giờ đọc ra hai thời điểm khác nhau |
-| `TIMESTAMPTZ` | Ngày và giờ, **có** múi giờ | Gần như luôn là lựa chọn đúng |
+| `TIMESTAMP` | Ngày **và** giờ, **không** gắn với múi giờ nào | Hai người ở hai múi giờ đọc ra hai thời điểm khác nhau |
+| `TIMESTAMPTZ` | **Một thời điểm tuyệt đối** — nhận vào và hiển thị ra theo múi giờ của phiên, nhưng **không lưu** múi giờ | Gần như luôn là lựa chọn đúng; nhưng đừng mong lấy lại được múi giờ gốc của lúc nhập |
 
 #### Các kiểu còn lại
 
@@ -225,7 +226,7 @@ CREATE TABLE b22_hoc_sinh_nhap (
 - `diem_tb NUMERIC(4,2)` — bốn chữ số, hai chữ số sau dấu phẩy, tức là `10.00` vừa khít. Chính xác tuyệt đối.
 - `dang_hoc BOOLEAN NOT NULL DEFAULT TRUE` — học sinh mới nhập thì mặc định đang học.
 - `ghi_chu TEXT` — độ dài tự do, không đoán trước được.
-- `tao_luc TIMESTAMPTZ NOT NULL DEFAULT now()` — thời điểm bản ghi ra đời, có múi giờ.
+- `tao_luc TIMESTAMPTZ NOT NULL DEFAULT now()` — thời điểm bản ghi ra đời, ghi như một **thời điểm tuyệt đối**.
 
 Thêm vài dòng, cố tình **không** nhắc tới `dang_hoc` và `tao_luc` để xem `DEFAULT` làm việc:
 
@@ -243,6 +244,13 @@ SELECT count(*)                          AS so_dong,
        count(ghi_chu)                    AS so_co_ghi_chu
 FROM b22_hoc_sinh_nhap;
 ```
+
+!!! note "Gặp `FILTER (WHERE ...)` lần đầu — chưa cần hiểu kỹ"
+    `count(*) FILTER (WHERE dang_hoc)` đọc là *"đếm số dòng, nhưng **chỉ** những dòng thoả điều kiện trong ngoặc"*. Nó là cách gọn nhất để lấy **nhiều con số với nhiều điều kiện khác nhau trong một câu lệnh**, nên từ đây tới hết Cấp 3 bạn sẽ thấy nó rất nhiều.
+
+    Bây giờ chỉ cần đọc được nó như một câu tiếng Việt là đủ. [Bài 26](26-group-by-having.md) sẽ dạy nó đầy đủ cùng với `GROUP BY` và các hàm tổng hợp khác.
+
+    Không có `FILTER`, ba con số trên phải chạy bằng ba câu lệnh riêng rồi tự ghép kết quả lại.
 
 Ba dòng đều có `dang_hoc = TRUE` dù không ai nhắc tới nó — đó là `DEFAULT`. Còn `ghi_chu` chỉ có 2 giá trị thật, vì dòng thứ hai được ghi `NULL` **một cách tường minh**; `DEFAULT` không can thiệp vào chuyện đó.
 
@@ -367,6 +375,15 @@ WHERE table_name = 'diem' AND column_name = 'diem_so';
 `TIMESTAMP` lưu đúng chuỗi ngày giờ bạn đưa vào, **không kèm thông tin múi giờ**. Nó giống như viết `"8 giờ sáng"` lên giấy: người ở Hà Nội và người ở London đọc ra hai thời điểm cách nhau 7 tiếng.
 
 `TIMESTAMPTZ` thì lưu **một thời điểm tuyệt đối**. Bạn đưa vào giờ nào, múi nào cũng được — nó quy về chuẩn UTC bên trong, rồi hiển thị lại theo múi giờ của người đang xem.
+
+!!! danger "Cái tên `TIMESTAMPTZ` nói dối, và đây là ngộ nhận phổ biến nhất về nó"
+    Chữ `TZ` làm ai cũng tưởng cột này **lưu kèm múi giờ**. Nó **không**.
+
+    Bên trong, `timestamptz` chỉ là **một con số** đếm từ một mốc gốc — tức đúng một thời điểm tuyệt đối, không có chỗ nào chứa `+07` hay `Asia/Ho_Chi_Minh`. Múi giờ chỉ được dùng **hai lần**, và cả hai lần đều ở ngoài chỗ lưu trữ: một lần lúc **nhận vào** để quy về mốc gốc, một lần lúc **hiển thị ra** theo thiết lập `TimeZone` của phiên làm việc.
+
+    Hệ quả rất cụ thể: nếu bạn ghi `'2026-09-25 08:00:00+07'` rồi hôm sau muốn biết *"bản ghi này được nhập ở múi giờ nào"* — **không có cách nào**. Thông tin đó đã bị bỏ đi ngay lúc ghi. Muốn giữ được nó thì phải thêm một cột riêng, ví dụ `mui_gio_nhap TEXT`.
+
+    Nói cho gọn: `TIMESTAMP` là *"một con số trên mặt đồng hồ"*, `TIMESTAMPTZ` là *"một khoảnh khắc trong lịch sử"*. Không cái nào lưu múi giờ.
 
 ```sql
 -- KỲ VỌNG: khac_nhau = true
@@ -620,7 +637,7 @@ COMMIT;                                     -- chỉ câu UPDATE có hiệu lự
 1. SQL chia làm bốn nhóm: **DDL** dựng cấu trúc (`CREATE`, `ALTER`, `DROP`, `TRUNCATE`), **DML** thao tác dữ liệu (`INSERT`, `UPDATE`, `DELETE`, `SELECT`), **DCL** cấp quyền (`GRANT`, `REVOKE`), **TCL** điều khiển giao tác (`BEGIN`, `COMMIT`, `ROLLBACK`, `SAVEPOINT`).
 2. `DROP TABLE` xoá **cả bảng**; `TRUNCATE` xoá **mọi dòng** nhưng **không có `WHERE`** và không kích hoạt trigger dòng; `DELETE` xoá **có điều kiện** và là lệnh DML. Ba việc khác nhau, đừng nhầm.
 3. **Kiểu dữ liệu** làm bốn việc cùng lúc: chặn giá trị sai, quyết định cách so sánh và sắp xếp, quyết định phép toán dùng được, quyết định dung lượng. Chọn sai kiểu thì lỗi không xuất hiện lúc nhập mà xuất hiện nhiều tháng sau, dưới dạng một kết quả sai không ai để ý.
-4. Ba cái bẫy phải thuộc lòng: **`CHAR(n)` đệm khoảng trắng** và so sánh bỏ qua khoảng trắng cuối; **`REAL` / `DOUBLE PRECISION` không chính xác** nên tiền và điểm phải dùng `NUMERIC`; **`TIMESTAMP` không có múi giờ** nên sự kiện thật phải dùng `TIMESTAMPTZ`.
+4. Ba cái bẫy phải thuộc lòng: **`CHAR(n)` đệm khoảng trắng** và so sánh bỏ qua khoảng trắng cuối; **`REAL` / `DOUBLE PRECISION` không chính xác** nên tiền và điểm phải dùng `NUMERIC`; **`TIMESTAMP` không neo vào thời điểm thật** nên sự kiện đã xảy ra phải dùng `TIMESTAMPTZ` — thứ lưu một **thời điểm tuyệt đối**, chứ **không** lưu múi giờ nào.
 5. **Giá trị mặc định** (`DEFAULT`) chỉ nhảy vào khi câu `INSERT` không nhắc tới cột — nó **không** thay được cho `NOT NULL`. Muốn chắc chắn thì khai cả hai.
 
 ---

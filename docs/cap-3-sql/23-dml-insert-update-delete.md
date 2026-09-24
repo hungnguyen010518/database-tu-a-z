@@ -470,7 +470,7 @@ Mười bảng thật vẫn nguyên vẹn — vì chúng ta chưa bao giờ ch�
 
 1. Viết một câu `INSERT` thêm môn học mới `MH10 — Giáo dục công dân`, 2 tiết mỗi tuần, vào bảng `mon_hoc`. (Chỉ viết, đừng chạy trên database khoá học.)
 
-2. Viết câu lệnh nâng lương thêm 10% cho mọi giáo viên dạy môn `Toán`. Giải thích vì sao phải viết `luong * 1.1` chứ không phải một con số cụ thể.
+2. Viết câu lệnh nâng lương thêm 10% cho mọi giáo viên có **chuyên môn** là `Toán` (cột `giao_vien.mon_chuyen_mon`). Giải thích vì sao phải viết `luong * 1.1` chứ không phải một con số cụ thể.
 
 3. Câu lệnh sau có gì nguy hiểm? Viết lại cho an toàn.
 
@@ -508,6 +508,26 @@ Mười bảng thật vẫn nguyên vẹn — vì chúng ta chưa bao giờ ch�
     Phải viết `luong * 1.1` vì **mỗi giáo viên có mức lương khác nhau**. Nếu viết một con số cụ thể, ví dụ `SET luong = 15950000`, thì tất cả giáo viên Toán sẽ bị gán **cùng một** mức lương — vừa sai, vừa xoá mất thông tin về chênh lệch giữa họ.
 
     Đây là điểm mạnh của `UPDATE`: vế phải của `SET` là một **biểu thức** được tính lại trên từng dòng, không phải một hằng số.
+
+    !!! note "Vì sao đề bài nói *chuyên môn* chứ không nói *dạy môn*?"
+        Hai chuyện đó khác nhau trong lược đồ này, và lẫn chúng là một lỗi nghiệp vụ thật.
+
+        `giao_vien.mon_chuyen_mon` là **môn được đào tạo để dạy** — một thuộc tính của bản thân giáo viên. Còn *"ai đang thực sự dạy môn nào cho lớp nào"* nằm ở bảng `phan_cong_day`.
+
+        Nếu đề bài là *"nâng lương cho mọi giáo viên **đang được phân công dạy** môn Toán"* thì câu lệnh phải đi qua bảng phân công, và kết quả có thể khác:
+
+        <!-- sql:khong-chay -->
+        ```sql
+        UPDATE giao_vien g
+        SET luong = luong * 1.1
+        WHERE EXISTS (
+            SELECT 1 FROM phan_cong_day pc
+            JOIN mon_hoc m ON m.ma_mon = pc.ma_mon
+            WHERE pc.ma_gv = g.ma_gv AND m.ten_mon = 'Toán'
+        );
+        ```
+
+        (`EXISTS` là nội dung của **Bài 27**, *sắp có*.) Trong dữ liệu mẫu hai cách cho cùng một người, vì mỗi giáo viên chỉ được phân công đúng môn chuyên môn của mình — nhưng lược đồ **không** ép điều đó, nên đừng dựa vào nó.
 
     **Câu 3.**
 

@@ -98,7 +98,7 @@ Hai phép đầu dễ nhầm, nên hãy khắc sâu bằng hình ảnh: **σ c�
 |---|---|---|---|
 | ∩ | **Phép giao** | *intersection* | `R ∩ S = R − (R − S)` |
 | ⋈ | **Phép kết nối** | *join* | `R ⋈_θ S = σ_θ(R × S)` |
-| ÷ | **Phép chia** | *division* | Viết được bằng × và − (khá dài) |
+| ÷ | **Phép chia** | *division* | Viết được bằng π, × và − — xem khai triển ở dưới |
 
 - **Phép giao** (*intersection*, ký hiệu **∩**) lấy những dòng có mặt ở **cả hai** quan hệ.
 - **Phép kết nối** (*join*, ký hiệu **⋈**) là tích Descartes rồi lọc ngay. Nó có ba biến thể, và ba tên này sẽ theo bạn suốt đời làm nghề:
@@ -109,7 +109,15 @@ Hai phép đầu dễ nhầm, nên hãy khắc sâu bằng hình ảnh: **σ c�
 
     Ví dụ: *"giáo viên nào dạy ở **tất cả** các lớp khối 8?"* Đó chính là `phan_cong_day ÷ (danh sách lớp khối 8)`.
 
-    Đáng chú ý: SQL **không có** từ khoá cho phép chia. Bạn phải tự dựng nó, bằng `GROUP BY ... HAVING count(...)` ([Bài 26](26-group-by-having.md)) hoặc bằng `NOT EXISTS` lồng hai tầng (**Bài 27** *(sắp có)* — sắp có).
+    Khai triển của nó qua các phép cơ bản cần tới **ba** phép — π, × và − — và đó là lý do nó là phép dài nhất trong cả chín phép. Với `R(x, y)` và `S(y)`:
+
+    ```
+    R ÷ S  =  π_x(R)  −  π_x( ( π_x(R) × S )  −  R )
+    ```
+
+    Đọc từ trong ra ngoài: `π_x(R) × S` là **mọi** cặp *(giá trị x, giá trị y)* có thể; trừ đi `R` thì còn lại những cặp **đáng lẽ phải có mà không có**; chiếu xuống `x` thì được danh sách những `x` **thiếu ít nhất một** `y`; lấy toàn bộ `x` trừ đi danh sách đó, còn lại đúng những `x` **đủ mọi** `y`.
+
+    Đáng chú ý: SQL **không có** từ khoá cho phép chia. Bạn phải tự dựng nó, bằng `GROUP BY ... HAVING count(...)` ([Bài 26](26-group-by-having.md)) hoặc bằng `NOT EXISTS` lồng hai tầng (**Bài 27**, *sắp có*).
 
 ### Bảng thuật ngữ
 
@@ -180,6 +188,7 @@ flowchart TB
     DIF --> INT
     CAR --> JOI
     SEL --> JOI
+    PRO --> DIV
     CAR --> DIV
     DIF --> DIV
 
@@ -187,31 +196,30 @@ flowchart TB
     style DX fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
 ```
 
-Còn đây là cách nhớ σ và π — hai phép hay bị lẫn nhất:
+Còn đây là cách nhớ σ và π — hai phép hay bị lẫn nhất. Chỗ này cố ý **không** dùng sơ đồ, vì thứ cần diễn đạt là "hàng và cột", mà một cái bảng thì **chính là** hàng và cột. Ô **in đậm** là phần được giữ lại.
 
-```mermaid
-flowchart LR
-    subgraph SIG["σ — PHÉP CHỌN · cắt NGANG"]
-        direction TB
-        S1["ma_hs │ ho_ten │ ma_lop"]
-        S2["<b>HS001 │ Nguyễn Văn An │ L01</b>"]
-        S3["HS007 │ Đỗ Văn Hải │ L02"]
-        S4["<b>HS003 │ Lê Hoàng Cường │ L01</b>"]
-        S1 --- S2 --- S3 --- S4
-    end
+**σ — phép chọn — cắt NGANG.** `σ_{ma_lop = 'L01'}(hoc_sinh)` giữ **cả dòng**, bỏ **cả dòng**:
 
-    subgraph PI["π — PHÉP CHIẾU · cắt DỌC"]
-        direction TB
-        P1["ma_hs │ <b>ho_ten</b> │ ma_lop"]
-        P2["HS001 │ <b>Nguyễn Văn An</b> │ L01"]
-        P3["HS007 │ <b>Đỗ Văn Hải</b> │ L02"]
-        P4["HS003 │ <b>Lê Hoàng Cường</b> │ L01"]
-        P1 --- P2 --- P3 --- P4
-    end
+| ma_hs | ho_ten | ma_lop | |
+|---|---|---|---|
+| **HS001** | **Nguyễn Văn An** | **L01** | ✅ giữ |
+| ~~HS007~~ | ~~Đỗ Văn Hải~~ | ~~L02~~ | ❌ bỏ |
+| **HS003** | **Lê Hoàng Cường** | **L01** | ✅ giữ |
 
-    style SIG fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
-    style PI fill:#f3e5f5,stroke:#6a1b9a,stroke-width:2px
-```
+Số **cột** không đổi, số **dòng** giảm.
+
+**π — phép chiếu — cắt DỌC.** `π_{ho_ten}(hoc_sinh)` giữ **cả cột**, bỏ **cả cột**:
+
+| ~~ma_hs~~ | **ho_ten** | ~~ma_lop~~ |
+|---|---|---|
+| ~~HS001~~ | **Nguyễn Văn An** | ~~L01~~ |
+| ~~HS007~~ | **Đỗ Văn Hải** | ~~L02~~ |
+| ~~HS003~~ | **Lê Hoàng Cường** | ~~L01~~ |
+| ❌ bỏ | ✅ giữ | ❌ bỏ |
+
+Số **dòng** có thể giảm (nếu có tên trùng và bạn dùng `DISTINCT`), số **cột** giảm chắc chắn.
+
+Mẹo nhớ bằng hình chữ: **π** có **hai chân dọc** — nó cắt **dọc**. **σ** tròn vo như một nét gạch ngang xoá dòng — nó cắt **ngang**.
 
 ## 💻 Thực hành
 
@@ -349,7 +357,7 @@ Cả 6 bạn lớp L01 đều đã mượn sách. Từ khoá tương ứng là *
 
 ### 8. ⋈ — Phép kết nối, ba biến thể
 
-**a) Kết nối bằng** (*equi join*) — điều kiện chỉ có dấu `=`:
+**a) Kết nối bằng** — điều kiện chỉ có dấu `=`:
 
 > **Toán:** `hoc_sinh ⋈_{hoc_sinh.ma_lop = lop.ma_lop} lop`
 > **Tiếng Việt:** *"Mỗi học sinh kèm tên lớp của bạn ấy."*
@@ -361,7 +369,7 @@ FROM hoc_sinh h
 JOIN lop l ON h.ma_lop = l.ma_lop;
 ```
 
-**b) Kết nối tự nhiên** (*natural join*) — tự tìm cột trùng tên:
+**b) Kết nối tự nhiên** — tự tìm cột trùng tên:
 
 > **Toán:** `hoc_sinh ⋈ lop`
 > **Tiếng Việt:** *"Ghép hai bảng theo mọi cột cùng tên — ở đây chỉ có `ma_lop`."*
@@ -374,7 +382,7 @@ FROM hoc_sinh NATURAL JOIN lop;
 
 Kết quả giống hệt câu trên, nhưng bảng ra chỉ có **một** cột `ma_lop` chứ không phải hai.
 
-**c) Kết nối theta** (*theta join*) — điều kiện là phép so sánh bất kỳ:
+**c) Kết nối theta** — điều kiện là phép so sánh bất kỳ:
 
 > **Toán:** `giao_vien ⋈_{g1.luong > g2.luong} giao_vien`
 > **Tiếng Việt:** *"Mọi cặp giáo viên mà người thứ nhất lương cao hơn người thứ hai."*
@@ -431,7 +439,7 @@ ORDER BY pc.ma_gv;
 | Phép đổi tên | ρ | `AS` | [Bài 24](24-select-where-order-by.md) |
 | Phép giao | ∩ | `INTERSECT` | Bài này |
 | Kết nối theta | ⋈_θ | `JOIN ... ON <điều kiện bất kỳ>` | [Bài 25](25-join.md) |
-| Kết nối bằng | ⋈ | `JOIN ... ON a.x = b.x`, hoặc `USING (x)` | [Bài 25](25-join.md) |
+| Kết nối bằng | ⋈ | `JOIN ... ON a.x = b.x`, hoặc lối viết gọn `USING (x)` khi hai bảng **cùng tên cột** — [Bài 25](25-join.md) dạy kỹ | [Bài 25](25-join.md) |
 | Kết nối tự nhiên | ⋈ | `NATURAL JOIN` | [Bài 25](25-join.md) |
 | Phép chia | ÷ | *(không có)* — dựng bằng `GROUP BY ... HAVING count(...)` hoặc `NOT EXISTS` lồng đôi | [Bài 26](26-group-by-having.md), **Bài 27** *(sắp có)* |
 | *(không có trong đại số)* | — | `ORDER BY` — vì tập hợp không có thứ tự | [Bài 24](24-select-where-order-by.md) |
@@ -529,7 +537,7 @@ Ba dòng cuối cho thấy: **SQL không chỉ là đại số quan hệ.** Nó 
 
     `DISTINCT` không cần dịch thành gì thêm, vì bản thân π đã bỏ trùng rồi.
 
-    c. `hoc_sinh ⋈_{hoc_sinh.ma_lop = lop.ma_lop} lop` — một **kết nối bằng** (*equi join*).
+    c. `hoc_sinh ⋈_{hoc_sinh.ma_lop = lop.ma_lop} lop` — một **kết nối bằng**.
 
     **Câu 2.**
 

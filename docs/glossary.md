@@ -54,6 +54,7 @@ Bảng được sắp xếp theo thứ tự chữ cái của **thuật ngữ ti�
 | Tỉ lệ bản số | *cardinality ratio* | Cách viết gọn bản số: 1:1, 1:N hoặc M:N | [Bài 8](cap-1-mo-hinh-er/08-moi-quan-he-va-cardinality.md) |
 | Tích Descartes bùng nổ | *Cartesian explosion* | Quên điều kiện ghép nên số dòng nhân lên theo tích hai bảng — không báo lỗi, chỉ treo máy | [Bài 25](cap-3-sql/25-join.md) |
 | Tích Descartes | *Cartesian product* | Phép × ghép mọi dòng bảng này với mọi dòng bảng kia, cho ra `m × n` dòng | [Bài 21](cap-3-sql/21-dai-so-quan-he.md) |
+| Biểu thức điều kiện | *CASE expression* | Cách viết "nếu… thì…" ngay trong biểu thức SQL; bỏ `ELSE` thì trả `NULL` khi không nhánh nào khớp | [Bài 26](cap-3-sql/26-group-by-having.md) |
 | Danh mục hệ thống | *catalog* | Tên gọi khác của từ điển dữ liệu | [Bài 3](cap-0-nhap-mon/03-dbms-la-gi.md) |
 | Ký hiệu Chen | *Chen notation* | Bộ ký hiệu ER gốc năm 1976: mỗi loại phần tử một hình riêng, mỗi thuộc tính một elip treo ra ngoài | [Bài 10](cap-1-mo-hinh-er/10-bieu-do-er-ky-hieu-chen.md) |
 | Máy khách | *client* | Chương trình gõ cửa máy chủ để gửi câu lệnh, ví dụ `psql` | [Bài 5](cap-0-nhap-mon/05-cai-dat-postgresql.md) |
@@ -231,6 +232,7 @@ Bảng được sắp xếp theo thứ tự chữ cái của **thuật ngữ ti�
 | Thuộc tính không khoá | *non-prime attribute* | Thuộc tính không nằm trong bất kỳ khoá dự tuyển nào | [Bài 16](cap-2-chuan-hoa/16-phu-thuoc-ham.md) |
 | Dạng chuẩn | *normal form* | Một điều kiện đặt lên lược đồ bảng; các dạng chuẩn lồng nhau | [Bài 17](cap-2-chuan-hoa/17-dang-chuan-1nf-2nf.md) |
 | Chuẩn hoá | *normalization* | Tách một bảng thành nhiều bảng nhỏ hơn cho tới khi mọi bảng đều đạt dạng chuẩn mong muốn | [Bài 2](cap-0-nhap-mon/02-tu-so-giay-den-excel.md) |
+| Không phân biệt được | *not distinct* | Quan hệ mà `DISTINCT`, `GROUP BY` và các phép tập hợp dùng thay cho `=` — hai `NULL` là không phân biệt được nên bị gộp thành một | [Bài 24](cap-3-sql/24-select-where-order-by.md) |
 | NoSQL | *Not Only SQL* | Nhóm mô hình dữ liệu chấp nhận hy sinh một phần tính nhất quán để đổi lấy khả năng mở rộng ngang | [Bài 4](cap-0-nhap-mon/04-cac-mo-hinh-du-lieu.md) |
 
 ## O

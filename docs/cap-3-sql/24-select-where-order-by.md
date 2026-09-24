@@ -133,6 +133,7 @@ Hệ quả rất cụ thể: trong logic hai giá trị, `A` và `NOT A` chia đ
 | Vị từ | *predicate* | Biểu thức trong `WHERE` trả về `TRUE`, `FALSE` hoặc `UNKNOWN` |
 | Logic ba giá trị | *three-valued logic* | Hệ logic của SQL, có thêm giá trị thứ ba `UNKNOWN` bên cạnh `TRUE` và `FALSE` |
 | Chưa biết | *UNKNOWN* | Giá trị chân lý thứ ba, sinh ra mỗi khi so sánh với `NULL`; `WHERE` **loại bỏ** mọi dòng cho `UNKNOWN` |
+| Không phân biệt được | *not distinct* | Quan hệ mà `DISTINCT`, `GROUP BY` và các phép tập hợp dùng **thay cho** `=`: hai `NULL` là không phân biệt được nên bị gộp thành một |
 | Phân trang | *pagination* | Cắt kết quả thành từng trang bằng `LIMIT` và `OFFSET` |
 
 ## 🖼️ Sơ đồ
@@ -230,6 +231,50 @@ ORDER BY ma_lop, gioi_tinh;
 
 Sáu lớp × hai giới tính, và cả 12 tổ hợp đều có thật trong dữ liệu.
 
+!!! danger "Chỗ DUY NHẤT mà `NULL` **không** cư xử như phần còn lại của bài này"
+    Cả bài này nói một điều: **`NULL = NULL` cho `UNKNOWN`**, hai giá trị chưa biết không khẳng định được là bằng nhau.
+
+    Nhưng `DISTINCT` thì **coi mọi `NULL` là BẰNG NHAU** và gộp chúng thành **một** dòng duy nhất.
+
+    Nghe như tự mâu thuẫn, nhưng không: `DISTINCT` không dùng phép so sánh `=`. Nó dùng một quan hệ khác — thứ mà SQL gọi là **không phân biệt được** (*not distinct*), chính là toán tử `IS NOT DISTINCT FROM` mà bạn sẽ gặp ở phần sau. Với quan hệ đó, `NULL` và `NULL` là **không phân biệt được**, nên chúng bị gộp.
+
+    Cột `lop.ma_gvcn` có 5 giá trị thật cộng 1 ô rỗng (lớp `9A3`), và `DISTINCT` cho ra **6** dòng chứ không phải 5:
+
+    ```sql
+    -- KỲ VỌNG: 6 dòng
+    SELECT DISTINCT ma_gvcn
+    FROM lop
+    ORDER BY ma_gvcn NULLS LAST;
+    ```
+
+    Một dòng trong số đó là `NULL`. Nếu `DISTINCT` dùng `=` thì hai `NULL` sẽ không bao giờ khớp nhau và kết quả phải là 5 giá trị thật cộng **mỗi ô rỗng một dòng riêng** — tức 6 ở đây chỉ là tình cờ, vì `lop` chỉ có một ô rỗng. Kiểm bằng một cột có **nhiều** ô rỗng thì thấy rõ:
+
+    ```sql
+    -- KỲ VỌNG: so_gia_tri_phan_biet = 27
+    -- KỲ VỌNG: so_gia_tri_that = 26
+    -- KỲ VỌNG: so_dong_null = 12
+    SELECT count(*)                            AS so_gia_tri_phan_biet,
+           count(*) FILTER (WHERE d IS NOT NULL) AS so_gia_tri_that,
+           (SELECT count(*) FROM muon_sach WHERE ngay_tra_thuc_te IS NULL) AS so_dong_null
+    FROM (SELECT DISTINCT ngay_tra_thuc_te AS d FROM muon_sach) AS t;
+    ```
+
+    **12 dòng rỗng bị gộp thành đúng 1**: 26 ngày trả phân biệt cộng 1 dòng `NULL` = 27. (Bảng có 38 lượt đã trả nhưng chỉ 26 ngày khác nhau — nhiều cuốn được trả cùng ngày.)
+
+    Quy tắc chung — và `DISTINCT` không phải ngoại lệ duy nhất. Bảng này đáng học thuộc:
+
+    | Chỗ | `NULL` cư xử thế nào |
+    |---|---|
+    | `WHERE`, `ON`, `CHECK`, `HAVING` — mọi **vị từ** | `NULL = NULL` là `UNKNOWN`, dòng bị loại |
+    | `DISTINCT` | Mọi `NULL` **bằng nhau**, gộp thành một |
+    | `GROUP BY` ([Bài 26](26-group-by-having.md)) | Mọi `NULL` **bằng nhau**, gộp thành một nhóm |
+    | `UNION` / `INTERSECT` / `EXCEPT` ([Bài 21](21-dai-so-quan-he.md)) | Mọi `NULL` **bằng nhau** |
+    | `UNIQUE` ([Bài 15](../cap-1-mo-hinh-er/15-rang-buoc-toan-ven.md)) | `NULL` **khác** mọi `NULL` — nên nhiều dòng rỗng cùng lọt qua `UNIQUE` |
+
+    Đọc dòng cuối cho kỹ: `UNIQUE` lại quay về ngữ nghĩa vị từ. Đó là lý do `lop.ma_gvcn` có `UNIQUE` mà vẫn cho **nhiều** lớp chưa có chủ nhiệm — trong dữ liệu mẫu hiện chỉ có một, nhưng ràng buộc không hề cấm lớp thứ hai.
+
+    Cách nhớ gọn nhất: **khi SQL đi *so sánh* thì `NULL` là "chưa biết"; khi SQL đi *gom nhóm* thì `NULL` là "một giá trị như mọi giá trị khác".**
+
 ### Các vị từ
 
 **So sánh** và **`BETWEEN`**:
@@ -305,7 +350,9 @@ SELECT count(*)                  AS tong_so_luot,
 FROM muon_sach;
 ```
 
-Bây giờ là màn chính. Ba câu lệnh dưới đây dùng **cùng một** điều kiện, và kết quả của chúng phá vỡ mọi trực giác từ môn Toán:
+Bây giờ là màn chính. Ba phép đếm dưới đây dùng **cùng một** điều kiện, và kết quả của chúng phá vỡ mọi trực giác từ môn Toán.
+
+Cả ba được gói vào **một** câu lệnh nhờ `FILTER (WHERE ...)` — cú pháp bạn đã gặp lần đầu ở [Bài 22](22-ddl-va-kieu-du-lieu.md) và sẽ học đầy đủ ở [Bài 26](26-group-by-having.md). Ở đây chỉ cần đọc `count(*) FILTER (WHERE đk)` là *"đếm số dòng thoả điều kiện đk"*. Gói chung một câu là có chủ đích: nó bảo đảm cả bốn con số được đếm trên **đúng cùng một** bảng, cùng một thời điểm — không ai bắt bẻ được.
 
 ```sql
 -- KỲ VỌNG: dieu_kien_dung = 38
@@ -621,7 +668,7 @@ LIMIT 5 OFFSET 10;
 1. Khung một câu truy vấn: `SELECT` (phép chiếu π) → `FROM` → `WHERE` (phép chọn σ) → `ORDER BY` → `LIMIT`/`OFFSET`. **Bí danh** đặt bằng `AS`, chính là phép ρ của đại số quan hệ; `DISTINCT` là thứ biến `SELECT` thành đúng phép chiếu của toán học.
 2. SQL dùng **logic ba giá trị**: `TRUE`, `FALSE` và **`UNKNOWN`**. Mọi phép so sánh với `NULL` — kể cả `NULL = NULL` — đều cho `UNKNOWN`, và `WHERE` **loại bỏ** mọi dòng cho `UNKNOWN`.
 3. Hệ quả cụ thể phải thuộc lòng: `NOT UNKNOWN` vẫn là `UNKNOWN`, nên `WHERE đk` và `WHERE NOT đk` **không** chia đôi bảng. Trên `muon_sach`, `38 + 0 = 38` chứ không phải 50 — 12 dòng `NULL` rơi khỏi cả hai phía.
-4. Ba công cụ để xử lý `NULL` cho đúng: **`IS NULL` / `IS NOT NULL`** (không bao giờ cho `UNKNOWN`), **`IS DISTINCT FROM`** (phiên bản "biết điều" của `<>`), và viết tường minh **`OR cot IS NULL`**. Tuyệt đối không dùng `= NULL` — nó luôn trả về 0 dòng mà không báo lỗi.
+4. Ba công cụ để xử lý `NULL` cho đúng: **`IS NULL` / `IS NOT NULL`** (không bao giờ cho `UNKNOWN`), **`IS DISTINCT FROM`** (phiên bản "biết điều" của `<>`), và viết tường minh **`OR cot IS NULL`**. Tuyệt đối không dùng `= NULL` — nó luôn trả về 0 dòng mà không báo lỗi. Ngoại lệ phải nhớ: **`DISTINCT`, `GROUP BY` và `UNION`/`INTERSECT`/`EXCEPT` coi mọi `NULL` là BẰNG NHAU** và gộp chúng lại — khi SQL đi *so sánh* thì `NULL` là "chưa biết", khi SQL đi *gom nhóm* thì `NULL` là một giá trị như mọi giá trị khác.
 5. `ORDER BY` mặc định coi `NULL` là **lớn nhất** (`ASC` đẩy xuống cuối, `DESC` đưa lên đầu); dùng `NULLS FIRST` / `NULLS LAST` để tự quyết định. Và **có `LIMIT` thì bắt buộc phải có `ORDER BY`** đủ chặt, nếu không bạn sẽ nhận đúng số dòng nhưng sai nội dung.
 
 ---
