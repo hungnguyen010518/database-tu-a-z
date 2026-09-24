@@ -18,7 +18,7 @@ Nhóm bạn tranh luận cả buổi, vì hoá ra có nhiều cách vẽ, và c�
 
 **Bạn C** không vẽ hình. Bạn ấy kẻ **ba bảng**: bảng học sinh, bảng lớp, bảng câu lạc bộ; ai thuộc đâu thì ghi mã vào. Nhìn thì chán, nhưng trả lời câu hỏi nào cũng được.
 
-**Bạn D** nói: *"Trong Python em tạo một object Lớp, bên trong chứa một list các object Học sinh là xong."* Code chạy ngon lành. Nhưng khi cô hỏi *"in ra mọi học sinh sinh tháng 5 toàn trường"* thì bạn ấy phải viết vòng lặp lồng ba tầng.
+**Bạn D** làm mỗi lớp một **tấm bìa hồ sơ**: ngoài bìa ghi tên lớp và sĩ số, bên trong nhét phiếu của từng học sinh, và mặt sau bìa ghi sẵn cách tính sĩ số. Muốn biết gì về lớp 8A1 thì rút đúng một tấm bìa ra là có hết. Nhưng khi cô hỏi *"kể tên mọi học sinh sinh tháng 5 toàn trường"* thì bạn ấy phải mở từng tấm bìa, lật từng phiếu.
 
 Bốn bạn không ai sai. Mỗi bạn đang dùng một **mô hình dữ liệu** khác nhau — và tình cờ, cả bốn đều là những mô hình có thật, đã từng hoặc đang thống trị ngành công nghiệp này.
 
@@ -42,13 +42,32 @@ Chọn mô hình là quyết định nền móng. Đổi từ PostgreSQL sang My
 
 Ra đời khoảng 1966 với hệ **IMS** của IBM, dùng cho chương trình Apollo đưa người lên Mặt Trăng. Ưu điểm rất thật: đi từ cha xuống con cực nhanh, vì con nằm ngay cạnh cha trên đĩa.
 
-Nhược điểm cũng rất thật: thế giới không phải hình cây. Bạn Minh thuộc ba nhóm — mô hình phân cấp bắt bạn **chép Minh ra ba bản**, và ta quay lại đúng căn bệnh **dư thừa dữ liệu** của [Bài 2](02-tu-so-giay-den-excel.md). Hỏi ngược từ dưới lên (*"lớp 8A1 do ai chủ nhiệm?"*) thì lại rất chậm, vì cây chỉ thiết kế để đi xuôi.
+Nhược điểm cũng rất thật: thế giới không phải hình cây. Bạn Minh thuộc ba nhóm — mô hình phân cấp bắt bạn **chép Minh ra ba bản**, và ta quay lại đúng căn bệnh **dư thừa dữ liệu** của [Bài 2](02-tu-so-giay-den-excel.md). Hỏi ngược từ dưới lên (*"bạn Minh đang thuộc quyền tổ trưởng chuyên môn nào?"*) thì lại rất chậm, vì cây chỉ thiết kế để đi xuôi.
 
 Mô hình này chưa chết: cấu trúc thư mục trong máy tính, tệp XML, tệp JSON đều là cây.
 
+!!! info "JSON là gì — giải thích một lần cho cả bài"
+    Từ **JSON** sẽ còn xuất hiện nhiều lần dưới đây, nên hãy làm quen ngay. Bạn không cần biết lập trình.
+
+    JSON (*JavaScript Object Notation*) chỉ là **một quy ước viết dữ liệu ra thành chữ**, giống hệt cách bạn điền một tờ phiếu có nhãn sẵn. Mỗi ô là một cặp *tên nhãn* và *nội dung*, ngăn nhau bằng dấu hai chấm; cả tờ phiếu bọc trong một cặp ngoặc nhọn `{ }`; và khi một nhãn cần nhiều mục thì các mục xếp trong cặp ngoặc vuông `[ ]`.
+
+    Tờ phiếu học sinh viết theo kiểu JSON trông như thế này:
+
+    ```json
+    {
+        "ma_hs": "HS001",
+        "ho_ten": "Nguyễn Văn An",
+        "cac_cau_lac_bo": [ "Bóng đá", "Tiếng Anh" ]
+    }
+    ```
+
+    Đọc là: *"mã học sinh là HS001, họ tên là Nguyễn Văn An, các câu lạc bộ gồm Bóng đá và Tiếng Anh"*. Chỉ có thế.
+
+    Vì sao JSON là cây? Vì một tờ phiếu có thể nhét trọn nhiều tờ phiếu con vào bên trong nó, còn tờ phiếu con thì luôn nằm trong đúng **một** tờ phiếu cha.
+
 ### Mô hình mạng — cách của bạn B
 
-**Mô hình mạng** (*network model*), chuẩn hoá bởi nhóm **CODASYL** năm 1969, sửa đúng điểm yếu trên: một bản ghi được phép có **nhiều cha**. Minh nối thẳng tới cả ba nhóm, không cần chép ra ba bản.
+**Mô hình mạng** (*network model*), được nhóm **CODASYL** đưa ra thành chuẩn chung năm 1969, sửa đúng điểm yếu trên: một bản ghi được phép có **nhiều cha**. Minh nối thẳng tới cả ba nhóm, không cần chép ra ba bản.
 
 Cái giá phải trả nằm ở chỗ khác. Muốn lấy dữ liệu, lập trình viên phải tự viết lộ trình đi: *"tìm bản ghi Minh, đi theo con trỏ 'thuộc lớp', rồi con trỏ 'có chủ nhiệm'…"*. Người ta gọi kiểu lập trình này là **điều hướng thủ công** (*navigational programming*).
 
@@ -91,7 +110,7 @@ Có bốn họ chính:
 
 | Họ | Dữ liệu trông như | Hợp với | Ví dụ sản phẩm |
 |---|---|---|---|
-| **Khoá–giá trị** (*key-value*) | Một cuốn từ điển: tra khoá ra giá trị | Bộ nhớ đệm, phiên đăng nhập, giỏ hàng | Redis, DynamoDB |
+| **Khoá–giá trị** (*key-value*) | Một cuốn từ điển: tra khoá ra giá trị | Bộ nhớ đệm, phiên đăng nhập, dữ liệu tạm | Redis, DynamoDB |
 | **Tài liệu** (*document*) | Một tệp JSON tự chứa mọi thứ | Nội dung cấu trúc lỏng lẻo, hay đổi | MongoDB, CouchDB |
 | **Cột rộng** (*column-family*) | Bảng khổng lồ, mỗi dòng có bộ cột riêng | Ghi log cực nhiều, dữ liệu theo thời gian | Cassandra, HBase |
 | **Đồ thị** (*graph*) | Các điểm nối nhau bằng cạnh có nhãn | Mạng xã hội, gợi ý, phát hiện gian lận | Neo4j, JanusGraph |
@@ -165,7 +184,7 @@ flowchart TB
         RX["✅ Không dư thừa · có ràng buộc<br/>✅ Hỏi gì cũng được, không cần chỉ đường"]
     end
 
-    subgraph DT["4️⃣ ĐỐI TƯỢNG — lưu thẳng object"]
+    subgraph DT["4️⃣ ĐỐI TƯỢNG — lưu thẳng đối tượng"]
         direction TB
         O1["<b>Lop</b> 8A1<br/>hoc_sinh = An · Bình<br/><i>+ phương thức siSoLop</i>"]
         OX["⚠️ Code viết dễ<br/>❌ Hỏi ngoài dự kiến thì rất chậm"]
@@ -301,14 +320,13 @@ Chỉ có đúng **một** kiểu câu hỏi trả lời được: *"khoá này 
 
 ### Còn đồ thị thì trông như thế nào
 
-Cùng câu hỏi *"An học lớp nào"*, viết bằng Cypher — ngôn ngữ của Neo4j:
+!!! note "Cú pháp của một DBMS khác — chỉ để đối chiếu"
+    Đoạn dưới đây **không phải SQL** và không chạy trên PostgreSQL. Đó là **Cypher**, ngôn ngữ của Neo4j, đặt ở đây chỉ để bạn thấy một mô hình khác diễn đạt cùng câu hỏi *"An học lớp nào"* ra sao.
 
-<!-- sql:khong-chay -->
-```sql
--- Đây là Cypher (Neo4j), KHÔNG phải SQL. Chỉ để bạn thấy sự khác biệt.
-MATCH (hs:HocSinh {ho_ten: 'Nguyễn Văn An'})-[:HOC_TAI]->(l:Lop)
-RETURN l.ten_lop;
-```
+    ```cypher
+    MATCH (hs:HocSinh {ho_ten: 'Nguyễn Văn An'})-[:HOC_TAI]->(l:Lop)
+    RETURN l.ten_lop;
+    ```
 
 Quan hệ `HOC_TAI` là một **đối tượng hạng nhất** — nó có tên, có thuộc tính riêng. Trong mô hình quan hệ, quan hệ đó chỉ là một cột `ma_lop`.
 
@@ -317,7 +335,7 @@ Khác biệt lộ rõ khi câu hỏi phải đi **nhiều bước**: *"tìm bạ
 ## ⚠️ Lỗi thường gặp
 
 !!! warning "Lỗi 1: Hiểu NoSQL là 'không dùng SQL'"
-    Cách hiểu phổ biến hơn là **Not Only SQL** — không chỉ có SQL. Bằng chứng: Cassandra có CQL, còn MongoDB từ bản 5 đã hỗ trợ cú pháp truy vấn kiểu SQL.
+    Cách hiểu phổ biến hơn là **Not Only SQL** — không chỉ có SQL. Bằng chứng: Cassandra có hẳn một ngôn ngữ tên CQL với cú pháp rất giống SQL, còn MongoDB thì cung cấp riêng một lớp dịch để công cụ báo cáo hỏi nó bằng SQL.
 
     Điểm khác biệt thật sự **không nằm ở ngôn ngữ**, mà ở **mô hình dữ liệu** và ở việc **chấp nhận đánh đổi tính nhất quán lấy khả năng mở rộng**.
 
@@ -332,7 +350,7 @@ Khác biệt lộ rõ khi câu hỏi phải đi **nhiều bước**: *"tìm bạ
     Nhầm lẫn này khiến nhiều người tưởng học PostgreSQL xong là phải học lại từ đầu khi chuyển sang MySQL. Thực tế phần lớn kiến thức chuyển thẳng được, vì cả hai cùng một mô hình.
 
 !!! warning "Lỗi 4: Tưởng mô hình phân cấp và mạng đã tuyệt chủng"
-    Chúng không chết, chỉ đổi chỗ đứng. Cây thư mục trong máy bạn là mô hình phân cấp. Tệp JSON và XML là mô hình phân cấp. Mạng xã hội là mô hình mạng.
+    Chúng không chết, chỉ đổi chỗ đứng. Cây thư mục trong máy bạn là mô hình phân cấp; tệp JSON và XML cũng vậy. Còn ý tưởng cốt lõi của mô hình mạng — cho một bản ghi nối thẳng tới nhiều bản ghi khác — thì sống tiếp trong họ **đồ thị** của NoSQL, thứ đang chạy sau lưng các mạng xã hội.
 
     Bài học thật sự: **các mô hình chồng lấn nhau**. Chọn mô hình nào phụ thuộc vào *câu hỏi bạn sẽ hỏi nhiều nhất*, chứ không phụ thuộc năm ra đời.
 
@@ -341,9 +359,9 @@ Khác biệt lộ rõ khi câu hỏi phải đi **nhiều bước**: *"tìm bạ
 1. Ghép mỗi mô tả với đúng một mô hình (phân cấp / mạng / quan hệ / đối tượng / NoSQL đồ thị):
    (a) mỗi bản ghi có đúng một cha; (b) dữ liệu là bảng, nối nhau bằng giá trị bằng nhau;
    (c) lập trình viên tự đi theo con trỏ; (d) quan hệ giữa các bản ghi có tên và thuộc tính riêng;
-   (e) lưu thẳng object kèm phương thức.
+   (e) lưu thẳng đối tượng của ngôn ngữ lập trình, kèm cả phương thức của nó.
 
-2. Một ứng dụng cần lưu **giỏ hàng tạm** của người đang mua sắm: tra theo mã người dùng, không cần thống kê, cần cực nhanh, mất cũng không sao. Nên chọn họ NoSQL nào? Vì sao không dùng đồ thị?
+2. Cổng thông tin học sinh của trường cần lưu **phiên đăng nhập**: mỗi lần một bạn đăng nhập, hệ thống sinh một mã phiên và ghi lại bạn đó là ai; mỗi lần bạn ấy bấm sang trang khác, hệ thống tra mã phiên để biết ai đang xem. Chỉ tra theo mã phiên, không cần thống kê, cần cực nhanh, và mất cũng không sao (bạn ấy chỉ phải đăng nhập lại). Nên chọn họ NoSQL nào? Vì sao không dùng đồ thị?
 
 3. Vì sao mô hình quan hệ đạt được **độc lập dữ liệu** tốt hơn hẳn mô hình mạng? Trả lời bằng cách nhắc tới cặp khái niệm *khai báo* và *thủ tục*.
 
@@ -366,12 +384,12 @@ Khác biệt lộ rõ khi câu hỏi phải đi **nhiều bước**: *"tìm bạ
 
     Lý do khớp từng yêu cầu:
 
-    - *Tra theo mã người dùng* → đúng một kiểu truy cập: khoá → giá trị. Không cần gì hơn.
+    - *Tra theo mã phiên* → đúng một kiểu truy cập: khoá → giá trị. Không cần gì hơn.
     - *Cần cực nhanh* → kho khoá–giá trị thường giữ dữ liệu trong RAM, trả lời dưới một mili giây.
-    - *Mất cũng không sao* → cho phép hy sinh độ bền để đổi lấy tốc độ; giỏ hàng tạm mất thì người dùng chọn lại.
+    - *Mất cũng không sao* → cho phép hy sinh độ bền để đổi lấy tốc độ; phiên mất thì bạn học sinh chỉ phải đăng nhập lại.
     - *Không cần thống kê* → đúng điểm yếu duy nhất của họ này, mà ở đây lại không cần.
 
-    Không dùng đồ thị vì đồ thị mạnh ở việc **đi nhiều bước qua các mối quan hệ**. Giỏ hàng chẳng có mối quan hệ nào phải đi cả — dùng đồ thị là trả tiền cho một năng lực không xài tới, lại còn chậm hơn.
+    Không dùng đồ thị vì đồ thị mạnh ở việc **đi nhiều bước qua các mối quan hệ**. Một phiên đăng nhập chẳng có mối quan hệ nào phải đi cả — chỉ là "mã này ứng với bạn nào". Dùng đồ thị là trả tiền cho một năng lực không xài tới, lại còn chậm hơn.
 
     **Câu 3.**
 

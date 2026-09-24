@@ -316,15 +316,25 @@ Sau `ROLLBACK`, bảng `cau_lac_bo` **không còn tồn tại**. PostgreSQL cho 
 Mức trong thường bị giấu kín, nhưng PostgreSQL vẫn cho ta nhìn qua khe cửa:
 
 ```sql
-SELECT relname AS ten_bang, relkind AS loai, relpages AS so_trang_8kb
+SELECT relname AS ten_bang,
+       pg_relation_size(oid)                 AS so_byte,
+       pg_size_pretty(pg_relation_size(oid)) AS doc_cho_de,
+       pg_relation_size(oid) / 8192          AS so_trang_8kb
 FROM pg_class
 WHERE relname IN ('hoc_sinh', 'lop', 'diem')
 ORDER BY relname;
 ```
 
-Cột `relpages` cho biết mỗi bảng đang chiếm bao nhiêu **trang** dữ liệu trên đĩa, mỗi trang 8KB — đây là đơn vị lưu trữ của PostgreSQL. Con số này thay đổi theo lượng dữ liệu và theo lần dọn dẹp gần nhất, nên bạn và bạn cùng bàn có thể ra kết quả khác nhau; điều đó bình thường.
+`pg_relation_size()` hỏi thẳng hệ điều hành xem tệp của bảng đó đang chiếm bao nhiêu byte, còn `pg_size_pretty()` đổi con số byte thô sang dạng dễ đọc như `48 kB`. Chia cho 8192 ta ra số **trang** — PostgreSQL không đọc/ghi từng dòng lẻ mà đọc/ghi theo từng khối 8KB, và trang chính là khối đó.
 
-Điều đáng nhớ: bạn vừa đổi hoàn toàn chủ đề — từ "lớp nào có mấy học sinh" sang "bảng nào chiếm mấy trang đĩa" — mà **không câu `SELECT` nào ở trên phải viết lại**. Đó chính là độc lập dữ liệu vật lý đang làm việc.
+Bảng `lop` chỉ có 6 dòng nên gọn trong **một** trang duy nhất; `diem` với 480 dòng thì phải trải ra nhiều trang. Con số cụ thể có thể khác nhau chút ít giữa máy bạn và máy bạn cùng bàn, vì nó còn phụ thuộc lần dọn dẹp gần nhất; điều đó bình thường.
+
+!!! warning "Đừng nhầm với cột `relpages`"
+    Trong `pg_class` còn một cột tên `relpages` trông rất giống thứ ta vừa tính. Nhưng nó **không phải số trang thật** — nó chỉ là con số **ước lượng** mà bộ tối ưu truy vấn dùng để đoán chi phí, và chỉ được cập nhật khi chạy `VACUUM` hoặc `ANALYZE`.
+
+    Vì vậy ngay sau khi nạp dataset xong, `relpages` của mọi bảng vẫn còn là `0` dù dữ liệu đã nằm đầy trên đĩa. Muốn nó đúng, phải `ANALYZE` trước. Bài 35 sẽ nói vì sao PostgreSQL lại chấp nhận một con số cũ như vậy.
+
+Điều đáng nhớ: bạn vừa đổi hoàn toàn chủ đề — từ "lớp nào có mấy học sinh" sang "bảng nào chiếm bao nhiêu byte trên đĩa" — mà **không câu `SELECT` nào ở trên phải viết lại**. Đó chính là độc lập dữ liệu vật lý đang làm việc.
 
 ## ⚠️ Lỗi thường gặp
 
@@ -346,7 +356,7 @@ Cột `relpages` cho biết mỗi bảng đang chiếm bao nhiêu **trang** dữ
 !!! warning "Lỗi 4: Dùng DDL khi chỉ định xoá dữ liệu"
     Muốn xoá dữ liệu thì dùng `DELETE` (DML). `DROP TABLE` (DDL) xoá luôn cả bảng.
 
-    Một sai lầm hay gặp nữa: `TRUNCATE` trông giống `DELETE` nhưng là DDL, chạy rất nhanh vì nó không xoá từng dòng mà vứt cả tệp dữ liệu đi. Nhanh là cái bẫy — nó cũng không kích hoạt các trigger kiểm tra, và trong nhiều DBMS thì không thể `ROLLBACK`.
+    Một sai lầm hay gặp nữa: `TRUNCATE` trông giống `DELETE` nhưng là DDL, chạy rất nhanh vì nó không xoá từng dòng mà vứt cả tệp dữ liệu đi. Nhanh là cái bẫy — nó bỏ qua các **bẫy sự kiện** (*trigger*), tức những đoạn lệnh mà bạn dặn database tự chạy mỗi khi có dòng bị xoá (ví dụ để ghi lại nhật ký ai xoá cái gì). Và trong nhiều DBMS thì `TRUNCATE` không thể `ROLLBACK`. Bài 32 sẽ dạy kỹ về trigger.
 
 ## ✍️ Bài tập
 

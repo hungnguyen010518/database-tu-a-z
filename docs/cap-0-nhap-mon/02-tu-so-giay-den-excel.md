@@ -38,6 +38,7 @@ Hãy nhìn lại file Excel của bạn:
 | Trần Thị Bình | 8A1 | Nguyễn Thị Lan | lan.nt@thcs.edu.vn |
 | Lê Hoàng Cường | 8A1 | Nguyễn Thị Lan | lan.nt@thcs.edu.vn |
 | Phạm Thị Dung | 8A1 | Nguyễn Thị Lan | lan.nt@thcs.edu.vn |
+| … *(còn 2 học sinh nữa của lớp 8A1)* | … | … | … |
 
 Sự thật *"lớp 8A1 do cô Nguyễn Thị Lan chủ nhiệm, email lan.nt@thcs.edu.vn"* là **một** sự thật. Nhưng nó đang được ghi **6 lần**, một lần cho mỗi học sinh.
 
@@ -266,7 +267,9 @@ ORDER BY ma_lop;
 Ba căn bệnh biến mất cùng một lúc:
 
 - Cô Lan đổi email? Sửa **một** dòng trong bảng `giao_vien`. Không thể sót.
-- Lớp mới chưa có học sinh? Thêm một dòng vào `lop`. Xong. Dòng `L06` (lớp 9A3) trong bảng trên chính là ví dụ sống: lớp đã có thật, chỉ chưa có giáo viên chủ nhiệm.
+- Lớp mới chưa có học sinh? Thêm một dòng vào `lop`. Xong — bảng `lop` không hề đòi phải có học sinh nào thì mới được ghi.
+
+    Bảng trên còn cho thấy một trường hợp anh em với nó: dòng `L06` (lớp 9A3) có ô `ma_gvcn` **để trống**. Lớp đã có thật, đã có học sinh, chỉ là chưa phân công giáo viên chủ nhiệm — và bảng `lop` vẫn ghi nhận được bình thường. Cùng một nguyên tắc: **thiếu một sự thật không được phép chặn việc ghi những sự thật còn lại**.
 - Học sinh chuyển trường hết? Xoá ở bảng `hoc_sinh`; bảng `lop` không suy suyển.
 
 ### Và ràng buộc thì được canh gác thật sự
@@ -286,6 +289,12 @@ ERROR:  insert or update on table "hoc_sinh" violates foreign key constraint "ho
 DETAIL:  Key (ma_lop)=(L99) is not present in table "lop".
 ```
 
+Hãy đọc kỹ chữ `foreign key` trong thông báo lỗi. Quy tắc mà PostgreSQL vừa dùng để từ chối có tên riêng: **khoá ngoại** (*foreign key*).
+
+Khoá ngoại là một lời hứa bạn khai báo sẵn cho database: *"cột `ma_lop` của bảng `hoc_sinh` chỉ được chứa những mã lớp **có thật** trong bảng `lop`"*. Từ lúc bạn khai báo, database tự canh lời hứa đó với mọi dòng, mãi mãi, không cần ai nhắc. `L99` không có trong bảng `lop`, nên dòng vừa rồi bị chặn.
+
+Đây cũng chính là sợi dây nối hai bảng lại với nhau sau khi ta tách chúng ra. Bài 13 sẽ dạy cách khai báo khoá ngoại, còn Bài 15 sẽ dạy phải làm gì khi xoá một dòng mà có bảng khác đang trỏ tới nó.
+
 Excel sẽ nhận dòng này không một lời phàn nàn. Đó là khác biệt lớn nhất giữa "một file bảng tính" và "một cơ sở dữ liệu": **database có quyền nói KHÔNG**.
 
 ## ⚠️ Lỗi thường gặp
@@ -298,7 +307,7 @@ Excel sẽ nhận dòng này không một lời phàn nàn. Đó là khác biệ
 !!! warning "Lỗi 2: Nghĩ rằng cẩn thận hơn thì sẽ hết lỗi"
     Phản xạ tự nhiên là tự trách: "lần sau mình sửa kỹ hơn". Nhưng hãy thử tính: file thật của một trường có 500 học sinh, 30 lớp. Đổi email một cô là sửa khoảng 17 dòng, làm mỗi tháng vài lần, trong nhiều năm, bởi nhiều người khác nhau.
 
-    Xác suất không sót một lần nào là gần bằng không. Thiết kế tốt không đòi hỏi con người phải hoàn hảo — nó làm cho **việc sai trở thành bất khả thi**. Ràng buộc khoá ngoại ở trên chính là tinh thần đó.
+    Xác suất không sót một lần nào là gần bằng không. Thiết kế tốt không đòi hỏi con người phải hoàn hảo — nó làm cho **việc sai trở thành bất khả thi**. Ràng buộc **khoá ngoại** (*foreign key*) ở trên chính là tinh thần đó.
 
 !!! warning "Lỗi 3: Nghĩ Excel là thứ tồi tệ, phải bỏ đi"
     Không hề. Excel rất tốt cho: dữ liệu nhỏ, **một người** dùng, phân tích tạm thời, cần vẽ biểu đồ nhanh. Cực kỳ nhiều công việc thật sự chỉ cần đến thế.
@@ -366,7 +375,7 @@ Excel sẽ nhận dòng này không một lời phàn nàn. Đó là khác biệ
     | TV02 | Trần Thị Bình | 8A2 | Hậu vệ | CLB01 |
     | TV03 | Lê Hoàng Cường | 8A1 | Thủ môn | CLB01 |
 
-    Cột nối hai bảng là **`ma_clb`**: nó là định danh của bảng `cau_lac_bo`, và được mang sang bảng `thanh_vien` để chỉ ra mỗi thành viên thuộc câu lạc bộ nào. Ở Bài 13 bạn sẽ biết tên chính thức của cột mang sang này: **khoá ngoại**.
+    Cột nối hai bảng là **`ma_clb`**: nó là định danh của bảng `cau_lac_bo`, và được mang sang bảng `thanh_vien` để chỉ ra mỗi thành viên thuộc câu lạc bộ nào. Cột mang sang như vậy chính là **khoá ngoại** (*foreign key*) mà phần Thực hành đã giới thiệu — và Bài 13 sẽ dạy cách khai báo nó.
 
     Kiểm lại cả ba căn bệnh:
 
