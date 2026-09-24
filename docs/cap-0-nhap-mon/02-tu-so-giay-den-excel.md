@@ -293,7 +293,7 @@ Hãy đọc kỹ chữ `foreign key` trong thông báo lỗi. Quy tắc mà Post
 
 Khoá ngoại là một lời hứa bạn khai báo sẵn cho database: *"cột `ma_lop` của bảng `hoc_sinh` chỉ được chứa những mã lớp **có thật** trong bảng `lop`"*. Từ lúc bạn khai báo, database tự canh lời hứa đó với mọi dòng, mãi mãi, không cần ai nhắc. `L99` không có trong bảng `lop`, nên dòng vừa rồi bị chặn.
 
-Đây cũng chính là sợi dây nối hai bảng lại với nhau sau khi ta tách chúng ra. Bài 13 sẽ dạy cách khai báo khoá ngoại, còn Bài 15 sẽ dạy phải làm gì khi xoá một dòng mà có bảng khác đang trỏ tới nó.
+Đây cũng chính là sợi dây nối hai bảng lại với nhau sau khi ta tách chúng ra. Bài 12 sẽ dạy cách khai báo khoá ngoại, còn Bài 15 sẽ dạy phải làm gì khi xoá một dòng mà có bảng khác đang trỏ tới nó.
 
 Excel sẽ nhận dòng này không một lời phàn nàn. Đó là khác biệt lớn nhất giữa "một file bảng tính" và "một cơ sở dữ liệu": **database có quyền nói KHÔNG**.
 
@@ -375,7 +375,7 @@ Excel sẽ nhận dòng này không một lời phàn nàn. Đó là khác biệ
     | TV02 | Trần Thị Bình | 8A2 | Hậu vệ | CLB01 |
     | TV03 | Lê Hoàng Cường | 8A1 | Thủ môn | CLB01 |
 
-    Cột nối hai bảng là **`ma_clb`**: nó là định danh của bảng `cau_lac_bo`, và được mang sang bảng `thanh_vien` để chỉ ra mỗi thành viên thuộc câu lạc bộ nào. Cột mang sang như vậy chính là **khoá ngoại** (*foreign key*) mà phần Thực hành đã giới thiệu — và Bài 13 sẽ dạy cách khai báo nó.
+    Cột nối hai bảng là **`ma_clb`**: nó là định danh của bảng `cau_lac_bo`, và được mang sang bảng `thanh_vien` để chỉ ra mỗi thành viên thuộc câu lạc bộ nào. Cột mang sang như vậy chính là **khoá ngoại** (*foreign key*) mà phần Thực hành đã giới thiệu — và Bài 12 sẽ dạy cách khai báo nó.
 
     Kiểm lại cả ba căn bệnh:
 
