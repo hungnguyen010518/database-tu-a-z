@@ -55,7 +55,7 @@ CUA_SO_TRUOC = 120
 def main() -> int:
     goc = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
     duong_dan = sorted(glob.glob(os.path.join(goc, "docs", "**", "*.md"), recursive=True))
-    so_chay, so_bo_qua, so_kv = 0, 0, 0
+    so_chay, so_bo_qua, so_kv, so_loi = 0, 0, 0, 0
 
     for duong in duong_dan:
         with open(duong, encoding="utf-8") as f:
@@ -75,9 +75,30 @@ def main() -> int:
 
             moc = list(KY_VONG_BAT_KY.finditer(noi_khoi))
             if moc:
-                truy_van = noi_khoi[moc[-1].end():].strip().rstrip(";").strip()
+                phan_sau = noi_khoi[moc[-1].end():].strip()
+                # Bỏ comment dòng ở cuối (kể cả comment đứng sau dấu ';'),
+                # rồi bỏ dấu ';' kết thúc. Trước khi có bước này, một comment sau ';'
+                # khiến truy vấn sinh ra bị lỗi cú pháp mà không ai biết vì sao.
+                cac_dong = []
+                for d in phan_sau.split("\n"):
+                    if d.strip().startswith("--"):
+                        continue
+                    cac_dong.append(re.sub(r"\s--[^'\"]*$", "", d))
+                truy_van = "\n".join(cac_dong).strip().rstrip(";").strip()
+
                 if not truy_van:
-                    print(f"-- !! KỲ VỌNG ở {ten} không có câu lệnh nào theo sau", file=sys.stderr)
+                    print(f"!! LỖI {ten}: KỲ VỌNG không có câu lệnh nào theo sau", file=sys.stderr)
+                    so_loi += 1
+                    continue
+                if ";" in truy_van:
+                    print(f"!! LỖI {ten}: KỲ VỌNG phải nằm ngay trên MỘT câu lệnh duy nhất, "
+                          f"nhưng phần sau đánh dấu còn chứa dấu ';'", file=sys.stderr)
+                    so_loi += 1
+                    continue
+                if not re.match(r"(?is)^\s*(select|with|table|values)\b", truy_van):
+                    print(f"!! LỖI {ten}: KỲ VỌNG chỉ dùng được cho câu SELECT/WITH, "
+                          f"nhưng câu lệnh bắt đầu bằng: {truy_van.split()[0]}", file=sys.stderr)
+                    so_loi += 1
                     continue
 
                 khoi_moc = noi_khoi[moc[0].start():moc[-1].end()]
@@ -87,6 +108,25 @@ def main() -> int:
                 if not so_dong and not gia_tri:
                     print(f"-- !! KỲ VỌNG ở {ten} sai cú pháp, không nhận dạng được", file=sys.stderr)
                     continue
+
+                # Cảnh báo lớp lỗi đã gặp thật: khai "N dòng" (N>1) cho một truy vấn
+                # tổng hợp không GROUP BY — loại truy vấn luôn trả về đúng một dòng.
+                # Con số N thường là GIÁ TRỊ của cột, không phải số dòng.
+                # UNION/INTERSECT/EXCEPT gộp nhiều câu đếm lại thành nhiều dòng,
+                # nên heuristic dưới đây không áp dụng được cho chúng.
+                co_hop = re.search(r"(?is)\b(union|intersect|except)\b", truy_van)
+                if any(n > 1 for n in so_dong) and not co_hop:
+                    ngoai = re.split(r"(?is)\bfrom\b", truy_van, maxsplit=1)[0]
+                    co_tong_hop = re.search(
+                        r"(?is)\b(count|sum|avg|min|max|string_agg|array_agg|bool_and|bool_or)\s*\(",
+                        ngoai)
+                    co_group_by = re.search(r"(?is)\bgroup\s+by\b", truy_van)
+                    if co_tong_hop and not co_group_by:
+                        dau = " ".join(truy_van.split())[:90]
+                        print(f"!! CẢNH BÁO {ten}: khai 'KỲ VỌNG: {so_dong} dòng' nhưng truy vấn "
+                              f"là hàm tổng hợp không GROUP BY — loại này chỉ trả về 1 dòng. "
+                              f"Có phải bạn muốn 'KỲ VỌNG: <cột> = N'?\n"
+                              f"     truy vấn: {dau}...", file=sys.stderr)
 
                 so_kv += len(so_dong) + len(gia_tri)
                 print(f"-- kiểm tra kết quả cho {ten}")
@@ -118,6 +158,10 @@ def main() -> int:
 
     print(f"-- Trích {so_chay} khối SQL để chạy, bỏ qua {so_bo_qua} khối đã đánh dấu, "
           f"{so_kv} khẳng định kết quả.", file=sys.stderr)
+    if so_loi:
+        print(f"!! CÓ {so_loi} ĐÁNH DẤU KỲ VỌNG SAI CÚ PHÁP — sửa trước khi push.",
+              file=sys.stderr)
+        return 1
     return 0
 
 
