@@ -1,0 +1,48 @@
+name: Kiểm tra sơ đồ Mermaid
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'docs/**'
+      - 'scripts/trich_mermaid.py'
+      - '.github/workflows/kiem-tra-so-do.yml'
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  kiem-tra:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Trích sơ đồ ra file .mmd
+        run: python3 scripts/trich_mermaid.py /tmp/so-do
+
+      - name: Cài mermaid-cli
+        run: npm install -g @mermaid-js/mermaid-cli@11.4.2
+
+      - name: Cấu hình puppeteer chạy không sandbox
+        run: echo '{"args":["--no-sandbox","--disable-setuid-sandbox"]}' > /tmp/puppeteer.json
+
+      - name: Render thử từng sơ đồ
+        run: |
+          loi=0
+          tong=0
+          for f in /tmp/so-do/*.mmd; do
+            tong=$((tong+1))
+            if ! mmdc -p /tmp/puppeteer.json -i "$f" -o "/tmp/$(basename "$f").svg" >/tmp/mmdc.log 2>&1; then
+              echo "::error file=$f::Sơ đồ Mermaid lỗi cú pháp"
+              echo "--- $(basename "$f") ---"
+              sed -n '1,25p' /tmp/mmdc.log
+              echo '--- nội dung sơ đồ ---'
+              cat "$f"
+              loi=$((loi+1))
+            fi
+          done
+          echo "Đã kiểm $tong sơ đồ, $loi sơ đồ lỗi."
+          exit $loi
