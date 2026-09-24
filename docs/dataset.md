@@ -72,9 +72,9 @@ erDiagram
         smallint so_tiet_tuan
     }
     phan_cong_day {
-        char ma_gv PK_FK
-        char ma_mon PK_FK
-        char ma_lop PK_FK
+        char ma_gv PK, FK
+        char ma_mon PK, FK
+        char ma_lop PK, FK
         smallint hoc_ky PK
     }
     diem {
