@@ -1,0 +1,2593 @@
+
+<!doctype html>
+<html lang="vi" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Khóa học cơ sở dữ liệu tiếng Việt, từ con số 0 tới mức siêu nâng cao — giải thích để học sinh cấp 2 cũng hiểu được.">
+      
+      
+      
+        <link rel="canonical" href="https://hungnguyen010518.github.io/database-tu-a-z/cap-3-sql/26-group-by-having/">
+      
+      
+        <link rel="prev" href="../25-join/">
+      
+      
+        <link rel="next" href="../../dataset/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.39">
+    
+    
+      
+        <title>Bài 26 — GROUP BY, HAVING và các hàm tổng hợp - Database từ A-Z</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.8c3ca2c6.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#bai-26-group-by-having-va-cac-ham-tong-hop" class="md-skip">
+          Bỏ qua
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Đầu trang">
+    <a href="../.." title="Database từ A-Z" class="md-header__button md-logo" aria-label="Database từ A-Z" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3C7.58 3 4 4.79 4 7s3.58 4 8 4 8-1.79 8-4-3.58-4-8-4M4 9v3c0 2.21 3.58 4 8 4s8-1.79 8-4V9c0 2.21-3.58 4-8 4s-8-1.79-8-4m0 5v3c0 2.21 3.58 4 8 4s8-1.79 8-4v-3c0 2.21-3.58 4-8 4s-8-1.79-8-4"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Database từ A-Z
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Bài 26 — GROUP BY, HAVING và các hàm tổng hợp
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Chuyển sang chế độ tối"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Chuyển sang chế độ tối" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Chuyển sang chế độ sáng"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Chuyển sang chế độ sáng" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Tìm kiếm" placeholder="Tìm kiếm" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Tìm kiếm">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Xoá" aria-label="Xoá" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/hungnguyen010518/database-tu-a-z" title="Xem mã nguồn" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    database-tu-a-z
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Thanh điều hướng" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Database từ A-Z" class="md-nav__button md-logo" aria-label="Database từ A-Z" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3C7.58 3 4 4.79 4 7s3.58 4 8 4 8-1.79 8-4-3.58-4-8-4M4 9v3c0 2.21 3.58 4 8 4s8-1.79 8-4V9c0 2.21-3.58 4-8 4s-8-1.79-8-4m0 5v3c0 2.21 3.58 4 8 4s8-1.79 8-4v-3c0 2.21-3.58 4-8 4s-8-1.79-8-4"/></svg>
+
+    </a>
+    Database từ A-Z
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/hungnguyen010518/database-tu-a-z" title="Xem mã nguồn" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    database-tu-a-z
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Trang chủ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Cấp 0 — Nhập môn
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Cấp 0 — Nhập môn
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-0-nhap-mon/01-du-lieu-va-thong-tin/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 1 — Dữ liệu, thông tin và tại sao phải lưu trữ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-0-nhap-mon/02-tu-so-giay-den-excel/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 2 — Từ sổ giấy đến Excel
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-0-nhap-mon/03-dbms-la-gi/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 3 — DBMS là gì
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-0-nhap-mon/04-cac-mo-hinh-du-lieu/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 4 — Các mô hình dữ liệu
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-0-nhap-mon/05-cai-dat-postgresql/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 5 — Cài đặt PostgreSQL
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Cấp 1 — Mô hình quan hệ & Biểu đồ ER
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Cấp 1 — Mô hình quan hệ & Biểu đồ ER
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/06-mo-hinh-quan-he/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 6 — Mô hình quan hệ: bảng, dòng, cột, miền giá trị, lược đồ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/07-thuc-the-va-thuoc-tinh/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 7 — Thực thể và các loại thuộc tính
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/08-moi-quan-he-va-cardinality/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 8 — Mối quan hệ, bậc và bản số (Cardinality)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/09-participation-va-thuc-the-yeu/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 9 — Ràng buộc tham gia và Thực thể yếu
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/10-bieu-do-er-ky-hieu-chen/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 10 — Biểu đồ ER — ký hiệu Chen
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/11-bieu-do-er-crows-foot/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 11 — Biểu đồ ER — ký hiệu Crow's Foot và vẽ bằng Mermaid
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/12-bay-loai-khoa/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 12 — Bảy loại khoá trong cơ sở dữ liệu
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/13-mo-hinh-eer/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 13 — Mô hình EER: Generalization, Specialization, Aggregation
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/14-chuyen-er-sang-bang/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 14 — Chuyển biểu đồ ER thành lược đồ quan hệ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/15-rang-buoc-toan-ven/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 15 — Ràng buộc toàn vẹn (Integrity Constraints)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Cấp 2 — Chuẩn hoá
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Cấp 2 — Chuẩn hoá
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-2-chuan-hoa/16-phu-thuoc-ham/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 16 — Phụ thuộc hàm và bao đóng
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-2-chuan-hoa/17-dang-chuan-1nf-2nf/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 17 — Dạng chuẩn 1 (1NF) và Dạng chuẩn 2 (2NF)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-2-chuan-hoa/18-dang-chuan-3nf-bcnf/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 18 — Dạng chuẩn 3 (3NF) và BCNF
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-2-chuan-hoa/19-dang-chuan-4nf-5nf-6nf/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 19 — 4NF, 5NF và 6NF
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-2-chuan-hoa/20-denormalization/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 20 — Phi chuẩn hoá — khi nào nên phá luật
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Cấp 3 — SQL từ 0 tới cao thủ
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Cấp 3 — SQL từ 0 tới cao thủ
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../21-dai-so-quan-he/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 21 — Đại số quan hệ: nền toán học phía sau SQL
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../22-ddl-va-kieu-du-lieu/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 22 — DDL: CREATE, ALTER, DROP và các kiểu dữ liệu
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../23-dml-insert-update-delete/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 23 — DML: INSERT, UPDATE, DELETE
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../24-select-where-order-by/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 24 — SELECT, WHERE, ORDER BY, LIMIT
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../25-join/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 25 — JOIN: sáu cách ghép bảng
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Bài 26 — GROUP BY, HAVING và các hàm tổng hợp
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Bài 26 — GROUP BY, HAVING và các hàm tổng hợp
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Mục lục">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Mục lục
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#cau-chuyen-mo-au" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧠 Câu chuyện mở đầu
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#khai-niem-thuat-ngu" class="md-nav__link">
+    <span class="md-ellipsis">
+      📖 Khái niệm &amp; thuật ngữ
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📖 Khái niệm & thuật ngữ">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ham-tong-hop" class="md-nav__link">
+    <span class="md-ellipsis">
+      Hàm tổng hợp
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#group-by" class="md-nav__link">
+    <span class="md-ellipsis">
+      GROUP BY
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#having" class="md-nav__link">
+    <span class="md-ellipsis">
+      HAVING
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#thu-tu-thuc-thi-logic-chia-khoa-cua-ca-bai" class="md-nav__link">
+    <span class="md-ellipsis">
+      Thứ tự thực thi logic — chìa khoá của cả bài
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#filter-where" class="md-nav__link">
+    <span class="md-ellipsis">
+      FILTER (WHERE ...)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rollup-cube-grouping-sets" class="md-nav__link">
+    <span class="md-ellipsis">
+      ROLLUP, CUBE, GROUPING SETS
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bang-thuat-ngu" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bảng thuật ngữ
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#so-o" class="md-nav__link">
+    <span class="md-ellipsis">
+      🖼️ Sơ đồ
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#thuc-hanh" class="md-nav__link">
+    <span class="md-ellipsis">
+      💻 Thực hành
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="💻 Thực hành">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#count-ba-dang-ba-y-nghia" class="md-nav__link">
+    <span class="md-ellipsis">
+      COUNT — ba dạng, ba ý nghĩa
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sum-avg-min-max" class="md-nav__link">
+    <span class="md-ellipsis">
+      SUM, AVG, MIN, MAX
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#avg-bo-qua-null-xem-tan-mat" class="md-nav__link">
+    <span class="md-ellipsis">
+      AVG bỏ qua NULL — xem tận mắt
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#group-by-mot-cot" class="md-nav__link">
+    <span class="md-ellipsis">
+      GROUP BY một cột
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#group-by-nhieu-cot" class="md-nav__link">
+    <span class="md-ellipsis">
+      GROUP BY nhiều cột
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#having-loc-nhom" class="md-nav__link">
+    <span class="md-ellipsis">
+      HAVING — lọc nhóm
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#iem-trung-binh-tung-mon-tung-lop" class="md-nav__link">
+    <span class="md-ellipsis">
+      Điểm trung bình từng môn từng lớp
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#filter-where_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      FILTER (WHERE ...)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rollup-them-dong-tong-theo-thu-bac" class="md-nav__link">
+    <span class="md-ellipsis">
+      ROLLUP — thêm dòng tổng theo thứ bậc
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cube-va-grouping-sets" class="md-nav__link">
+    <span class="md-ellipsis">
+      CUBE và GROUPING SETS
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#don-dep" class="md-nav__link">
+    <span class="md-ellipsis">
+      Dọn dẹp
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#loi-thuong-gap" class="md-nav__link">
+    <span class="md-ellipsis">
+      ⚠️ Lỗi thường gặp
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bai-tap" class="md-nav__link">
+    <span class="md-ellipsis">
+      ✍️ Bài tập
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tom-tat" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔑 Tóm tắt
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../dataset/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Database mẫu
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../glossary/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bảng thuật ngữ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Mục lục">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Mục lục
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#cau-chuyen-mo-au" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧠 Câu chuyện mở đầu
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#khai-niem-thuat-ngu" class="md-nav__link">
+    <span class="md-ellipsis">
+      📖 Khái niệm &amp; thuật ngữ
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📖 Khái niệm & thuật ngữ">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ham-tong-hop" class="md-nav__link">
+    <span class="md-ellipsis">
+      Hàm tổng hợp
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#group-by" class="md-nav__link">
+    <span class="md-ellipsis">
+      GROUP BY
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#having" class="md-nav__link">
+    <span class="md-ellipsis">
+      HAVING
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#thu-tu-thuc-thi-logic-chia-khoa-cua-ca-bai" class="md-nav__link">
+    <span class="md-ellipsis">
+      Thứ tự thực thi logic — chìa khoá của cả bài
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#filter-where" class="md-nav__link">
+    <span class="md-ellipsis">
+      FILTER (WHERE ...)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rollup-cube-grouping-sets" class="md-nav__link">
+    <span class="md-ellipsis">
+      ROLLUP, CUBE, GROUPING SETS
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bang-thuat-ngu" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bảng thuật ngữ
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#so-o" class="md-nav__link">
+    <span class="md-ellipsis">
+      🖼️ Sơ đồ
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#thuc-hanh" class="md-nav__link">
+    <span class="md-ellipsis">
+      💻 Thực hành
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="💻 Thực hành">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#count-ba-dang-ba-y-nghia" class="md-nav__link">
+    <span class="md-ellipsis">
+      COUNT — ba dạng, ba ý nghĩa
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sum-avg-min-max" class="md-nav__link">
+    <span class="md-ellipsis">
+      SUM, AVG, MIN, MAX
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#avg-bo-qua-null-xem-tan-mat" class="md-nav__link">
+    <span class="md-ellipsis">
+      AVG bỏ qua NULL — xem tận mắt
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#group-by-mot-cot" class="md-nav__link">
+    <span class="md-ellipsis">
+      GROUP BY một cột
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#group-by-nhieu-cot" class="md-nav__link">
+    <span class="md-ellipsis">
+      GROUP BY nhiều cột
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#having-loc-nhom" class="md-nav__link">
+    <span class="md-ellipsis">
+      HAVING — lọc nhóm
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#iem-trung-binh-tung-mon-tung-lop" class="md-nav__link">
+    <span class="md-ellipsis">
+      Điểm trung bình từng môn từng lớp
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#filter-where_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      FILTER (WHERE ...)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rollup-them-dong-tong-theo-thu-bac" class="md-nav__link">
+    <span class="md-ellipsis">
+      ROLLUP — thêm dòng tổng theo thứ bậc
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cube-va-grouping-sets" class="md-nav__link">
+    <span class="md-ellipsis">
+      CUBE và GROUPING SETS
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#don-dep" class="md-nav__link">
+    <span class="md-ellipsis">
+      Dọn dẹp
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#loi-thuong-gap" class="md-nav__link">
+    <span class="md-ellipsis">
+      ⚠️ Lỗi thường gặp
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bai-tap" class="md-nav__link">
+    <span class="md-ellipsis">
+      ✍️ Bài tập
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tom-tat" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔑 Tóm tắt
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="bai-26-group-by-having-va-cac-ham-tong-hop">Bài 26 — GROUP BY, HAVING và các hàm tổng hợp<a class="headerlink" href="#bai-26-group-by-having-va-cac-ham-tong-hop" title="Permanent link">&para;</a></h1>
+<div class="admonition abstract">
+<p class="admonition-title">🎯 Học xong bài này, bạn sẽ</p>
+<ul>
+<li>Dùng được năm <strong>hàm tổng hợp</strong> <code>COUNT</code>, <code>SUM</code>, <code>AVG</code>, <code>MIN</code>, <code>MAX</code> và biết chúng xử lý <code>NULL</code> thế nào</li>
+<li>Giải thích chính xác khác biệt giữa <code>COUNT(*)</code>, <code>COUNT(cột)</code> và <code>COUNT(DISTINCT cột)</code></li>
+<li>Gom dòng theo một hoặc nhiều cột bằng <code>GROUP BY</code>, và lọc <strong>nhóm</strong> bằng <code>HAVING</code></li>
+<li>Trả lời được câu hỏi kinh điển <em>"khi nào <code>WHERE</code>, khi nào <code>HAVING</code>"</em> bằng <strong>thứ tự thực thi logic</strong></li>
+<li>Viết được <code>FILTER (WHERE ...)</code> để đếm nhiều điều kiện trong một lượt, và dựng báo cáo có dòng tổng bằng <code>ROLLUP</code>, <code>CUBE</code>, <code>GROUPING SETS</code></li>
+</ul>
+</div>
+<h2 id="cau-chuyen-mo-au">🧠 Câu chuyện mở đầu<a class="headerlink" href="#cau-chuyen-mo-au" title="Permanent link">&para;</a></h2>
+<p>Quay lại quyển sổ điểm ở <a href="../../cap-0-nhap-mon/01-du-lieu-va-thong-tin/">Bài 1</a>. Cô giáo hỏi bạn ba câu, và bạn đã thấy rằng dữ liệu thô không trả lời được ngay.</p>
+<p>Bây giờ cô hỏi thêm một câu khó hơn: <em>"Em cho cô biết điểm trung bình môn Toán của </em><em>từng lớp</em><em>, và chỉ những lớp nào có trung bình trên 7 thôi."</em></p>
+<p>Hãy để ý câu hỏi này có <strong>ba tầng</strong> lọc và gom lồng vào nhau:</p>
+<ol>
+<li>Trước hết, chỉ giữ điểm <strong>môn Toán</strong> — đây là lọc trên <strong>từng dòng điểm</strong>.</li>
+<li>Rồi <strong>gom</strong> các dòng còn lại thành từng đống theo lớp, và tính trung bình mỗi đống.</li>
+<li>Cuối cùng, bỏ đi những <strong>đống</strong> có trung bình không quá 7 — đây là lọc trên <strong>cả nhóm</strong>, không phải trên từng dòng.</li>
+</ol>
+<p>Bước 1 và bước 3 đều là "lọc", nhưng chúng lọc hai thứ <strong>khác nhau</strong>: một cái lọc dòng, một cái lọc nhóm. Và vì thế SQL phải có <strong>hai</strong> từ khoá riêng cho chúng.</p>
+<p>Đó chính là <code>WHERE</code> và <code>HAVING</code>. Hiểu vì sao cần cả hai là hiểu được điều quan trọng nhất của bài này.</p>
+<h2 id="khai-niem-thuat-ngu">📖 Khái niệm &amp; thuật ngữ<a class="headerlink" href="#khai-niem-thuat-ngu" title="Permanent link">&para;</a></h2>
+<h3 id="ham-tong-hop">Hàm tổng hợp<a class="headerlink" href="#ham-tong-hop" title="Permanent link">&para;</a></h3>
+<p><strong>Hàm tổng hợp</strong> (<em>aggregate function</em>) là hàm nhận <strong>nhiều dòng</strong> và trả về <strong>một giá trị duy nhất</strong>.</p>
+<p>Đây là điểm khác biệt căn bản so với mọi thứ bạn đã học. Các hàm như <code>upper()</code> hay <code>length()</code> xử lý từng dòng độc lập: vào 40 dòng, ra 40 dòng. Hàm tổng hợp thì vào 40 dòng, ra <strong>1</strong> dòng.</p>
+<table>
+<thead>
+<tr>
+<th>Hàm</th>
+<th>Trả về</th>
+<th>Xử lý <code>NULL</code> thế nào</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong><code>COUNT(*)</code></strong></td>
+<td>Số <strong>dòng</strong></td>
+<td>Đếm mọi dòng, kể cả dòng toàn <code>NULL</code></td>
+</tr>
+<tr>
+<td><strong><code>COUNT(cột)</code></strong></td>
+<td>Số giá trị <strong>không <code>NULL</code></strong> của cột</td>
+<td><strong>Bỏ qua</strong> <code>NULL</code></td>
+</tr>
+<tr>
+<td><strong><code>COUNT(DISTINCT cột)</code></strong></td>
+<td>Số giá trị <strong>phân biệt, không <code>NULL</code></strong></td>
+<td>Bỏ qua <code>NULL</code> và bỏ trùng</td>
+</tr>
+<tr>
+<td><strong><code>SUM(cột)</code></strong></td>
+<td>Tổng</td>
+<td>Bỏ qua <code>NULL</code>; nếu <strong>mọi</strong> giá trị là <code>NULL</code> thì trả về <code>NULL</code></td>
+</tr>
+<tr>
+<td><strong><code>AVG(cột)</code></strong></td>
+<td>Trung bình</td>
+<td>Bỏ qua <code>NULL</code> — <strong>chia cho số giá trị có thật</strong>, không chia cho số dòng</td>
+</tr>
+<tr>
+<td><strong><code>MIN(cột)</code></strong> / <strong><code>MAX(cột)</code></strong></td>
+<td>Nhỏ nhất / lớn nhất</td>
+<td>Bỏ qua <code>NULL</code></td>
+</tr>
+</tbody>
+</table>
+<div class="admonition danger">
+<p class="admonition-title"><code>COUNT(*)</code> và <code>COUNT(cột)</code> là hai hàm khác nhau</p>
+<p><code>COUNT(*)</code> đếm <strong>dòng</strong>. <code>COUNT(ngay_tra_thuc_te)</code> đếm <strong>giá trị có thật trong cột đó</strong>.</p>
+<p>Trên bảng <code>muon_sach</code> với 50 lượt mượn, trong đó 12 lượt chưa trả:</p>
+<ul>
+<li><code>COUNT(*)</code> = <strong>50</strong> — tổng số lượt mượn</li>
+<li><code>COUNT(ngay_tra_thuc_te)</code> = <strong>38</strong> — số lượt <strong>đã trả</strong></li>
+<li><code>COUNT(*) - COUNT(ngay_tra_thuc_te)</code> = <strong>12</strong> — số lượt chưa trả</li>
+</ul>
+<p>Ba con số, ba ý nghĩa nghiệp vụ hoàn toàn khác. Đây là lý do một báo cáo <em>"tổng số lượt mượn"</em> có thể ra 38 thay vì 50 chỉ vì ai đó viết <code>COUNT(ngay_tra_thuc_te)</code>.</p>
+<p>Quy tắc: <strong>muốn đếm dòng thì luôn viết <code>COUNT(*)</code>.</strong> Chỉ viết <code>COUNT(cột)</code> khi bạn <strong>thật sự</strong> muốn đếm số ô có giá trị.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title"><code>AVG</code> cũng bỏ qua <code>NULL</code> — và đây là bẫy kín hơn</p>
+<p>Ba học sinh, hai bạn được chấm 9 và 6, một bạn <strong>chưa chấm</strong> (<code>NULL</code>).</p>
+<ul>
+<li><code>AVG(diem_so)</code> = <code>(9 + 6) ÷ 2</code> = <strong>7.5</strong> — coi như bạn thứ ba không tồn tại</li>
+<li><code>SUM(diem_so) / COUNT(*)</code> = <code>15 ÷ 3</code> = <strong>5.0</strong> — coi bạn thứ ba là 0 điểm</li>
+</ul>
+<p>Cả hai đều là phép tính đúng. Câu hỏi là <strong>bạn muốn cái nào</strong>, và bạn phải trả lời câu đó một cách có ý thức. <em>"Trung bình của những bài đã chấm"</em> thì dùng <code>AVG</code>; <em>"trung bình của cả lớp, coi bài chưa chấm là 0"</em> thì phải tự viết phép chia.</p>
+</div>
+<h3 id="group-by"><code>GROUP BY</code><a class="headerlink" href="#group-by" title="Permanent link">&para;</a></h3>
+<p><strong><code>GROUP BY</code></strong> gom các dòng có cùng giá trị ở một (hoặc nhiều) cột thành <strong>một nhóm</strong>, rồi áp hàm tổng hợp lên <strong>từng nhóm</strong> thay vì lên toàn bảng.</p>
+<p>Kết quả có đúng <strong>một dòng cho mỗi nhóm</strong>.</p>
+<p>Quy tắc sắt của <code>GROUP BY</code>: <strong>mọi cột xuất hiện trong <code>SELECT</code> mà không nằm trong hàm tổng hợp thì phải có trong <code>GROUP BY</code>.</strong></p>
+<p>Vì sao? Vì một nhóm gồm nhiều dòng. Nếu bạn viết <code>SELECT ma_lop, ho_ten, count(*) FROM hoc_sinh GROUP BY ma_lop</code>, thì nhóm <code>L01</code> có 6 học sinh với 6 cái <code>ho_ten</code> khác nhau — máy phải in cái nào? Không có câu trả lời, nên PostgreSQL từ chối.</p>
+<h3 id="having"><code>HAVING</code><a class="headerlink" href="#having" title="Permanent link">&para;</a></h3>
+<p><strong><code>HAVING</code></strong> lọc <strong>nhóm</strong>, giống như <code>WHERE</code> lọc <strong>dòng</strong>.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th><code>WHERE</code></th>
+<th><code>HAVING</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Lọc cái gì</td>
+<td>Từng <strong>dòng</strong></td>
+<td>Từng <strong>nhóm</strong></td>
+</tr>
+<tr>
+<td>Chạy khi nào</td>
+<td><strong>Trước</strong> <code>GROUP BY</code></td>
+<td><strong>Sau</strong> <code>GROUP BY</code></td>
+</tr>
+<tr>
+<td>Dùng được hàm tổng hợp?</td>
+<td><strong>Không</strong></td>
+<td><strong>Có</strong></td>
+</tr>
+<tr>
+<td>Dùng được cột không gom?</td>
+<td>Có</td>
+<td>Không</td>
+</tr>
+</tbody>
+</table>
+<h3 id="thu-tu-thuc-thi-logic-chia-khoa-cua-ca-bai">Thứ tự thực thi logic — chìa khoá của cả bài<a class="headerlink" href="#thu-tu-thuc-thi-logic-chia-khoa-cua-ca-bai" title="Permanent link">&para;</a></h3>
+<p><strong>Thứ tự thực thi logic</strong> (<em>logical query processing order</em>) là thứ tự mà SQL <strong>quy định về mặt ngữ nghĩa</strong> cho các mệnh đề của một câu truy vấn. Nó <strong>khác</strong> thứ tự bạn viết chúng ra:</p>
+<table>
+<thead>
+<tr>
+<th>Bạn viết theo thứ tự</th>
+<th>SQL thực hiện theo thứ tự</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1. <code>SELECT</code></td>
+<td>1. <code>FROM</code> — lấy bảng, ghép <code>JOIN</code></td>
+</tr>
+<tr>
+<td>2. <code>FROM</code></td>
+<td>2. <code>WHERE</code> — lọc <strong>dòng</strong></td>
+</tr>
+<tr>
+<td>3. <code>WHERE</code></td>
+<td>3. <code>GROUP BY</code> — gom thành nhóm</td>
+</tr>
+<tr>
+<td>4. <code>GROUP BY</code></td>
+<td>4. <code>HAVING</code> — lọc <strong>nhóm</strong></td>
+</tr>
+<tr>
+<td>5. <code>HAVING</code></td>
+<td>5. <code>SELECT</code> — tính biểu thức, đặt bí danh</td>
+</tr>
+<tr>
+<td>6. <code>ORDER BY</code></td>
+<td>6. <code>DISTINCT</code> — bỏ dòng trùng</td>
+</tr>
+<tr>
+<td>7. <code>LIMIT</code></td>
+<td>7. <code>ORDER BY</code> — sắp xếp</td>
+</tr>
+<tr>
+<td></td>
+<td>8. <code>LIMIT</code> / <code>OFFSET</code> — cắt</td>
+</tr>
+</tbody>
+</table>
+<p>Bảng này giải thích <strong>mọi</strong> thắc mắc mà người mới có về <code>GROUP BY</code>:</p>
+<ol>
+<li><strong>Vì sao <code>WHERE</code> không dùng được hàm tổng hợp?</strong> Vì <code>WHERE</code> chạy ở bước 2, khi các nhóm <strong>chưa được tạo ra</strong>. Lúc đó <code>count(*)</code> chưa có nghĩa gì.</li>
+<li><strong>Vì sao <code>HAVING</code> dùng được?</strong> Vì nó chạy ở bước 4, sau khi nhóm đã hình thành.</li>
+<li><strong>Vì sao không viết được bí danh trong <code>WHERE</code> hay <code>HAVING</code>?</strong> Vì bí danh được đặt ở bước 5, <strong>sau</strong> cả hai.</li>
+<li><strong>Vì sao <code>ORDER BY</code> lại viết được bí danh?</strong> Vì nó chạy ở bước 7, sau khi bí danh đã tồn tại.</li>
+<li><strong>Vì sao <code>LIMIT</code> không lọc trước rồi mới sắp?</strong> Vì <code>ORDER BY</code> chạy ở bước 7, <code>LIMIT</code> ở bước 8 — sắp xong mới cắt.</li>
+</ol>
+<div class="admonition note">
+<p class="admonition-title">'Logic' nghĩa là 'về ngữ nghĩa', không phải 'về cách chạy thật'</p>
+<p>PostgreSQL <strong>không</strong> thực sự làm tám bước theo đúng trình tự đó. Bộ tối ưu của nó sắp xếp lại công việc rất nhiều — đẩy điều kiện lọc xuống sâu, dùng index để bỏ qua hẳn việc sắp xếp, gom nhóm bằng bảng băm.</p>
+<p>Nhưng nó <strong>bắt buộc</strong> phải cho ra <strong>kết quả giống như</strong> nếu đã làm theo đúng tám bước đó. Thứ tự logic là <strong>hợp đồng về kết quả</strong>, còn kế hoạch thực thi thật là chuyện của Cấp 4, khi bạn đọc <code>EXPLAIN</code>.</p>
+</div>
+<h3 id="filter-where"><code>FILTER (WHERE ...)</code><a class="headerlink" href="#filter-where" title="Permanent link">&para;</a></h3>
+<p><strong><code>FILTER (WHERE ...)</code></strong> là mệnh đề gắn vào <strong>một</strong> hàm tổng hợp, cho hàm đó chỉ nhìn những dòng thoả điều kiện riêng của nó.</p>
+<p>Nó cực kỳ hữu ích khi bạn cần <strong>nhiều con số với nhiều điều kiện khác nhau trong cùng một lượt đọc bảng</strong>: số học sinh nam, số học sinh nữ, số bạn sinh năm 2012 — tất cả trong một câu lệnh, một lần quét bảng.</p>
+<p>Không có <code>FILTER</code>, bạn phải viết <code>count(*)</code> lồng với <code>CASE WHEN</code>, dài và khó đọc hơn. Hai cách tương đương nhau về kết quả:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>count(*) FILTER (WHERE gioi_tinh = 'Nữ')
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>count(CASE WHEN gioi_tinh = 'Nữ' THEN 1 END)
+</span></code></pre></div>
+<h3 id="rollup-cube-grouping-sets"><code>ROLLUP</code>, <code>CUBE</code>, <code>GROUPING SETS</code><a class="headerlink" href="#rollup-cube-grouping-sets" title="Permanent link">&para;</a></h3>
+<p>Ba mệnh đề này giải quyết một nhu cầu rất thực tế: <strong>báo cáo cần cả dòng chi tiết lẫn dòng tổng.</strong></p>
+<ul>
+<li><strong><code>ROLLUP (a, b)</code></strong> gom theo thứ bậc, từ chi tiết nhất lên tổng quát nhất: <code>(a, b)</code>, rồi <code>(a)</code>, rồi <code>()</code>. Dùng khi hai cột có quan hệ <strong>cha–con</strong> — ví dụ khối → lớp. Kết quả có dòng tổng cho từng khối, cộng một dòng tổng toàn trường.</li>
+<li><strong><code>CUBE (a, b)</code></strong> gom theo <strong>mọi tổ hợp</strong> có thể: <code>(a, b)</code>, <code>(a)</code>, <code>(b)</code>, <code>()</code>. Dùng khi hai cột <strong>độc lập</strong> với nhau và bạn muốn xem tổng theo cả hai chiều.</li>
+<li><strong><code>GROUPING SETS ((a), (b), ())</code></strong> cho bạn <strong>tự liệt kê</strong> chính xác những tổ hợp mình cần. Đây là dạng tổng quát nhất; <code>ROLLUP</code> và <code>CUBE</code> chỉ là hai lối viết tắt của nó.</li>
+</ul>
+<p>Ở các dòng tổng, những cột không tham gia gom được điền <code>NULL</code>. Để phân biệt cái <code>NULL</code> "đây là dòng tổng" với cái <code>NULL</code> có thật trong dữ liệu, dùng hàm <strong><code>GROUPING(cột)</code></strong>: nó trả về <code>1</code> nếu cột đó <strong>không</strong> tham gia nhóm hiện tại, và <code>0</code> nếu có.</p>
+<h3 id="bang-thuat-ngu">Bảng thuật ngữ<a class="headerlink" href="#bang-thuat-ngu" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Tiếng Việt</th>
+<th>English</th>
+<th>Nghĩa dễ hiểu</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Hàm tổng hợp</td>
+<td><em>aggregate function</em></td>
+<td>Hàm nhận nhiều dòng và trả về một giá trị duy nhất</td>
+</tr>
+<tr>
+<td>Gom nhóm</td>
+<td><em>GROUP BY</em></td>
+<td>Gom các dòng cùng giá trị thành nhóm, rồi áp hàm tổng hợp lên từng nhóm</td>
+</tr>
+<tr>
+<td>Lọc nhóm</td>
+<td><em>HAVING</em></td>
+<td>Lọc trên <strong>nhóm</strong> sau khi đã gom, nên dùng được hàm tổng hợp</td>
+</tr>
+<tr>
+<td>Thứ tự thực thi logic</td>
+<td><em>logical query processing order</em></td>
+<td>Trình tự ngữ nghĩa <code>FROM</code> → <code>WHERE</code> → <code>GROUP BY</code> → <code>HAVING</code> → <code>SELECT</code> → <code>DISTINCT</code> → <code>ORDER BY</code> → <code>LIMIT</code>, khác thứ tự viết</td>
+</tr>
+<tr>
+<td>Lọc riêng cho một hàm</td>
+<td><em>FILTER</em></td>
+<td>Mệnh đề <code>FILTER (WHERE ...)</code> cho một hàm tổng hợp chỉ nhìn phần dòng nó cần</td>
+</tr>
+<tr>
+<td>Gom theo thứ bậc</td>
+<td><em>ROLLUP</em></td>
+<td>Sinh thêm dòng tổng theo thứ bậc cha–con, ví dụ lớp → khối → toàn trường</td>
+</tr>
+<tr>
+<td>Gom theo mọi tổ hợp</td>
+<td><em>CUBE</em></td>
+<td>Sinh thêm dòng tổng cho mọi tổ hợp của các cột gom</td>
+</tr>
+<tr>
+<td>Tập gom tự chọn</td>
+<td><em>GROUPING SETS</em></td>
+<td>Tự liệt kê chính xác các tổ hợp gom cần thiết — dạng tổng quát của <code>ROLLUP</code> và <code>CUBE</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="so-o">🖼️ Sơ đồ<a class="headerlink" href="#so-o" title="Permanent link">&para;</a></h2>
+<p>Tám bước của thứ tự thực thi logic. Đây là sơ đồ đáng in ra dán lên tường:</p>
+<pre class="mermaid"><code>flowchart TB
+    F["&lt;b&gt;1 · FROM&lt;/b&gt;&lt;br/&gt;Lấy bảng, thực hiện JOIN&lt;br/&gt;&lt;i&gt;→ một bảng lớn duy nhất&lt;/i&gt;"]
+    W["&lt;b&gt;2 · WHERE&lt;/b&gt;&lt;br/&gt;Lọc từng DÒNG&lt;br/&gt;&lt;i&gt;❌ chưa dùng được hàm tổng hợp&lt;/i&gt;"]
+    G["&lt;b&gt;3 · GROUP BY&lt;/b&gt;&lt;br/&gt;Gom dòng thành các NHÓM"]
+    H["&lt;b&gt;4 · HAVING&lt;/b&gt;&lt;br/&gt;Lọc từng NHÓM&lt;br/&gt;&lt;i&gt;✅ dùng được hàm tổng hợp&lt;/i&gt;"]
+    S["&lt;b&gt;5 · SELECT&lt;/b&gt;&lt;br/&gt;Tính biểu thức · đặt bí danh&lt;br/&gt;&lt;i&gt;bí danh mới ra đời ở đây&lt;/i&gt;"]
+    D["&lt;b&gt;6 · DISTINCT&lt;/b&gt;&lt;br/&gt;Bỏ dòng kết quả trùng nhau"]
+    O["&lt;b&gt;7 · ORDER BY&lt;/b&gt;&lt;br/&gt;Sắp xếp&lt;br/&gt;&lt;i&gt;✅ dùng được bí danh&lt;/i&gt;"]
+    L["&lt;b&gt;8 · LIMIT / OFFSET&lt;/b&gt;&lt;br/&gt;Cắt lấy phần cần"]
+
+    F --&gt; W --&gt; G --&gt; H --&gt; S --&gt; D --&gt; O --&gt; L
+
+    style F fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
+    style W fill:#fff8e1,stroke:#f9a825,stroke-width:3px
+    style G fill:#f3e5f5,stroke:#6a1b9a,stroke-width:2px
+    style H fill:#fff8e1,stroke:#f9a825,stroke-width:3px
+    style S fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
+    style D fill:#eceff1,stroke:#607d8b
+    style O fill:#e8f5e9,stroke:#2e7d32
+    style L fill:#eceff1,stroke:#607d8b</code></pre>
+<p>Hai ô viền đậm là <code>WHERE</code> và <code>HAVING</code>. Chúng nằm ở <strong>hai phía</strong> của <code>GROUP BY</code> — và đó là toàn bộ câu trả lời cho câu hỏi "khi nào dùng cái nào".</p>
+<p>Còn đây là <code>GROUP BY</code> làm gì với dữ liệu:</p>
+<pre class="mermaid"><code>flowchart LR
+    subgraph T["TRƯỚC · 40 dòng học sinh"]
+        direction TB
+        R1["HS001 · L01"]
+        R2["HS002 · L01"]
+        R3["HS007 · L02"]
+        R4["HS013 · L03"]
+        R5["… 36 dòng nữa"]
+        R1 --- R2 --- R3 --- R4 --- R5
+    end
+
+    GB{{"GROUP BY ma_lop&lt;br/&gt;+ count(*)"}}
+
+    subgraph S["SAU · 6 dòng — một dòng mỗi lớp"]
+        direction TB
+        G1["L01 · 6 học sinh"]
+        G2["L02 · 6 học sinh"]
+        G3["L03 · 8 học sinh"]
+        G4["L04 · 6 · L05 · 7 · L06 · 7"]
+        G1 --- G2 --- G3 --- G4
+    end
+
+    T --&gt; GB --&gt; S
+
+    style T fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
+    style GB fill:#fff8e1,stroke:#f9a825,stroke-width:2px
+    style S fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px</code></pre>
+<h2 id="thuc-hanh">💻 Thực hành<a class="headerlink" href="#thuc-hanh" title="Permanent link">&para;</a></h2>
+<h3 id="count-ba-dang-ba-y-nghia"><code>COUNT</code> — ba dạng, ba ý nghĩa<a class="headerlink" href="#count-ba-dang-ba-y-nghia" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1">-- KỲ VỌNG: dem_moi_dong = 50</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1">-- KỲ VỌNG: dem_cot_co_null = 38</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1">-- KỲ VỌNG: dem_phan_biet = 25</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1">-- KỲ VỌNG: dem_hang_so = 50</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w">                  </span><span class="k">AS</span><span class="w"> </span><span class="n">dem_moi_dong</span><span class="p">,</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">       </span><span class="k">count</span><span class="p">(</span><span class="n">ngay_tra_thuc_te</span><span class="p">)</span><span class="w">   </span><span class="k">AS</span><span class="w"> </span><span class="n">dem_cot_co_null</span><span class="p">,</span>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">       </span><span class="k">count</span><span class="p">(</span><span class="k">DISTINCT</span><span class="w"> </span><span class="n">ma_hs</span><span class="p">)</span><span class="w">     </span><span class="k">AS</span><span class="w"> </span><span class="n">dem_phan_biet</span><span class="p">,</span>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">       </span><span class="k">count</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w">                  </span><span class="k">AS</span><span class="w"> </span><span class="n">dem_hang_so</span>
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="k">FROM</span><span class="w"> </span><span class="n">muon_sach</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Bốn con số trên cùng một bảng:</p>
+<ul>
+<li><strong>50</strong> — tổng số lượt mượn. <code>count(*)</code> đếm dòng.</li>
+<li><strong>38</strong> — số lượt <strong>đã trả</strong>. <code>count(ngay_tra_thuc_te)</code> bỏ qua 12 ô rỗng.</li>
+<li><strong>25</strong> — số học sinh <strong>khác nhau</strong> đã từng mượn. Có 50 lượt nhưng chỉ 25 người, vì mỗi người mượn hai lần.</li>
+<li><strong>50</strong> — <code>count(1)</code> giống hệt <code>count(*)</code>: hằng số <code>1</code> không bao giờ <code>NULL</code>, nên nó đếm mọi dòng. (Có người tin <code>count(1)</code> nhanh hơn <code>count(*)</code>; trong PostgreSQL thì không, hai cái y như nhau.)</li>
+</ul>
+<p>Cùng chuyện đó trên bảng <code>diem_danh</code>, nơi cột <code>ly_do</code> chỉ được điền khi học sinh vắng có phép:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1">-- KỲ VỌNG: tong_luot_diem_danh = 200</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1">-- KỲ VỌNG: so_luot_co_ly_do = 16</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w">       </span><span class="k">AS</span><span class="w"> </span><span class="n">tong_luot_diem_danh</span><span class="p">,</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">       </span><span class="k">count</span><span class="p">(</span><span class="n">ly_do</span><span class="p">)</span><span class="w">   </span><span class="k">AS</span><span class="w"> </span><span class="n">so_luot_co_ly_do</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="k">FROM</span><span class="w"> </span><span class="n">diem_danh</span><span class="p">;</span>
+</span></code></pre></div>
+<h3 id="sum-avg-min-max"><code>SUM</code>, <code>AVG</code>, <code>MIN</code>, <code>MAX</code><a class="headerlink" href="#sum-avg-min-max" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1">-- KỲ VỌNG: so_giao_vien = 8</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1">-- KỲ VỌNG: tong_luong = 115600000</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1">-- KỲ VỌNG: luong_thap_nhat = 11900000.00</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1">-- KỲ VỌNG: luong_cao_nhat = 17400000.00</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w">            </span><span class="k">AS</span><span class="w"> </span><span class="n">so_giao_vien</span><span class="p">,</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">       </span><span class="k">sum</span><span class="p">(</span><span class="n">luong</span><span class="p">)::</span><span class="nb">BIGINT</span><span class="w">  </span><span class="k">AS</span><span class="w"> </span><span class="n">tong_luong</span><span class="p">,</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">       </span><span class="k">min</span><span class="p">(</span><span class="n">luong</span><span class="p">)</span><span class="w">          </span><span class="k">AS</span><span class="w"> </span><span class="n">luong_thap_nhat</span><span class="p">,</span>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">       </span><span class="k">max</span><span class="p">(</span><span class="n">luong</span><span class="p">)</span><span class="w">          </span><span class="k">AS</span><span class="w"> </span><span class="n">luong_cao_nhat</span>
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="k">FROM</span><span class="w"> </span><span class="n">giao_vien</span><span class="p">;</span>
+</span></code></pre></div>
+<p><code>MIN</code> và <code>MAX</code> dùng được cho cả ngày tháng và chuỗi, không riêng gì số:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1">-- KỲ VỌNG: ban_lon_tuoi_nhat = 2011-01-20</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1">-- KỲ VỌNG: ban_nho_tuoi_nhat = 2012-12-25</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">min</span><span class="p">(</span><span class="n">ngay_sinh</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">ban_lon_tuoi_nhat</span><span class="p">,</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">       </span><span class="k">max</span><span class="p">(</span><span class="n">ngay_sinh</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">ban_nho_tuoi_nhat</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span><span class="p">;</span>
+</span></code></pre></div>
+<h3 id="avg-bo-qua-null-xem-tan-mat"><code>AVG</code> bỏ qua <code>NULL</code> — xem tận mắt<a class="headerlink" href="#avg-bo-qua-null-xem-tan-mat" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">b26_diem_thu</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">;</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">b26_diem_thu</span><span class="w"> </span><span class="p">(</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">    </span><span class="n">ma_hs</span><span class="w">   </span><span class="nb">CHAR</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">    </span><span class="n">diem_so</span><span class="w"> </span><span class="nb">NUMERIC</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span><span class="w">        </span><span class="c1">-- NULL = chưa chấm</span>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="p">);</span>
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">b26_diem_thu</span><span class="w"> </span><span class="p">(</span><span class="n">ma_hs</span><span class="p">,</span><span class="w"> </span><span class="n">diem_so</span><span class="p">)</span><span class="w"> </span><span class="k">VALUES</span>
+</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="p">(</span><span class="s1">'HS001'</span><span class="p">,</span><span class="w"> </span><span class="mi">9</span><span class="p">.</span><span class="mi">00</span><span class="p">),</span>
+</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="p">(</span><span class="s1">'HS002'</span><span class="p">,</span><span class="w"> </span><span class="mi">6</span><span class="p">.</span><span class="mi">00</span><span class="p">),</span>
+</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="p">(</span><span class="s1">'HS003'</span><span class="p">,</span><span class="w"> </span><span class="k">NULL</span><span class="p">);</span>
+</span><span id="__span-5-12"><a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
+</span><span id="__span-5-13"><a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="c1">-- KỲ VỌNG: so_dong = 3</span>
+</span><span id="__span-5-14"><a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="c1">-- KỲ VỌNG: so_bai_da_cham = 2</span>
+</span><span id="__span-5-15"><a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="c1">-- KỲ VỌNG: avg_bo_qua_null = 7.50</span>
+</span><span id="__span-5-16"><a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="c1">-- KỲ VỌNG: chia_cho_moi_dong = 5.00</span>
+</span><span id="__span-5-17"><a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w">                          </span><span class="k">AS</span><span class="w"> </span><span class="n">so_dong</span><span class="p">,</span>
+</span><span id="__span-5-18"><a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="w">       </span><span class="k">count</span><span class="p">(</span><span class="n">diem_so</span><span class="p">)</span><span class="w">                    </span><span class="k">AS</span><span class="w"> </span><span class="n">so_bai_da_cham</span><span class="p">,</span>
+</span><span id="__span-5-19"><a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="w">       </span><span class="n">round</span><span class="p">(</span><span class="k">avg</span><span class="p">(</span><span class="n">diem_so</span><span class="p">),</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w">            </span><span class="k">AS</span><span class="w"> </span><span class="n">avg_bo_qua_null</span><span class="p">,</span>
+</span><span id="__span-5-20"><a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a><span class="w">       </span><span class="n">round</span><span class="p">(</span><span class="k">sum</span><span class="p">(</span><span class="n">diem_so</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">),</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">chia_cho_moi_dong</span>
+</span><span id="__span-5-21"><a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a><span class="k">FROM</span><span class="w"> </span><span class="n">b26_diem_thu</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Cùng ba con điểm, hai cách tính, <strong>hai kết quả lệch nhau 2.5 điểm</strong>. <code>AVG</code> chia cho 2 (số bài đã chấm), phép chia tay chia cho 3 (số học sinh).</p>
+<p>Chuyện gì xảy ra khi nhóm <strong>không có dòng nào</strong>? Bảng <code>diem</code> của trường chỉ có dữ liệu học kỳ 1:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1">-- KỲ VỌNG: dem = 0</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1">-- KỲ VỌNG: tong = NULL</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1">-- KỲ VỌNG: trung_binh = NULL</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w">      </span><span class="k">AS</span><span class="w"> </span><span class="n">dem</span><span class="p">,</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">       </span><span class="k">sum</span><span class="p">(</span><span class="n">diem_so</span><span class="p">)</span><span class="w">  </span><span class="k">AS</span><span class="w"> </span><span class="n">tong</span><span class="p">,</span>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">       </span><span class="k">avg</span><span class="p">(</span><span class="n">diem_so</span><span class="p">)</span><span class="w">  </span><span class="k">AS</span><span class="w"> </span><span class="n">trung_binh</span>
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="k">FROM</span><span class="w"> </span><span class="n">diem</span>
+</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">hoc_ky</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
+</span></code></pre></div>
+<p><code>COUNT</code> trả về <strong><code>0</code></strong> — một con số. Nhưng <code>SUM</code> và <code>AVG</code> trả về <strong><code>NULL</code></strong>, không phải <code>0</code>. Đúng về mặt logic: tổng của tập rỗng thì không xác định. Trong báo cáo, đừng để <code>NULL</code> này hiện ra — bọc bằng <code>coalesce(sum(diem_so), 0)</code>.</p>
+<p>Còn khi có <code>GROUP BY</code> mà không dòng nào thoả <code>WHERE</code>, kết quả là <strong>không có nhóm nào cả</strong>:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1">-- KỲ VỌNG: 0 dòng</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">ma_mon</span><span class="p">,</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_diem</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="k">FROM</span><span class="w"> </span><span class="n">diem</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">hoc_ky</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">ma_mon</span>
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">ma_mon</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Không dòng nào — chứ không phải 9 dòng với số 0. Đây là lý do một báo cáo <em>"số điểm từng môn"</em> có thể <strong>thiếu hẳn</strong> những môn chưa có điểm, và bạn phải dùng <code>LEFT JOIN</code> từ bảng <code>mon_hoc</code> sang để đủ 9 dòng.</p>
+<h3 id="group-by-mot-cot"><code>GROUP BY</code> một cột<a class="headerlink" href="#group-by-mot-cot" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1">-- KỲ VỌNG: 6 dòng</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="c1">-- KỲ VỌNG: ma_lop = L01</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="c1">-- KỲ VỌNG: so_hoc_sinh = 6</span>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">ma_lop</span><span class="p">,</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_hoc_sinh</span>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span>
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">ma_lop</span>
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">ma_lop</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Sáu nhóm, sáu dòng kết quả: <code>L01</code> 6 bạn, <code>L02</code> 6, <code>L03</code> 8, <code>L04</code> 6, <code>L05</code> 7, <code>L06</code> 7. Cộng lại đúng 40.</p>
+<h3 id="group-by-nhieu-cot"><code>GROUP BY</code> nhiều cột<a class="headerlink" href="#group-by-nhieu-cot" title="Permanent link">&para;</a></h3>
+<p>Gom theo <strong>cặp</strong> giá trị: mỗi tổ hợp <em>(lớp, giới tính)</em> là một nhóm riêng.</p>
+<div class="highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1">-- KỲ VỌNG: 12 dòng</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">ma_lop</span><span class="p">,</span><span class="w"> </span><span class="n">gioi_tinh</span><span class="p">,</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_hoc_sinh</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">ma_lop</span><span class="p">,</span><span class="w"> </span><span class="n">gioi_tinh</span>
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">ma_lop</span><span class="p">,</span><span class="w"> </span><span class="n">gioi_tinh</span><span class="p">;</span>
+</span></code></pre></div>
+<p>12 nhóm = 6 lớp × 2 giới tính, và cả 12 tổ hợp đều có thật trong dữ liệu. Nếu có lớp nào toàn nam thì sẽ chỉ còn 11 nhóm — <code>GROUP BY</code> <strong>không</strong> sinh ra nhóm rỗng.</p>
+<h3 id="having-loc-nhom"><code>HAVING</code> — lọc nhóm<a class="headerlink" href="#having-loc-nhom" title="Permanent link">&para;</a></h3>
+<p>Câu hỏi: <em>"Lớp nào có hơn 6 học sinh?"</em></p>
+<div class="highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1">-- KỲ VỌNG: 3 dòng</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">ma_lop</span><span class="p">,</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_hoc_sinh</span>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span>
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">ma_lop</span>
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="k">HAVING</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">6</span>
+</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">ma_lop</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Ba lớp: <code>L03</code> (8 bạn), <code>L05</code> (7), <code>L06</code> (7).</p>
+<p>Bây giờ dùng <strong>cả hai</strong> <code>WHERE</code> và <code>HAVING</code> trong một câu — và chú ý chúng lọc hai thứ khác nhau:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1">-- KỲ VỌNG: 2 dòng</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">ma_lop</span><span class="p">,</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_hoc_sinh_nu</span>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span>
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">gioi_tinh</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'Nữ'</span><span class="w">          </span><span class="c1">-- lọc DÒNG: chỉ giữ học sinh nữ</span>
+</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">ma_lop</span>
+</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="k">HAVING</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">4</span><span class="w">            </span><span class="c1">-- lọc NHÓM: chỉ giữ lớp có ít nhất 4 bạn nữ</span>
+</span><span id="__span-11-7"><a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">ma_lop</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Hai lớp: <code>L03</code> và <code>L06</code>, mỗi lớp 4 bạn nữ. Các lớp khác chỉ có 3 bạn nữ nên bị <code>HAVING</code> loại.</p>
+<p>Đọc lại theo thứ tự thực thi logic để thấy vì sao nó đúng:</p>
+<ol>
+<li><code>FROM hoc_sinh</code> → 40 dòng.</li>
+<li><code>WHERE gioi_tinh = 'Nữ'</code> → còn 20 dòng.</li>
+<li><code>GROUP BY ma_lop</code> → gom thành 6 nhóm với số lượng 3, 3, 4, 3, 3, 4.</li>
+<li><code>HAVING count(*) &gt;= 4</code> → còn 2 nhóm.</li>
+<li><code>SELECT</code> → tính <code>count(*)</code>, đặt bí danh <code>so_hoc_sinh_nu</code>.</li>
+<li><code>ORDER BY ma_lop</code> → sắp xếp.</li>
+</ol>
+<h3 id="iem-trung-binh-tung-mon-tung-lop">Điểm trung bình từng môn từng lớp<a class="headerlink" href="#iem-trung-binh-tung-mon-tung-lop" title="Permanent link">&para;</a></h3>
+<p>Đây là báo cáo mà cô giáo hỏi ở đầu bài, ghép <code>JOIN</code> của <a href="../25-join/">Bài 25</a> với <code>GROUP BY</code> của bài này:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1">-- KỲ VỌNG: so_nhom = 54</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_nhom</span>
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="k">FROM</span><span class="w"> </span><span class="p">(</span>
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">    </span><span class="k">SELECT</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">ma_lop</span><span class="p">,</span><span class="w"> </span><span class="n">d</span><span class="p">.</span><span class="n">ma_mon</span>
+</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="w">    </span><span class="k">FROM</span><span class="w"> </span><span class="n">diem</span><span class="w"> </span><span class="n">d</span>
+</span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="w">    </span><span class="k">JOIN</span><span class="w"> </span><span class="n">hoc_sinh</span><span class="w"> </span><span class="n">h</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">ma_hs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">d</span><span class="p">.</span><span class="n">ma_hs</span>
+</span><span id="__span-12-7"><a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="w">    </span><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">ma_lop</span><span class="p">,</span><span class="w"> </span><span class="n">d</span><span class="p">.</span><span class="n">ma_mon</span>
+</span><span id="__span-12-8"><a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">t</span><span class="p">;</span>
+</span></code></pre></div>
+<p>54 nhóm = 6 lớp × 9 môn. Xem nội dung thật của báo cáo:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1">-- KỲ VỌNG: 54 dòng</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">ma_lop</span><span class="p">,</span>
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="w">       </span><span class="n">d</span><span class="p">.</span><span class="n">ma_mon</span><span class="p">,</span>
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="w">       </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w">                   </span><span class="k">AS</span><span class="w"> </span><span class="n">so_con_diem</span><span class="p">,</span>
+</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="w">       </span><span class="n">round</span><span class="p">(</span><span class="k">avg</span><span class="p">(</span><span class="n">d</span><span class="p">.</span><span class="n">diem_so</span><span class="p">),</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w">   </span><span class="k">AS</span><span class="w"> </span><span class="n">diem_tb</span><span class="p">,</span>
+</span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="w">       </span><span class="k">min</span><span class="p">(</span><span class="n">d</span><span class="p">.</span><span class="n">diem_so</span><span class="p">)</span><span class="w">             </span><span class="k">AS</span><span class="w"> </span><span class="n">thap_nhat</span><span class="p">,</span>
+</span><span id="__span-13-7"><a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="w">       </span><span class="k">max</span><span class="p">(</span><span class="n">d</span><span class="p">.</span><span class="n">diem_so</span><span class="p">)</span><span class="w">             </span><span class="k">AS</span><span class="w"> </span><span class="n">cao_nhat</span>
+</span><span id="__span-13-8"><a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="k">FROM</span><span class="w"> </span><span class="n">diem</span><span class="w"> </span><span class="n">d</span>
+</span><span id="__span-13-9"><a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="k">JOIN</span><span class="w"> </span><span class="n">hoc_sinh</span><span class="w"> </span><span class="n">h</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">ma_hs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">d</span><span class="p">.</span><span class="n">ma_hs</span>
+</span><span id="__span-13-10"><a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">ma_lop</span><span class="p">,</span><span class="w"> </span><span class="n">d</span><span class="p">.</span><span class="n">ma_mon</span>
+</span><span id="__span-13-11"><a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">ma_lop</span><span class="p">,</span><span class="w"> </span><span class="n">d</span><span class="p">.</span><span class="n">ma_mon</span><span class="p">;</span>
+</span></code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">Vì sao bài này không ghi sẵn con điểm trung bình?</p>
+<p>Cột <code>diem.diem_so</code> của database mẫu được <strong>sinh ngẫu nhiên</strong> (với hạt giống cố định, nên nó giống nhau mỗi lần nạp lại). Vì vậy khoá học <strong>không</strong> ghi các giá trị điểm cụ thể làm "kết quả mong đợi" — chỉ ghi những con số <strong>tất định</strong> như số dòng, số nhóm, số lượt.</p>
+<p>Đây cũng là một nguyên tắc nghề: khi viết tài liệu hay viết kiểm thử, hãy khẳng định những gì <strong>chắc chắn đúng</strong>, đừng khẳng định những gì chỉ <strong>tình cờ đúng</strong> ở lần chạy này.</p>
+</div>
+<h3 id="filter-where_1"><code>FILTER (WHERE ...)</code><a class="headerlink" href="#filter-where_1" title="Permanent link">&para;</a></h3>
+<p>Ba con số với ba điều kiện khác nhau, trong <strong>một</strong> lần quét bảng:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1">-- KỲ VỌNG: 6 dòng</span>
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="c1">-- KỲ VỌNG: ma_lop = L01</span>
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="c1">-- KỲ VỌNG: tong = 6</span>
+</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1">-- KỲ VỌNG: so_nu = 3</span>
+</span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="c1">-- KỲ VỌNG: so_nam = 3</span>
+</span><span id="__span-14-6"><a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="c1">-- KỲ VỌNG: sinh_2012 = 6</span>
+</span><span id="__span-14-7"><a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">ma_lop</span><span class="p">,</span>
+</span><span id="__span-14-8"><a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="w">       </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w">                                          </span><span class="k">AS</span><span class="w"> </span><span class="n">tong</span><span class="p">,</span>
+</span><span id="__span-14-9"><a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a><span class="w">       </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="n">FILTER</span><span class="w"> </span><span class="p">(</span><span class="k">WHERE</span><span class="w"> </span><span class="n">gioi_tinh</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'Nữ'</span><span class="p">)</span><span class="w">          </span><span class="k">AS</span><span class="w"> </span><span class="n">so_nu</span><span class="p">,</span>
+</span><span id="__span-14-10"><a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="w">       </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="n">FILTER</span><span class="w"> </span><span class="p">(</span><span class="k">WHERE</span><span class="w"> </span><span class="n">gioi_tinh</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'Nam'</span><span class="p">)</span><span class="w">         </span><span class="k">AS</span><span class="w"> </span><span class="n">so_nam</span><span class="p">,</span>
+</span><span id="__span-14-11"><a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a><span class="w">       </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="n">FILTER</span><span class="w"> </span><span class="p">(</span><span class="k">WHERE</span><span class="w"> </span><span class="n">ngay_sinh</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="nb">DATE</span><span class="w"> </span><span class="s1">'2013-01-01'</span>
+</span><span id="__span-14-12"><a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a><span class="w">                          </span><span class="k">AND</span><span class="w"> </span><span class="n">ngay_sinh</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="nb">DATE</span><span class="w"> </span><span class="s1">'2012-01-01'</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">sinh_2012</span>
+</span><span id="__span-14-13"><a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span>
+</span><span id="__span-14-14"><a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">ma_lop</span>
+</span><span id="__span-14-15"><a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">ma_lop</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Không có <code>FILTER</code>, bạn sẽ phải chạy ba truy vấn rồi tự ghép kết quả — hoặc viết <code>CASE WHEN</code> lồng trong <code>count</code>, dài hơn và khó đọc hơn.</p>
+<p>Trên bảng điểm danh, <code>FILTER</code> biến một bảng 200 dòng thành một báo cáo gọn:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1">-- KỲ VỌNG: tong_luot = 200</span>
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="c1">-- KỲ VỌNG: co_mat = 164</span>
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="c1">-- KỲ VỌNG: di_muon = 20</span>
+</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="c1">-- KỲ VỌNG: vang_co_phep = 16</span>
+</span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="c1">-- KỲ VỌNG: vang_khong_phep = 0</span>
+</span><span id="__span-15-6"><a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w">                                                  </span><span class="k">AS</span><span class="w"> </span><span class="n">tong_luot</span><span class="p">,</span>
+</span><span id="__span-15-7"><a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="w">       </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="n">FILTER</span><span class="w"> </span><span class="p">(</span><span class="k">WHERE</span><span class="w"> </span><span class="n">trang_thai</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'Có mặt'</span><span class="p">)</span><span class="w">             </span><span class="k">AS</span><span class="w"> </span><span class="n">co_mat</span><span class="p">,</span>
+</span><span id="__span-15-8"><a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a><span class="w">       </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="n">FILTER</span><span class="w"> </span><span class="p">(</span><span class="k">WHERE</span><span class="w"> </span><span class="n">trang_thai</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'Đi muộn'</span><span class="p">)</span><span class="w">            </span><span class="k">AS</span><span class="w"> </span><span class="n">di_muon</span><span class="p">,</span>
+</span><span id="__span-15-9"><a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a><span class="w">       </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="n">FILTER</span><span class="w"> </span><span class="p">(</span><span class="k">WHERE</span><span class="w"> </span><span class="n">trang_thai</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'Vắng có phép'</span><span class="p">)</span><span class="w">       </span><span class="k">AS</span><span class="w"> </span><span class="n">vang_co_phep</span><span class="p">,</span>
+</span><span id="__span-15-10"><a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a><span class="w">       </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="n">FILTER</span><span class="w"> </span><span class="p">(</span><span class="k">WHERE</span><span class="w"> </span><span class="n">trang_thai</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'Vắng không phép'</span><span class="p">)</span><span class="w">    </span><span class="k">AS</span><span class="w"> </span><span class="n">vang_khong_phep</span>
+</span><span id="__span-15-11"><a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a><span class="k">FROM</span><span class="w"> </span><span class="n">diem_danh</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Bốn con số cộng lại đúng 200. Và để ý: <code>vang_khong_phep = 0</code> — dữ liệu mẫu không có lượt nào vắng không phép.</p>
+<p>Hãy so sánh với cách làm bằng <code>GROUP BY</code>:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1">-- KỲ VỌNG: 3 dòng</span>
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="c1">-- KỲ VỌNG: so_luot = 164</span>
+</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">trang_thai</span><span class="p">,</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_luot</span>
+</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="k">FROM</span><span class="w"> </span><span class="n">diem_danh</span>
+</span><span id="__span-16-5"><a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">trang_thai</span>
+</span><span id="__span-16-6"><a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">so_luot</span><span class="w"> </span><span class="k">DESC</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Chỉ <strong>3 dòng</strong>, không phải 4! <code>GROUP BY</code> chỉ sinh nhóm cho những giá trị <strong>có mặt trong dữ liệu</strong> — trạng thái <code>Vắng không phép</code> không xuất hiện dòng nào nên nó không có nhóm.</p>
+<p>Đây là khác biệt thực chất giữa hai cách: <strong><code>FILTER</code> luôn cho bạn đủ số cột bạn khai, kể cả cột bằng 0; <code>GROUP BY</code> thì chỉ cho bạn những gì dữ liệu có.</strong> Với báo cáo cần đủ mọi hạng mục, <code>FILTER</code> an toàn hơn.</p>
+<h3 id="rollup-them-dong-tong-theo-thu-bac"><code>ROLLUP</code> — thêm dòng tổng theo thứ bậc<a class="headerlink" href="#rollup-them-dong-tong-theo-thu-bac" title="Permanent link">&para;</a></h3>
+<p>Báo cáo sĩ số theo lớp, kèm dòng tổng cho từng khối và một dòng tổng toàn trường:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1">-- KỲ VỌNG: 9 dòng</span>
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="c1">-- KỲ VỌNG: khoi = 8</span>
+</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="c1">-- KỲ VỌNG: ma_lop = L01</span>
+</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="c1">-- KỲ VỌNG: so_hoc_sinh = 6</span>
+</span><span id="__span-17-5"><a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">khoi</span><span class="p">,</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">ma_lop</span><span class="p">,</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="n">h</span><span class="p">.</span><span class="n">ma_hs</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_hoc_sinh</span>
+</span><span id="__span-17-6"><a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a><span class="k">FROM</span><span class="w"> </span><span class="n">lop</span><span class="w"> </span><span class="n">l</span>
+</span><span id="__span-17-7"><a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="k">LEFT</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">hoc_sinh</span><span class="w"> </span><span class="n">h</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">ma_lop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">ma_lop</span>
+</span><span id="__span-17-8"><a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="k">ROLLUP</span><span class="w"> </span><span class="p">(</span><span class="n">l</span><span class="p">.</span><span class="n">khoi</span><span class="p">,</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">ma_lop</span><span class="p">)</span>
+</span><span id="__span-17-9"><a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">khoi</span><span class="w"> </span><span class="n">NULLS</span><span class="w"> </span><span class="k">LAST</span><span class="p">,</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">ma_lop</span><span class="w"> </span><span class="n">NULLS</span><span class="w"> </span><span class="k">LAST</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Chín dòng, gồm ba tầng:</p>
+<table>
+<thead>
+<tr>
+<th><code>khoi</code></th>
+<th><code>ma_lop</code></th>
+<th>Nghĩa</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>8</td>
+<td>L01, L02, L03</td>
+<td>3 dòng chi tiết khối 8</td>
+</tr>
+<tr>
+<td>8</td>
+<td><code>NULL</code></td>
+<td><strong>Tổng khối 8</strong> = 20</td>
+</tr>
+<tr>
+<td>9</td>
+<td>L04, L05, L06</td>
+<td>3 dòng chi tiết khối 9</td>
+</tr>
+<tr>
+<td>9</td>
+<td><code>NULL</code></td>
+<td><strong>Tổng khối 9</strong> = 20</td>
+</tr>
+<tr>
+<td><code>NULL</code></td>
+<td><code>NULL</code></td>
+<td><strong>Tổng toàn trường</strong> = 40</td>
+</tr>
+</tbody>
+</table>
+<p><code>6 + 3 = 9</code> dòng. Không có <code>ROLLUP</code>, bạn phải chạy ba truy vấn rồi <code>UNION ALL</code> chúng lại.</p>
+<p>Dùng <code>GROUPING()</code> để dán nhãn cho các dòng tổng, thay vì để <code>NULL</code> trơ trọi:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1">-- KỲ VỌNG: 9 dòng</span>
+</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="c1">-- KỲ VỌNG: cap_do = TOAN TRUONG</span>
+</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">CASE</span><span class="w"> </span><span class="k">WHEN</span><span class="w"> </span><span class="k">GROUPING</span><span class="p">(</span><span class="n">l</span><span class="p">.</span><span class="n">khoi</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="w">   </span><span class="k">THEN</span><span class="w"> </span><span class="s1">'TOAN TRUONG'</span>
+</span><span id="__span-18-4"><a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="w">            </span><span class="k">WHEN</span><span class="w"> </span><span class="k">GROUPING</span><span class="p">(</span><span class="n">l</span><span class="p">.</span><span class="n">ma_lop</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="k">THEN</span><span class="w"> </span><span class="s1">'Khoi '</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">khoi</span>
+</span><span id="__span-18-5"><a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="w">            </span><span class="k">ELSE</span><span class="w"> </span><span class="s1">'Lop '</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">ma_lop</span>
+</span><span id="__span-18-6"><a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a><span class="w">       </span><span class="k">END</span><span class="w">                              </span><span class="k">AS</span><span class="w"> </span><span class="n">cap_do</span><span class="p">,</span>
+</span><span id="__span-18-7"><a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="w">       </span><span class="k">count</span><span class="p">(</span><span class="n">h</span><span class="p">.</span><span class="n">ma_hs</span><span class="p">)</span><span class="w">                   </span><span class="k">AS</span><span class="w"> </span><span class="n">so_hoc_sinh</span>
+</span><span id="__span-18-8"><a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a><span class="k">FROM</span><span class="w"> </span><span class="n">lop</span><span class="w"> </span><span class="n">l</span>
+</span><span id="__span-18-9"><a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a><span class="k">LEFT</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">hoc_sinh</span><span class="w"> </span><span class="n">h</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">ma_lop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">ma_lop</span>
+</span><span id="__span-18-10"><a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="k">ROLLUP</span><span class="w"> </span><span class="p">(</span><span class="n">l</span><span class="p">.</span><span class="n">khoi</span><span class="p">,</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">ma_lop</span><span class="p">)</span>
+</span><span id="__span-18-11"><a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="k">GROUPING</span><span class="p">(</span><span class="n">l</span><span class="p">.</span><span class="n">khoi</span><span class="p">)</span><span class="w"> </span><span class="k">DESC</span><span class="p">,</span><span class="w"> </span><span class="k">GROUPING</span><span class="p">(</span><span class="n">l</span><span class="p">.</span><span class="n">ma_lop</span><span class="p">)</span><span class="w"> </span><span class="k">DESC</span><span class="p">,</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">khoi</span><span class="p">,</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">ma_lop</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Dòng đầu tiên là <code>TOAN TRUONG</code> — vì <code>ORDER BY GROUPING(...) DESC</code> đẩy các dòng tổng quát nhất lên trước.</p>
+<h3 id="cube-va-grouping-sets"><code>CUBE</code> và <code>GROUPING SETS</code><a class="headerlink" href="#cube-va-grouping-sets" title="Permanent link">&para;</a></h3>
+<p><strong><code>CUBE</code></strong> gom theo <strong>mọi</strong> tổ hợp, không theo thứ bậc:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1">-- KỲ VỌNG: so_dong = 15</span>
+</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_dong</span>
+</span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="k">FROM</span><span class="w"> </span><span class="p">(</span>
+</span><span id="__span-19-4"><a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="w">    </span><span class="k">SELECT</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">khoi</span><span class="p">,</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">ma_lop</span><span class="p">,</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="n">h</span><span class="p">.</span><span class="n">ma_hs</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">n</span>
+</span><span id="__span-19-5"><a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a><span class="w">    </span><span class="k">FROM</span><span class="w"> </span><span class="n">lop</span><span class="w"> </span><span class="n">l</span>
+</span><span id="__span-19-6"><a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a><span class="w">    </span><span class="k">LEFT</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">hoc_sinh</span><span class="w"> </span><span class="n">h</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">ma_lop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">ma_lop</span>
+</span><span id="__span-19-7"><a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a><span class="w">    </span><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="k">CUBE</span><span class="w"> </span><span class="p">(</span><span class="n">l</span><span class="p">.</span><span class="n">khoi</span><span class="p">,</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">ma_lop</span><span class="p">)</span>
+</span><span id="__span-19-8"><a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">t</span><span class="p">;</span>
+</span></code></pre></div>
+<p>15 dòng = 6 tổ hợp <em>(khoi, ma_lop)</em> + 2 tổ hợp <em>(khoi)</em> + 6 tổ hợp <em>(ma_lop)</em> + 1 dòng tổng chung.</p>
+<p>So với <code>ROLLUP</code> chỉ có 9 dòng: <code>CUBE</code> thêm 6 dòng "tổng theo từng lớp mà bỏ qua khối". Ở đây chúng vô nghĩa, vì mỗi lớp thuộc đúng một khối — nên <strong><code>ROLLUP</code> mới là lựa chọn đúng</strong> cho cặp cột có quan hệ cha–con. <code>CUBE</code> chỉ hợp khi hai cột thật sự độc lập, kiểu <em>(giới tính, khối)</em>.</p>
+<p><strong><code>GROUPING SETS</code></strong> cho bạn tự liệt kê:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1">-- KỲ VỌNG: 9 dòng</span>
+</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">khoi</span><span class="p">,</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">gioi_tinh</span><span class="p">,</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_hoc_sinh</span>
+</span><span id="__span-20-3"><a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span><span class="w"> </span><span class="n">h</span>
+</span><span id="__span-20-4"><a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="k">JOIN</span><span class="w"> </span><span class="n">lop</span><span class="w"> </span><span class="n">l</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">ma_lop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">ma_lop</span>
+</span><span id="__span-20-5"><a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="k">GROUPING</span><span class="w"> </span><span class="k">SETS</span><span class="w"> </span><span class="p">((</span><span class="n">l</span><span class="p">.</span><span class="n">khoi</span><span class="p">,</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">gioi_tinh</span><span class="p">),</span><span class="w"> </span><span class="p">(</span><span class="n">l</span><span class="p">.</span><span class="n">khoi</span><span class="p">),</span><span class="w"> </span><span class="p">(</span><span class="n">h</span><span class="p">.</span><span class="n">gioi_tinh</span><span class="p">),</span><span class="w"> </span><span class="p">())</span>
+</span><span id="__span-20-6"><a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">khoi</span><span class="w"> </span><span class="n">NULLS</span><span class="w"> </span><span class="k">LAST</span><span class="p">,</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">gioi_tinh</span><span class="w"> </span><span class="n">NULLS</span><span class="w"> </span><span class="k">LAST</span><span class="p">;</span>
+</span></code></pre></div>
+<p>9 dòng: 4 tổ hợp <em>(khối, giới tính)</em> + 2 dòng theo khối + 2 dòng theo giới tính + 1 dòng tổng. Ở đây khối và giới tính <strong>độc lập</strong> với nhau, nên tập gom này (tương đương <code>CUBE</code>) là hợp lý.</p>
+<h3 id="don-dep">Dọn dẹp<a class="headerlink" href="#don-dep" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">b26_diem_thu</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">;</span>
+</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>
+</span><span id="__span-21-3"><a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="c1">-- KỲ VỌNG: con_lai = 0</span>
+</span><span id="__span-21-4"><a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">con_lai</span>
+</span><span id="__span-21-5"><a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a><span class="k">FROM</span><span class="w"> </span><span class="n">information_schema</span><span class="p">.</span><span class="n">tables</span>
+</span><span id="__span-21-6"><a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a><span class="k">WHERE</span><span class="w"> </span><span class="k">table_name</span><span class="w"> </span><span class="k">LIKE</span><span class="w"> </span><span class="s1">'b26\_%'</span><span class="p">;</span>
+</span></code></pre></div>
+<h2 id="loi-thuong-gap">⚠️ Lỗi thường gặp<a class="headerlink" href="#loi-thuong-gap" title="Permanent link">&para;</a></h2>
+<div class="admonition danger">
+<p class="admonition-title">Lỗi 1: Dùng hàm tổng hợp trong <code>WHERE</code></p>
+<p><!-- sql:co-y-loi -->
+<div class="highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">ma_lop</span><span class="p">,</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_hs</span>
+</span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span>
+</span><span id="__span-22-3"><a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="k">WHERE</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">6</span>
+</span><span id="__span-22-4"><a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">ma_lop</span><span class="p">;</span>
+</span></code></pre></div></p>
+<p>PostgreSQL báo lỗi đại ý <em>"không cho phép hàm tổng hợp trong <code>WHERE</code>"</em>.</p>
+<p>Lý do nằm ở thứ tự thực thi logic: <code>WHERE</code> chạy ở <strong>bước 2</strong>, còn nhóm mới hình thành ở <strong>bước 3</strong>. Lúc <code>WHERE</code> làm việc, chưa có nhóm nào để mà <code>count</code>.</p>
+<p>Sửa: chuyển điều kiện sang <code>HAVING</code> — mệnh đề chạy ở bước 4.</p>
+<div class="highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="c1">-- KỲ VỌNG: 3 dòng</span>
+</span><span id="__span-23-2"><a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">ma_lop</span><span class="p">,</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_hs</span>
+</span><span id="__span-23-3"><a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span>
+</span><span id="__span-23-4"><a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">ma_lop</span>
+</span><span id="__span-23-5"><a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a><span class="k">HAVING</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">6</span>
+</span><span id="__span-23-6"><a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">ma_lop</span><span class="p">;</span>
+</span></code></pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Lỗi 2: Dùng bí danh trong <code>HAVING</code> hoặc <code>WHERE</code></p>
+<p><!-- sql:co-y-loi -->
+<div class="highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">ma_lop</span><span class="p">,</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_hs</span>
+</span><span id="__span-24-2"><a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span>
+</span><span id="__span-24-3"><a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">ma_lop</span>
+</span><span id="__span-24-4"><a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a><span class="k">HAVING</span><span class="w"> </span><span class="n">so_hs</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">6</span><span class="p">;</span>
+</span></code></pre></div></p>
+<p>PostgreSQL báo lỗi <em>cột <code>so_hs</code> không tồn tại</em>. Bí danh được đặt ở <strong>bước 5</strong> (<code>SELECT</code>), sau <code>HAVING</code> ở bước 4 — nên ở bước 4 nó chưa tồn tại.</p>
+<p>Trong <code>ORDER BY</code> (bước 7) thì lại dùng được bình thường, vì bí danh đã có rồi:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="c1">-- KỲ VỌNG: 6 dòng</span>
+</span><span id="__span-25-2"><a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a><span class="c1">-- KỲ VỌNG: so_hs = 8</span>
+</span><span id="__span-25-3"><a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">ma_lop</span><span class="p">,</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_hs</span>
+</span><span id="__span-25-4"><a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span>
+</span><span id="__span-25-5"><a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">ma_lop</span>
+</span><span id="__span-25-6"><a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">so_hs</span><span class="w"> </span><span class="k">DESC</span><span class="p">,</span><span class="w"> </span><span class="n">ma_lop</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Cùng một cái tên <code>so_hs</code>, dùng được ở chỗ này mà không dùng được ở chỗ kia — và bảng thứ tự thực thi logic giải thích chính xác vì sao.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Lỗi 3: Thiếu cột trong <code>GROUP BY</code></p>
+<p><!-- sql:co-y-loi -->
+<div class="highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">ma_lop</span><span class="p">,</span><span class="w"> </span><span class="n">ho_ten</span><span class="p">,</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span>
+</span><span id="__span-26-2"><a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span>
+</span><span id="__span-26-3"><a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">ma_lop</span><span class="p">;</span>
+</span></code></pre></div></p>
+<p>PostgreSQL báo lỗi vì cột <code>ho_ten</code> vừa không nằm trong <code>GROUP BY</code>, vừa không nằm trong hàm tổng hợp.</p>
+<p>Nhóm <code>L01</code> gồm 6 học sinh với 6 tên khác nhau — máy không có cách nào chọn ra một cái để in. Hai cách sửa, tuỳ ý bạn muốn gì:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a><span class="c1">-- Cách 1: gom chi tiết hơn — mỗi học sinh một nhóm</span>
+</span><span id="__span-27-2"><a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a><span class="c1">-- KỲ VỌNG: 40 dòng</span>
+</span><span id="__span-27-3"><a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">ma_lop</span><span class="p">,</span><span class="w"> </span><span class="n">ho_ten</span><span class="p">,</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_dong</span>
+</span><span id="__span-27-4"><a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span>
+</span><span id="__span-27-5"><a id="__codelineno-27-5" name="__codelineno-27-5" href="#__codelineno-27-5"></a><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">ma_lop</span><span class="p">,</span><span class="w"> </span><span class="n">ho_ten</span>
+</span><span id="__span-27-6"><a id="__codelineno-27-6" name="__codelineno-27-6" href="#__codelineno-27-6"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">ma_lop</span><span class="p">,</span><span class="w"> </span><span class="n">ho_ten</span><span class="p">;</span>
+</span></code></pre></div>
+<div class="highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="c1">-- Cách 2: gộp các tên lại thành một chuỗi</span>
+</span><span id="__span-28-2"><a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a><span class="c1">-- KỲ VỌNG: 6 dòng</span>
+</span><span id="__span-28-3"><a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">ma_lop</span><span class="p">,</span>
+</span><span id="__span-28-4"><a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a><span class="w">       </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w">                            </span><span class="k">AS</span><span class="w"> </span><span class="n">so_hoc_sinh</span><span class="p">,</span>
+</span><span id="__span-28-5"><a id="__codelineno-28-5" name="__codelineno-28-5" href="#__codelineno-28-5"></a><span class="w">       </span><span class="n">string_agg</span><span class="p">(</span><span class="n">ma_hs</span><span class="p">,</span><span class="w"> </span><span class="s1">', '</span><span class="w"> </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">ma_hs</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">danh_sach_ma</span>
+</span><span id="__span-28-6"><a id="__codelineno-28-6" name="__codelineno-28-6" href="#__codelineno-28-6"></a><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span>
+</span><span id="__span-28-7"><a id="__codelineno-28-7" name="__codelineno-28-7" href="#__codelineno-28-7"></a><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">ma_lop</span>
+</span><span id="__span-28-8"><a id="__codelineno-28-8" name="__codelineno-28-8" href="#__codelineno-28-8"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">ma_lop</span><span class="p">;</span>
+</span></code></pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Lỗi 4: Dùng <code>COUNT(cột)</code> khi muốn đếm dòng</p>
+<div class="highlight"><pre><span></span><code><span id="__span-29-1"><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a><span class="c1">-- KỲ VỌNG: dung_count_sao = 50</span>
+</span><span id="__span-29-2"><a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a><span class="c1">-- KỲ VỌNG: sai_count_cot = 38</span>
+</span><span id="__span-29-3"><a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w">                </span><span class="k">AS</span><span class="w"> </span><span class="n">dung_count_sao</span><span class="p">,</span>
+</span><span id="__span-29-4"><a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a><span class="w">       </span><span class="k">count</span><span class="p">(</span><span class="n">ngay_tra_thuc_te</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">sai_count_cot</span>
+</span><span id="__span-29-5"><a id="__codelineno-29-5" name="__codelineno-29-5" href="#__codelineno-29-5"></a><span class="k">FROM</span><span class="w"> </span><span class="n">muon_sach</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Một báo cáo <em>"tổng số lượt mượn sách trong tháng"</em> ghi <strong>38</strong> thay vì <strong>50</strong> — sai 24%, và không có gì báo lỗi.</p>
+<p>Nguy hiểm gấp đôi khi cột đó <strong>hiện chưa có <code>NULL</code> nào</strong>: câu lệnh chạy đúng suốt nhiều tháng, rồi một ngày có người nhập một dòng thiếu dữ liệu, và con số lặng lẽ lệch.</p>
+<p>Quy tắc: <strong>đếm dòng thì luôn <code>COUNT(*)</code>.</strong></p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Lỗi 5: Đếm sai sau khi <code>JOIN</code> một-nhiều</p>
+<div class="highlight"><pre><span></span><code><span id="__span-30-1"><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a><span class="c1">-- KỲ VỌNG: dem_sai = 480</span>
+</span><span id="__span-30-2"><a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a><span class="c1">-- KỲ VỌNG: dem_dung = 40</span>
+</span><span id="__span-30-3"><a id="__codelineno-30-3" name="__codelineno-30-3" href="#__codelineno-30-3"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w">                </span><span class="k">AS</span><span class="w"> </span><span class="n">dem_sai</span><span class="p">,</span>
+</span><span id="__span-30-4"><a id="__codelineno-30-4" name="__codelineno-30-4" href="#__codelineno-30-4"></a><span class="w">       </span><span class="k">count</span><span class="p">(</span><span class="k">DISTINCT</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">ma_hs</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">dem_dung</span>
+</span><span id="__span-30-5"><a id="__codelineno-30-5" name="__codelineno-30-5" href="#__codelineno-30-5"></a><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span><span class="w"> </span><span class="n">h</span>
+</span><span id="__span-30-6"><a id="__codelineno-30-6" name="__codelineno-30-6" href="#__codelineno-30-6"></a><span class="k">JOIN</span><span class="w"> </span><span class="n">diem</span><span class="w"> </span><span class="n">d</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">d</span><span class="p">.</span><span class="n">ma_hs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">ma_hs</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Định đếm <strong>học sinh</strong>, nhưng sau khi ghép với <code>diem</code>, mỗi học sinh nhân thành 12 dòng (12 con điểm). <code>count(*)</code> trả về 480 — số con điểm, không phải số học sinh.</p>
+<p><code>count(DISTINCT h.ma_hs)</code> trả về 40, đúng số học sinh.</p>
+<p>Đây là cái bẫy nối tiếp của bài học <em>"<code>JOIN</code> làm số dòng tăng"</em> ở <a href="../25-join/">Bài 25</a>. Quy tắc: <strong>sau một <code>JOIN</code> một-nhiều, mọi phép đếm và cộng đều phải được xem lại.</strong> Đặc biệt <code>SUM</code> — cộng một cột của bảng "một" sau khi nó đã bị nhân bản sẽ cho ra con số lớn hơn thực tế nhiều lần, và không có cách nào nhận ra bằng mắt.</p>
+</div>
+<h2 id="bai-tap">✍️ Bài tập<a class="headerlink" href="#bai-tap" title="Permanent link">&para;</a></h2>
+<ol>
+<li>
+<p>Viết truy vấn cho biết mỗi môn học có bao nhiêu con điểm, sắp theo số lượng giảm dần. Có bao nhiêu dòng kết quả, và vì sao ba môn đầu có số điểm gấp đôi các môn còn lại?</p>
+</li>
+<li>
+<p>Cô thủ thư muốn biết: <em>"mỗi học sinh đã mượn bao nhiêu cuốn, và trong đó bao nhiêu cuốn chưa trả?"</em> Chỉ liệt kê những bạn <strong>còn nợ ít nhất một cuốn</strong>. Viết truy vấn.</p>
+</li>
+<li>
+<p>Ba câu sau khác nhau ở đâu? Dự đoán kết quả từng câu trên bảng <code>muon_sach</code> (50 lượt, 25 học sinh, 12 lượt chưa trả):</p>
+<p>a. <code>SELECT count(*) FROM muon_sach;</code></p>
+<p>b. <code>SELECT count(ma_hs) FROM muon_sach;</code></p>
+<p>c. <code>SELECT count(DISTINCT ma_hs) FROM muon_sach;</code></p>
+</li>
+<li>
+<p>Câu lệnh sau báo lỗi. Chỉ ra lỗi, giải thích bằng <strong>thứ tự thực thi logic</strong>, và viết lại cho đúng:</p>
+<p><!-- sql:khong-chay -->
+<div class="highlight"><pre><span></span><code><span id="__span-31-1"><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">ma_lop</span><span class="p">,</span><span class="w"> </span><span class="k">avg</span><span class="p">(</span><span class="n">diem_so</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">diem_tb</span>
+</span><span id="__span-31-2"><a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a><span class="k">FROM</span><span class="w"> </span><span class="n">diem</span><span class="w"> </span><span class="n">d</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">hoc_sinh</span><span class="w"> </span><span class="n">h</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">ma_hs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">d</span><span class="p">.</span><span class="n">ma_hs</span>
+</span><span id="__span-31-3"><a id="__codelineno-31-3" name="__codelineno-31-3" href="#__codelineno-31-3"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">diem_tb</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">7</span>
+</span><span id="__span-31-4"><a id="__codelineno-31-4" name="__codelineno-31-4" href="#__codelineno-31-4"></a><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">ma_lop</span><span class="p">;</span>
+</span></code></pre></div></p>
+</li>
+<li>
+<p>Giải thích vì sao truy vấn <em>"số học sinh từng lớp"</em> dưới đây có thể <strong>thiếu lớp</strong> trong kết quả, và viết lại cho chắc chắn đủ 6 lớp:</p>
+<p><!-- sql:khong-chay -->
+<div class="highlight"><pre><span></span><code><span id="__span-32-1"><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">ma_lop</span><span class="p">,</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span><span class="w"> </span><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">ma_lop</span><span class="p">;</span>
+</span></code></pre></div></p>
+</li>
+</ol>
+<details class="success">
+<summary>Đáp án</summary>
+<p><strong>Câu 1.</strong></p>
+<div class="highlight"><pre><span></span><code><span id="__span-33-1"><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a><span class="c1">-- KỲ VỌNG: 9 dòng</span>
+</span><span id="__span-33-2"><a id="__codelineno-33-2" name="__codelineno-33-2" href="#__codelineno-33-2"></a><span class="c1">-- KỲ VỌNG: so_con_diem = 80</span>
+</span><span id="__span-33-3"><a id="__codelineno-33-3" name="__codelineno-33-3" href="#__codelineno-33-3"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">d</span><span class="p">.</span><span class="n">ma_mon</span><span class="p">,</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_con_diem</span>
+</span><span id="__span-33-4"><a id="__codelineno-33-4" name="__codelineno-33-4" href="#__codelineno-33-4"></a><span class="k">FROM</span><span class="w"> </span><span class="n">diem</span><span class="w"> </span><span class="n">d</span>
+</span><span id="__span-33-5"><a id="__codelineno-33-5" name="__codelineno-33-5" href="#__codelineno-33-5"></a><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">d</span><span class="p">.</span><span class="n">ma_mon</span>
+</span><span id="__span-33-6"><a id="__codelineno-33-6" name="__codelineno-33-6" href="#__codelineno-33-6"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">so_con_diem</span><span class="w"> </span><span class="k">DESC</span><span class="p">,</span><span class="w"> </span><span class="n">d</span><span class="p">.</span><span class="n">ma_mon</span><span class="p">;</span>
+</span></code></pre></div>
+<p><strong>9 dòng</strong> — đúng bằng số môn học, vì mọi môn đều có điểm.</p>
+<p>Ba môn <code>MH01</code> (Toán), <code>MH02</code> (Ngữ văn), <code>MH03</code> (Tiếng Anh) có <strong>80</strong> con điểm, sáu môn còn lại có <strong>40</strong>. Lý do nằm ở dữ liệu mẫu: mọi học sinh có một điểm <em>Học kỳ</em> ở cả 9 môn (40 × 9 = 360 dòng), nhưng chỉ ba môn chính có thêm điểm <em>1 tiết</em> (40 × 3 = 120 dòng). Vậy ba môn chính có 40 + 40 = 80, các môn khác có 40. Tổng: <code>3 × 80 + 6 × 40 = 480</code>. ✓</p>
+<p><strong>Câu 2.</strong></p>
+<div class="highlight"><pre><span></span><code><span id="__span-34-1"><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a><span class="c1">-- KỲ VỌNG: 12 dòng</span>
+</span><span id="__span-34-2"><a id="__codelineno-34-2" name="__codelineno-34-2" href="#__codelineno-34-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">ms</span><span class="p">.</span><span class="n">ma_hs</span><span class="p">,</span>
+</span><span id="__span-34-3"><a id="__codelineno-34-3" name="__codelineno-34-3" href="#__codelineno-34-3"></a><span class="w">       </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w">                                              </span><span class="k">AS</span><span class="w"> </span><span class="n">tong_luot_muon</span><span class="p">,</span>
+</span><span id="__span-34-4"><a id="__codelineno-34-4" name="__codelineno-34-4" href="#__codelineno-34-4"></a><span class="w">       </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="n">FILTER</span><span class="w"> </span><span class="p">(</span><span class="k">WHERE</span><span class="w"> </span><span class="n">ms</span><span class="p">.</span><span class="n">ngay_tra_thuc_te</span><span class="w"> </span><span class="k">IS</span><span class="w"> </span><span class="k">NULL</span><span class="p">)</span><span class="w">    </span><span class="k">AS</span><span class="w"> </span><span class="n">con_no</span>
+</span><span id="__span-34-5"><a id="__codelineno-34-5" name="__codelineno-34-5" href="#__codelineno-34-5"></a><span class="k">FROM</span><span class="w"> </span><span class="n">muon_sach</span><span class="w"> </span><span class="n">ms</span>
+</span><span id="__span-34-6"><a id="__codelineno-34-6" name="__codelineno-34-6" href="#__codelineno-34-6"></a><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">ms</span><span class="p">.</span><span class="n">ma_hs</span>
+</span><span id="__span-34-7"><a id="__codelineno-34-7" name="__codelineno-34-7" href="#__codelineno-34-7"></a><span class="k">HAVING</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="n">FILTER</span><span class="w"> </span><span class="p">(</span><span class="k">WHERE</span><span class="w"> </span><span class="n">ms</span><span class="p">.</span><span class="n">ngay_tra_thuc_te</span><span class="w"> </span><span class="k">IS</span><span class="w"> </span><span class="k">NULL</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">1</span>
+</span><span id="__span-34-8"><a id="__codelineno-34-8" name="__codelineno-34-8" href="#__codelineno-34-8"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">ms</span><span class="p">.</span><span class="n">ma_hs</span><span class="p">;</span>
+</span></code></pre></div>
+<p><strong>12 dòng</strong> — 12 lượt chưa trả nằm ở 12 học sinh khác nhau.</p>
+<p>Chú ý ba điểm:</p>
+<ul>
+<li><code>count(*)</code> cho tổng số lượt, <code>count(*) FILTER (WHERE ... IS NULL)</code> cho số cuốn còn nợ. Một lần quét bảng, hai con số.</li>
+<li>Điều kiện <em>"còn nợ ít nhất một cuốn"</em> là điều kiện về <strong>nhóm</strong>, nên nó phải ở <code>HAVING</code>, không phải <code>WHERE</code>.</li>
+<li>Không viết được <code>HAVING con_no &gt;= 1</code> — bí danh chưa tồn tại ở bước 4. Phải nhắc lại cả biểu thức.</li>
+</ul>
+<p><strong>Câu 3.</strong></p>
+<ul>
+<li>a. <strong>50</strong> — <code>count(*)</code> đếm dòng.</li>
+<li>b. <strong>50</strong> — <code>count(ma_hs)</code> đếm giá trị không <code>NULL</code> của cột <code>ma_hs</code>, mà cột này là khoá ngoại <code>NOT NULL</code> nên không có <code>NULL</code> nào. Trùng với (a) <strong>một cách tình cờ</strong>, và nếu cột cho phép <code>NULL</code> thì hai con số sẽ khác nhau.</li>
+<li>c. <strong>25</strong> — <code>count(DISTINCT ma_hs)</code> đếm số học sinh <strong>khác nhau</strong>. Dữ liệu mẫu cho mỗi bạn trong <code>HS001</code>…<code>HS025</code> mượn đúng hai lần.</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span id="__span-35-1"><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a><span class="c1">-- KỲ VỌNG: a_count_sao = 50</span>
+</span><span id="__span-35-2"><a id="__codelineno-35-2" name="__codelineno-35-2" href="#__codelineno-35-2"></a><span class="c1">-- KỲ VỌNG: b_count_cot = 50</span>
+</span><span id="__span-35-3"><a id="__codelineno-35-3" name="__codelineno-35-3" href="#__codelineno-35-3"></a><span class="c1">-- KỲ VỌNG: c_count_distinct = 25</span>
+</span><span id="__span-35-4"><a id="__codelineno-35-4" name="__codelineno-35-4" href="#__codelineno-35-4"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w">              </span><span class="k">AS</span><span class="w"> </span><span class="n">a_count_sao</span><span class="p">,</span>
+</span><span id="__span-35-5"><a id="__codelineno-35-5" name="__codelineno-35-5" href="#__codelineno-35-5"></a><span class="w">       </span><span class="k">count</span><span class="p">(</span><span class="n">ma_hs</span><span class="p">)</span><span class="w">          </span><span class="k">AS</span><span class="w"> </span><span class="n">b_count_cot</span><span class="p">,</span>
+</span><span id="__span-35-6"><a id="__codelineno-35-6" name="__codelineno-35-6" href="#__codelineno-35-6"></a><span class="w">       </span><span class="k">count</span><span class="p">(</span><span class="k">DISTINCT</span><span class="w"> </span><span class="n">ma_hs</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">c_count_distinct</span>
+</span><span id="__span-35-7"><a id="__codelineno-35-7" name="__codelineno-35-7" href="#__codelineno-35-7"></a><span class="k">FROM</span><span class="w"> </span><span class="n">muon_sach</span><span class="p">;</span>
+</span></code></pre></div>
+<p><strong>Câu 4.</strong></p>
+<p>Hai lỗi cùng lúc:</p>
+<ol>
+<li><code>WHERE diem_tb &gt; 7</code> dùng <strong>bí danh</strong> <code>diem_tb</code>, mà bí danh chỉ ra đời ở <strong>bước 5</strong> (<code>SELECT</code>); <code>WHERE</code> chạy ở <strong>bước 2</strong>.</li>
+<li>Kể cả viết đầy đủ <code>WHERE avg(diem_so) &gt; 7</code> cũng vẫn sai, vì đó là <strong>hàm tổng hợp</strong> trong <code>WHERE</code>, mà nhóm chưa hình thành ở bước 2.</li>
+</ol>
+<p>Điều kiện này lọc <strong>nhóm</strong> (lớp nào có trung bình trên 7), nên nó thuộc <code>HAVING</code> ở bước 4:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-36-1"><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a><span class="c1">-- KỲ VỌNG: 6 dòng</span>
+</span><span id="__span-36-2"><a id="__codelineno-36-2" name="__codelineno-36-2" href="#__codelineno-36-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">ma_lop</span><span class="p">,</span><span class="w"> </span><span class="n">round</span><span class="p">(</span><span class="k">avg</span><span class="p">(</span><span class="n">d</span><span class="p">.</span><span class="n">diem_so</span><span class="p">),</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">diem_tb</span>
+</span><span id="__span-36-3"><a id="__codelineno-36-3" name="__codelineno-36-3" href="#__codelineno-36-3"></a><span class="k">FROM</span><span class="w"> </span><span class="n">diem</span><span class="w"> </span><span class="n">d</span>
+</span><span id="__span-36-4"><a id="__codelineno-36-4" name="__codelineno-36-4" href="#__codelineno-36-4"></a><span class="k">JOIN</span><span class="w"> </span><span class="n">hoc_sinh</span><span class="w"> </span><span class="n">h</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">ma_hs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">d</span><span class="p">.</span><span class="n">ma_hs</span>
+</span><span id="__span-36-5"><a id="__codelineno-36-5" name="__codelineno-36-5" href="#__codelineno-36-5"></a><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">ma_lop</span>
+</span><span id="__span-36-6"><a id="__codelineno-36-6" name="__codelineno-36-6" href="#__codelineno-36-6"></a><span class="k">HAVING</span><span class="w"> </span><span class="k">avg</span><span class="p">(</span><span class="n">d</span><span class="p">.</span><span class="n">diem_so</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">5</span>
+</span><span id="__span-36-7"><a id="__codelineno-36-7" name="__codelineno-36-7" href="#__codelineno-36-7"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">ma_lop</span><span class="p">;</span>
+</span></code></pre></div>
+<p>(Ngưỡng ở đây đặt là 5 chứ không phải 7, vì điểm trong database mẫu được sinh ngẫu nhiên — đặt ngưỡng 5 thì chắc chắn cả 6 lớp đều vượt, còn ngưỡng 7 thì kết quả không đoán trước được.)</p>
+<p><strong>Câu 5.</strong></p>
+<p>Thiếu lớp khi có một <strong>lớp không có học sinh nào</strong>. <code>GROUP BY</code> chỉ sinh nhóm từ những dòng <strong>có thật</strong> trong bảng <code>hoc_sinh</code>; một lớp rỗng thì không góp dòng nào, nên không có nhóm, nên không xuất hiện trong kết quả — và nó <strong>không</strong> hiện ra dưới dạng "0 học sinh", nó biến mất hoàn toàn.</p>
+<p>Trong database mẫu hiện tại cả 6 lớp đều có học sinh nên bạn không thấy vấn đề. Nhưng chỉ cần trường mở một lớp mới là báo cáo sai ngay.</p>
+<p>Cách viết chắc chắn: đi từ bảng <code>lop</code> — bảng chứa <strong>đủ</strong> danh mục — rồi <code>LEFT JOIN</code> sang <code>hoc_sinh</code>:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-37-1"><a id="__codelineno-37-1" name="__codelineno-37-1" href="#__codelineno-37-1"></a><span class="c1">-- KỲ VỌNG: 6 dòng</span>
+</span><span id="__span-37-2"><a id="__codelineno-37-2" name="__codelineno-37-2" href="#__codelineno-37-2"></a><span class="c1">-- KỲ VỌNG: ma_lop = L01</span>
+</span><span id="__span-37-3"><a id="__codelineno-37-3" name="__codelineno-37-3" href="#__codelineno-37-3"></a><span class="c1">-- KỲ VỌNG: so_hoc_sinh = 6</span>
+</span><span id="__span-37-4"><a id="__codelineno-37-4" name="__codelineno-37-4" href="#__codelineno-37-4"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">ma_lop</span><span class="p">,</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">ten_lop</span><span class="p">,</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="n">h</span><span class="p">.</span><span class="n">ma_hs</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_hoc_sinh</span>
+</span><span id="__span-37-5"><a id="__codelineno-37-5" name="__codelineno-37-5" href="#__codelineno-37-5"></a><span class="k">FROM</span><span class="w"> </span><span class="n">lop</span><span class="w"> </span><span class="n">l</span>
+</span><span id="__span-37-6"><a id="__codelineno-37-6" name="__codelineno-37-6" href="#__codelineno-37-6"></a><span class="k">LEFT</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">hoc_sinh</span><span class="w"> </span><span class="n">h</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">ma_lop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">ma_lop</span>
+</span><span id="__span-37-7"><a id="__codelineno-37-7" name="__codelineno-37-7" href="#__codelineno-37-7"></a><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">ma_lop</span><span class="p">,</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">ten_lop</span>
+</span><span id="__span-37-8"><a id="__codelineno-37-8" name="__codelineno-37-8" href="#__codelineno-37-8"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">ma_lop</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Và chú ý dùng <code>count(h.ma_hs)</code> chứ <strong>không</strong> <code>count(*)</code>: với một lớp rỗng, <code>LEFT JOIN</code> sinh ra đúng một dòng có <code>h.ma_hs = NULL</code>, nên <code>count(*)</code> sẽ đếm thành <strong>1</strong> trong khi sự thật là <strong>0</strong>. <code>count(h.ma_hs)</code> bỏ qua <code>NULL</code> và trả về đúng 0.</p>
+<p>Đây là một trong những chỗ mà <code>COUNT(cột)</code> <strong>mới</strong> là lựa chọn đúng, còn <code>COUNT(*)</code> thì sai — ngược hẳn với Lỗi 4 ở trên. Điều phân biệt hai tình huống: sau <code>LEFT JOIN</code>, <code>NULL</code> mang nghĩa <em>"không có gì"</em>, và bạn muốn đếm nó thành 0.</p>
+</details>
+<h2 id="tom-tat">🔑 Tóm tắt<a class="headerlink" href="#tom-tat" title="Permanent link">&para;</a></h2>
+<ol>
+<li><strong>Hàm tổng hợp</strong> nhận nhiều dòng, trả về một giá trị. <code>COUNT(*)</code> đếm <strong>dòng</strong>; <code>COUNT(cột)</code> đếm <strong>ô không <code>NULL</code></strong>; <code>COUNT(DISTINCT cột)</code> đếm <strong>giá trị khác nhau</strong>. <code>SUM</code>, <code>AVG</code>, <code>MIN</code>, <code>MAX</code> đều <strong>bỏ qua <code>NULL</code></strong> — nên <code>AVG</code> chia cho số giá trị có thật, không chia cho số dòng.</li>
+<li><strong><code>GROUP BY</code></strong> gom dòng thành nhóm, kết quả một dòng mỗi nhóm. Mọi cột trong <code>SELECT</code> mà không nằm trong hàm tổng hợp thì <strong>bắt buộc</strong> phải có trong <code>GROUP BY</code>. Và <code>GROUP BY</code> <strong>không sinh nhóm rỗng</strong> — giá trị không có dòng nào thì biến mất khỏi báo cáo.</li>
+<li><strong>Thứ tự thực thi logic</strong> là chìa khoá của mọi thắc mắc: <code>FROM</code> → <code>WHERE</code> → <code>GROUP BY</code> → <code>HAVING</code> → <code>SELECT</code> → <code>DISTINCT</code> → <code>ORDER BY</code> → <code>LIMIT</code>. <code>WHERE</code> lọc <strong>dòng</strong> ở bước 2 nên không dùng được hàm tổng hợp; <code>HAVING</code> lọc <strong>nhóm</strong> ở bước 4 nên dùng được; bí danh ra đời ở bước 5 nên chỉ <code>ORDER BY</code> mới dùng được nó.</li>
+<li><strong><code>FILTER (WHERE ...)</code></strong> cho phép một câu lệnh trả nhiều con số với nhiều điều kiện khác nhau, trong một lần quét bảng — và khác <code>GROUP BY</code>, nó <strong>luôn</strong> cho đủ mọi hạng mục, kể cả hạng mục bằng 0.</li>
+<li><strong><code>ROLLUP</code></strong> thêm dòng tổng theo thứ bậc cha–con (lớp → khối → toàn trường), <strong><code>CUBE</code></strong> thêm dòng tổng cho mọi tổ hợp, <strong><code>GROUPING SETS</code></strong> cho bạn tự liệt kê. Hàm <code>GROUPING(cột)</code> phân biệt <code>NULL</code> của dòng tổng với <code>NULL</code> có thật trong dữ liệu.</li>
+</ol>
+<hr />
+<p>⬅️ <a href="../25-join/">Bài 25 — JOIN: sáu cách ghép bảng</a> · ➡️ <strong>Bài 27 — Subquery và EXISTS</strong> <em>(sắp có)</em></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Trở lại mục lục
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Chân trang" >
+        
+          
+          <a href="../25-join/" class="md-footer__link md-footer__link--prev" aria-label="Trước: Bài 25 — JOIN: sáu cách ghép bảng">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Trước
+              </span>
+              <div class="md-ellipsis">
+                Bài 25 — JOIN: sáu cách ghép bảng
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../../dataset/" class="md-footer__link md-footer__link--next" aria-label="Sau: Database mẫu">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Sau
+              </span>
+              <div class="md-ellipsis">
+                Database mẫu
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Nội dung theo giấy phép CC BY 4.0
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/hungnguyen010518/database-tu-a-z" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.sections", "navigation.top", "navigation.footer", "navigation.indexes", "navigation.tracking", "toc.follow", "content.code.copy", "content.code.annotate", "search.highlight", "search.suggest"], "search": "../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "\u0110\u00e3 sao ch\u00e9p", "clipboard.copy": "Sao ch\u00e9p v\u00e0o b\u1ed9 nh\u1edb t\u1ea1m", "search.result.more.one": "1 t\u1eeb kh\u00e1c trong trang", "search.result.more.other": "# t\u1eeb kh\u00e1c trong trang", "search.result.none": "Kh\u00f4ng t\u00ecm th\u1ea5y t\u00e0i li\u1ec7u li\u00ean quan", "search.result.one": "1 t\u00e0i li\u1ec7u li\u00ean quan", "search.result.other": "# t\u00e0i li\u1ec7u li\u00ean quan", "search.result.placeholder": "Nh\u1eadp \u0111\u1ec3 b\u1eaft \u0111\u1ea7u t\u00ecm ki\u1ebfm", "search.result.term.missing": "Kh\u00f4ng", "select.version": "Ch\u1ecdn phi\u00ean b\u1ea3n"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.525ec568.min.js"></script>
+      
+    
+  </body>
+</html>

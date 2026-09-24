@@ -1,0 +1,2295 @@
+
+<!doctype html>
+<html lang="vi" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Khóa học cơ sở dữ liệu tiếng Việt, từ con số 0 tới mức siêu nâng cao — giải thích để học sinh cấp 2 cũng hiểu được.">
+      
+      
+      
+        <link rel="canonical" href="https://hungnguyen010518.github.io/database-tu-a-z/cap-3-sql/24-select-where-order-by/">
+      
+      
+        <link rel="prev" href="../23-dml-insert-update-delete/">
+      
+      
+        <link rel="next" href="../25-join/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.39">
+    
+    
+      
+        <title>Bài 24 — SELECT, WHERE, ORDER BY, LIMIT - Database từ A-Z</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.8c3ca2c6.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#bai-24-select-where-order-by-limit" class="md-skip">
+          Bỏ qua
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Đầu trang">
+    <a href="../.." title="Database từ A-Z" class="md-header__button md-logo" aria-label="Database từ A-Z" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3C7.58 3 4 4.79 4 7s3.58 4 8 4 8-1.79 8-4-3.58-4-8-4M4 9v3c0 2.21 3.58 4 8 4s8-1.79 8-4V9c0 2.21-3.58 4-8 4s-8-1.79-8-4m0 5v3c0 2.21 3.58 4 8 4s8-1.79 8-4v-3c0 2.21-3.58 4-8 4s-8-1.79-8-4"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Database từ A-Z
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Bài 24 — SELECT, WHERE, ORDER BY, LIMIT
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Chuyển sang chế độ tối"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Chuyển sang chế độ tối" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Chuyển sang chế độ sáng"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Chuyển sang chế độ sáng" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Tìm kiếm" placeholder="Tìm kiếm" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Tìm kiếm">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Xoá" aria-label="Xoá" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/hungnguyen010518/database-tu-a-z" title="Xem mã nguồn" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    database-tu-a-z
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Thanh điều hướng" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Database từ A-Z" class="md-nav__button md-logo" aria-label="Database từ A-Z" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3C7.58 3 4 4.79 4 7s3.58 4 8 4 8-1.79 8-4-3.58-4-8-4M4 9v3c0 2.21 3.58 4 8 4s8-1.79 8-4V9c0 2.21-3.58 4-8 4s-8-1.79-8-4m0 5v3c0 2.21 3.58 4 8 4s8-1.79 8-4v-3c0 2.21-3.58 4-8 4s-8-1.79-8-4"/></svg>
+
+    </a>
+    Database từ A-Z
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/hungnguyen010518/database-tu-a-z" title="Xem mã nguồn" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    database-tu-a-z
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Trang chủ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Cấp 0 — Nhập môn
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Cấp 0 — Nhập môn
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-0-nhap-mon/01-du-lieu-va-thong-tin/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 1 — Dữ liệu, thông tin và tại sao phải lưu trữ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-0-nhap-mon/02-tu-so-giay-den-excel/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 2 — Từ sổ giấy đến Excel
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-0-nhap-mon/03-dbms-la-gi/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 3 — DBMS là gì
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-0-nhap-mon/04-cac-mo-hinh-du-lieu/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 4 — Các mô hình dữ liệu
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-0-nhap-mon/05-cai-dat-postgresql/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 5 — Cài đặt PostgreSQL
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Cấp 1 — Mô hình quan hệ & Biểu đồ ER
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Cấp 1 — Mô hình quan hệ & Biểu đồ ER
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/06-mo-hinh-quan-he/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 6 — Mô hình quan hệ: bảng, dòng, cột, miền giá trị, lược đồ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/07-thuc-the-va-thuoc-tinh/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 7 — Thực thể và các loại thuộc tính
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/08-moi-quan-he-va-cardinality/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 8 — Mối quan hệ, bậc và bản số (Cardinality)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/09-participation-va-thuc-the-yeu/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 9 — Ràng buộc tham gia và Thực thể yếu
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/10-bieu-do-er-ky-hieu-chen/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 10 — Biểu đồ ER — ký hiệu Chen
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/11-bieu-do-er-crows-foot/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 11 — Biểu đồ ER — ký hiệu Crow's Foot và vẽ bằng Mermaid
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/12-bay-loai-khoa/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 12 — Bảy loại khoá trong cơ sở dữ liệu
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/13-mo-hinh-eer/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 13 — Mô hình EER: Generalization, Specialization, Aggregation
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/14-chuyen-er-sang-bang/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 14 — Chuyển biểu đồ ER thành lược đồ quan hệ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/15-rang-buoc-toan-ven/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 15 — Ràng buộc toàn vẹn (Integrity Constraints)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Cấp 2 — Chuẩn hoá
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Cấp 2 — Chuẩn hoá
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-2-chuan-hoa/16-phu-thuoc-ham/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 16 — Phụ thuộc hàm và bao đóng
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-2-chuan-hoa/17-dang-chuan-1nf-2nf/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 17 — Dạng chuẩn 1 (1NF) và Dạng chuẩn 2 (2NF)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-2-chuan-hoa/18-dang-chuan-3nf-bcnf/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 18 — Dạng chuẩn 3 (3NF) và BCNF
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-2-chuan-hoa/19-dang-chuan-4nf-5nf-6nf/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 19 — 4NF, 5NF và 6NF
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-2-chuan-hoa/20-denormalization/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 20 — Phi chuẩn hoá — khi nào nên phá luật
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Cấp 3 — SQL từ 0 tới cao thủ
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Cấp 3 — SQL từ 0 tới cao thủ
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../21-dai-so-quan-he/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 21 — Đại số quan hệ: nền toán học phía sau SQL
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../22-ddl-va-kieu-du-lieu/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 22 — DDL: CREATE, ALTER, DROP và các kiểu dữ liệu
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../23-dml-insert-update-delete/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 23 — DML: INSERT, UPDATE, DELETE
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Bài 24 — SELECT, WHERE, ORDER BY, LIMIT
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Bài 24 — SELECT, WHERE, ORDER BY, LIMIT
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Mục lục">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Mục lục
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#cau-chuyen-mo-au" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧠 Câu chuyện mở đầu
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#khai-niem-thuat-ngu" class="md-nav__link">
+    <span class="md-ellipsis">
+      📖 Khái niệm &amp; thuật ngữ
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📖 Khái niệm & thuật ngữ">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#khung-xuong-cua-mot-cau-select" class="md-nav__link">
+    <span class="md-ellipsis">
+      Khung xương của một câu SELECT
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vi-tu" class="md-nav__link">
+    <span class="md-ellipsis">
+      Vị từ
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#logic-ba-gia-tri-phan-quan-trong-nhat-cua-bai" class="md-nav__link">
+    <span class="md-ellipsis">
+      Logic ba giá trị — phần quan trọng nhất của bài
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sap-xep-va-null" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sắp xếp và NULL
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bang-thuat-ngu" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bảng thuật ngữ
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#so-o" class="md-nav__link">
+    <span class="md-ellipsis">
+      🖼️ Sơ đồ
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#thuc-hanh" class="md-nav__link">
+    <span class="md-ellipsis">
+      💻 Thực hành
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="💻 Thực hành">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#chon-cot-va-at-bi-danh" class="md-nav__link">
+    <span class="md-ellipsis">
+      Chọn cột và đặt bí danh
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#distinct" class="md-nav__link">
+    <span class="md-ellipsis">
+      DISTINCT
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cac-vi-tu" class="md-nav__link">
+    <span class="md-ellipsis">
+      Các vị từ
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#logic-ba-gia-tri-xem-tan-mat" class="md-nav__link">
+    <span class="md-ellipsis">
+      Logic ba giá trị — xem tận mắt
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bay-10-voi-iem-so" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bẫy &lt;&gt; 10 với điểm số
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#order-by-nulls-first-nulls-last" class="md-nav__link">
+    <span class="md-ellipsis">
+      ORDER BY, NULLS FIRST / NULLS LAST
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#limit-va-offset-phan-trang" class="md-nav__link">
+    <span class="md-ellipsis">
+      LIMIT và OFFSET — phân trang
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#loi-thuong-gap" class="md-nav__link">
+    <span class="md-ellipsis">
+      ⚠️ Lỗi thường gặp
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bai-tap" class="md-nav__link">
+    <span class="md-ellipsis">
+      ✍️ Bài tập
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tom-tat" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔑 Tóm tắt
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../25-join/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 25 — JOIN: sáu cách ghép bảng
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../26-group-by-having/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 26 — GROUP BY, HAVING và các hàm tổng hợp
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../dataset/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Database mẫu
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../glossary/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bảng thuật ngữ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Mục lục">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Mục lục
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#cau-chuyen-mo-au" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧠 Câu chuyện mở đầu
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#khai-niem-thuat-ngu" class="md-nav__link">
+    <span class="md-ellipsis">
+      📖 Khái niệm &amp; thuật ngữ
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📖 Khái niệm & thuật ngữ">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#khung-xuong-cua-mot-cau-select" class="md-nav__link">
+    <span class="md-ellipsis">
+      Khung xương của một câu SELECT
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vi-tu" class="md-nav__link">
+    <span class="md-ellipsis">
+      Vị từ
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#logic-ba-gia-tri-phan-quan-trong-nhat-cua-bai" class="md-nav__link">
+    <span class="md-ellipsis">
+      Logic ba giá trị — phần quan trọng nhất của bài
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sap-xep-va-null" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sắp xếp và NULL
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bang-thuat-ngu" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bảng thuật ngữ
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#so-o" class="md-nav__link">
+    <span class="md-ellipsis">
+      🖼️ Sơ đồ
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#thuc-hanh" class="md-nav__link">
+    <span class="md-ellipsis">
+      💻 Thực hành
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="💻 Thực hành">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#chon-cot-va-at-bi-danh" class="md-nav__link">
+    <span class="md-ellipsis">
+      Chọn cột và đặt bí danh
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#distinct" class="md-nav__link">
+    <span class="md-ellipsis">
+      DISTINCT
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cac-vi-tu" class="md-nav__link">
+    <span class="md-ellipsis">
+      Các vị từ
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#logic-ba-gia-tri-xem-tan-mat" class="md-nav__link">
+    <span class="md-ellipsis">
+      Logic ba giá trị — xem tận mắt
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bay-10-voi-iem-so" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bẫy &lt;&gt; 10 với điểm số
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#order-by-nulls-first-nulls-last" class="md-nav__link">
+    <span class="md-ellipsis">
+      ORDER BY, NULLS FIRST / NULLS LAST
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#limit-va-offset-phan-trang" class="md-nav__link">
+    <span class="md-ellipsis">
+      LIMIT và OFFSET — phân trang
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#loi-thuong-gap" class="md-nav__link">
+    <span class="md-ellipsis">
+      ⚠️ Lỗi thường gặp
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bai-tap" class="md-nav__link">
+    <span class="md-ellipsis">
+      ✍️ Bài tập
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tom-tat" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔑 Tóm tắt
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="bai-24-select-where-order-by-limit">Bài 24 — SELECT, WHERE, ORDER BY, LIMIT<a class="headerlink" href="#bai-24-select-where-order-by-limit" title="Permanent link">&para;</a></h1>
+<div class="admonition abstract">
+<p class="admonition-title">🎯 Học xong bài này, bạn sẽ</p>
+<ul>
+<li>Viết được một câu <code>SELECT</code> đầy đủ: chọn cột, đặt <strong>bí danh</strong>, lọc bằng <code>WHERE</code>, sắp xếp, cắt trang</li>
+<li>Dùng thành thạo bảy loại <strong>vị từ</strong>: so sánh, <code>BETWEEN</code>, <code>IN</code>, <code>LIKE</code>/<code>ILIKE</code>, <code>IS NULL</code>, và <code>AND</code>/<code>OR</code>/<code>NOT</code></li>
+<li>Giải thích được <strong>logic ba giá trị</strong> và giá trị <code>UNKNOWN</code> — cái bẫy số một của người mới học SQL</li>
+<li>Biết vì sao <code>WHERE diem_so &lt;&gt; 10</code> lại <strong>làm biến mất</strong> những dòng có <code>diem_so</code> là <code>NULL</code></li>
+<li>Điều khiển được vị trí của <code>NULL</code> khi sắp xếp, bằng <code>NULLS FIRST</code> / <code>NULLS LAST</code></li>
+</ul>
+</div>
+<h2 id="cau-chuyen-mo-au">🧠 Câu chuyện mở đầu<a class="headerlink" href="#cau-chuyen-mo-au" title="Permanent link">&para;</a></h2>
+<p>Cô thủ thư nhờ bạn kiểm tra sổ mượn sách. Trong sổ có 50 lượt mượn. Cột <em>"ngày trả thực tế"</em> của một số lượt đang <strong>để trống</strong> — nghĩa là sách chưa được mang trả.</p>
+<p>Cô hỏi: <em>"Em lọc giúp cô những lượt mà ngày trả </em><em>khác</em><em> ngày 10 tháng 9 nhé."</em></p>
+<p>Bạn viết một câu lệnh rất hiển nhiên: lấy mọi dòng có ngày trả khác <code>10/09</code>. Máy trả về một danh sách. Bạn đưa cô. Cô đếm và nhíu mày: <em>"Sao thiếu mất mấy lượt thế em? Cô nhớ là có hơn thế cơ mà."</em></p>
+<p>Bạn kiểm lại. Đúng là thiếu. Và thứ bị thiếu chính là <strong>những lượt đang để trống ngày trả</strong> — những cuốn sách chưa ai mang trả về.</p>
+<p>Nhưng khoan đã. Một ô <strong>để trống</strong> thì rõ ràng là "khác ngày 10 tháng 9" chứ còn gì nữa? Sao máy lại bỏ chúng ra?</p>
+<p>Đây không phải lỗi của máy. Đây là chỗ mà SQL hành xử theo một logic <strong>không phải hai giá trị đúng/sai</strong> như bạn học ở môn Toán. Và nếu không biết điều đó, bạn sẽ còn bị nó lừa nhiều lần nữa.</p>
+<h2 id="khai-niem-thuat-ngu">📖 Khái niệm &amp; thuật ngữ<a class="headerlink" href="#khai-niem-thuat-ngu" title="Permanent link">&para;</a></h2>
+<h3 id="khung-xuong-cua-mot-cau-select">Khung xương của một câu <code>SELECT</code><a class="headerlink" href="#khung-xuong-cua-mot-cau-select" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>SELECT   [DISTINCT] &lt;danh sách cột&gt;      -- phép chiếu π
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>FROM     &lt;bảng&gt;
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>WHERE    &lt;vị từ&gt;                          -- phép chọn σ
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>ORDER BY &lt;cột&gt; [ASC|DESC] [NULLS FIRST|LAST]
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>LIMIT    &lt;n&gt; OFFSET &lt;m&gt;
+</span></code></pre></div>
+<p>Nối lại với <a href="../21-dai-so-quan-he/">Bài 21</a>: <code>SELECT</code> là <strong>phép chiếu π</strong>, <code>WHERE</code> là <strong>phép chọn σ</strong>. Còn <code>ORDER BY</code> và <code>LIMIT</code> thì <strong>không</strong> có trong đại số quan hệ — chúng là phần SQL tự thêm vào, vì kết quả trên màn hình thì cần thứ tự, còn tập hợp trong toán thì không.</p>
+<ul>
+<li><strong><code>SELECT</code></strong> nêu các cột cần lấy. Dấu <code>*</code> nghĩa là "mọi cột".</li>
+<li><strong>Bí danh</strong> (<em>alias</em>) là tên tạm đặt cho một cột hoặc một bảng bằng từ khoá <code>AS</code>. Nó chính là phép <strong>ρ</strong> (đổi tên) ở Bài 21. Bí danh cột làm tiêu đề kết quả dễ đọc; bí danh bảng làm câu lệnh ngắn lại và là điều <strong>bắt buộc</strong> khi ghép một bảng với chính nó.</li>
+<li><strong><code>DISTINCT</code></strong> bỏ các dòng kết quả trùng nhau. Nhớ lại Bài 21: nó là thứ biến "phép chiếu của đa tập" thành đúng <strong>phép chiếu π</strong> của toán học.</li>
+<li><strong><code>WHERE</code></strong> nhận một <strong>vị từ</strong>.</li>
+<li><strong><code>LIMIT n</code></strong> giới hạn số dòng trả về; <strong><code>OFFSET m</code></strong> bỏ qua <code>m</code> dòng đầu. Hai cái đi cùng nhau tạo nên <strong>phân trang</strong> (<em>pagination</em>) của mọi trang web bạn từng dùng.</li>
+</ul>
+<h3 id="vi-tu">Vị từ<a class="headerlink" href="#vi-tu" title="Permanent link">&para;</a></h3>
+<p><strong>Vị từ</strong> (<em>predicate</em>) là một biểu thức trả về giá trị chân lý: <code>TRUE</code>, <code>FALSE</code>, hoặc — và đây là chỗ bất ngờ — <code>UNKNOWN</code>.</p>
+<p><code>WHERE</code> giữ lại <strong>duy nhất</strong> những dòng làm vị từ trả về <code>TRUE</code>. Dòng nào cho <code>FALSE</code> bị loại. <strong>Dòng nào cho <code>UNKNOWN</code> cũng bị loại.</strong></p>
+<p>Bảy loại vị từ bạn sẽ dùng hằng ngày:</p>
+<table>
+<thead>
+<tr>
+<th>Vị từ</th>
+<th>Ví dụ</th>
+<th>Nghĩa</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>So sánh</td>
+<td><code>luong &gt; 15000000</code></td>
+<td><code>=</code>, <code>&lt;&gt;</code>, <code>&lt;</code>, <code>&gt;</code>, <code>&lt;=</code>, <code>&gt;=</code></td>
+</tr>
+<tr>
+<td><strong><code>BETWEEN</code></strong></td>
+<td><code>khoi BETWEEN 6 AND 9</code></td>
+<td>Trong khoảng, <strong>tính cả hai đầu mút</strong></td>
+</tr>
+<tr>
+<td><strong><code>IN</code></strong></td>
+<td><code>ma_lop IN ('L01', 'L02')</code></td>
+<td>Thuộc một danh sách cho trước</td>
+</tr>
+<tr>
+<td><strong><code>LIKE</code></strong></td>
+<td><code>ho_ten LIKE 'Nguyễn%'</code></td>
+<td>Khớp mẫu chuỗi, <strong>phân biệt hoa thường</strong></td>
+</tr>
+<tr>
+<td><strong><code>ILIKE</code></strong></td>
+<td><code>ho_ten ILIKE 'nguyễn%'</code></td>
+<td>Như <code>LIKE</code> nhưng <strong>không</strong> phân biệt hoa thường</td>
+</tr>
+<tr>
+<td><strong><code>IS NULL</code></strong></td>
+<td><code>ngay_tra_thuc_te IS NULL</code></td>
+<td>Ô có rỗng hay không</td>
+</tr>
+<tr>
+<td><code>AND</code> / <code>OR</code> / <code>NOT</code></td>
+<td><code>gioi_tinh = 'Nữ' AND khoi = 9</code></td>
+<td>Ghép các vị từ lại</td>
+</tr>
+</tbody>
+</table>
+<p>Trong <code>LIKE</code>, hai ký tự đại diện: <strong><code>%</code></strong> thay cho <em>không hoặc nhiều</em> ký tự bất kỳ, <strong><code>_</code></strong> thay cho <em>đúng một</em> ký tự.</p>
+<h3 id="logic-ba-gia-tri-phan-quan-trong-nhat-cua-bai">Logic ba giá trị — phần quan trọng nhất của bài<a class="headerlink" href="#logic-ba-gia-tri-phan-quan-trong-nhat-cua-bai" title="Permanent link">&para;</a></h3>
+<p>Ở môn Toán, một mệnh đề chỉ có hai khả năng: đúng hoặc sai. SQL thì có <strong>ba</strong>.</p>
+<p><strong>Logic ba giá trị</strong> (<em>three-valued logic</em>) là hệ logic mà một biểu thức có thể nhận <code>TRUE</code>, <code>FALSE</code>, hoặc <strong>chưa biết</strong> (<em>UNKNOWN</em>).</p>
+<p>Vì sao phải có giá trị thứ ba? Vì <code>NULL</code> không phải là một giá trị — nó là <strong>sự vắng mặt của giá trị</strong>. Nó nghĩa là <em>"chỗ này chưa biết"</em> hoặc <em>"chỗ này không áp dụng"</em>.</p>
+<p>Bây giờ hãy nghĩ như một nhà logic học. Ô "ngày trả thực tế" của một lượt mượn đang <strong>chưa biết</strong>. Vậy mệnh đề <em>"ngày trả khác ngày 10 tháng 9"</em> đúng hay sai?</p>
+<p><strong>Không trả lời được.</strong> Vì chưa biết ngày trả là ngày nào, nên cũng chưa biết nó có khác 10/9 hay không. Kết quả là <code>UNKNOWN</code>.</p>
+<p>Và vì <code>WHERE</code> chỉ giữ dòng cho <code>TRUE</code>, dòng đó <strong>bị loại</strong>. Máy không sai. Máy đang rất trung thực: <em>"tôi không dám khẳng định dòng này thoả điều kiện, nên tôi không đưa nó cho bạn."</em></p>
+<div class="admonition danger">
+<p class="admonition-title">Quy tắc vàng: mọi phép so sánh với <code>NULL</code> đều cho <code>UNKNOWN</code></p>
+<p><code>NULL = 5</code> → <code>UNKNOWN</code>. <code>NULL &lt;&gt; 5</code> → <code>UNKNOWN</code>. <code>NULL &gt; 5</code> → <code>UNKNOWN</code>.</p>
+<p>Kể cả <code>NULL = NULL</code> cũng là <code>UNKNOWN</code> — vì hai thứ đều chưa biết thì làm sao khẳng định chúng bằng nhau?</p>
+<p>Đó là lý do phải có toán tử riêng <strong><code>IS NULL</code></strong> và <strong><code>IS NOT NULL</code></strong>. Chỉ hai toán tử này mới trả về <code>TRUE</code>/<code>FALSE</code> thật sự khi gặp <code>NULL</code>.</p>
+</div>
+<p>Ba bảng chân lý của logic ba giá trị:</p>
+<p><strong>Phép <code>AND</code></strong> — chỉ cần một vế <code>FALSE</code> là cả biểu thức <code>FALSE</code>:</p>
+<table>
+<thead>
+<tr>
+<th><code>AND</code></th>
+<th>TRUE</th>
+<th>FALSE</th>
+<th>UNKNOWN</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>TRUE</strong></td>
+<td>TRUE</td>
+<td>FALSE</td>
+<td><strong>UNKNOWN</strong></td>
+</tr>
+<tr>
+<td><strong>FALSE</strong></td>
+<td>FALSE</td>
+<td>FALSE</td>
+<td><strong>FALSE</strong></td>
+</tr>
+<tr>
+<td><strong>UNKNOWN</strong></td>
+<td>UNKNOWN</td>
+<td><strong>FALSE</strong></td>
+<td>UNKNOWN</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Phép <code>OR</code></strong> — chỉ cần một vế <code>TRUE</code> là cả biểu thức <code>TRUE</code>:</p>
+<table>
+<thead>
+<tr>
+<th><code>OR</code></th>
+<th>TRUE</th>
+<th>FALSE</th>
+<th>UNKNOWN</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>TRUE</strong></td>
+<td>TRUE</td>
+<td>TRUE</td>
+<td><strong>TRUE</strong></td>
+</tr>
+<tr>
+<td><strong>FALSE</strong></td>
+<td>TRUE</td>
+<td>FALSE</td>
+<td><strong>UNKNOWN</strong></td>
+</tr>
+<tr>
+<td><strong>UNKNOWN</strong></td>
+<td><strong>TRUE</strong></td>
+<td>UNKNOWN</td>
+<td>UNKNOWN</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Phép <code>NOT</code></strong> — và đây là ô đáng nhớ nhất cả bài:</p>
+<table>
+<thead>
+<tr>
+<th><code>NOT</code></th>
+<th>Kết quả</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>TRUE</td>
+<td>FALSE</td>
+</tr>
+<tr>
+<td>FALSE</td>
+<td>TRUE</td>
+</tr>
+<tr>
+<td><strong>UNKNOWN</strong></td>
+<td><strong>UNKNOWN</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Hãy dừng lại ở dòng cuối. <code>NOT UNKNOWN</code> vẫn là <code>UNKNOWN</code>. Phủ định một điều chưa biết thì vẫn chưa biết.</p>
+<p>Hệ quả rất cụ thể: trong logic hai giá trị, <code>A</code> và <code>NOT A</code> chia đôi toàn bộ dữ liệu — cộng lại phải ra đủ. Trong SQL <strong>điều đó không còn đúng</strong>. Những dòng cho <code>UNKNOWN</code> rơi ra khỏi <strong>cả hai</strong> phía. Bạn sẽ thấy tận mắt ở phần thực hành.</p>
+<h3 id="sap-xep-va-null">Sắp xếp và <code>NULL</code><a class="headerlink" href="#sap-xep-va-null" title="Permanent link">&para;</a></h3>
+<p><code>NULL</code> không lớn hơn cũng không nhỏ hơn giá trị nào. Nên khi sắp xếp, PostgreSQL phải tự quy ước — và quy ước là: <strong><code>NULL</code> được coi là lớn nhất</strong>.</p>
+<table>
+<thead>
+<tr>
+<th>Câu lệnh</th>
+<th><code>NULL</code> nằm ở đâu</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ORDER BY c ASC</code></td>
+<td><strong>Cuối</strong> — vì <code>NULL</code> lớn nhất</td>
+</tr>
+<tr>
+<td><code>ORDER BY c DESC</code></td>
+<td><strong>Đầu</strong> — vì <code>NULL</code> lớn nhất</td>
+</tr>
+<tr>
+<td><code>ORDER BY c NULLS FIRST</code></td>
+<td>Đầu, bất kể <code>ASC</code> hay <code>DESC</code></td>
+</tr>
+<tr>
+<td><code>ORDER BY c NULLS LAST</code></td>
+<td>Cuối, bất kể <code>ASC</code> hay <code>DESC</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong><code>NULLS FIRST</code></strong> và <strong><code>NULLS LAST</code></strong> cho bạn quyền quyết định thay vì nhận mặc định. Với danh sách "sách chưa trả", đưa <code>NULL</code> lên đầu thường mới là điều cô thủ thư muốn thấy.</p>
+<h3 id="bang-thuat-ngu">Bảng thuật ngữ<a class="headerlink" href="#bang-thuat-ngu" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Tiếng Việt</th>
+<th>English</th>
+<th>Nghĩa dễ hiểu</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Bí danh</td>
+<td><em>alias</em></td>
+<td>Tên tạm đặt cho cột hoặc bảng bằng <code>AS</code> — chính là phép ρ của đại số quan hệ</td>
+</tr>
+<tr>
+<td>Vị từ</td>
+<td><em>predicate</em></td>
+<td>Biểu thức trong <code>WHERE</code> trả về <code>TRUE</code>, <code>FALSE</code> hoặc <code>UNKNOWN</code></td>
+</tr>
+<tr>
+<td>Logic ba giá trị</td>
+<td><em>three-valued logic</em></td>
+<td>Hệ logic của SQL, có thêm giá trị thứ ba <code>UNKNOWN</code> bên cạnh <code>TRUE</code> và <code>FALSE</code></td>
+</tr>
+<tr>
+<td>Chưa biết</td>
+<td><em>UNKNOWN</em></td>
+<td>Giá trị chân lý thứ ba, sinh ra mỗi khi so sánh với <code>NULL</code>; <code>WHERE</code> <strong>loại bỏ</strong> mọi dòng cho <code>UNKNOWN</code></td>
+</tr>
+<tr>
+<td>Phân trang</td>
+<td><em>pagination</em></td>
+<td>Cắt kết quả thành từng trang bằng <code>LIMIT</code> và <code>OFFSET</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="so-o">🖼️ Sơ đồ<a class="headerlink" href="#so-o" title="Permanent link">&para;</a></h2>
+<p><code>WHERE</code> chia dữ liệu làm <strong>ba</strong> rổ chứ không phải hai — và chỉ rổ <code>TRUE</code> được đi tiếp:</p>
+<pre class="mermaid"><code>flowchart TB
+    IN["50 lượt mượn sách"]
+    VT{"Vị từ&lt;br/&gt;&lt;b&gt;ngay_tra_thuc_te &amp;gt; ngày 01-09-2026&lt;/b&gt;"}
+    T["&lt;b&gt;TRUE&lt;/b&gt; — 38 dòng&lt;br/&gt;đã trả, sau ngày đó"]
+    F["&lt;b&gt;FALSE&lt;/b&gt; — 0 dòng&lt;br/&gt;đã trả, trước ngày đó"]
+    U["&lt;b&gt;UNKNOWN&lt;/b&gt; — 12 dòng&lt;br/&gt;chưa trả · ngay_tra_thuc_te IS NULL"]
+    OK["✅ Đi tiếp vào kết quả"]
+    BO["🗑️ BỊ LOẠI"]
+
+    IN --&gt; VT
+    VT --&gt; T
+    VT --&gt; F
+    VT --&gt; U
+    T --&gt; OK
+    F --&gt; BO
+    U --&gt; BO
+
+    style IN fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
+    style VT fill:#fff8e1,stroke:#f9a825,stroke-width:2px
+    style T fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
+    style F fill:#eceff1,stroke:#607d8b
+    style U fill:#ffebee,stroke:#c62828,stroke-width:3px
+    style OK fill:#e8f5e9,stroke:#2e7d32
+    style BO fill:#ffebee,stroke:#c62828</code></pre>
+<p>Cùng một dữ liệu, ba câu lệnh, ba kết quả — và tổng của hai câu đầu <strong>không</strong> ra câu thứ ba:</p>
+<pre class="mermaid"><code>flowchart LR
+    A["&lt;b&gt;WHERE điều kiện&lt;/b&gt;&lt;br/&gt;38 dòng"]
+    B["&lt;b&gt;WHERE NOT điều kiện&lt;/b&gt;&lt;br/&gt;0 dòng"]
+    C["&lt;b&gt;WHERE điều kiện&lt;br/&gt;OR cột IS NULL&lt;/b&gt;&lt;br/&gt;50 dòng ✅"]
+    X["38 + 0 = 38&lt;br/&gt;&lt;b&gt;≠ 50&lt;/b&gt;&lt;br/&gt;12 dòng biến mất"]
+
+    A --&gt; X
+    B --&gt; X
+
+    style A fill:#e3f2fd,stroke:#1565c0
+    style B fill:#e3f2fd,stroke:#1565c0
+    style C fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
+    style X fill:#ffebee,stroke:#c62828,stroke-width:2px</code></pre>
+<h2 id="thuc-hanh">💻 Thực hành<a class="headerlink" href="#thuc-hanh" title="Permanent link">&para;</a></h2>
+<h3 id="chon-cot-va-at-bi-danh">Chọn cột và đặt bí danh<a class="headerlink" href="#chon-cot-va-at-bi-danh" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1">-- KỲ VỌNG: 6 dòng</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">ma_hs</span><span class="w">     </span><span class="k">AS</span><span class="w"> </span><span class="n">ma</span><span class="p">,</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">       </span><span class="n">ho_ten</span><span class="w">    </span><span class="k">AS</span><span class="w"> </span><span class="n">ten_hoc_sinh</span><span class="p">,</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">       </span><span class="n">ngay_sinh</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">sinh_ngay</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">ma_lop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'L01'</span>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">ma_hs</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Bí danh cho <strong>bảng</strong> thì dùng nhiều hơn nữa, vì nó rút ngắn mọi thứ phía sau:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1">-- KỲ VỌNG: 6 dòng</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">ma_hs</span><span class="p">,</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">ho_ten</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">h</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">ma_lop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'L01'</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">ma_hs</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Từ khoá <code>AS</code> có thể bỏ (<code>FROM hoc_sinh h</code>), nhưng viết rõ ra thì dễ đọc hơn.</p>
+<h3 id="distinct"><code>DISTINCT</code><a class="headerlink" href="#distinct" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1">-- KỲ VỌNG: 6 dòng</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">DISTINCT</span><span class="w"> </span><span class="n">ma_lop</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">ma_lop</span><span class="p">;</span>
+</span></code></pre></div>
+<p><code>DISTINCT</code> xét <strong>toàn bộ danh sách cột</strong> chứ không riêng cột đầu:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1">-- KỲ VỌNG: 12 dòng</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">DISTINCT</span><span class="w"> </span><span class="n">ma_lop</span><span class="p">,</span><span class="w"> </span><span class="n">gioi_tinh</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">ma_lop</span><span class="p">,</span><span class="w"> </span><span class="n">gioi_tinh</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Sáu lớp × hai giới tính, và cả 12 tổ hợp đều có thật trong dữ liệu.</p>
+<h3 id="cac-vi-tu">Các vị từ<a class="headerlink" href="#cac-vi-tu" title="Permanent link">&para;</a></h3>
+<p><strong>So sánh</strong> và <strong><code>BETWEEN</code></strong>:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1">-- KỲ VỌNG: so_gv_luong_tam_trung = 4</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_gv_luong_tam_trung</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="k">FROM</span><span class="w"> </span><span class="n">giao_vien</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">luong</span><span class="w"> </span><span class="k">BETWEEN</span><span class="w"> </span><span class="mi">13000000</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="mi">16000000</span><span class="p">;</span>
+</span></code></pre></div>
+<p><code>BETWEEN a AND b</code> tính <strong>cả hai đầu mút</strong>, tức là tương đương <code>&gt;= a AND &lt;= b</code>.</p>
+<p><strong><code>IN</code></strong> và <strong><code>NOT IN</code></strong>:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1">-- KỲ VỌNG: trong_hai_lop = 12</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1">-- KỲ VỌNG: ngoai_hai_lop = 28</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="n">FILTER</span><span class="w"> </span><span class="p">(</span><span class="k">WHERE</span><span class="w"> </span><span class="n">ma_lop</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="p">(</span><span class="s1">'L01'</span><span class="p">,</span><span class="w"> </span><span class="s1">'L02'</span><span class="p">))</span><span class="w">     </span><span class="k">AS</span><span class="w"> </span><span class="n">trong_hai_lop</span><span class="p">,</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">       </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="n">FILTER</span><span class="w"> </span><span class="p">(</span><span class="k">WHERE</span><span class="w"> </span><span class="n">ma_lop</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="p">(</span><span class="s1">'L01'</span><span class="p">,</span><span class="w"> </span><span class="s1">'L02'</span><span class="p">))</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">ngoai_hai_lop</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Ở đây <code>12 + 28 = 40</code>, đủ cả bảng — vì cột <code>ma_lop</code> được khai <code>NOT NULL</code>. <strong>Nếu cột cho phép <code>NULL</code> thì hai con số này sẽ không cộng lại thành tổng nữa</strong>; đó chính là bẫy mà phần sau sẽ mổ xẻ.</p>
+<p><strong><code>LIKE</code></strong> — phân biệt hoa thường:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1">-- KỲ VỌNG: ho_nguyen = 2</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c1">-- KỲ VỌNG: co_chu_thi = 20</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="c1">-- KỲ VỌNG: co_chu_van = 10</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="n">FILTER</span><span class="w"> </span><span class="p">(</span><span class="k">WHERE</span><span class="w"> </span><span class="n">ho_ten</span><span class="w"> </span><span class="k">LIKE</span><span class="w"> </span><span class="s1">'Nguyễn%'</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">ho_nguyen</span><span class="p">,</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">       </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="n">FILTER</span><span class="w"> </span><span class="p">(</span><span class="k">WHERE</span><span class="w"> </span><span class="n">ho_ten</span><span class="w"> </span><span class="k">LIKE</span><span class="w"> </span><span class="s1">'%Thị%'</span><span class="p">)</span><span class="w">   </span><span class="k">AS</span><span class="w"> </span><span class="n">co_chu_thi</span><span class="p">,</span>
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">       </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="n">FILTER</span><span class="w"> </span><span class="p">(</span><span class="k">WHERE</span><span class="w"> </span><span class="n">ho_ten</span><span class="w"> </span><span class="k">LIKE</span><span class="w"> </span><span class="s1">'%Văn%'</span><span class="p">)</span><span class="w">   </span><span class="k">AS</span><span class="w"> </span><span class="n">co_chu_van</span>
+</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Bây giờ đổi một chữ hoa thành chữ thường, và xem chuyện gì xảy ra:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1">-- KỲ VỌNG: like_chu_thuong = 0</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="c1">-- KỲ VỌNG: ilike_chu_thuong = 20</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="n">FILTER</span><span class="w"> </span><span class="p">(</span><span class="k">WHERE</span><span class="w"> </span><span class="n">ho_ten</span><span class="w"> </span><span class="k">LIKE</span><span class="w">  </span><span class="s1">'%thị%'</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">like_chu_thuong</span><span class="p">,</span>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">       </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="n">FILTER</span><span class="w"> </span><span class="p">(</span><span class="k">WHERE</span><span class="w"> </span><span class="n">ho_ten</span><span class="w"> </span><span class="k">ILIKE</span><span class="w"> </span><span class="s1">'%thị%'</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">ilike_chu_thuong</span>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span><span class="p">;</span>
+</span></code></pre></div>
+<p><code>LIKE</code> tìm được <strong>không dòng nào</strong>, vì trong dữ liệu chữ đó luôn viết hoa là <code>Thị</code>. <code>ILIKE</code> — chữ <code>I</code> là <em>insensitive</em>, không phân biệt — tìm ra đủ 20 dòng. Đây là mở rộng riêng của PostgreSQL; nhiều DBMS khác phải viết <code>WHERE lower(ho_ten) LIKE '%thị%'</code>.</p>
+<p>Ký tự <code>_</code> khớp <strong>đúng một</strong> ký tự:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1">-- KỲ VỌNG: 9 dòng</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">ma_hs</span><span class="p">,</span><span class="w"> </span><span class="n">ho_ten</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">ma_hs</span><span class="w"> </span><span class="k">LIKE</span><span class="w"> </span><span class="s1">'HS00_'</span>
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">ma_hs</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Chín mã <code>HS001</code>…<code>HS009</code> — <strong>không</strong> lấy <code>HS010</code>, vì mẫu chỉ chừa đúng một ô trống mà <code>10</code> lại chiếm hai ký tự.</p>
+<h3 id="logic-ba-gia-tri-xem-tan-mat">Logic ba giá trị — xem tận mắt<a class="headerlink" href="#logic-ba-gia-tri-xem-tan-mat" title="Permanent link">&para;</a></h3>
+<p>Bảng <code>muon_sach</code> có 50 lượt, trong đó 12 lượt <strong>chưa trả</strong> nên <code>ngay_tra_thuc_te IS NULL</code>:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1">-- KỲ VỌNG: tong_so_luot = 50</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="c1">-- KỲ VỌNG: da_tra = 38</span>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="c1">-- KỲ VỌNG: chua_tra = 12</span>
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w">                  </span><span class="k">AS</span><span class="w"> </span><span class="n">tong_so_luot</span><span class="p">,</span>
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">       </span><span class="k">count</span><span class="p">(</span><span class="n">ngay_tra_thuc_te</span><span class="p">)</span><span class="w">   </span><span class="k">AS</span><span class="w"> </span><span class="n">da_tra</span><span class="p">,</span>
+</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="w">       </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="n">ngay_tra_thuc_te</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">chua_tra</span>
+</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="k">FROM</span><span class="w"> </span><span class="n">muon_sach</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Bây giờ là màn chính. Ba câu lệnh dưới đây dùng <strong>cùng một</strong> điều kiện, và kết quả của chúng phá vỡ mọi trực giác từ môn Toán:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1">-- KỲ VỌNG: dieu_kien_dung = 38</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="c1">-- KỲ VỌNG: phu_dinh_dieu_kien = 0</span>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="c1">-- KỲ VỌNG: tong_hai_cai_tren = 38</span>
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1">-- KỲ VỌNG: so_dong_that_su = 50</span>
+</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="n">FILTER</span><span class="w"> </span><span class="p">(</span><span class="k">WHERE</span><span class="w"> </span><span class="n">ngay_tra_thuc_te</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="nb">DATE</span><span class="w"> </span><span class="s1">'2026-09-01'</span><span class="p">)</span><span class="w">       </span><span class="k">AS</span><span class="w"> </span><span class="n">dieu_kien_dung</span><span class="p">,</span>
+</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="w">       </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="n">FILTER</span><span class="w"> </span><span class="p">(</span><span class="k">WHERE</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="p">(</span><span class="n">ngay_tra_thuc_te</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="nb">DATE</span><span class="w"> </span><span class="s1">'2026-09-01'</span><span class="p">))</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">phu_dinh_dieu_kien</span><span class="p">,</span>
+</span><span id="__span-11-7"><a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="w">       </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="n">FILTER</span><span class="w"> </span><span class="p">(</span><span class="k">WHERE</span><span class="w"> </span><span class="n">ngay_tra_thuc_te</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="nb">DATE</span><span class="w"> </span><span class="s1">'2026-09-01'</span><span class="p">)</span>
+</span><span id="__span-11-8"><a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="w">     </span><span class="o">+</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="n">FILTER</span><span class="w"> </span><span class="p">(</span><span class="k">WHERE</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="p">(</span><span class="n">ngay_tra_thuc_te</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="nb">DATE</span><span class="w"> </span><span class="s1">'2026-09-01'</span><span class="p">))</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">tong_hai_cai_tren</span><span class="p">,</span>
+</span><span id="__span-11-9"><a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="w">       </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w">                                                           </span><span class="k">AS</span><span class="w"> </span><span class="n">so_dong_that_su</span>
+</span><span id="__span-11-10"><a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="k">FROM</span><span class="w"> </span><span class="n">muon_sach</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Đọc kỹ bốn con số: <code>38 + 0 = 38</code>, nhưng bảng có <strong>50</strong> dòng. <strong>Mười hai dòng rơi ra khỏi cả điều kiện lẫn phủ định của chính nó.</strong></p>
+<p>Trong logic hai giá trị điều này là bất khả thi. Trong SQL nó là chuyện bình thường, vì 12 dòng đó cho <code>UNKNOWN</code>, và <code>NOT UNKNOWN</code> vẫn là <code>UNKNOWN</code>.</p>
+<p>Cách sửa: nói rõ ý định của bạn với <code>NULL</code>.</p>
+<div class="highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1">-- KỲ VỌNG: 50 dòng</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">ma_muon</span><span class="p">,</span><span class="w"> </span><span class="n">ngay_tra_thuc_te</span>
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="k">FROM</span><span class="w"> </span><span class="n">muon_sach</span>
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">ngay_tra_thuc_te</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="nb">DATE</span><span class="w"> </span><span class="s1">'2026-09-01'</span>
+</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="w">   </span><span class="k">OR</span><span class="w"> </span><span class="n">ngay_tra_thuc_te</span><span class="w"> </span><span class="k">IS</span><span class="w"> </span><span class="k">NULL</span>
+</span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">ma_muon</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Đủ 50 dòng. Nhờ bảng chân lý của <code>OR</code>: khi vế trái là <code>UNKNOWN</code> mà vế phải là <code>TRUE</code>, cả biểu thức thành <code>TRUE</code>.</p>
+<h3 id="bay-10-voi-iem-so">Bẫy <code>&lt;&gt; 10</code> với điểm số<a class="headerlink" href="#bay-10-voi-iem-so" title="Permanent link">&para;</a></h3>
+<p>Đúng tình huống mà câu chuyện mở đầu mô tả, nhưng với bảng điểm. Ta dựng một bảng nháp có <code>NULL</code> thật:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">b24_diem_nhap</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">;</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">b24_diem_nhap</span><span class="w"> </span><span class="p">(</span>
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="w">    </span><span class="n">ma_hs</span><span class="w">   </span><span class="nb">CHAR</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span>
+</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="w">    </span><span class="n">diem_so</span><span class="w"> </span><span class="nb">NUMERIC</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span><span class="w">        </span><span class="c1">-- NULL nghĩa là CHƯA CHẤM</span>
+</span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="p">);</span>
+</span><span id="__span-13-7"><a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>
+</span><span id="__span-13-8"><a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">b24_diem_nhap</span><span class="w"> </span><span class="p">(</span><span class="n">ma_hs</span><span class="p">,</span><span class="w"> </span><span class="n">diem_so</span><span class="p">)</span><span class="w"> </span><span class="k">VALUES</span>
+</span><span id="__span-13-9"><a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="p">(</span><span class="s1">'HS001'</span><span class="p">,</span><span class="w"> </span><span class="mi">10</span><span class="p">.</span><span class="mi">00</span><span class="p">),</span>
+</span><span id="__span-13-10"><a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="p">(</span><span class="s1">'HS002'</span><span class="p">,</span><span class="w">  </span><span class="mi">8</span><span class="p">.</span><span class="mi">50</span><span class="p">),</span>
+</span><span id="__span-13-11"><a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a><span class="p">(</span><span class="s1">'HS003'</span><span class="p">,</span><span class="w">  </span><span class="k">NULL</span><span class="p">),</span><span class="w">   </span><span class="c1">-- bài này cô chưa chấm</span>
+</span><span id="__span-13-12"><a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a><span class="p">(</span><span class="s1">'HS004'</span><span class="p">,</span><span class="w">  </span><span class="mi">7</span><span class="p">.</span><span class="mi">00</span><span class="p">);</span>
+</span><span id="__span-13-13"><a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>
+</span><span id="__span-13-14"><a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a><span class="c1">-- KỲ VỌNG: 2 dòng</span>
+</span><span id="__span-13-15"><a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">ma_hs</span><span class="p">,</span><span class="w"> </span><span class="n">diem_so</span>
+</span><span id="__span-13-16"><a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a><span class="k">FROM</span><span class="w"> </span><span class="n">b24_diem_nhap</span>
+</span><span id="__span-13-17"><a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">diem_so</span><span class="w"> </span><span class="o">&lt;&gt;</span><span class="w"> </span><span class="mi">10</span>
+</span><span id="__span-13-18"><a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">ma_hs</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Câu hỏi đặt ra là <em>"những bạn không được 10 điểm"</em>. Bạn <code>HS003</code> chưa được chấm — rõ ràng bạn ấy <strong>chưa</strong> có điểm 10. Nhưng câu lệnh chỉ trả về <strong>2</strong> dòng, và <code>HS003</code> biến mất.</p>
+<p>Vì sao? <code>NULL &lt;&gt; 10</code> cho <code>UNKNOWN</code>, không phải <code>TRUE</code>. Và <code>WHERE</code> loại mọi dòng <code>UNKNOWN</code>.</p>
+<p>Viết lại cho đúng ý định:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1">-- KỲ VỌNG: 3 dòng</span>
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">ma_hs</span><span class="p">,</span><span class="w"> </span><span class="n">diem_so</span>
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="k">FROM</span><span class="w"> </span><span class="n">b24_diem_nhap</span>
+</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">diem_so</span><span class="w"> </span><span class="k">IS</span><span class="w"> </span><span class="k">DISTINCT</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="mi">10</span>
+</span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">ma_hs</span><span class="p">;</span>
+</span></code></pre></div>
+<p><strong><code>IS DISTINCT FROM</code></strong> là phiên bản "biết điều" của <code>&lt;&gt;</code>: nó coi <code>NULL</code> như một giá trị bình thường và <strong>luôn</strong> trả về <code>TRUE</code> hoặc <code>FALSE</code>, không bao giờ <code>UNKNOWN</code>. Cách viết dài dòng hơn nhưng tương đương là <code>WHERE diem_so &lt;&gt; 10 OR diem_so IS NULL</code>.</p>
+<p>Và đây là bộ so sánh đầy đủ về <code>NULL</code>, đáng học thuộc:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1">-- KỲ VỌNG: null_bang_null = NULL</span>
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="c1">-- KỲ VỌNG: null_khac_null = NULL</span>
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="c1">-- KỲ VỌNG: dung_is_null = true</span>
+</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="c1">-- KỲ VỌNG: is_distinct_from = false</span>
+</span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="k">SELECT</span><span class="w"> </span><span class="p">(</span><span class="k">NULL</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">NULL</span><span class="p">)</span><span class="w">                       </span><span class="k">AS</span><span class="w"> </span><span class="n">null_bang_null</span><span class="p">,</span>
+</span><span id="__span-15-6"><a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="w">       </span><span class="p">(</span><span class="k">NULL</span><span class="w"> </span><span class="o">&lt;&gt;</span><span class="w"> </span><span class="k">NULL</span><span class="p">)</span><span class="w">                      </span><span class="k">AS</span><span class="w"> </span><span class="n">null_khac_null</span><span class="p">,</span>
+</span><span id="__span-15-7"><a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="w">       </span><span class="p">(</span><span class="k">NULL</span><span class="w"> </span><span class="k">IS</span><span class="w"> </span><span class="k">NULL</span><span class="p">)</span><span class="w">                      </span><span class="k">AS</span><span class="w"> </span><span class="n">dung_is_null</span><span class="p">,</span>
+</span><span id="__span-15-8"><a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a><span class="w">       </span><span class="p">(</span><span class="k">NULL</span><span class="w"> </span><span class="k">IS</span><span class="w"> </span><span class="k">DISTINCT</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="k">NULL</span><span class="p">)</span><span class="w">        </span><span class="k">AS</span><span class="w"> </span><span class="n">is_distinct_from</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Ba bảng chân lý ở phần lý thuyết, kiểm chứng bằng chính PostgreSQL:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1">-- KỲ VỌNG: true_or_unknown = true</span>
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="c1">-- KỲ VỌNG: false_and_unknown = false</span>
+</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="c1">-- KỲ VỌNG: true_and_unknown = NULL</span>
+</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="c1">-- KỲ VỌNG: not_unknown = NULL</span>
+</span><span id="__span-16-5"><a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="k">SELECT</span><span class="w"> </span><span class="p">(</span><span class="k">TRUE</span><span class="w">  </span><span class="k">OR</span><span class="w">  </span><span class="k">NULL</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">true_or_unknown</span><span class="p">,</span>
+</span><span id="__span-16-6"><a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="w">       </span><span class="p">(</span><span class="k">FALSE</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="k">NULL</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">false_and_unknown</span><span class="p">,</span>
+</span><span id="__span-16-7"><a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="w">       </span><span class="p">(</span><span class="k">TRUE</span><span class="w">  </span><span class="k">AND</span><span class="w"> </span><span class="k">NULL</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">true_and_unknown</span><span class="p">,</span>
+</span><span id="__span-16-8"><a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a><span class="w">       </span><span class="p">(</span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">::</span><span class="nb">boolean</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">not_unknown</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Dọn bảng nháp:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">b24_diem_nhap</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">;</span>
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>
+</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="c1">-- KỲ VỌNG: con_lai = 0</span>
+</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">con_lai</span>
+</span><span id="__span-17-5"><a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="k">FROM</span><span class="w"> </span><span class="n">information_schema</span><span class="p">.</span><span class="n">tables</span>
+</span><span id="__span-17-6"><a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a><span class="k">WHERE</span><span class="w"> </span><span class="k">table_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'b24_diem_nhap'</span><span class="p">;</span>
+</span></code></pre></div>
+<h3 id="order-by-nulls-first-nulls-last"><code>ORDER BY</code>, <code>NULLS FIRST</code> / <code>NULLS LAST</code><a class="headerlink" href="#order-by-nulls-first-nulls-last" title="Permanent link">&para;</a></h3>
+<p>Cô thủ thư muốn xem <strong>những cuốn chưa trả trước tiên</strong>. Mặc định của <code>ASC</code> là đẩy <code>NULL</code> xuống cuối, nên phải nói rõ:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1">-- KỲ VỌNG: 5 dòng</span>
+</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="c1">-- KỲ VỌNG: ngay_tra_thuc_te = NULL</span>
+</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">ma_muon</span><span class="p">,</span><span class="w"> </span><span class="n">ma_hs</span><span class="p">,</span><span class="w"> </span><span class="n">ngay_tra_thuc_te</span>
+</span><span id="__span-18-4"><a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="k">FROM</span><span class="w"> </span><span class="n">muon_sach</span>
+</span><span id="__span-18-5"><a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">ngay_tra_thuc_te</span><span class="w"> </span><span class="n">NULLS</span><span class="w"> </span><span class="k">FIRST</span><span class="p">,</span><span class="w"> </span><span class="n">ma_muon</span>
+</span><span id="__span-18-6"><a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a><span class="k">LIMIT</span><span class="w"> </span><span class="mi">5</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Dòng đầu tiên có <code>ngay_tra_thuc_te</code> rỗng — đúng như yêu cầu. Còn <code>DESC</code> thì mặc định đã đặt <code>NULL</code> lên đầu rồi, vì PostgreSQL coi <code>NULL</code> là <strong>lớn nhất</strong>:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1">-- KỲ VỌNG: ngay_tra_thuc_te = NULL</span>
+</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">ma_muon</span><span class="p">,</span><span class="w"> </span><span class="n">ngay_tra_thuc_te</span>
+</span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="k">FROM</span><span class="w"> </span><span class="n">muon_sach</span>
+</span><span id="__span-19-4"><a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">ngay_tra_thuc_te</span><span class="w"> </span><span class="k">DESC</span><span class="p">,</span><span class="w"> </span><span class="n">ma_muon</span>
+</span><span id="__span-19-5"><a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a><span class="k">LIMIT</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Muốn ngược lại — đẩy <code>NULL</code> xuống dưới cùng dù đang <code>DESC</code> — thì viết <code>ORDER BY ngay_tra_thuc_te DESC NULLS LAST</code>.</p>
+<p>Sắp xếp theo nhiều cột: cột đầu quyết định trước, cột sau chỉ dùng để phân xử khi cột đầu bằng nhau.</p>
+<div class="highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1">-- KỲ VỌNG: 40 dòng</span>
+</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">ma_lop</span><span class="p">,</span><span class="w"> </span><span class="n">ma_hs</span><span class="p">,</span><span class="w"> </span><span class="n">ngay_sinh</span>
+</span><span id="__span-20-3"><a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span>
+</span><span id="__span-20-4"><a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">ma_lop</span><span class="w"> </span><span class="k">ASC</span><span class="p">,</span><span class="w"> </span><span class="n">ngay_sinh</span><span class="w"> </span><span class="k">DESC</span><span class="p">;</span>
+</span></code></pre></div>
+<h3 id="limit-va-offset-phan-trang"><code>LIMIT</code> và <code>OFFSET</code> — phân trang<a class="headerlink" href="#limit-va-offset-phan-trang" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="c1">-- KỲ VỌNG: 5 dòng</span>
+</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="c1">-- KỲ VỌNG: ma_hs = HS011</span>
+</span><span id="__span-21-3"><a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">ma_hs</span><span class="p">,</span><span class="w"> </span><span class="n">ho_ten</span>
+</span><span id="__span-21-4"><a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span>
+</span><span id="__span-21-5"><a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">ma_hs</span>
+</span><span id="__span-21-6"><a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a><span class="k">LIMIT</span><span class="w"> </span><span class="mi">5</span><span class="w"> </span><span class="k">OFFSET</span><span class="w"> </span><span class="mi">10</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Đây là "trang 3" nếu mỗi trang 5 dòng: bỏ qua 10 dòng đầu (trang 1 và 2), lấy 5 dòng tiếp theo — bắt đầu từ <code>HS011</code>.</p>
+<div class="admonition danger">
+<p class="admonition-title"><code>LIMIT</code> mà không có <code>ORDER BY</code> là sai — kể cả khi nó có vẻ chạy đúng</p>
+<p>Nếu không có <code>ORDER BY</code>, PostgreSQL <strong>không hề hứa hẹn</strong> thứ tự nào. Hôm nay nó trả về <code>HS001…HS005</code>; ngày mai, sau khi ai đó <code>UPDATE</code> một dòng hoặc sau khi bộ tối ưu chọn một đường đi khác, nó có thể trả về năm dòng hoàn toàn khác.</p>
+<p>Với <code>LIMIT</code>, hậu quả không chỉ là "thứ tự hơi lạ" mà là <strong>kết quả sai</strong>: bạn nhận về đúng 5 dòng, nhưng không phải 5 dòng bạn muốn. Và nó không báo lỗi gì cả.</p>
+<p>Quy tắc: <strong>có <code>LIMIT</code> thì phải có <code>ORDER BY</code></strong>, và <code>ORDER BY</code> đó phải đủ chặt để không còn hai dòng nào ngang nhau — thường là thêm cột khoá chính vào cuối.</p>
+</div>
+<h2 id="loi-thuong-gap">⚠️ Lỗi thường gặp<a class="headerlink" href="#loi-thuong-gap" title="Permanent link">&para;</a></h2>
+<div class="admonition danger">
+<p class="admonition-title">Lỗi 1: Viết <code>= NULL</code> thay vì <code>IS NULL</code></p>
+<p><!-- sql:co-y-loi -->
+<div class="highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">muon_sach</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">ngay_tra_thuc_te</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">NULL</span><span class="p">;</span>
+</span></code></pre></div></p>
+<p>Câu này <strong>không báo lỗi</strong>. Nó chạy ngon lành và trả về <strong>0 dòng</strong> — luôn luôn, trên mọi bảng, mọi dữ liệu.</p>
+<p>Vì <code>bất_kỳ_gì = NULL</code> cho <code>UNKNOWN</code>, và <code>WHERE</code> loại hết <code>UNKNOWN</code>. Nên nó là một câu lệnh vô nghĩa nhưng im lặng.</p>
+<p>Cách viết đúng:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="c1">-- KỲ VỌNG: 12 dòng</span>
+</span><span id="__span-23-2"><a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">ma_muon</span><span class="p">,</span><span class="w"> </span><span class="n">ma_hs</span>
+</span><span id="__span-23-3"><a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a><span class="k">FROM</span><span class="w"> </span><span class="n">muon_sach</span>
+</span><span id="__span-23-4"><a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">ngay_tra_thuc_te</span><span class="w"> </span><span class="k">IS</span><span class="w"> </span><span class="k">NULL</span>
+</span><span id="__span-23-5"><a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">ma_muon</span><span class="p">;</span>
+</span></code></pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Lỗi 2: Tưởng <code>WHERE đk</code> và <code>WHERE NOT đk</code> chia đôi bảng</p>
+<p>Đã chứng minh ở phần thực hành: <code>38 + 0 = 38</code>, không phải 50.</p>
+<p>Bất cứ khi nào cột trong vị từ <strong>có thể là <code>NULL</code></strong>, hãy tự hỏi: <em>"tôi muốn những dòng <code>NULL</code> đó rơi vào đâu?"</em> rồi viết ra cho tường minh bằng <code>OR ... IS NULL</code> hoặc <code>IS DISTINCT FROM</code>.</p>
+<p>Đây không phải chuyện bắt bẻ lý thuyết. Một báo cáo <em>"số sách đã trả đúng hạn"</em> cộng với <em>"số sách trả muộn"</em> mà không bằng tổng số lượt mượn là một báo cáo sai — và không ai phát hiện ra cho tới khi có người đi đối chiếu.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Lỗi 3: Quên rằng <code>BETWEEN</code> tính cả hai đầu mút</p>
+<p><code>WHERE diem_so BETWEEN 5 AND 8</code> <strong>bao gồm</strong> cả đúng 5.00 và đúng 8.00.</p>
+<p>Hậu quả hay gặp nhất là khi chia khoảng: viết <code>BETWEEN 0 AND 5</code> cho loại <em>"yếu"</em> rồi <code>BETWEEN 5 AND 8</code> cho loại <em>"trung bình"</em>, thì học sinh được đúng 5.00 rơi vào <strong>cả hai</strong> nhóm — và tổng số học sinh trong báo cáo lớn hơn sĩ số thật.</p>
+<p>Với ngày giờ thì bẫy còn kín hơn: <code>ngay_nhap BETWEEN '2026-01-01' AND '2026-01-31'</code> trên một cột <code>TIMESTAMP</code> sẽ <strong>bỏ sót</strong> mọi bản ghi của ngày 31 sau 0 giờ 0 phút, vì <code>'2026-01-31'</code> được hiểu là <code>2026-01-31 00:00:00</code>. Cách an toàn: <code>&gt;= '2026-01-01' AND &lt; '2026-02-01'</code>.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Lỗi 4: Dùng <code>LIKE</code> khi cần không phân biệt hoa thường</p>
+<p><code>WHERE ho_ten LIKE '%thị%'</code> trả về 0 dòng, trong khi dữ liệu có 20 dòng chứa <code>Thị</code>.</p>
+<p>Dùng <code>ILIKE</code> (PostgreSQL) hoặc <code>lower(ho_ten) LIKE lower('%thị%')</code> (chạy ở mọi DBMS).</p>
+<p>Lưu ý về tốc độ: <code>ILIKE</code> và <code>LIKE '%...%'</code> — mẫu bắt đầu bằng <code>%</code> — <strong>không dùng được index thông thường</strong>. Trên bảng nhỏ thì không sao; trên bảng 500.000 dòng ở Cấp 4, đó là lý do một trang tìm kiếm chạy mất mấy giây.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Lỗi 5: <code>ORDER BY</code> theo số thứ tự cột</p>
+<p>SQL cho phép <code>ORDER BY 2</code> nghĩa là "sắp theo cột thứ hai trong danh sách <code>SELECT</code>". Nó gọn, nhưng rất dễ hỏng: chỉ cần ai đó chèn thêm một cột vào giữa <code>SELECT</code>, câu lệnh lặng lẽ sắp theo cột khác.</p>
+<p>Hãy viết tên cột hoặc tên bí danh: <code>ORDER BY ten_hoc_sinh</code>.</p>
+</div>
+<h2 id="bai-tap">✍️ Bài tập<a class="headerlink" href="#bai-tap" title="Permanent link">&para;</a></h2>
+<ol>
+<li>
+<p>Viết truy vấn liệt kê <strong>mã và họ tên</strong> các học sinh <strong>nữ</strong> thuộc khối 9, sắp theo ngày sinh từ lớn tuổi nhất tới nhỏ tuổi nhất. (Gợi ý: cần ghép với bảng <code>lop</code> để biết khối — hoặc lọc theo danh sách mã lớp khối 9.)</p>
+</li>
+<li>
+<p>Ba câu lệnh sau cho kết quả khác nhau trên bảng <code>muon_sach</code>. Dự đoán số dòng của từng câu và giải thích:</p>
+<p>a. <code>WHERE ngay_tra_thuc_te IS NOT NULL</code></p>
+<p>b. <code>WHERE NOT (ngay_tra_thuc_te IS NULL)</code></p>
+<p>c. <code>WHERE ngay_tra_thuc_te &lt;&gt; ngay_tra_du_kien</code></p>
+</li>
+<li>
+<p>Cô thủ thư muốn một danh sách: <em>"mọi lượt mượn mà sách được trả </em><em>không</em><em> đúng vào ngày hẹn — kể cả những cuốn chưa trả."</em> Viết truy vấn đúng ý cô, và giải thích vì sao câu <code>WHERE ngay_tra_thuc_te &lt;&gt; ngay_tra_du_kien</code> là sai.</p>
+</li>
+<li>
+<p>Viết truy vấn lấy <strong>trang thứ 4</strong> của danh sách giáo viên, mỗi trang 2 người, sắp theo mã giáo viên. Cho biết <code>LIMIT</code> và <code>OFFSET</code> phải là bao nhiêu, và vì sao.</p>
+</li>
+<li>
+<p>Giải thích vì sao câu dưới đây luôn trả về <strong>0 dòng</strong>, dù bảng <code>hoc_sinh</code> có 40 dòng và có bạn tên đệm là <code>Thị</code>:</p>
+<p><!-- sql:khong-chay -->
+<div class="highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">ho_ten</span><span class="w"> </span><span class="k">LIKE</span><span class="w"> </span><span class="s1">'Thị'</span><span class="p">;</span>
+</span></code></pre></div></p>
+</li>
+</ol>
+<details class="success">
+<summary>Đáp án</summary>
+<p><strong>Câu 1.</strong></p>
+<div class="highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="c1">-- KỲ VỌNG: 10 dòng</span>
+</span><span id="__span-25-2"><a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">ma_hs</span><span class="p">,</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">ho_ten</span><span class="p">,</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">ngay_sinh</span>
+</span><span id="__span-25-3"><a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span><span class="w"> </span><span class="n">h</span>
+</span><span id="__span-25-4"><a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a><span class="k">JOIN</span><span class="w"> </span><span class="n">lop</span><span class="w"> </span><span class="n">l</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">ma_lop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">ma_lop</span>
+</span><span id="__span-25-5"><a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">gioi_tinh</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'Nữ'</span>
+</span><span id="__span-25-6"><a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a><span class="w">  </span><span class="k">AND</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">khoi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">9</span>
+</span><span id="__span-25-7"><a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">ngay_sinh</span><span class="w"> </span><span class="k">ASC</span><span class="p">,</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">ma_hs</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Khối 9 gồm <code>L04</code>, <code>L05</code>, <code>L06</code> với tổng 20 học sinh, trong đó 3 + 3 + 4 = <strong>10</strong> bạn nữ.</p>
+<p>Chú ý <code>ORDER BY h.ngay_sinh ASC</code>: "lớn tuổi nhất trước" nghĩa là <strong>ngày sinh nhỏ nhất trước</strong>, tức là tăng dần. Rất dễ viết nhầm thành <code>DESC</code>. Thêm <code>h.ma_hs</code> ở cuối để hai bạn cùng ngày sinh cũng có thứ tự ổn định.</p>
+<p><strong>Câu 2.</strong></p>
+<p>a. <strong>38 dòng.</strong> <code>IS NOT NULL</code> trả về <code>TRUE</code>/<code>FALSE</code> thật, không bao giờ <code>UNKNOWN</code>, nên nó lọc đúng 38 lượt đã trả.</p>
+<p>b. <strong>38 dòng.</strong> <code>NOT (x IS NULL)</code> tương đương hoàn toàn với <code>x IS NOT NULL</code>. Khác với <code>NOT (x = y)</code>, ở đây <code>NOT</code> áp lên một biểu thức <strong>không bao giờ</strong> cho <code>UNKNOWN</code>, nên nó an toàn.</p>
+<p>c. <strong>38 dòng</strong> — nhưng vì một lý do khác, và đây là chỗ đáng suy nghĩ. 12 lượt chưa trả cho <code>UNKNOWN</code> nên bị loại. Trong 38 lượt còn lại, dữ liệu mẫu không có lượt nào trả đúng vào ngày hẹn, nên cả 38 đều thoả <code>&lt;&gt;</code>.</p>
+<p>Ba câu cho cùng một con số, nhưng câu (c) <strong>dễ vỡ</strong>: chỉ cần có một lượt trả đúng hạn là nó khác ngay, trong khi (a) và (b) thì không. Kiểm chứng:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="c1">-- KỲ VỌNG: a_is_not_null = 38</span>
+</span><span id="__span-26-2"><a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a><span class="c1">-- KỲ VỌNG: b_not_is_null = 38</span>
+</span><span id="__span-26-3"><a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a><span class="c1">-- KỲ VỌNG: c_khac_ngay_hen = 38</span>
+</span><span id="__span-26-4"><a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="n">FILTER</span><span class="w"> </span><span class="p">(</span><span class="k">WHERE</span><span class="w"> </span><span class="n">ngay_tra_thuc_te</span><span class="w"> </span><span class="k">IS</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">)</span><span class="w">                 </span><span class="k">AS</span><span class="w"> </span><span class="n">a_is_not_null</span><span class="p">,</span>
+</span><span id="__span-26-5"><a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a><span class="w">       </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="n">FILTER</span><span class="w"> </span><span class="p">(</span><span class="k">WHERE</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="p">(</span><span class="n">ngay_tra_thuc_te</span><span class="w"> </span><span class="k">IS</span><span class="w"> </span><span class="k">NULL</span><span class="p">))</span><span class="w">               </span><span class="k">AS</span><span class="w"> </span><span class="n">b_not_is_null</span><span class="p">,</span>
+</span><span id="__span-26-6"><a id="__codelineno-26-6" name="__codelineno-26-6" href="#__codelineno-26-6"></a><span class="w">       </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="n">FILTER</span><span class="w"> </span><span class="p">(</span><span class="k">WHERE</span><span class="w"> </span><span class="n">ngay_tra_thuc_te</span><span class="w"> </span><span class="o">&lt;&gt;</span><span class="w"> </span><span class="n">ngay_tra_du_kien</span><span class="p">)</span><span class="w">         </span><span class="k">AS</span><span class="w"> </span><span class="n">c_khac_ngay_hen</span>
+</span><span id="__span-26-7"><a id="__codelineno-26-7" name="__codelineno-26-7" href="#__codelineno-26-7"></a><span class="k">FROM</span><span class="w"> </span><span class="n">muon_sach</span><span class="p">;</span>
+</span></code></pre></div>
+<p><strong>Câu 3.</strong></p>
+<div class="highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a><span class="c1">-- KỲ VỌNG: 50 dòng</span>
+</span><span id="__span-27-2"><a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">ma_muon</span><span class="p">,</span><span class="w"> </span><span class="n">ma_hs</span><span class="p">,</span><span class="w"> </span><span class="n">ngay_tra_du_kien</span><span class="p">,</span><span class="w"> </span><span class="n">ngay_tra_thuc_te</span>
+</span><span id="__span-27-3"><a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a><span class="k">FROM</span><span class="w"> </span><span class="n">muon_sach</span>
+</span><span id="__span-27-4"><a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">ngay_tra_thuc_te</span><span class="w"> </span><span class="k">IS</span><span class="w"> </span><span class="k">DISTINCT</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">ngay_tra_du_kien</span>
+</span><span id="__span-27-5"><a id="__codelineno-27-5" name="__codelineno-27-5" href="#__codelineno-27-5"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">ma_muon</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Câu <code>WHERE ngay_tra_thuc_te &lt;&gt; ngay_tra_du_kien</code> sai vì nó <strong>bỏ sót 12 lượt chưa trả</strong>. Với những lượt đó, <code>ngay_tra_thuc_te</code> là <code>NULL</code>, phép <code>&lt;&gt;</code> cho <code>UNKNOWN</code>, và <code>WHERE</code> loại chúng đi.</p>
+<p>Nhưng về mặt nghiệp vụ, một cuốn sách <strong>chưa được trả</strong> thì chắc chắn là "không trả đúng vào ngày hẹn" — cô thủ thư muốn thấy chúng, và chúng còn quan trọng hơn cả 38 lượt kia.</p>
+<p><code>IS DISTINCT FROM</code> xử lý đúng: nó coi <code>NULL</code> là một giá trị và trả lời dứt khoát <em>"khác nhau"</em>. Cách viết tương đương: <code>WHERE ngay_tra_thuc_te &lt;&gt; ngay_tra_du_kien OR ngay_tra_thuc_te IS NULL</code>.</p>
+<p><strong>Câu 4.</strong></p>
+<div class="highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="c1">-- KỲ VỌNG: 2 dòng</span>
+</span><span id="__span-28-2"><a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a><span class="c1">-- KỲ VỌNG: ma_gv = GV07</span>
+</span><span id="__span-28-3"><a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">ma_gv</span><span class="p">,</span><span class="w"> </span><span class="n">ho_ten</span>
+</span><span id="__span-28-4"><a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a><span class="k">FROM</span><span class="w"> </span><span class="n">giao_vien</span>
+</span><span id="__span-28-5"><a id="__codelineno-28-5" name="__codelineno-28-5" href="#__codelineno-28-5"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">ma_gv</span>
+</span><span id="__span-28-6"><a id="__codelineno-28-6" name="__codelineno-28-6" href="#__codelineno-28-6"></a><span class="k">LIMIT</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="k">OFFSET</span><span class="w"> </span><span class="mi">6</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Công thức chung: với kích thước trang <code>n</code> và số trang <code>p</code> đếm từ 1 thì <code>LIMIT n OFFSET (p - 1) * n</code>.</p>
+<p>Ở đây <code>n = 2</code>, <code>p = 4</code> → <code>OFFSET = 3 × 2 = 6</code>. Bỏ qua 6 người của ba trang đầu, lấy <code>GV07</code> và <code>GV08</code>.</p>
+<p><strong>Câu 5.</strong></p>
+<p>Vì <code>LIKE 'Thị'</code> <strong>không có ký tự đại diện nào</strong>. Không có <code>%</code>, không có <code>_</code>. Nên nó đòi giá trị của cột phải <strong>bằng đúng</strong> chuỗi <code>Thị</code> — cả họ tên chỉ vỏn vẹn ba chữ cái.</p>
+<p>Không bạn nào tên là <code>Thị</code>, nên kết quả rỗng. Khi không có ký tự đại diện, <code>LIKE</code> hành xử y hệt dấu <code>=</code>.</p>
+<p>Muốn tìm tên <strong>chứa</strong> <code>Thị</code> thì phải bọc hai dấu <code>%</code>: <code>WHERE ho_ten LIKE '%Thị%'</code> — và khi đó ra 20 dòng.</p>
+</details>
+<h2 id="tom-tat">🔑 Tóm tắt<a class="headerlink" href="#tom-tat" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Khung một câu truy vấn: <code>SELECT</code> (phép chiếu π) → <code>FROM</code> → <code>WHERE</code> (phép chọn σ) → <code>ORDER BY</code> → <code>LIMIT</code>/<code>OFFSET</code>. <strong>Bí danh</strong> đặt bằng <code>AS</code>, chính là phép ρ của đại số quan hệ; <code>DISTINCT</code> là thứ biến <code>SELECT</code> thành đúng phép chiếu của toán học.</li>
+<li>SQL dùng <strong>logic ba giá trị</strong>: <code>TRUE</code>, <code>FALSE</code> và <strong><code>UNKNOWN</code></strong>. Mọi phép so sánh với <code>NULL</code> — kể cả <code>NULL = NULL</code> — đều cho <code>UNKNOWN</code>, và <code>WHERE</code> <strong>loại bỏ</strong> mọi dòng cho <code>UNKNOWN</code>.</li>
+<li>Hệ quả cụ thể phải thuộc lòng: <code>NOT UNKNOWN</code> vẫn là <code>UNKNOWN</code>, nên <code>WHERE đk</code> và <code>WHERE NOT đk</code> <strong>không</strong> chia đôi bảng. Trên <code>muon_sach</code>, <code>38 + 0 = 38</code> chứ không phải 50 — 12 dòng <code>NULL</code> rơi khỏi cả hai phía.</li>
+<li>Ba công cụ để xử lý <code>NULL</code> cho đúng: <strong><code>IS NULL</code> / <code>IS NOT NULL</code></strong> (không bao giờ cho <code>UNKNOWN</code>), <strong><code>IS DISTINCT FROM</code></strong> (phiên bản "biết điều" của <code>&lt;&gt;</code>), và viết tường minh <strong><code>OR cot IS NULL</code></strong>. Tuyệt đối không dùng <code>= NULL</code> — nó luôn trả về 0 dòng mà không báo lỗi.</li>
+<li><code>ORDER BY</code> mặc định coi <code>NULL</code> là <strong>lớn nhất</strong> (<code>ASC</code> đẩy xuống cuối, <code>DESC</code> đưa lên đầu); dùng <code>NULLS FIRST</code> / <code>NULLS LAST</code> để tự quyết định. Và <strong>có <code>LIMIT</code> thì bắt buộc phải có <code>ORDER BY</code></strong> đủ chặt, nếu không bạn sẽ nhận đúng số dòng nhưng sai nội dung.</li>
+</ol>
+<hr />
+<p>⬅️ <a href="../23-dml-insert-update-delete/">Bài 23 — DML: INSERT, UPDATE, DELETE</a> · ➡️ <a href="../25-join/">Bài 25 — JOIN: sáu cách ghép bảng</a></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Trở lại mục lục
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Chân trang" >
+        
+          
+          <a href="../23-dml-insert-update-delete/" class="md-footer__link md-footer__link--prev" aria-label="Trước: Bài 23 — DML: INSERT, UPDATE, DELETE">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Trước
+              </span>
+              <div class="md-ellipsis">
+                Bài 23 — DML: INSERT, UPDATE, DELETE
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../25-join/" class="md-footer__link md-footer__link--next" aria-label="Sau: Bài 25 — JOIN: sáu cách ghép bảng">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Sau
+              </span>
+              <div class="md-ellipsis">
+                Bài 25 — JOIN: sáu cách ghép bảng
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Nội dung theo giấy phép CC BY 4.0
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/hungnguyen010518/database-tu-a-z" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.sections", "navigation.top", "navigation.footer", "navigation.indexes", "navigation.tracking", "toc.follow", "content.code.copy", "content.code.annotate", "search.highlight", "search.suggest"], "search": "../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "\u0110\u00e3 sao ch\u00e9p", "clipboard.copy": "Sao ch\u00e9p v\u00e0o b\u1ed9 nh\u1edb t\u1ea1m", "search.result.more.one": "1 t\u1eeb kh\u00e1c trong trang", "search.result.more.other": "# t\u1eeb kh\u00e1c trong trang", "search.result.none": "Kh\u00f4ng t\u00ecm th\u1ea5y t\u00e0i li\u1ec7u li\u00ean quan", "search.result.one": "1 t\u00e0i li\u1ec7u li\u00ean quan", "search.result.other": "# t\u00e0i li\u1ec7u li\u00ean quan", "search.result.placeholder": "Nh\u1eadp \u0111\u1ec3 b\u1eaft \u0111\u1ea7u t\u00ecm ki\u1ebfm", "search.result.term.missing": "Kh\u00f4ng", "select.version": "Ch\u1ecdn phi\u00ean b\u1ea3n"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.525ec568.min.js"></script>
+      
+    
+  </body>
+</html>

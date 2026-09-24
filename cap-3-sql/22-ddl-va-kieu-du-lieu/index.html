@@ -1,0 +1,2550 @@
+
+<!doctype html>
+<html lang="vi" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Khóa học cơ sở dữ liệu tiếng Việt, từ con số 0 tới mức siêu nâng cao — giải thích để học sinh cấp 2 cũng hiểu được.">
+      
+      
+      
+        <link rel="canonical" href="https://hungnguyen010518.github.io/database-tu-a-z/cap-3-sql/22-ddl-va-kieu-du-lieu/">
+      
+      
+        <link rel="prev" href="../21-dai-so-quan-he/">
+      
+      
+        <link rel="next" href="../23-dml-insert-update-delete/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.39">
+    
+    
+      
+        <title>Bài 22 — DDL: CREATE, ALTER, DROP và các kiểu dữ liệu - Database từ A-Z</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.8c3ca2c6.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#bai-22-ddl-create-alter-drop-va-cac-kieu-du-lieu" class="md-skip">
+          Bỏ qua
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Đầu trang">
+    <a href="../.." title="Database từ A-Z" class="md-header__button md-logo" aria-label="Database từ A-Z" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3C7.58 3 4 4.79 4 7s3.58 4 8 4 8-1.79 8-4-3.58-4-8-4M4 9v3c0 2.21 3.58 4 8 4s8-1.79 8-4V9c0 2.21-3.58 4-8 4s-8-1.79-8-4m0 5v3c0 2.21 3.58 4 8 4s8-1.79 8-4v-3c0 2.21-3.58 4-8 4s-8-1.79-8-4"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Database từ A-Z
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Bài 22 — DDL: CREATE, ALTER, DROP và các kiểu dữ liệu
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Chuyển sang chế độ tối"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Chuyển sang chế độ tối" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Chuyển sang chế độ sáng"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Chuyển sang chế độ sáng" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Tìm kiếm" placeholder="Tìm kiếm" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Tìm kiếm">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Xoá" aria-label="Xoá" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/hungnguyen010518/database-tu-a-z" title="Xem mã nguồn" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    database-tu-a-z
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Thanh điều hướng" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Database từ A-Z" class="md-nav__button md-logo" aria-label="Database từ A-Z" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3C7.58 3 4 4.79 4 7s3.58 4 8 4 8-1.79 8-4-3.58-4-8-4M4 9v3c0 2.21 3.58 4 8 4s8-1.79 8-4V9c0 2.21-3.58 4-8 4s-8-1.79-8-4m0 5v3c0 2.21 3.58 4 8 4s8-1.79 8-4v-3c0 2.21-3.58 4-8 4s-8-1.79-8-4"/></svg>
+
+    </a>
+    Database từ A-Z
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/hungnguyen010518/database-tu-a-z" title="Xem mã nguồn" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    database-tu-a-z
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Trang chủ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Cấp 0 — Nhập môn
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Cấp 0 — Nhập môn
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-0-nhap-mon/01-du-lieu-va-thong-tin/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 1 — Dữ liệu, thông tin và tại sao phải lưu trữ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-0-nhap-mon/02-tu-so-giay-den-excel/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 2 — Từ sổ giấy đến Excel
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-0-nhap-mon/03-dbms-la-gi/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 3 — DBMS là gì
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-0-nhap-mon/04-cac-mo-hinh-du-lieu/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 4 — Các mô hình dữ liệu
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-0-nhap-mon/05-cai-dat-postgresql/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 5 — Cài đặt PostgreSQL
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Cấp 1 — Mô hình quan hệ & Biểu đồ ER
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Cấp 1 — Mô hình quan hệ & Biểu đồ ER
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/06-mo-hinh-quan-he/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 6 — Mô hình quan hệ: bảng, dòng, cột, miền giá trị, lược đồ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/07-thuc-the-va-thuoc-tinh/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 7 — Thực thể và các loại thuộc tính
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/08-moi-quan-he-va-cardinality/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 8 — Mối quan hệ, bậc và bản số (Cardinality)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/09-participation-va-thuc-the-yeu/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 9 — Ràng buộc tham gia và Thực thể yếu
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/10-bieu-do-er-ky-hieu-chen/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 10 — Biểu đồ ER — ký hiệu Chen
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/11-bieu-do-er-crows-foot/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 11 — Biểu đồ ER — ký hiệu Crow's Foot và vẽ bằng Mermaid
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/12-bay-loai-khoa/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 12 — Bảy loại khoá trong cơ sở dữ liệu
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/13-mo-hinh-eer/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 13 — Mô hình EER: Generalization, Specialization, Aggregation
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/14-chuyen-er-sang-bang/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 14 — Chuyển biểu đồ ER thành lược đồ quan hệ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/15-rang-buoc-toan-ven/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 15 — Ràng buộc toàn vẹn (Integrity Constraints)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Cấp 2 — Chuẩn hoá
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Cấp 2 — Chuẩn hoá
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-2-chuan-hoa/16-phu-thuoc-ham/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 16 — Phụ thuộc hàm và bao đóng
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-2-chuan-hoa/17-dang-chuan-1nf-2nf/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 17 — Dạng chuẩn 1 (1NF) và Dạng chuẩn 2 (2NF)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-2-chuan-hoa/18-dang-chuan-3nf-bcnf/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 18 — Dạng chuẩn 3 (3NF) và BCNF
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-2-chuan-hoa/19-dang-chuan-4nf-5nf-6nf/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 19 — 4NF, 5NF và 6NF
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-2-chuan-hoa/20-denormalization/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 20 — Phi chuẩn hoá — khi nào nên phá luật
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Cấp 3 — SQL từ 0 tới cao thủ
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Cấp 3 — SQL từ 0 tới cao thủ
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../21-dai-so-quan-he/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 21 — Đại số quan hệ: nền toán học phía sau SQL
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Bài 22 — DDL: CREATE, ALTER, DROP và các kiểu dữ liệu
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Bài 22 — DDL: CREATE, ALTER, DROP và các kiểu dữ liệu
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Mục lục">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Mục lục
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#cau-chuyen-mo-au" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧠 Câu chuyện mở đầu
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#khai-niem-thuat-ngu" class="md-nav__link">
+    <span class="md-ellipsis">
+      📖 Khái niệm &amp; thuật ngữ
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📖 Khái niệm & thuật ngữ">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sql-khong-phai-mot-ngon-ngu-no-la-bon" class="md-nav__link">
+    <span class="md-ellipsis">
+      SQL không phải một ngôn ngữ, nó là bốn
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ba-cau-lenh-ddl-quan-trong-nhat" class="md-nav__link">
+    <span class="md-ellipsis">
+      Ba câu lệnh DDL quan trọng nhất
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kieu-du-lieu" class="md-nav__link">
+    <span class="md-ellipsis">
+      Kiểu dữ liệu
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gia-tri-mac-inh" class="md-nav__link">
+    <span class="md-ellipsis">
+      Giá trị mặc định
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bang-thuat-ngu" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bảng thuật ngữ
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#so-o" class="md-nav__link">
+    <span class="md-ellipsis">
+      🖼️ Sơ đồ
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#thuc-hanh" class="md-nav__link">
+    <span class="md-ellipsis">
+      💻 Thực hành
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="💻 Thực hành">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tao-bang" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tạo bảng
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sua-bang-bang-alter-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sửa bảng bằng ALTER TABLE
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#truncate-va-drop" class="md-nav__link">
+    <span class="md-ellipsis">
+      TRUNCATE và DROP
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bay-1-charn-em-khoang-trang" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bẫy 1 — CHAR(n) đệm khoảng trắng
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bay-2-ung-dung-so-thuc-cho-tien-va-iem" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bẫy 2 — Đừng dùng số thực cho tiền và điểm
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bay-3-timestamp-khong-co-mui-gio" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bẫy 3 — TIMESTAMP không có múi giờ
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#uuid-array-enum" class="md-nav__link">
+    <span class="md-ellipsis">
+      UUID, ARRAY, ENUM
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#don-dep" class="md-nav__link">
+    <span class="md-ellipsis">
+      Dọn dẹp
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dcl-va-tcl-xem-qua-cho-biet" class="md-nav__link">
+    <span class="md-ellipsis">
+      DCL và TCL — xem qua cho biết
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#loi-thuong-gap" class="md-nav__link">
+    <span class="md-ellipsis">
+      ⚠️ Lỗi thường gặp
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bai-tap" class="md-nav__link">
+    <span class="md-ellipsis">
+      ✍️ Bài tập
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tom-tat" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔑 Tóm tắt
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../23-dml-insert-update-delete/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 23 — DML: INSERT, UPDATE, DELETE
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../24-select-where-order-by/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 24 — SELECT, WHERE, ORDER BY, LIMIT
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../25-join/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 25 — JOIN: sáu cách ghép bảng
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../26-group-by-having/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 26 — GROUP BY, HAVING và các hàm tổng hợp
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../dataset/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Database mẫu
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../glossary/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bảng thuật ngữ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Mục lục">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Mục lục
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#cau-chuyen-mo-au" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧠 Câu chuyện mở đầu
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#khai-niem-thuat-ngu" class="md-nav__link">
+    <span class="md-ellipsis">
+      📖 Khái niệm &amp; thuật ngữ
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📖 Khái niệm & thuật ngữ">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sql-khong-phai-mot-ngon-ngu-no-la-bon" class="md-nav__link">
+    <span class="md-ellipsis">
+      SQL không phải một ngôn ngữ, nó là bốn
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ba-cau-lenh-ddl-quan-trong-nhat" class="md-nav__link">
+    <span class="md-ellipsis">
+      Ba câu lệnh DDL quan trọng nhất
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kieu-du-lieu" class="md-nav__link">
+    <span class="md-ellipsis">
+      Kiểu dữ liệu
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gia-tri-mac-inh" class="md-nav__link">
+    <span class="md-ellipsis">
+      Giá trị mặc định
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bang-thuat-ngu" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bảng thuật ngữ
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#so-o" class="md-nav__link">
+    <span class="md-ellipsis">
+      🖼️ Sơ đồ
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#thuc-hanh" class="md-nav__link">
+    <span class="md-ellipsis">
+      💻 Thực hành
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="💻 Thực hành">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tao-bang" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tạo bảng
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sua-bang-bang-alter-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sửa bảng bằng ALTER TABLE
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#truncate-va-drop" class="md-nav__link">
+    <span class="md-ellipsis">
+      TRUNCATE và DROP
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bay-1-charn-em-khoang-trang" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bẫy 1 — CHAR(n) đệm khoảng trắng
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bay-2-ung-dung-so-thuc-cho-tien-va-iem" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bẫy 2 — Đừng dùng số thực cho tiền và điểm
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bay-3-timestamp-khong-co-mui-gio" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bẫy 3 — TIMESTAMP không có múi giờ
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#uuid-array-enum" class="md-nav__link">
+    <span class="md-ellipsis">
+      UUID, ARRAY, ENUM
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#don-dep" class="md-nav__link">
+    <span class="md-ellipsis">
+      Dọn dẹp
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dcl-va-tcl-xem-qua-cho-biet" class="md-nav__link">
+    <span class="md-ellipsis">
+      DCL và TCL — xem qua cho biết
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#loi-thuong-gap" class="md-nav__link">
+    <span class="md-ellipsis">
+      ⚠️ Lỗi thường gặp
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bai-tap" class="md-nav__link">
+    <span class="md-ellipsis">
+      ✍️ Bài tập
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tom-tat" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔑 Tóm tắt
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="bai-22-ddl-create-alter-drop-va-cac-kieu-du-lieu">Bài 22 — DDL: CREATE, ALTER, DROP và các kiểu dữ liệu<a class="headerlink" href="#bai-22-ddl-create-alter-drop-va-cac-kieu-du-lieu" title="Permanent link">&para;</a></h1>
+<div class="admonition abstract">
+<p class="admonition-title">🎯 Học xong bài này, bạn sẽ</p>
+<ul>
+<li>Chia được SQL thành bốn nhóm con <strong>DDL / DML / DCL / TCL</strong> và biết câu lệnh nào thuộc nhóm nào</li>
+<li>Viết được <code>CREATE TABLE</code> đầy đủ ràng buộc, <code>ALTER TABLE</code> để sửa bảng đang chạy, và phân biệt <code>DROP TABLE</code> với <code>TRUNCATE</code></li>
+<li>Chọn đúng <strong>kiểu dữ liệu</strong> cho từng cột, thay vì cho tất cả vào <code>TEXT</code></li>
+<li>Tránh được ba cái bẫy kinh điển: <code>CHAR</code> đệm khoảng trắng, <code>REAL</code> làm hỏng tiền và điểm, <code>TIMESTAMP</code> mất múi giờ</li>
+</ul>
+</div>
+<h2 id="cau-chuyen-mo-au">🧠 Câu chuyện mở đầu<a class="headerlink" href="#cau-chuyen-mo-au" title="Permanent link">&para;</a></h2>
+<p>Trường bạn sắp làm phần mềm quản lý học sinh. Cô hiệu phó đưa cho bạn tờ giấy ghi các thông tin cần lưu: họ tên, ngày sinh, giới tính, điểm trung bình, còn đang học hay đã chuyển trường, ghi chú của giáo viên chủ nhiệm.</p>
+<p>Bạn mở máy, tạo bảng. Và bạn đứng khựng lại ở câu hỏi đầu tiên: <strong>ngày sinh thì lưu kiểu gì?</strong></p>
+<p>Lưu thành chữ, ví dụ <code>"15/01/2012"</code>? Nghe tiện. Nhưng rồi hôm sau cô hỏi <em>"sắp xếp học sinh theo tuổi giúp cô"</em> — máy sẽ sắp theo thứ tự chữ cái, và <code>"02/12/2011"</code> sẽ đứng trước <code>"15/01/2012"</code> vì <code>"0"</code> bé hơn <code>"1"</code>. Sai bét.</p>
+<p>Còn điểm trung bình thì sao? <code>8.25</code> — lưu kiểu số thực chứ gì. Nhưng nếu máy lưu <code>8.25</code> thành <code>8.2499999999999996</code> thì lúc so sánh <code>diem_tb = 8.25</code> sẽ ra <em>sai</em>, dù trên màn hình rõ ràng đang hiện <code>8.25</code>.</p>
+<p>Hai câu hỏi tưởng vụn vặt đó thực ra là <strong>quyết định thiết kế</strong>. Chúng ta chọn một lần, rồi sống với nó nhiều năm. Vậy có bộ quy tắc nào để chọn cho đúng không?</p>
+<h2 id="khai-niem-thuat-ngu">📖 Khái niệm &amp; thuật ngữ<a class="headerlink" href="#khai-niem-thuat-ngu" title="Permanent link">&para;</a></h2>
+<h3 id="sql-khong-phai-mot-ngon-ngu-no-la-bon">SQL không phải một ngôn ngữ, nó là bốn<a class="headerlink" href="#sql-khong-phai-mot-ngon-ngu-no-la-bon" title="Permanent link">&para;</a></h3>
+<p>Người ta quen gọi "SQL" như một khối, nhưng chuẩn SQL chia câu lệnh thành bốn nhóm con, theo <strong>việc chúng tác động lên cái gì</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Nhóm</th>
+<th>Tên đầy đủ</th>
+<th>Tác động lên</th>
+<th>Câu lệnh tiêu biểu</th>
+<th>Học ở bài</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>DDL</strong></td>
+<td><em>Data Definition Language</em></td>
+<td><strong>Cấu trúc</strong> — bảng, cột, ràng buộc, index</td>
+<td><code>CREATE</code>, <code>ALTER</code>, <code>DROP</code>, <code>TRUNCATE</code></td>
+<td>Bài này</td>
+</tr>
+<tr>
+<td><strong>DML</strong></td>
+<td><em>Data Manipulation Language</em></td>
+<td><strong>Dữ liệu</strong> bên trong bảng</td>
+<td><code>INSERT</code>, <code>UPDATE</code>, <code>DELETE</code>, <code>SELECT</code></td>
+<td><a href="../23-dml-insert-update-delete/">Bài 23</a>, <a href="../24-select-where-order-by/">Bài 24</a></td>
+</tr>
+<tr>
+<td><strong>DCL</strong></td>
+<td><em>Data Control Language</em></td>
+<td><strong>Quyền</strong> của người dùng</td>
+<td><code>GRANT</code>, <code>REVOKE</code></td>
+<td>Cấp 5</td>
+</tr>
+<tr>
+<td><strong>TCL</strong></td>
+<td><em>Transaction Control Language</em></td>
+<td><strong>Giao tác</strong> — gom nhiều lệnh thành một khối</td>
+<td><code>BEGIN</code>, <code>COMMIT</code>, <code>ROLLBACK</code>, <code>SAVEPOINT</code></td>
+<td>Cấp 4</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>Ngôn ngữ định nghĩa dữ liệu</strong> (<em>Data Definition Language</em>, viết tắt <strong>DDL</strong>) là nhóm câu lệnh dựng và sửa <strong>khung</strong> của database. Nó không quan tâm bên trong bảng có bao nhiêu dòng.</li>
+<li><strong>Ngôn ngữ thao tác dữ liệu</strong> (<em>Data Manipulation Language</em>, viết tắt <strong>DML</strong>) là nhóm câu lệnh làm việc với <strong>nội dung</strong> bảng.</li>
+<li><strong>Ngôn ngữ điều khiển dữ liệu</strong> (<em>Data Control Language</em>, viết tắt <strong>DCL</strong>) cấp và thu hồi quyền: ai được đọc bảng nào, ai được sửa.</li>
+<li><strong>Ngôn ngữ điều khiển giao tác</strong> (<em>Transaction Control Language</em>, viết tắt <strong>TCL</strong>) gom nhiều câu lệnh thành một khối "hoặc xong cả, hoặc không gì cả".</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title"><code>SELECT</code> thuộc nhóm nào?</p>
+<p>Chuẩn SQL xếp <code>SELECT</code> vào <strong>DML</strong>. Nhiều tài liệu tách riêng nó ra thành <strong>DQL</strong> (<em>Data Query Language</em>) cho gọn, vì <code>SELECT</code> chỉ đọc chứ không sửa gì. Hai cách gọi đều gặp được; biết cả hai để không bối rối khi đọc tài liệu.</p>
+</div>
+<h3 id="ba-cau-lenh-ddl-quan-trong-nhat">Ba câu lệnh DDL quan trọng nhất<a class="headerlink" href="#ba-cau-lenh-ddl-quan-trong-nhat" title="Permanent link">&para;</a></h3>
+<p><strong><code>CREATE TABLE</code></strong> dựng một bảng mới. Cú pháp tối thiểu là tên bảng và danh sách cột, mỗi cột gồm <strong>tên</strong> và <strong>kiểu dữ liệu</strong>; sau đó mới tới các ràng buộc mà bạn đã học ở <a href="../../cap-1-mo-hinh-er/15-rang-buoc-toan-ven/">Bài 15</a>.</p>
+<p><strong><code>ALTER TABLE</code></strong> sửa bảng đã có mà <strong>không</strong> làm mất dữ liệu đang nằm trong đó. Bốn thao tác hay dùng nhất:</p>
+<table>
+<thead>
+<tr>
+<th>Thao tác</th>
+<th>Cú pháp</th>
+<th>Ghi chú</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Thêm cột</td>
+<td><code>ALTER TABLE t ADD COLUMN c KIEU;</code></td>
+<td>Cột mới nhận <code>NULL</code> cho mọi dòng cũ, trừ khi có <code>DEFAULT</code></td>
+</tr>
+<tr>
+<td>Bỏ cột</td>
+<td><code>ALTER TABLE t DROP COLUMN c;</code></td>
+<td><strong>Mất dữ liệu cột đó vĩnh viễn</strong></td>
+</tr>
+<tr>
+<td>Đổi kiểu</td>
+<td><code>ALTER TABLE t ALTER COLUMN c TYPE KIEU;</code></td>
+<td>Thất bại nếu dữ liệu cũ không chuyển được</td>
+</tr>
+<tr>
+<td>Đổi tên</td>
+<td><code>ALTER TABLE t RENAME COLUMN a TO b;</code></td>
+<td>Mọi truy vấn cũ dùng tên <code>a</code> sẽ hỏng</td>
+</tr>
+</tbody>
+</table>
+<p><strong><code>DROP TABLE</code></strong> xoá <strong>cả bảng lẫn dữ liệu lẫn ràng buộc</strong>. Còn <strong><code>TRUNCATE</code></strong> chỉ xoá <strong>dữ liệu</strong>, giữ nguyên cái bảng rỗng.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th><code>DROP TABLE</code></th>
+<th><code>TRUNCATE</code></th>
+<th><code>DELETE FROM t</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Nhóm</td>
+<td>DDL</td>
+<td>DDL</td>
+<td>DML</td>
+</tr>
+<tr>
+<td>Bảng còn lại không?</td>
+<td><strong>Không</strong></td>
+<td>Có, rỗng</td>
+<td>Có, rỗng</td>
+</tr>
+<tr>
+<td>Tốc độ trên bảng lớn</td>
+<td>Nhanh</td>
+<td><strong>Rất nhanh</strong></td>
+<td>Chậm — xoá từng dòng</td>
+</tr>
+<tr>
+<td>Có <code>WHERE</code> không?</td>
+<td>Không</td>
+<td><strong>Không</strong></td>
+<td><strong>Có</strong></td>
+</tr>
+<tr>
+<td>Kích hoạt trigger dòng?</td>
+<td>Không</td>
+<td><strong>Không</strong></td>
+<td>Có</td>
+</tr>
+<tr>
+<td>Quay lui được bằng <code>ROLLBACK</code>?</td>
+<td>Có (trong PostgreSQL)</td>
+<td>Có (trong PostgreSQL)</td>
+<td>Có</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition danger">
+<p class="admonition-title"><code>TRUNCATE</code> không có <code>WHERE</code> — và đó là điểm mấu chốt</p>
+<p><code>TRUNCATE hoc_sinh;</code> xoá sạch 40 dòng, không hỏi lại, không cách nào giới hạn.</p>
+<p>Nó nhanh vì nó không đi qua từng dòng — nó vứt luôn cả tệp dữ liệu rồi tạo tệp mới. Đổi lại, nó <strong>không kích hoạt trigger <code>FOR EACH ROW</code></strong> (<strong>Bài 31</strong> <em>(sắp có)</em> sẽ dạy trigger), nên nếu bạn có trigger ghi nhật ký thì nhật ký sẽ trống trơn.</p>
+</div>
+<h3 id="kieu-du-lieu">Kiểu dữ liệu<a class="headerlink" href="#kieu-du-lieu" title="Permanent link">&para;</a></h3>
+<p><strong>Kiểu dữ liệu</strong> (<em>data type</em>) là khai báo cho DBMS biết một cột chứa loại giá trị nào. Nó làm bốn việc cùng lúc:</p>
+<ol>
+<li><strong>Ràng buộc miền giá trị</strong> — nhét chữ vào cột <code>INTEGER</code> là bị từ chối ngay, không cần viết <code>CHECK</code>.</li>
+<li><strong>Quyết định cách so sánh và sắp xếp</strong> — với <code>DATE</code> thì <code>2011-12-01 &lt; 2012-01-15</code>; với <code>TEXT</code> thì ngược lại.</li>
+<li><strong>Quyết định các phép toán dùng được</strong> — cộng hai <code>DATE</code> ra khoảng thời gian, cộng hai <code>TEXT</code> thì vô nghĩa.</li>
+<li><strong>Quyết định dung lượng lưu trữ</strong> — <code>SMALLINT</code> tốn 2 byte, <code>BIGINT</code> tốn 8 byte. Nhân với 500 triệu dòng ở Cấp 4 thì khác biệt là hàng gigabyte.</li>
+</ol>
+<h4 id="kieu-so">Kiểu số<a class="headerlink" href="#kieu-so" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Kiểu</th>
+<th>Phạm vi / độ chính xác</th>
+<th>Dung lượng</th>
+<th>Dùng khi</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SMALLINT</code></td>
+<td>−32 768 … 32 767</td>
+<td>2 byte</td>
+<td>Số nhỏ chắc chắn không vượt ngưỡng: <code>khoi</code>, <code>so_tiet_tuan</code>, <code>nam_xuat_ban</code></td>
+</tr>
+<tr>
+<td><code>INTEGER</code></td>
+<td>≈ ±2,1 tỉ</td>
+<td>4 byte</td>
+<td>Mặc định cho số nguyên</td>
+</tr>
+<tr>
+<td><code>BIGINT</code></td>
+<td>≈ ±9,2 × 10¹⁸</td>
+<td>8 byte</td>
+<td>Khoá tự tăng của bảng rất lớn, số tiền tính bằng đồng</td>
+</tr>
+<tr>
+<td><code>NUMERIC(p,s)</code></td>
+<td><strong>Chính xác tuyệt đối</strong>, <code>p</code> chữ số, <code>s</code> chữ số thập phân</td>
+<td>Thay đổi</td>
+<td><strong>Tiền, điểm số, mọi thứ phải đúng từng chữ số</strong></td>
+</tr>
+<tr>
+<td><code>REAL</code></td>
+<td>≈ 6 chữ số có nghĩa</td>
+<td>4 byte</td>
+<td>Số đo vật lý chấp nhận sai số</td>
+</tr>
+<tr>
+<td><code>DOUBLE PRECISION</code></td>
+<td>≈ 15 chữ số có nghĩa</td>
+<td>8 byte</td>
+<td>Tính toán khoa học</td>
+</tr>
+<tr>
+<td><code>SERIAL</code></td>
+<td><code>INTEGER</code> tự tăng</td>
+<td>4 byte</td>
+<td>Khoá nhân tạo</td>
+</tr>
+<tr>
+<td><code>BIGSERIAL</code></td>
+<td><code>BIGINT</code> tự tăng</td>
+<td>8 byte</td>
+<td>Khoá nhân tạo của bảng rất lớn</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition info">
+<p class="admonition-title"><code>SERIAL</code> không phải một kiểu thật</p>
+<p><code>SERIAL</code> là <strong>lối viết tắt</strong>. Khi bạn viết <code>ma_diem SERIAL</code>, PostgreSQL âm thầm làm ba việc: tạo một bộ đếm (<em>sequence</em>), khai cột là <code>INTEGER NOT NULL</code>, và đặt giá trị mặc định của cột là "lấy số tiếp theo từ bộ đếm đó".</p>
+<p>Từ PostgreSQL 10 trở đi có cách viết chuẩn hơn, được khuyến nghị dùng cho bảng mới: <code>ma_diem INTEGER GENERATED ALWAYS AS IDENTITY</code>. Khoá học vẫn dùng <code>SERIAL</code> vì bạn sẽ gặp nó ở khắp mọi nơi trong mã nguồn có sẵn.</p>
+</div>
+<h4 id="kieu-chuoi">Kiểu chuỗi<a class="headerlink" href="#kieu-chuoi" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Kiểu</th>
+<th>Nghĩa</th>
+<th>Dùng khi</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>VARCHAR(n)</code></td>
+<td>Chuỗi dài <strong>tối đa</strong> <code>n</code> ký tự</td>
+<td>Mặc định cho mọi chuỗi có giới hạn nghiệp vụ rõ ràng</td>
+</tr>
+<tr>
+<td><code>CHAR(n)</code></td>
+<td>Chuỗi dài <strong>đúng</strong> <code>n</code> ký tự, thiếu thì <strong>đệm khoảng trắng</strong></td>
+<td>Mã có độ dài cố định thật sự: <code>HS001</code>, <code>MH01</code></td>
+</tr>
+<tr>
+<td><code>TEXT</code></td>
+<td>Chuỗi dài <strong>không giới hạn</strong></td>
+<td>Ghi chú, nội dung bài viết, mô tả tự do</td>
+</tr>
+</tbody>
+</table>
+<p>Trong PostgreSQL, ba kiểu này <strong>tốc độ như nhau</strong> — không có chuyện <code>CHAR(5)</code> nhanh hơn <code>TEXT</code>. Chọn kiểu nào là chuyện <strong>diễn đạt ý định nghiệp vụ</strong>, không phải chuyện hiệu năng.</p>
+<h4 id="kieu-ngay-gio">Kiểu ngày giờ<a class="headerlink" href="#kieu-ngay-gio" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Kiểu</th>
+<th>Chứa gì</th>
+<th>Cạm bẫy</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>DATE</code></td>
+<td>Ngày tháng năm</td>
+<td>An toàn, dùng thoải mái</td>
+</tr>
+<tr>
+<td><code>TIME</code></td>
+<td>Giờ phút giây, <strong>không</strong> có ngày</td>
+<td>Không tự biết hôm nay là ngày nào</td>
+</tr>
+<tr>
+<td><code>TIMESTAMP</code></td>
+<td>Ngày <strong>và</strong> giờ, <strong>không</strong> có múi giờ</td>
+<td>Hai người ở hai múi giờ đọc ra hai thời điểm khác nhau</td>
+</tr>
+<tr>
+<td><code>TIMESTAMPTZ</code></td>
+<td>Ngày và giờ, <strong>có</strong> múi giờ</td>
+<td>Gần như luôn là lựa chọn đúng</td>
+</tr>
+</tbody>
+</table>
+<h4 id="cac-kieu-con-lai">Các kiểu còn lại<a class="headerlink" href="#cac-kieu-con-lai" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Kiểu</th>
+<th>Nghĩa</th>
+<th>Ví dụ giá trị</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>BOOLEAN</code></td>
+<td>Đúng / Sai / chưa biết</td>
+<td><code>TRUE</code>, <code>FALSE</code>, <code>NULL</code></td>
+</tr>
+<tr>
+<td><code>UUID</code></td>
+<td>Định danh 128 bit, sinh ngẫu nhiên gần như không bao giờ trùng</td>
+<td><code>a0ee-…-9f3b</code></td>
+</tr>
+<tr>
+<td><code>ARRAY</code></td>
+<td>Mảng nhiều giá trị cùng kiểu trong <strong>một ô</strong></td>
+<td><code>ARRAY['Bóng đá', 'Vẽ']</code></td>
+</tr>
+<tr>
+<td><code>ENUM</code></td>
+<td>Tập giá trị cố định do bạn tự định nghĩa, <strong>có thứ tự</strong></td>
+<td><code>'Giỏi'</code>, <code>'Khá'</code></td>
+</tr>
+<tr>
+<td><code>JSONB</code></td>
+<td>Tài liệu JSON đã phân tích sẵn</td>
+<td>Bài 32 <em>(sắp có)</em></td>
+</tr>
+</tbody>
+</table>
+<div class="admonition warning">
+<p class="admonition-title"><code>ARRAY</code> và chuẩn hoá — hai thứ đối đầu nhau</p>
+<p>Ở <a href="../../cap-2-chuan-hoa/17-dang-chuan-1nf-2nf/">Bài 17</a> bạn học rằng 1NF đòi mỗi ô chỉ chứa <strong>một</strong> giá trị nguyên tử. Kiểu <code>ARRAY</code> cho phép nhét cả danh sách vào một ô — tức là <strong>phá 1NF một cách có chủ đích</strong>.</p>
+<p>Dùng nó khi nào? Khi danh sách đó <strong>không bao giờ</strong> cần được tìm kiếm, nối bảng hay ràng buộc riêng — ví dụ danh sách thẻ (<em>tag</em>) để hiển thị. Nếu bạn thấy mình muốn <code>JOIN</code> vào phần tử của mảng, đó là dấu hiệu bạn đang cần một <strong>bảng con</strong> chứ không phải một mảng.</p>
+</div>
+<h3 id="gia-tri-mac-inh">Giá trị mặc định<a class="headerlink" href="#gia-tri-mac-inh" title="Permanent link">&para;</a></h3>
+<p><strong>Giá trị mặc định</strong> (<em>default value</em>) là giá trị DBMS tự điền khi câu <code>INSERT</code> không nhắc tới cột đó. Khai bằng <code>DEFAULT</code>.</p>
+<p>Điều dễ hiểu nhầm: <code>DEFAULT</code> <strong>không</strong> làm cột trở thành <code>NOT NULL</code>. Nếu bạn cố tình viết <code>INSERT ... VALUES (..., NULL, ...)</code> thì <code>NULL</code> vẫn vào được. <code>DEFAULT</code> chỉ bù cho trường hợp <strong>im lặng không nhắc tới</strong>.</p>
+<p>Hai giá trị mặc định hay dùng nhất là <code>CURRENT_DATE</code> (hôm nay) và <code>now()</code> (đúng thời điểm này). Bảng <code>diem</code> trong database mẫu dùng đúng cách đó: <code>ngay_nhap DATE NOT NULL DEFAULT CURRENT_DATE</code>.</p>
+<h3 id="bang-thuat-ngu">Bảng thuật ngữ<a class="headerlink" href="#bang-thuat-ngu" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Tiếng Việt</th>
+<th>English</th>
+<th>Nghĩa dễ hiểu</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Ngôn ngữ định nghĩa dữ liệu</td>
+<td><em>Data Definition Language</em> (DDL)</td>
+<td>Nhóm lệnh dựng và sửa <strong>cấu trúc</strong>: <code>CREATE</code>, <code>ALTER</code>, <code>DROP</code>, <code>TRUNCATE</code></td>
+</tr>
+<tr>
+<td>Ngôn ngữ thao tác dữ liệu</td>
+<td><em>Data Manipulation Language</em> (DML)</td>
+<td>Nhóm lệnh làm việc với <strong>nội dung</strong> bảng: <code>INSERT</code>, <code>UPDATE</code>, <code>DELETE</code>, <code>SELECT</code></td>
+</tr>
+<tr>
+<td>Ngôn ngữ điều khiển dữ liệu</td>
+<td><em>Data Control Language</em> (DCL)</td>
+<td>Nhóm lệnh cấp và thu hồi <strong>quyền</strong>: <code>GRANT</code>, <code>REVOKE</code></td>
+</tr>
+<tr>
+<td>Ngôn ngữ điều khiển giao tác</td>
+<td><em>Transaction Control Language</em> (TCL)</td>
+<td>Nhóm lệnh gom nhiều câu thành một khối: <code>BEGIN</code>, <code>COMMIT</code>, <code>ROLLBACK</code>, <code>SAVEPOINT</code></td>
+</tr>
+<tr>
+<td>Kiểu dữ liệu</td>
+<td><em>data type</em></td>
+<td>Khai báo loại giá trị một cột được phép chứa — quyết định cả miền giá trị, cách so sánh, phép toán và dung lượng</td>
+</tr>
+<tr>
+<td>Giá trị mặc định</td>
+<td><em>default value</em></td>
+<td>Giá trị DBMS tự điền khi câu <code>INSERT</code> không nhắc tới cột đó; nó <strong>không</strong> thay cho <code>NOT NULL</code></td>
+</tr>
+<tr>
+<td>Bộ đếm</td>
+<td><em>sequence</em></td>
+<td>Đối tượng sinh số tăng dần, là thứ nằm sau <code>SERIAL</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="so-o">🖼️ Sơ đồ<a class="headerlink" href="#so-o" title="Permanent link">&para;</a></h2>
+<p>Bốn nhóm con của SQL, chia theo thứ mà câu lệnh tác động tới:</p>
+<pre class="mermaid"><code>flowchart TB
+    SQL["&lt;b&gt;SQL&lt;/b&gt;"]
+    SQL --&gt; DDL["&lt;b&gt;DDL&lt;/b&gt;&lt;br/&gt;Data Definition&lt;br/&gt;&lt;i&gt;tác động lên CẤU TRÚC&lt;/i&gt;"]
+    SQL --&gt; DML["&lt;b&gt;DML&lt;/b&gt;&lt;br/&gt;Data Manipulation&lt;br/&gt;&lt;i&gt;tác động lên DỮ LIỆU&lt;/i&gt;"]
+    SQL --&gt; DCL["&lt;b&gt;DCL&lt;/b&gt;&lt;br/&gt;Data Control&lt;br/&gt;&lt;i&gt;tác động lên QUYỀN&lt;/i&gt;"]
+    SQL --&gt; TCL["&lt;b&gt;TCL&lt;/b&gt;&lt;br/&gt;Transaction Control&lt;br/&gt;&lt;i&gt;tác động lên GIAO TÁC&lt;/i&gt;"]
+
+    DDL --&gt; D1["CREATE · ALTER&lt;br/&gt;DROP · TRUNCATE"]
+    DML --&gt; D2["INSERT · UPDATE&lt;br/&gt;DELETE · SELECT"]
+    DCL --&gt; D3["GRANT · REVOKE"]
+    TCL --&gt; D4["BEGIN · COMMIT&lt;br/&gt;ROLLBACK · SAVEPOINT"]
+
+    style SQL fill:#e8eaf6,stroke:#3949ab,stroke-width:3px
+    style DDL fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
+    style DML fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
+    style DCL fill:#fff8e1,stroke:#f9a825,stroke-width:2px
+    style TCL fill:#f3e5f5,stroke:#6a1b9a,stroke-width:2px</code></pre>
+<p>Vòng đời một cái bảng, và ba lệnh xoá khác nhau ở chỗ nào:</p>
+<pre class="mermaid"><code>flowchart LR
+    KHONG["&lt;b&gt;CHƯA CÓ BẢNG&lt;/b&gt;"]
+    RONG["&lt;b&gt;BẢNG RỖNG&lt;/b&gt;&lt;br/&gt;có cấu trúc · không có dòng nào"]
+    CO["&lt;b&gt;BẢNG CÓ DỮ LIỆU&lt;/b&gt;"]
+
+    KHONG --&gt;|"CREATE TABLE"| RONG
+    RONG --&gt;|"INSERT"| CO
+    CO --&gt;|"TRUNCATE&lt;br/&gt;xoá sạch dòng · giữ bảng"| RONG
+    CO --&gt;|"DROP TABLE&lt;br/&gt;xoá luôn cả bảng"| KHONG
+    RONG --&gt;|"DROP TABLE"| KHONG
+    CO --&gt;|"UPDATE · DELETE WHERE&lt;br/&gt;ALTER TABLE"| CO
+
+    style KHONG fill:#eceff1,stroke:#607d8b,stroke-width:2px
+    style RONG fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
+    style CO fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px</code></pre>
+<h2 id="thuc-hanh">💻 Thực hành<a class="headerlink" href="#thuc-hanh" title="Permanent link">&para;</a></h2>
+<div class="admonition danger">
+<p class="admonition-title">Không bao giờ thử DDL trên bảng thật</p>
+<p>Mười bảng của <code>truong_hoc</code> được toàn bộ 51 bài học dùng chung. Một câu <code>ALTER</code> hay <code>DROP</code> nhầm là mọi bài phía sau sai theo.</p>
+<p>Toàn bộ phần thực hành dưới đây làm trên <strong>bảng nháp</strong> đặt tên bắt đầu bằng <code>b22_</code>, và dọn sạch ở cuối bài.</p>
+</div>
+<h3 id="tao-bang">Tạo bảng<a class="headerlink" href="#tao-bang" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">b22_hoc_sinh_nhap</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">;</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">b22_hoc_sinh_nhap</span><span class="w"> </span><span class="p">(</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">    </span><span class="n">ma_hs</span><span class="w">     </span><span class="nb">SERIAL</span><span class="w">        </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">    </span><span class="n">ho_ten</span><span class="w">    </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">60</span><span class="p">)</span><span class="w">   </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">    </span><span class="n">ngay_sinh</span><span class="w"> </span><span class="nb">DATE</span><span class="w">          </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">    </span><span class="n">gioi_tinh</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="w">    </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">CHECK</span><span class="w"> </span><span class="p">(</span><span class="n">gioi_tinh</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="p">(</span><span class="s1">'Nam'</span><span class="p">,</span><span class="w"> </span><span class="s1">'Nữ'</span><span class="p">)),</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">    </span><span class="n">diem_tb</span><span class="w">   </span><span class="nb">NUMERIC</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span><span class="w">  </span><span class="k">CHECK</span><span class="w"> </span><span class="p">(</span><span class="n">diem_tb</span><span class="w"> </span><span class="k">BETWEEN</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="mi">10</span><span class="p">),</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">    </span><span class="n">dang_hoc</span><span class="w">  </span><span class="nb">BOOLEAN</span><span class="w">       </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="k">TRUE</span><span class="p">,</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">    </span><span class="n">ghi_chu</span><span class="w">   </span><span class="nb">TEXT</span><span class="p">,</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">    </span><span class="n">tao_luc</span><span class="w">   </span><span class="n">TIMESTAMPTZ</span><span class="w">   </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="n">now</span><span class="p">()</span>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="p">);</span>
+</span></code></pre></div>
+<p>Đọc từng cột một lần nữa và tự hỏi <em>"vì sao lại là kiểu này"</em>:</p>
+<ul>
+<li><code>ma_hs SERIAL PRIMARY KEY</code> — khoá nhân tạo, để máy tự đánh số.</li>
+<li><code>ho_ten VARCHAR(60)</code> — tên người có giới hạn nghiệp vụ hợp lý, nên dùng <code>VARCHAR</code> chứ không <code>TEXT</code>.</li>
+<li><code>ngay_sinh DATE</code> — <strong>không bao giờ</strong> lưu ngày tháng bằng chuỗi.</li>
+<li><code>diem_tb NUMERIC(4,2)</code> — bốn chữ số, hai chữ số sau dấu phẩy, tức là <code>10.00</code> vừa khít. Chính xác tuyệt đối.</li>
+<li><code>dang_hoc BOOLEAN NOT NULL DEFAULT TRUE</code> — học sinh mới nhập thì mặc định đang học.</li>
+<li><code>ghi_chu TEXT</code> — độ dài tự do, không đoán trước được.</li>
+<li><code>tao_luc TIMESTAMPTZ NOT NULL DEFAULT now()</code> — thời điểm bản ghi ra đời, có múi giờ.</li>
+</ul>
+<p>Thêm vài dòng, cố tình <strong>không</strong> nhắc tới <code>dang_hoc</code> và <code>tao_luc</code> để xem <code>DEFAULT</code> làm việc:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">b22_hoc_sinh_nhap</span><span class="w"> </span><span class="p">(</span><span class="n">ho_ten</span><span class="p">,</span><span class="w"> </span><span class="n">ngay_sinh</span><span class="p">,</span><span class="w"> </span><span class="n">gioi_tinh</span><span class="p">,</span><span class="w"> </span><span class="n">diem_tb</span><span class="p">,</span><span class="w"> </span><span class="n">ghi_chu</span><span class="p">)</span><span class="w"> </span><span class="k">VALUES</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="p">(</span><span class="s1">'Nguyễn Văn Khoa'</span><span class="p">,</span><span class="w"> </span><span class="s1">'2012-02-11'</span><span class="p">,</span><span class="w"> </span><span class="s1">'Nam'</span><span class="p">,</span><span class="w"> </span><span class="mi">7</span><span class="p">.</span><span class="mi">25</span><span class="p">,</span><span class="w"> </span><span class="s1">'Chuyển từ trường khác sang'</span><span class="p">),</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="p">(</span><span class="s1">'Trần Thị Ly'</span><span class="p">,</span><span class="w">     </span><span class="s1">'2012-06-04'</span><span class="p">,</span><span class="w"> </span><span class="s1">'Nữ'</span><span class="p">,</span><span class="w">  </span><span class="mi">8</span><span class="p">.</span><span class="mi">50</span><span class="p">,</span><span class="w"> </span><span class="k">NULL</span><span class="p">),</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="p">(</span><span class="s1">'Lê Minh Quân'</span><span class="p">,</span><span class="w">    </span><span class="s1">'2011-09-30'</span><span class="p">,</span><span class="w"> </span><span class="s1">'Nam'</span><span class="p">,</span><span class="w"> </span><span class="mi">6</span><span class="p">.</span><span class="mi">75</span><span class="p">,</span><span class="w"> </span><span class="s1">'Cần kèm thêm môn Toán'</span><span class="p">);</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1">-- KỲ VỌNG: so_dong = 3</span>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1">-- KỲ VỌNG: so_dang_hoc = 3</span>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1">-- KỲ VỌNG: so_co_ghi_chu = 2</span>
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w">                          </span><span class="k">AS</span><span class="w"> </span><span class="n">so_dong</span><span class="p">,</span>
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">       </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="n">FILTER</span><span class="w"> </span><span class="p">(</span><span class="k">WHERE</span><span class="w"> </span><span class="n">dang_hoc</span><span class="p">)</span><span class="w">  </span><span class="k">AS</span><span class="w"> </span><span class="n">so_dang_hoc</span><span class="p">,</span>
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">       </span><span class="k">count</span><span class="p">(</span><span class="n">ghi_chu</span><span class="p">)</span><span class="w">                    </span><span class="k">AS</span><span class="w"> </span><span class="n">so_co_ghi_chu</span>
+</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="k">FROM</span><span class="w"> </span><span class="n">b22_hoc_sinh_nhap</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Ba dòng đều có <code>dang_hoc = TRUE</code> dù không ai nhắc tới nó — đó là <code>DEFAULT</code>. Còn <code>ghi_chu</code> chỉ có 2 giá trị thật, vì dòng thứ hai được ghi <code>NULL</code> <strong>một cách tường minh</strong>; <code>DEFAULT</code> không can thiệp vào chuyện đó.</p>
+<h3 id="sua-bang-bang-alter-table">Sửa bảng bằng <code>ALTER TABLE</code><a class="headerlink" href="#sua-bang-bang-alter-table" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1">-- Thêm cột mới: học sinh thuộc lớp nào</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="k">ALTER</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">b22_hoc_sinh_nhap</span><span class="w"> </span><span class="k">ADD</span><span class="w"> </span><span class="k">COLUMN</span><span class="w"> </span><span class="n">ma_lop</span><span class="w"> </span><span class="nb">CHAR</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1">-- Đổi kiểu: ghi chú thật ra không bao giờ dài quá 200 ký tự</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="k">ALTER</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">b22_hoc_sinh_nhap</span><span class="w"> </span><span class="k">ALTER</span><span class="w"> </span><span class="k">COLUMN</span><span class="w"> </span><span class="n">ghi_chu</span><span class="w"> </span><span class="k">TYPE</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">200</span><span class="p">);</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1">-- Đổi giá trị mặc định: từ nay học sinh nhập mới coi như CHƯA xác nhận</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="k">ALTER</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">b22_hoc_sinh_nhap</span><span class="w"> </span><span class="k">ALTER</span><span class="w"> </span><span class="k">COLUMN</span><span class="w"> </span><span class="n">dang_hoc</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="k">FALSE</span><span class="p">;</span>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1">-- Đổi tên cột cho rõ nghĩa hơn</span>
+</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="k">ALTER</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">b22_hoc_sinh_nhap</span><span class="w"> </span><span class="k">RENAME</span><span class="w"> </span><span class="k">COLUMN</span><span class="w"> </span><span class="n">diem_tb</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">diem_trung_binh</span><span class="p">;</span>
+</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1">-- KỲ VỌNG: so_cot = 9</span>
+</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_cot</span>
+</span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="k">FROM</span><span class="w"> </span><span class="n">information_schema</span><span class="p">.</span><span class="n">columns</span>
+</span><span id="__span-2-16"><a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="k">WHERE</span><span class="w"> </span><span class="k">table_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'b22_hoc_sinh_nhap'</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Cột mới <code>ma_lop</code> nhận <code>NULL</code> cho cả ba dòng đã có — vì nó không có <code>DEFAULT</code>:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1">-- KỲ VỌNG: so_dong_thieu_lop = 3</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_dong_thieu_lop</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="k">FROM</span><span class="w"> </span><span class="n">b22_hoc_sinh_nhap</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">ma_lop</span><span class="w"> </span><span class="k">IS</span><span class="w"> </span><span class="k">NULL</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Bỏ hẳn một cột. Đây là thao tác <strong>không quay lui được</strong> khi đã <code>COMMIT</code>:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="k">ALTER</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">b22_hoc_sinh_nhap</span><span class="w"> </span><span class="k">DROP</span><span class="w"> </span><span class="k">COLUMN</span><span class="w"> </span><span class="n">ghi_chu</span><span class="p">;</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1">-- KỲ VỌNG: so_cot = 8</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_cot</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="k">FROM</span><span class="w"> </span><span class="n">information_schema</span><span class="p">.</span><span class="n">columns</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="k">WHERE</span><span class="w"> </span><span class="k">table_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'b22_hoc_sinh_nhap'</span><span class="p">;</span>
+</span></code></pre></div>
+<h3 id="truncate-va-drop"><code>TRUNCATE</code> và <code>DROP</code><a class="headerlink" href="#truncate-va-drop" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="k">TRUNCATE</span><span class="w"> </span><span class="n">b22_hoc_sinh_nhap</span><span class="p">;</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1">-- KỲ VỌNG: so_dong = 0</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_dong</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">b22_hoc_sinh_nhap</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Bảng vẫn còn, chỉ là rỗng — bạn vừa <code>SELECT</code> được từ nó đấy thôi. Còn sau <code>DROP TABLE</code> thì chính câu <code>SELECT</code> đó sẽ báo lỗi <em>relation does not exist</em>.</p>
+<p>Còn đây là những câu <strong>tuyệt đối không được chạy</strong> trên database của khoá học:</p>
+<!-- sql:khong-chay -->
+<div class="highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1">-- ĐỪNG chạy ba câu này! Chúng phá hỏng database mẫu.</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="k">TRUNCATE</span><span class="w"> </span><span class="n">hoc_sinh</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">;</span><span class="w">              </span><span class="c1">-- xoá sạch 40 học sinh</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">diem</span><span class="p">;</span><span class="w">                        </span><span class="c1">-- xoá luôn bảng điểm</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="k">ALTER</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">giao_vien</span><span class="w"> </span><span class="k">DROP</span><span class="w"> </span><span class="k">COLUMN</span><span class="w"> </span><span class="n">luong</span><span class="p">;</span><span class="w"> </span><span class="c1">-- mất cột lương vĩnh viễn</span>
+</span></code></pre></div>
+<h3 id="bay-1-charn-em-khoang-trang">Bẫy 1 — <code>CHAR(n)</code> đệm khoảng trắng<a class="headerlink" href="#bay-1-charn-em-khoang-trang" title="Permanent link">&para;</a></h3>
+<p><code>CHAR(10)</code> luôn giữ đúng 10 ký tự. Chuỗi ngắn hơn bị <strong>đệm thêm khoảng trắng</strong> cho đủ. Hậu quả: quy tắc so sánh của <code>CHAR</code> <strong>bỏ qua khoảng trắng ở cuối</strong>, còn <code>VARCHAR</code> thì không.</p>
+<div class="highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1">-- KỲ VỌNG: char_bang_nhau = true</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c1">-- KỲ VỌNG: varchar_bang_nhau = false</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="k">SELECT</span><span class="w"> </span><span class="s1">'Toán'</span><span class="p">::</span><span class="nb">CHAR</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s1">'Toán  '</span><span class="p">::</span><span class="nb">CHAR</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="w">    </span><span class="k">AS</span><span class="w"> </span><span class="n">char_bang_nhau</span><span class="p">,</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">       </span><span class="s1">'Toán'</span><span class="p">::</span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'Toán  '</span><span class="p">::</span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">varchar_bang_nhau</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Cùng hai giá trị đầu vào, đổi kiểu một cái là kết quả so sánh <strong>lật ngược</strong>. Và khi nối chuỗi, khoảng trắng đệm của <code>CHAR</code> lại <strong>biến mất</strong>:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1">-- KỲ VỌNG: noi_char = Toán|</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="c1">-- KỲ VỌNG: noi_varchar = Toán  |</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="k">SELECT</span><span class="w"> </span><span class="p">((</span><span class="s1">'Toán'</span><span class="p">::</span><span class="nb">CHAR</span><span class="p">(</span><span class="mi">10</span><span class="p">))::</span><span class="nb">TEXT</span><span class="w">      </span><span class="o">||</span><span class="w"> </span><span class="s1">'|'</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">noi_char</span><span class="p">,</span>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">       </span><span class="p">((</span><span class="s1">'Toán  '</span><span class="p">::</span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">10</span><span class="p">))::</span><span class="nb">TEXT</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="s1">'|'</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">noi_varchar</span><span class="p">;</span>
+</span></code></pre></div>
+<div class="admonition tip">
+<p class="admonition-title">Khi nào <code>CHAR</code> là lựa chọn đúng?</p>
+<p>Khi độ dài <strong>thật sự</strong> cố định và mọi giá trị đều dùng hết <code>n</code> ký tự: <code>ma_hs CHAR(5)</code> với <code>HS001</code>…<code>HS040</code>, <code>ma_lop CHAR(3)</code> với <code>L01</code>…<code>L06</code>. Lúc đó không có khoảng trắng đệm nào cả, nên không có bẫy.</p>
+<p>Còn nếu độ dài thay đổi — tên người, địa chỉ, ghi chú — thì dùng <code>VARCHAR</code> hoặc <code>TEXT</code>. Nhiều người có kinh nghiệm chọn thẳng <code>TEXT</code> cho mọi chuỗi và kiểm độ dài bằng <code>CHECK</code>.</p>
+</div>
+<h3 id="bay-2-ung-dung-so-thuc-cho-tien-va-iem">Bẫy 2 — Đừng dùng số thực cho tiền và điểm<a class="headerlink" href="#bay-2-ung-dung-so-thuc-cho-tien-va-iem" title="Permanent link">&para;</a></h3>
+<p><code>REAL</code> và <code>DOUBLE PRECISION</code> lưu số theo chuẩn dấu chấm động nhị phân. Số <code>0.1</code> trong hệ nhị phân là một phân số <strong>vô hạn tuần hoàn</strong>, giống như <code>1/3</code> trong hệ thập phân. Máy buộc phải cắt bớt, nên kết quả chỉ <strong>gần đúng</strong>:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1">-- KỲ VỌNG: dung_float = false</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="c1">-- KỲ VỌNG: dung_numeric = true</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="k">SELECT</span><span class="w"> </span><span class="p">(</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">::</span><span class="n">DOUBLE</span><span class="w"> </span><span class="k">PRECISION</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">0</span><span class="p">.</span><span class="mi">2</span><span class="p">::</span><span class="n">DOUBLE</span><span class="w"> </span><span class="k">PRECISION</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">.</span><span class="mi">3</span><span class="p">::</span><span class="n">DOUBLE</span><span class="w"> </span><span class="k">PRECISION</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">dung_float</span><span class="p">,</span>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">       </span><span class="p">(</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">::</span><span class="nb">NUMERIC</span><span class="w">          </span><span class="o">+</span><span class="w"> </span><span class="mi">0</span><span class="p">.</span><span class="mi">2</span><span class="p">::</span><span class="nb">NUMERIC</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">.</span><span class="mi">3</span><span class="p">::</span><span class="nb">NUMERIC</span><span class="p">)</span><span class="w">          </span><span class="k">AS</span><span class="w"> </span><span class="n">dung_numeric</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Đọc lại kết quả đó cho kỹ: với kiểu dấu chấm động, <strong><code>0.1 + 0.2</code> không bằng <code>0.3</code></strong>. Máy không hỏng — nó chỉ đang làm đúng cái mà chuẩn IEEE 754 quy định.</p>
+<p>Bây giờ hình dung hậu quả trong trường học: điểm trung bình của một bạn được tính ra <code>4.999999999</code>, phần mềm so <code>diem_tb &gt;= 5</code> và trả lời <em>"trượt"</em>. Bạn ấy vừa bị đánh trượt bởi một lỗi làm tròn.</p>
+<p>Đó chính là lý do bảng <code>diem</code> trong database mẫu khai <code>diem_so NUMERIC(4,2)</code> chứ không phải <code>REAL</code>:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1">-- KỲ VỌNG: kieu_cot = numeric</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">data_type</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">kieu_cot</span>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="k">FROM</span><span class="w"> </span><span class="n">information_schema</span><span class="p">.</span><span class="n">columns</span>
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="k">WHERE</span><span class="w"> </span><span class="k">table_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'diem'</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="k">column_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'diem_so'</span><span class="p">;</span>
+</span></code></pre></div>
+<div class="admonition tip">
+<p class="admonition-title">Quy tắc chốt</p>
+<p><strong>Thứ gì mà con người sẽ đọc, đếm và cãi nhau về từng chữ số — tiền, điểm, số lượng — thì dùng <code>NUMERIC</code>.</strong></p>
+<p><strong>Thứ gì là số đo vật lý vốn đã có sai số — nhiệt độ, toạ độ, khối lượng cảm biến — thì <code>REAL</code> hay <code>DOUBLE PRECISION</code> mới hợp.</strong></p>
+</div>
+<h3 id="bay-3-timestamp-khong-co-mui-gio">Bẫy 3 — <code>TIMESTAMP</code> không có múi giờ<a class="headerlink" href="#bay-3-timestamp-khong-co-mui-gio" title="Permanent link">&para;</a></h3>
+<p><code>TIMESTAMP</code> lưu đúng chuỗi ngày giờ bạn đưa vào, <strong>không kèm thông tin múi giờ</strong>. Nó giống như viết <code>"8 giờ sáng"</code> lên giấy: người ở Hà Nội và người ở London đọc ra hai thời điểm cách nhau 7 tiếng.</p>
+<p><code>TIMESTAMPTZ</code> thì lưu <strong>một thời điểm tuyệt đối</strong>. Bạn đưa vào giờ nào, múi nào cũng được — nó quy về chuẩn UTC bên trong, rồi hiển thị lại theo múi giờ của người đang xem.</p>
+<div class="highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1">-- KỲ VỌNG: khac_nhau = true</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="p">(</span><span class="n">TIMESTAMPTZ</span><span class="w"> </span><span class="s1">'2026-09-25 08:00:00+07'</span><span class="w"> </span><span class="k">AT</span><span class="w"> </span><span class="k">TIME</span><span class="w"> </span><span class="k">ZONE</span><span class="w"> </span><span class="s1">'UTC'</span><span class="p">)</span>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">       </span><span class="o">&lt;&gt;</span><span class="w"> </span><span class="k">TIMESTAMP</span><span class="w"> </span><span class="s1">'2026-09-25 08:00:00'</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">khac_nhau</span><span class="p">;</span>
+</span></code></pre></div>
+<p>8 giờ sáng giờ Việt Nam chính là 1 giờ sáng giờ UTC — hai con số khác nhau, cùng một khoảnh khắc. <code>TIMESTAMP</code> không có khả năng diễn đạt điều đó.</p>
+<div class="admonition tip">
+<p class="admonition-title">Quy tắc chốt</p>
+<p>Ghi lại <strong>một sự kiện đã xảy ra</strong> (lúc tạo bản ghi, lúc học sinh quẹt thẻ vào trường, lúc đơn hàng được đặt) → <strong><code>TIMESTAMPTZ</code></strong>.</p>
+<p>Ghi lại <strong>một mốc trên lịch, không gắn với thời điểm thật</strong> (ngày sinh, ngày thi dự kiến, "9 giờ sáng" trong thời khoá biểu) → <strong><code>DATE</code></strong>, <strong><code>TIME</code></strong>, hoặc <code>TIMESTAMP</code>.</p>
+<p>Khi phân vân, chọn <code>TIMESTAMPTZ</code>.</p>
+</div>
+<h3 id="uuid-array-enum"><code>UUID</code>, <code>ARRAY</code>, <code>ENUM</code><a class="headerlink" href="#uuid-array-enum" title="Permanent link">&para;</a></h3>
+<p>Ba kiểu này ít gặp hơn nhưng rất đáng biết. <code>ENUM</code> phải được <strong>tạo ra như một kiểu riêng</strong> trước khi dùng:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">b22_the_thu_vien</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">;</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="k">DROP</span><span class="w"> </span><span class="k">TYPE</span><span class="w">  </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">b22_xep_loai</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">;</span>
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">TYPE</span><span class="w"> </span><span class="n">b22_xep_loai</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">ENUM</span><span class="w"> </span><span class="p">(</span><span class="s1">'Yếu'</span><span class="p">,</span><span class="w"> </span><span class="s1">'Trung bình'</span><span class="p">,</span><span class="w"> </span><span class="s1">'Khá'</span><span class="p">,</span><span class="w"> </span><span class="s1">'Giỏi'</span><span class="p">);</span>
+</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>
+</span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">b22_the_thu_vien</span><span class="w"> </span><span class="p">(</span>
+</span><span id="__span-12-7"><a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="w">    </span><span class="n">ma_the</span><span class="w">   </span><span class="n">UUID</span><span class="w">          </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="n">gen_random_uuid</span><span class="p">(),</span>
+</span><span id="__span-12-8"><a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="w">    </span><span class="n">ma_hs</span><span class="w">    </span><span class="nb">CHAR</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span><span class="w">       </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+</span><span id="__span-12-9"><a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="w">    </span><span class="n">xep_loai</span><span class="w"> </span><span class="n">b22_xep_loai</span><span class="w">  </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="s1">'Trung bình'</span><span class="p">,</span>
+</span><span id="__span-12-10"><a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="w">    </span><span class="n">so_thich</span><span class="w"> </span><span class="nb">TEXT</span><span class="p">[]</span>
+</span><span id="__span-12-11"><a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="p">);</span>
+</span><span id="__span-12-12"><a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>
+</span><span id="__span-12-13"><a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">b22_the_thu_vien</span><span class="w"> </span><span class="p">(</span><span class="n">ma_hs</span><span class="p">,</span><span class="w"> </span><span class="n">xep_loai</span><span class="p">,</span><span class="w"> </span><span class="n">so_thich</span><span class="p">)</span><span class="w"> </span><span class="k">VALUES</span>
+</span><span id="__span-12-14"><a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a><span class="p">(</span><span class="s1">'HS001'</span><span class="p">,</span><span class="w"> </span><span class="s1">'Giỏi'</span><span class="p">,</span><span class="w"> </span><span class="nb">ARRAY</span><span class="p">[</span><span class="s1">'Bóng đá'</span><span class="p">,</span><span class="w"> </span><span class="s1">'Vẽ'</span><span class="p">,</span><span class="w"> </span><span class="s1">'Đọc sách'</span><span class="p">]),</span>
+</span><span id="__span-12-15"><a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a><span class="p">(</span><span class="s1">'HS002'</span><span class="p">,</span><span class="w"> </span><span class="s1">'Khá'</span><span class="p">,</span><span class="w">  </span><span class="nb">ARRAY</span><span class="p">[</span><span class="s1">'Cờ vua'</span><span class="p">]),</span>
+</span><span id="__span-12-16"><a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a><span class="p">(</span><span class="s1">'HS003'</span><span class="p">,</span><span class="w"> </span><span class="k">DEFAULT</span><span class="p">,</span><span class="w"> </span><span class="k">NULL</span><span class="p">);</span>
+</span><span id="__span-12-17"><a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a>
+</span><span id="__span-12-18"><a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a><span class="c1">-- KỲ VỌNG: so_the = 3</span>
+</span><span id="__span-12-19"><a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a><span class="c1">-- KỲ VỌNG: so_the_co_uuid = 3</span>
+</span><span id="__span-12-20"><a id="__codelineno-12-20" name="__codelineno-12-20" href="#__codelineno-12-20"></a><span class="c1">-- KỲ VỌNG: so_so_thich_hs001 = 3</span>
+</span><span id="__span-12-21"><a id="__codelineno-12-21" name="__codelineno-12-21" href="#__codelineno-12-21"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w">                                              </span><span class="k">AS</span><span class="w"> </span><span class="n">so_the</span><span class="p">,</span>
+</span><span id="__span-12-22"><a id="__codelineno-12-22" name="__codelineno-12-22" href="#__codelineno-12-22"></a><span class="w">       </span><span class="k">count</span><span class="p">(</span><span class="n">ma_the</span><span class="p">)</span><span class="w">                                         </span><span class="k">AS</span><span class="w"> </span><span class="n">so_the_co_uuid</span><span class="p">,</span>
+</span><span id="__span-12-23"><a id="__codelineno-12-23" name="__codelineno-12-23" href="#__codelineno-12-23"></a><span class="w">       </span><span class="k">max</span><span class="p">(</span><span class="n">array_length</span><span class="p">(</span><span class="n">so_thich</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">))</span><span class="w"> </span><span class="n">FILTER</span><span class="w"> </span><span class="p">(</span><span class="k">WHERE</span><span class="w"> </span><span class="n">ma_hs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'HS001'</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_so_thich_hs001</span>
+</span><span id="__span-12-24"><a id="__codelineno-12-24" name="__codelineno-12-24" href="#__codelineno-12-24"></a><span class="k">FROM</span><span class="w"> </span><span class="n">b22_the_thu_vien</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Điểm hay nhất của <code>ENUM</code>: các giá trị <strong>có thứ tự</strong>, đúng theo thứ tự bạn liệt kê lúc <code>CREATE TYPE</code>. Nên so sánh được, sắp xếp được:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1">-- KỲ VỌNG: gioi_hon_kha = true</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="c1">-- KỲ VỌNG: xep_loai = Giỏi</span>
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="k">SELECT</span><span class="w"> </span><span class="p">(</span><span class="s1">'Giỏi'</span><span class="p">::</span><span class="n">b22_xep_loai</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="s1">'Khá'</span><span class="p">::</span><span class="n">b22_xep_loai</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">gioi_hon_kha</span><span class="p">,</span>
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="w">       </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">xep_loai</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">b22_the_thu_vien</span><span class="w"> </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">xep_loai</span><span class="w"> </span><span class="k">DESC</span><span class="w"> </span><span class="k">LIMIT</span><span class="w"> </span><span class="mi">1</span><span class="p">)::</span><span class="nb">text</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">xep_loai</span><span class="p">;</span>
+</span></code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title"><code>ENUM</code> khó sửa — cân nhắc trước khi dùng</p>
+<p>Thêm giá trị mới vào <code>ENUM</code> thì được (<code>ALTER TYPE ... ADD VALUE</code>), nhưng <strong>xoá</strong> hoặc <strong>đổi thứ tự</strong> thì gần như không thể mà không dựng lại cả kiểu.</p>
+<p>Nếu danh sách giá trị có khả năng thay đổi theo nghiệp vụ, hãy dùng một <strong>bảng tra cứu</strong> cộng khoá ngoại — linh hoạt hơn nhiều, và đó là cách mà database mẫu làm với <code>mon_hoc</code>.</p>
+</div>
+<h3 id="don-dep">Dọn dẹp<a class="headerlink" href="#don-dep" title="Permanent link">&para;</a></h3>
+<p>Luôn dọn bảng nháp, để bài sau không bị nhiễu:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">b22_hoc_sinh_nhap</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">;</span>
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">b22_the_thu_vien</span><span class="w">  </span><span class="k">CASCADE</span><span class="p">;</span>
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="k">DROP</span><span class="w"> </span><span class="k">TYPE</span><span class="w">  </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">b22_xep_loai</span><span class="w">      </span><span class="k">CASCADE</span><span class="p">;</span>
+</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>
+</span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="c1">-- KỲ VỌNG: so_bang_con_lai = 0</span>
+</span><span id="__span-14-6"><a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_bang_con_lai</span>
+</span><span id="__span-14-7"><a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="k">FROM</span><span class="w"> </span><span class="n">information_schema</span><span class="p">.</span><span class="n">tables</span>
+</span><span id="__span-14-8"><a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="k">WHERE</span><span class="w"> </span><span class="k">table_name</span><span class="w"> </span><span class="k">LIKE</span><span class="w"> </span><span class="s1">'b22\_%'</span><span class="p">;</span>
+</span></code></pre></div>
+<h3 id="dcl-va-tcl-xem-qua-cho-biet">DCL và TCL — xem qua cho biết<a class="headerlink" href="#dcl-va-tcl-xem-qua-cho-biet" title="Permanent link">&para;</a></h3>
+<p>Hai nhóm này được dạy kỹ ở Cấp 4 và Cấp 5, nhưng hãy nhìn qua hình dáng của chúng ngay bây giờ:</p>
+<!-- sql:khong-chay -->
+<div class="highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1">-- DCL: cấp và thu hồi quyền (cần quyền quản trị, không chạy trong khoá học)</span>
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="k">GRANT</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">hoc_sinh</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">giao_vien_role</span><span class="p">;</span>
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="k">REVOKE</span><span class="w"> </span><span class="k">UPDATE</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">diem</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">giao_vien_role</span><span class="p">;</span>
+</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>
+</span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="c1">-- TCL: gom nhiều lệnh thành một khối "hoặc xong cả, hoặc không gì cả"</span>
+</span><span id="__span-15-6"><a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="k">BEGIN</span><span class="p">;</span>
+</span><span id="__span-15-7"><a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="w">    </span><span class="k">UPDATE</span><span class="w"> </span><span class="n">diem</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">diem_so</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">9</span><span class="p">.</span><span class="mi">0</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">ma_diem</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+</span><span id="__span-15-8"><a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a><span class="w">    </span><span class="n">SAVEPOINT</span><span class="w"> </span><span class="n">truoc_khi_xoa</span><span class="p">;</span>
+</span><span id="__span-15-9"><a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a><span class="w">    </span><span class="k">DELETE</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">diem</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">ma_diem</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
+</span><span id="__span-15-10"><a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a><span class="w">    </span><span class="k">ROLLBACK</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">SAVEPOINT</span><span class="w"> </span><span class="n">truoc_khi_xoa</span><span class="p">;</span><span class="w">   </span><span class="c1">-- huỷ riêng câu DELETE</span>
+</span><span id="__span-15-11"><a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a><span class="k">COMMIT</span><span class="p">;</span><span class="w">                                     </span><span class="c1">-- chỉ câu UPDATE có hiệu lực</span>
+</span></code></pre></div>
+<h2 id="loi-thuong-gap">⚠️ Lỗi thường gặp<a class="headerlink" href="#loi-thuong-gap" title="Permanent link">&para;</a></h2>
+<div class="admonition warning">
+<p class="admonition-title">Lỗi 1: Lưu mọi thứ bằng <code>TEXT</code> cho nhanh</p>
+<p><em>"Cứ để <code>TEXT</code> hết, sau này muốn gì cũng được."</em> — nghe thì tiện, nhưng bạn vừa vứt đi cả bốn việc mà kiểu dữ liệu làm hộ bạn.</p>
+<p>Ngày sinh lưu bằng <code>TEXT</code> thì <code>ORDER BY ngay_sinh</code> sắp theo thứ tự chữ cái. <code>'02/12/2011'</code> đứng trước <code>'15/01/2012'</code> — sai hoàn toàn về mặt thời gian.</p>
+<p>Điểm lưu bằng <code>TEXT</code> thì <code>WHERE diem_so &gt; 9</code> báo lỗi so sánh chữ với số, còn <code>WHERE diem_so &gt; '9'</code> thì <code>'10'</code> bị coi là <strong>nhỏ hơn</strong> <code>'9'</code> vì <code>'1' &lt; '9'</code>.</p>
+<p>Và cái mất lớn nhất: kiểu sai không báo lỗi lúc nhập. Nó báo lỗi sáu tháng sau, dưới dạng một bảng xếp hạng sai mà không ai để ý.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Lỗi 2: Dùng <code>REAL</code> hoặc <code>FLOAT</code> cho tiền và điểm</p>
+<p>Đã chứng minh ở Bẫy 2: với dấu chấm động, <code>0.1 + 0.2 &lt;&gt; 0.3</code>.</p>
+<p>Với tiền thì sai số tích luỹ thành thiếu hụt thật. Với điểm thì một bạn có thể bị xếp trượt vì <code>4.999999999</code>.</p>
+<p>Sửa: <code>NUMERIC(p, s)</code>. Chậm hơn dấu chấm động một chút, nhưng đúng tuyệt đối — và với vài trăm nghìn dòng thì chênh lệch tốc độ đó không ai cảm nhận được.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Lỗi 3: Nhầm <code>DROP TABLE</code> với <code>TRUNCATE</code>, và nhầm <code>TRUNCATE</code> với <code>DELETE</code></p>
+<p>Ba câu này xoá ba thứ khác nhau:</p>
+<ul>
+<li><code>DELETE FROM t WHERE ...</code> — xoá <strong>vài dòng</strong>, có <code>WHERE</code>, kích hoạt trigger dòng.</li>
+<li><code>TRUNCATE t</code> — xoá <strong>mọi dòng</strong>, không có <code>WHERE</code>, không kích hoạt trigger dòng, rất nhanh.</li>
+<li><code>DROP TABLE t</code> — xoá <strong>cả cái bảng</strong>, sau đó <code>SELECT * FROM t</code> sẽ báo lỗi.</li>
+</ul>
+<p>Bẫy hay gặp nhất: gõ <code>TRUNCATE hoc_sinh WHERE ma_lop = 'L01';</code> và ngạc nhiên vì báo lỗi cú pháp. <code>TRUNCATE</code> <strong>không có</strong> mệnh đề <code>WHERE</code>, và đó là thiết kế có chủ đích.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Lỗi 4: <code>ALTER TABLE ... TYPE</code> mà dữ liệu cũ không chuyển được</p>
+<p>Đổi kiểu chỉ thành công khi <strong>mọi giá trị đang có</strong> đều chuyển được sang kiểu mới.</p>
+<p><!-- sql:co-y-loi -->
+<div class="highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">b22_thu_kieu</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">;</span>
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">b22_thu_kieu</span><span class="w"> </span><span class="p">(</span><span class="n">ghi_chu</span><span class="w"> </span><span class="nb">TEXT</span><span class="p">);</span>
+</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">b22_thu_kieu</span><span class="w"> </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="s1">'xin chào'</span><span class="p">);</span>
+</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="k">ALTER</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">b22_thu_kieu</span><span class="w"> </span><span class="k">ALTER</span><span class="w"> </span><span class="k">COLUMN</span><span class="w"> </span><span class="n">ghi_chu</span><span class="w"> </span><span class="k">TYPE</span><span class="w"> </span><span class="nb">INTEGER</span><span class="p">;</span>
+</span></code></pre></div></p>
+<p>PostgreSQL sẽ từ chối, vì không có cách nào biến chuỗi <code>'xin chào'</code> thành số nguyên. Cách chữa là dùng <code>USING</code> để nói rõ cách chuyển — ví dụ <code>... TYPE INTEGER USING NULLIF(ghi_chu, '')::INTEGER</code> — nhưng trước đó bạn phải <strong>tự dọn dữ liệu bẩn</strong> đã.</p>
+<p>Dọn bảng thử nghiệm:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">b22_thu_kieu</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">;</span>
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>
+</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="c1">-- KỲ VỌNG: con_lai = 0</span>
+</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">con_lai</span>
+</span><span id="__span-17-5"><a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="k">FROM</span><span class="w"> </span><span class="n">information_schema</span><span class="p">.</span><span class="n">tables</span>
+</span><span id="__span-17-6"><a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a><span class="k">WHERE</span><span class="w"> </span><span class="k">table_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'b22_thu_kieu'</span><span class="p">;</span>
+</span></code></pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Lỗi 5: Tưởng <code>DEFAULT</code> thay được cho <code>NOT NULL</code></p>
+<p><code>DEFAULT</code> chỉ nhảy vào khi câu <code>INSERT</code> <strong>im lặng</strong> không nhắc tới cột.</p>
+<p>Nếu ứng dụng gửi lên <code>INSERT INTO t (a, b) VALUES ('x', NULL)</code> thì <code>NULL</code> vào thẳng cột <code>b</code>, bất chấp <code>DEFAULT</code>. Muốn chắc chắn cột không bao giờ rỗng, phải khai <strong>cả hai</strong>: <code>b BOOLEAN NOT NULL DEFAULT TRUE</code>.</p>
+</div>
+<h2 id="bai-tap">✍️ Bài tập<a class="headerlink" href="#bai-tap" title="Permanent link">&para;</a></h2>
+<ol>
+<li>
+<p>Xếp mỗi câu lệnh sau vào đúng nhóm DDL / DML / DCL / TCL: <code>UPDATE</code>, <code>CREATE INDEX</code>, <code>COMMIT</code>, <code>GRANT</code>, <code>TRUNCATE</code>, <code>SELECT</code>, <code>ROLLBACK</code>, <code>ALTER TABLE</code>.</p>
+</li>
+<li>
+<p>Chọn kiểu dữ liệu cho từng cột của một bảng <code>thu_vien_phat</code> (ghi tiền phạt trả sách muộn), và giải thích lý do trong một câu:</p>
+<p>a. <code>ma_phat</code> — khoá nhân tạo tự tăng</p>
+<p>b. <code>ma_muon</code> — trỏ tới <code>muon_sach.ma_muon</code></p>
+<p>c. <code>so_tien</code> — tiền phạt, tính bằng đồng, luôn là số nguyên nhưng có thể tới vài triệu</p>
+<p>d. <code>ngay_lap</code> — ngày lập biên bản</p>
+<p>e. <code>da_thu</code> — đã thu tiền hay chưa</p>
+<p>f. <code>ly_do</code> — mô tả tự do</p>
+</li>
+<li>
+<p>Câu lệnh <code>TRUNCATE hoc_sinh WHERE ma_lop = 'L01';</code> sai ở đâu? Viết lại cho đúng ý định "xoá mọi học sinh lớp L01".</p>
+</li>
+<li>
+<p>Bạn cần thêm cột <code>email</code> vào bảng <code>giao_vien</code> đang có 8 dòng, và email <strong>bắt buộc phải có</strong>. Viết <code>ALTER TABLE</code> theo cách chạy được ngay, rồi giải thích vì sao câu <code>ALTER TABLE giao_vien ADD COLUMN email VARCHAR(80) NOT NULL;</code> một mình lại thất bại.</p>
+</li>
+<li>
+<p>Hai cột dưới đây khai khác nhau. Hãy dự đoán kết quả của hai câu so sánh, rồi giải thích:</p>
+<p><!-- sql:khong-chay -->
+<div class="highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1">-- cot_a CHAR(6), cot_b VARCHAR(6), cả hai đều chứa giá trị 'L01'</span>
+</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">cot_a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'L01   '</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">t</span><span class="p">;</span><span class="w">   </span><span class="c1">-- ?</span>
+</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">cot_b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'L01   '</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">t</span><span class="p">;</span><span class="w">   </span><span class="c1">-- ?</span>
+</span></code></pre></div></p>
+</li>
+</ol>
+<details class="success">
+<summary>Đáp án</summary>
+<p><strong>Câu 1.</strong></p>
+<table>
+<thead>
+<tr>
+<th>Câu lệnh</th>
+<th>Nhóm</th>
+<th>Vì sao</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>UPDATE</code></td>
+<td><strong>DML</strong></td>
+<td>Sửa nội dung dòng</td>
+</tr>
+<tr>
+<td><code>CREATE INDEX</code></td>
+<td><strong>DDL</strong></td>
+<td>Tạo một đối tượng cấu trúc</td>
+</tr>
+<tr>
+<td><code>COMMIT</code></td>
+<td><strong>TCL</strong></td>
+<td>Chốt giao tác</td>
+</tr>
+<tr>
+<td><code>GRANT</code></td>
+<td><strong>DCL</strong></td>
+<td>Cấp quyền</td>
+</tr>
+<tr>
+<td><code>TRUNCATE</code></td>
+<td><strong>DDL</strong></td>
+<td>Dù xoá dữ liệu, nó thao tác ở mức tệp lưu trữ và không có <code>WHERE</code></td>
+</tr>
+<tr>
+<td><code>SELECT</code></td>
+<td><strong>DML</strong></td>
+<td>Chuẩn SQL xếp vào DML; một số tài liệu tách riêng thành DQL</td>
+</tr>
+<tr>
+<td><code>ROLLBACK</code></td>
+<td><strong>TCL</strong></td>
+<td>Huỷ giao tác</td>
+</tr>
+<tr>
+<td><code>ALTER TABLE</code></td>
+<td><strong>DDL</strong></td>
+<td>Đổi cấu trúc</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Câu 2.</strong></p>
+<table>
+<thead>
+<tr>
+<th>Cột</th>
+<th>Kiểu</th>
+<th>Lý do</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ma_phat</code></td>
+<td><code>SERIAL</code> (hoặc <code>INTEGER GENERATED ALWAYS AS IDENTITY</code>)</td>
+<td>Khoá nhân tạo tự tăng</td>
+</tr>
+<tr>
+<td><code>ma_muon</code></td>
+<td><code>INTEGER</code></td>
+<td>Phải <strong>trùng khít</strong> kiểu của <code>muon_sach.ma_muon</code>, vốn là <code>SERIAL</code> tức <code>INTEGER</code> — khoá ngoại đòi hai bên cùng kiểu</td>
+</tr>
+<tr>
+<td><code>so_tien</code></td>
+<td><code>NUMERIC(12,0)</code> hoặc <code>BIGINT</code></td>
+<td>Tiền phải chính xác tuyệt đối, tuyệt đối không dùng <code>REAL</code></td>
+</tr>
+<tr>
+<td><code>ngay_lap</code></td>
+<td><code>DATE</code></td>
+<td>Một mốc trên lịch, không cần giờ và múi giờ</td>
+</tr>
+<tr>
+<td><code>da_thu</code></td>
+<td><code>BOOLEAN NOT NULL DEFAULT FALSE</code></td>
+<td>Chỉ có hai trạng thái; mặc định là chưa thu</td>
+</tr>
+<tr>
+<td><code>ly_do</code></td>
+<td><code>TEXT</code></td>
+<td>Mô tả tự do, không đoán được độ dài</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Câu 3.</strong></p>
+<p>Sai vì <strong><code>TRUNCATE</code> không có mệnh đề <code>WHERE</code></strong>. Nó là lệnh DDL, thao tác trên toàn bộ tệp dữ liệu của bảng chứ không đi qua từng dòng, nên không có chỗ nào để nhét điều kiện vào.</p>
+<p>Muốn xoá có điều kiện thì phải dùng <code>DELETE</code> — một lệnh DML:</p>
+<p><!-- sql:khong-chay -->
+<div class="highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="k">DELETE</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">ma_lop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'L01'</span><span class="p">;</span>
+</span></code></pre></div></p>
+<p>(Trong database mẫu, câu này sẽ kéo theo việc xoá phụ huynh, điểm, lượt mượn và điểm danh của 6 bạn đó, vì các khoá ngoại được khai <code>ON DELETE CASCADE</code> — xem <a href="../../cap-1-mo-hinh-er/15-rang-buoc-toan-ven/">Bài 15</a>. Đừng chạy thật.)</p>
+<p><strong>Câu 4.</strong></p>
+<p>Câu <code>ADD COLUMN email VARCHAR(80) NOT NULL</code> một mình <strong>thất bại</strong> vì: cột mới được thêm vào sẽ mang giá trị <code>NULL</code> cho cả 8 dòng đang có, mà <code>NOT NULL</code> lại cấm đúng điều đó. PostgreSQL từ chối ngay, vì nếu nhận thì bảng sẽ vi phạm ràng buộc của chính nó ngay giây đầu tiên.</p>
+<p>Hai cách chữa. Cách một — thêm kèm <code>DEFAULT</code>, để 8 dòng cũ có ngay giá trị hợp lệ:</p>
+<p><!-- sql:khong-chay -->
+<div class="highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="k">ALTER</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">giao_vien</span>
+</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="w">    </span><span class="k">ADD</span><span class="w"> </span><span class="k">COLUMN</span><span class="w"> </span><span class="n">email</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">80</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="s1">'chua_cap_nhat@thcs.edu.vn'</span><span class="p">;</span>
+</span></code></pre></div></p>
+<p>Cách hai — làm ba bước, và đây là cách nên dùng khi mỗi dòng cần một giá trị <strong>khác nhau</strong>:</p>
+<p><!-- sql:khong-chay -->
+<div class="highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="k">ALTER</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">giao_vien</span><span class="w"> </span><span class="k">ADD</span><span class="w"> </span><span class="k">COLUMN</span><span class="w"> </span><span class="n">email</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">80</span><span class="p">);</span><span class="w">          </span><span class="c1">-- 1. thêm cột, cho phép NULL</span>
+</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="k">UPDATE</span><span class="w"> </span><span class="n">giao_vien</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">email</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="p">;</span><span class="w">                            </span><span class="c1">-- 2. điền dữ liệu thật</span>
+</span><span id="__span-21-3"><a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="k">ALTER</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">giao_vien</span><span class="w"> </span><span class="k">ALTER</span><span class="w"> </span><span class="k">COLUMN</span><span class="w"> </span><span class="n">email</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">;</span><span class="w">        </span><span class="c1">-- 3. siết ràng buộc lại</span>
+</span></code></pre></div></p>
+<p><strong>Câu 5.</strong></p>
+<ul>
+<li><code>cot_a = 'L01   '</code> → <strong><code>true</code></strong>. <code>cot_a</code> là <code>CHAR(6)</code>, nên giá trị <code>'L01'</code> được lưu thành <code>'L01   '</code> (đệm 3 khoảng trắng), và quy tắc so sánh của <code>CHAR</code> còn bỏ qua khoảng trắng cuối nữa. Hai vế bằng nhau.</li>
+<li><code>cot_b = 'L01   '</code> → <strong><code>false</code></strong>. <code>cot_b</code> là <code>VARCHAR(6)</code>, lưu đúng <code>'L01'</code> dài 3 ký tự. So với chuỗi dài 6 ký tự thì khác nhau.</li>
+</ul>
+<p>Bài học: <strong>cùng một giá trị, cùng một phép so sánh, kết quả đảo ngược chỉ vì kiểu cột khác nhau.</strong> Đây là lý do nên thống nhất kiểu chuỗi trong toàn bộ lược đồ, và chỉ dùng <code>CHAR</code> cho mã có độ dài cố định thật sự.</p>
+</details>
+<h2 id="tom-tat">🔑 Tóm tắt<a class="headerlink" href="#tom-tat" title="Permanent link">&para;</a></h2>
+<ol>
+<li>SQL chia làm bốn nhóm: <strong>DDL</strong> dựng cấu trúc (<code>CREATE</code>, <code>ALTER</code>, <code>DROP</code>, <code>TRUNCATE</code>), <strong>DML</strong> thao tác dữ liệu (<code>INSERT</code>, <code>UPDATE</code>, <code>DELETE</code>, <code>SELECT</code>), <strong>DCL</strong> cấp quyền (<code>GRANT</code>, <code>REVOKE</code>), <strong>TCL</strong> điều khiển giao tác (<code>BEGIN</code>, <code>COMMIT</code>, <code>ROLLBACK</code>, <code>SAVEPOINT</code>).</li>
+<li><code>DROP TABLE</code> xoá <strong>cả bảng</strong>; <code>TRUNCATE</code> xoá <strong>mọi dòng</strong> nhưng <strong>không có <code>WHERE</code></strong> và không kích hoạt trigger dòng; <code>DELETE</code> xoá <strong>có điều kiện</strong> và là lệnh DML. Ba việc khác nhau, đừng nhầm.</li>
+<li><strong>Kiểu dữ liệu</strong> làm bốn việc cùng lúc: chặn giá trị sai, quyết định cách so sánh và sắp xếp, quyết định phép toán dùng được, quyết định dung lượng. Chọn sai kiểu thì lỗi không xuất hiện lúc nhập mà xuất hiện nhiều tháng sau, dưới dạng một kết quả sai không ai để ý.</li>
+<li>Ba cái bẫy phải thuộc lòng: <strong><code>CHAR(n)</code> đệm khoảng trắng</strong> và so sánh bỏ qua khoảng trắng cuối; <strong><code>REAL</code> / <code>DOUBLE PRECISION</code> không chính xác</strong> nên tiền và điểm phải dùng <code>NUMERIC</code>; <strong><code>TIMESTAMP</code> không có múi giờ</strong> nên sự kiện thật phải dùng <code>TIMESTAMPTZ</code>.</li>
+<li><strong>Giá trị mặc định</strong> (<code>DEFAULT</code>) chỉ nhảy vào khi câu <code>INSERT</code> không nhắc tới cột — nó <strong>không</strong> thay được cho <code>NOT NULL</code>. Muốn chắc chắn thì khai cả hai.</li>
+</ol>
+<hr />
+<p>⬅️ <a href="../21-dai-so-quan-he/">Bài 21 — Đại số quan hệ</a> · ➡️ <a href="../23-dml-insert-update-delete/">Bài 23 — DML: INSERT, UPDATE, DELETE</a></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Trở lại mục lục
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Chân trang" >
+        
+          
+          <a href="../21-dai-so-quan-he/" class="md-footer__link md-footer__link--prev" aria-label="Trước: Bài 21 — Đại số quan hệ: nền toán học phía sau SQL">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Trước
+              </span>
+              <div class="md-ellipsis">
+                Bài 21 — Đại số quan hệ: nền toán học phía sau SQL
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../23-dml-insert-update-delete/" class="md-footer__link md-footer__link--next" aria-label="Sau: Bài 23 — DML: INSERT, UPDATE, DELETE">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Sau
+              </span>
+              <div class="md-ellipsis">
+                Bài 23 — DML: INSERT, UPDATE, DELETE
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Nội dung theo giấy phép CC BY 4.0
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/hungnguyen010518/database-tu-a-z" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.sections", "navigation.top", "navigation.footer", "navigation.indexes", "navigation.tracking", "toc.follow", "content.code.copy", "content.code.annotate", "search.highlight", "search.suggest"], "search": "../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "\u0110\u00e3 sao ch\u00e9p", "clipboard.copy": "Sao ch\u00e9p v\u00e0o b\u1ed9 nh\u1edb t\u1ea1m", "search.result.more.one": "1 t\u1eeb kh\u00e1c trong trang", "search.result.more.other": "# t\u1eeb kh\u00e1c trong trang", "search.result.none": "Kh\u00f4ng t\u00ecm th\u1ea5y t\u00e0i li\u1ec7u li\u00ean quan", "search.result.one": "1 t\u00e0i li\u1ec7u li\u00ean quan", "search.result.other": "# t\u00e0i li\u1ec7u li\u00ean quan", "search.result.placeholder": "Nh\u1eadp \u0111\u1ec3 b\u1eaft \u0111\u1ea7u t\u00ecm ki\u1ebfm", "search.result.term.missing": "Kh\u00f4ng", "select.version": "Ch\u1ecdn phi\u00ean b\u1ea3n"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.525ec568.min.js"></script>
+      
+    
+  </body>
+</html>

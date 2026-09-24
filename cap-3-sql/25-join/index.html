@@ -1,0 +1,2354 @@
+
+<!doctype html>
+<html lang="vi" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Khóa học cơ sở dữ liệu tiếng Việt, từ con số 0 tới mức siêu nâng cao — giải thích để học sinh cấp 2 cũng hiểu được.">
+      
+      
+      
+        <link rel="canonical" href="https://hungnguyen010518.github.io/database-tu-a-z/cap-3-sql/25-join/">
+      
+      
+        <link rel="prev" href="../24-select-where-order-by/">
+      
+      
+        <link rel="next" href="../26-group-by-having/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.39">
+    
+    
+      
+        <title>Bài 25 — JOIN: sáu cách ghép bảng - Database từ A-Z</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.8c3ca2c6.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#bai-25-join-sau-cach-ghep-bang" class="md-skip">
+          Bỏ qua
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Đầu trang">
+    <a href="../.." title="Database từ A-Z" class="md-header__button md-logo" aria-label="Database từ A-Z" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3C7.58 3 4 4.79 4 7s3.58 4 8 4 8-1.79 8-4-3.58-4-8-4M4 9v3c0 2.21 3.58 4 8 4s8-1.79 8-4V9c0 2.21-3.58 4-8 4s-8-1.79-8-4m0 5v3c0 2.21 3.58 4 8 4s8-1.79 8-4v-3c0 2.21-3.58 4-8 4s-8-1.79-8-4"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Database từ A-Z
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Bài 25 — JOIN: sáu cách ghép bảng
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Chuyển sang chế độ tối"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Chuyển sang chế độ tối" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Chuyển sang chế độ sáng"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Chuyển sang chế độ sáng" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Tìm kiếm" placeholder="Tìm kiếm" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Tìm kiếm">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Xoá" aria-label="Xoá" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/hungnguyen010518/database-tu-a-z" title="Xem mã nguồn" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    database-tu-a-z
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Thanh điều hướng" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Database từ A-Z" class="md-nav__button md-logo" aria-label="Database từ A-Z" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3C7.58 3 4 4.79 4 7s3.58 4 8 4 8-1.79 8-4-3.58-4-8-4M4 9v3c0 2.21 3.58 4 8 4s8-1.79 8-4V9c0 2.21-3.58 4-8 4s-8-1.79-8-4m0 5v3c0 2.21 3.58 4 8 4s8-1.79 8-4v-3c0 2.21-3.58 4-8 4s-8-1.79-8-4"/></svg>
+
+    </a>
+    Database từ A-Z
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/hungnguyen010518/database-tu-a-z" title="Xem mã nguồn" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    database-tu-a-z
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Trang chủ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Cấp 0 — Nhập môn
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Cấp 0 — Nhập môn
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-0-nhap-mon/01-du-lieu-va-thong-tin/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 1 — Dữ liệu, thông tin và tại sao phải lưu trữ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-0-nhap-mon/02-tu-so-giay-den-excel/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 2 — Từ sổ giấy đến Excel
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-0-nhap-mon/03-dbms-la-gi/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 3 — DBMS là gì
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-0-nhap-mon/04-cac-mo-hinh-du-lieu/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 4 — Các mô hình dữ liệu
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-0-nhap-mon/05-cai-dat-postgresql/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 5 — Cài đặt PostgreSQL
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Cấp 1 — Mô hình quan hệ & Biểu đồ ER
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Cấp 1 — Mô hình quan hệ & Biểu đồ ER
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/06-mo-hinh-quan-he/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 6 — Mô hình quan hệ: bảng, dòng, cột, miền giá trị, lược đồ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/07-thuc-the-va-thuoc-tinh/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 7 — Thực thể và các loại thuộc tính
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/08-moi-quan-he-va-cardinality/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 8 — Mối quan hệ, bậc và bản số (Cardinality)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/09-participation-va-thuc-the-yeu/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 9 — Ràng buộc tham gia và Thực thể yếu
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/10-bieu-do-er-ky-hieu-chen/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 10 — Biểu đồ ER — ký hiệu Chen
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/11-bieu-do-er-crows-foot/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 11 — Biểu đồ ER — ký hiệu Crow's Foot và vẽ bằng Mermaid
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/12-bay-loai-khoa/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 12 — Bảy loại khoá trong cơ sở dữ liệu
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/13-mo-hinh-eer/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 13 — Mô hình EER: Generalization, Specialization, Aggregation
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/14-chuyen-er-sang-bang/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 14 — Chuyển biểu đồ ER thành lược đồ quan hệ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/15-rang-buoc-toan-ven/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 15 — Ràng buộc toàn vẹn (Integrity Constraints)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Cấp 2 — Chuẩn hoá
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Cấp 2 — Chuẩn hoá
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-2-chuan-hoa/16-phu-thuoc-ham/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 16 — Phụ thuộc hàm và bao đóng
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-2-chuan-hoa/17-dang-chuan-1nf-2nf/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 17 — Dạng chuẩn 1 (1NF) và Dạng chuẩn 2 (2NF)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-2-chuan-hoa/18-dang-chuan-3nf-bcnf/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 18 — Dạng chuẩn 3 (3NF) và BCNF
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-2-chuan-hoa/19-dang-chuan-4nf-5nf-6nf/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 19 — 4NF, 5NF và 6NF
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-2-chuan-hoa/20-denormalization/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 20 — Phi chuẩn hoá — khi nào nên phá luật
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Cấp 3 — SQL từ 0 tới cao thủ
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Cấp 3 — SQL từ 0 tới cao thủ
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../21-dai-so-quan-he/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 21 — Đại số quan hệ: nền toán học phía sau SQL
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../22-ddl-va-kieu-du-lieu/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 22 — DDL: CREATE, ALTER, DROP và các kiểu dữ liệu
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../23-dml-insert-update-delete/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 23 — DML: INSERT, UPDATE, DELETE
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../24-select-where-order-by/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 24 — SELECT, WHERE, ORDER BY, LIMIT
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Bài 25 — JOIN: sáu cách ghép bảng
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Bài 25 — JOIN: sáu cách ghép bảng
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Mục lục">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Mục lục
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#cau-chuyen-mo-au" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧠 Câu chuyện mở đầu
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#khai-niem-thuat-ngu" class="md-nav__link">
+    <span class="md-ellipsis">
+      📖 Khái niệm &amp; thuật ngữ
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📖 Khái niệm & thuật ngữ">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#phep-ket-noi-nhac-lai-tu-bai-21" class="md-nav__link">
+    <span class="md-ellipsis">
+      Phép kết nối, nhắc lại từ Bài 21
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#on-hay-using" class="md-nav__link">
+    <span class="md-ellipsis">
+      ON hay USING?
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#natural-join-tien-ma-nguy-hiem" class="md-nav__link">
+    <span class="md-ellipsis">
+      NATURAL JOIN — tiện mà nguy hiểm
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tich-descartes-bung-no" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tích Descartes bùng nổ
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bang-thuat-ngu" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bảng thuật ngữ
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#so-o" class="md-nav__link">
+    <span class="md-ellipsis">
+      🖼️ Sơ đồ
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#thuc-hanh" class="md-nav__link">
+    <span class="md-ellipsis">
+      💻 Thực hành
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="💻 Thực hành">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#inner-join-va-cai-lop-bi-anh-roi" class="md-nav__link">
+    <span class="md-ellipsis">
+      INNER JOIN — và cái lớp bị đánh rơi
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#left-outer-join-giu-lai-moi-lop" class="md-nav__link">
+    <span class="md-ellipsis">
+      LEFT OUTER JOIN — giữ lại mọi lớp
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#right-outer-join-chi-la-left-join-soi-guong" class="md-nav__link">
+    <span class="md-ellipsis">
+      RIGHT OUTER JOIN — chỉ là LEFT JOIN soi gương
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#full-outer-join-oi-chieu-hai-danh-sach" class="md-nav__link">
+    <span class="md-ellipsis">
+      FULL OUTER JOIN — đối chiếu hai danh sách
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#khuon-ket-noi-chong-tim-dong-mo-coi" class="md-nav__link">
+    <span class="md-ellipsis">
+      Khuôn "kết nối chống" — tìm dòng mồ côi
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#self-join-ghep-bang-voi-chinh-no" class="md-nav__link">
+    <span class="md-ellipsis">
+      SELF JOIN — ghép bảng với chính nó
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cross-join-va-tich-descartes-bung-no" class="md-nav__link">
+    <span class="md-ellipsis">
+      CROSS JOIN và tích Descartes bùng nổ
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#on-va-using" class="md-nav__link">
+    <span class="md-ellipsis">
+      ON và USING
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#natural-join-va-vi-sao-ung-dung" class="md-nav__link">
+    <span class="md-ellipsis">
+      NATURAL JOIN — và vì sao đừng dùng
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ghep-nhieu-bang-loi-hua-voi-co-hieu-pho" class="md-nav__link">
+    <span class="md-ellipsis">
+      Ghép nhiều bảng — lời hứa với cô hiệu phó
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#loi-thuong-gap" class="md-nav__link">
+    <span class="md-ellipsis">
+      ⚠️ Lỗi thường gặp
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bai-tap" class="md-nav__link">
+    <span class="md-ellipsis">
+      ✍️ Bài tập
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tom-tat" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔑 Tóm tắt
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../26-group-by-having/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 26 — GROUP BY, HAVING và các hàm tổng hợp
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../dataset/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Database mẫu
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../glossary/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bảng thuật ngữ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Mục lục">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Mục lục
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#cau-chuyen-mo-au" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧠 Câu chuyện mở đầu
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#khai-niem-thuat-ngu" class="md-nav__link">
+    <span class="md-ellipsis">
+      📖 Khái niệm &amp; thuật ngữ
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📖 Khái niệm & thuật ngữ">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#phep-ket-noi-nhac-lai-tu-bai-21" class="md-nav__link">
+    <span class="md-ellipsis">
+      Phép kết nối, nhắc lại từ Bài 21
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#on-hay-using" class="md-nav__link">
+    <span class="md-ellipsis">
+      ON hay USING?
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#natural-join-tien-ma-nguy-hiem" class="md-nav__link">
+    <span class="md-ellipsis">
+      NATURAL JOIN — tiện mà nguy hiểm
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tich-descartes-bung-no" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tích Descartes bùng nổ
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bang-thuat-ngu" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bảng thuật ngữ
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#so-o" class="md-nav__link">
+    <span class="md-ellipsis">
+      🖼️ Sơ đồ
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#thuc-hanh" class="md-nav__link">
+    <span class="md-ellipsis">
+      💻 Thực hành
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="💻 Thực hành">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#inner-join-va-cai-lop-bi-anh-roi" class="md-nav__link">
+    <span class="md-ellipsis">
+      INNER JOIN — và cái lớp bị đánh rơi
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#left-outer-join-giu-lai-moi-lop" class="md-nav__link">
+    <span class="md-ellipsis">
+      LEFT OUTER JOIN — giữ lại mọi lớp
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#right-outer-join-chi-la-left-join-soi-guong" class="md-nav__link">
+    <span class="md-ellipsis">
+      RIGHT OUTER JOIN — chỉ là LEFT JOIN soi gương
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#full-outer-join-oi-chieu-hai-danh-sach" class="md-nav__link">
+    <span class="md-ellipsis">
+      FULL OUTER JOIN — đối chiếu hai danh sách
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#khuon-ket-noi-chong-tim-dong-mo-coi" class="md-nav__link">
+    <span class="md-ellipsis">
+      Khuôn "kết nối chống" — tìm dòng mồ côi
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#self-join-ghep-bang-voi-chinh-no" class="md-nav__link">
+    <span class="md-ellipsis">
+      SELF JOIN — ghép bảng với chính nó
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cross-join-va-tich-descartes-bung-no" class="md-nav__link">
+    <span class="md-ellipsis">
+      CROSS JOIN và tích Descartes bùng nổ
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#on-va-using" class="md-nav__link">
+    <span class="md-ellipsis">
+      ON và USING
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#natural-join-va-vi-sao-ung-dung" class="md-nav__link">
+    <span class="md-ellipsis">
+      NATURAL JOIN — và vì sao đừng dùng
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ghep-nhieu-bang-loi-hua-voi-co-hieu-pho" class="md-nav__link">
+    <span class="md-ellipsis">
+      Ghép nhiều bảng — lời hứa với cô hiệu phó
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#loi-thuong-gap" class="md-nav__link">
+    <span class="md-ellipsis">
+      ⚠️ Lỗi thường gặp
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bai-tap" class="md-nav__link">
+    <span class="md-ellipsis">
+      ✍️ Bài tập
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tom-tat" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔑 Tóm tắt
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="bai-25-join-sau-cach-ghep-bang">Bài 25 — JOIN: sáu cách ghép bảng<a class="headerlink" href="#bai-25-join-sau-cach-ghep-bang" title="Permanent link">&para;</a></h1>
+<div class="admonition abstract">
+<p class="admonition-title">🎯 Học xong bài này, bạn sẽ</p>
+<ul>
+<li>Ghép được dữ liệu từ nhiều bảng bằng cả sáu loại <code>JOIN</code>, và biết chọn loại nào cho tình huống nào</li>
+<li>Nhìn thấy tận mắt sự khác nhau giữa <code>INNER JOIN</code> và <code>LEFT JOIN</code> trên lớp <code>9A3</code> chưa có chủ nhiệm</li>
+<li>Tìm được "dòng mồ côi" bằng khuôn <code>LEFT JOIN ... WHERE ... IS NULL</code></li>
+<li>Ghép một bảng với chính nó bằng <code>SELF JOIN</code></li>
+<li>Phân biệt <code>ON</code> với <code>USING</code>, hiểu vì sao <code>NATURAL JOIN</code> nguy hiểm, và tránh được <strong>tích Descartes bùng nổ</strong></li>
+</ul>
+</div>
+<h2 id="cau-chuyen-mo-au">🧠 Câu chuyện mở đầu<a class="headerlink" href="#cau-chuyen-mo-au" title="Permanent link">&para;</a></h2>
+<p>Cô hiệu phó đưa bạn hai tờ giấy.</p>
+<p>Tờ thứ nhất là danh sách 40 học sinh, mỗi bạn kèm một <strong>mã lớp</strong>: <code>HS001 — Nguyễn Văn An — L01</code>.</p>
+<p>Tờ thứ hai là danh sách 6 lớp, mỗi lớp kèm <strong>tên hiển thị</strong> và <strong>mã giáo viên chủ nhiệm</strong>: <code>L01 — 8A1 — GV01</code>.</p>
+<p>Cô nói: <em>"Em in cho cô một bảng gồm tên học sinh, tên lớp, và tên cô chủ nhiệm nhé."</em></p>
+<p>Không tờ giấy nào có đủ cả ba thông tin. Bạn phải <strong>ghép</strong> chúng: lấy mã lớp ở tờ một, tìm nó ở tờ hai để biết tên lớp và mã giáo viên, rồi tìm mã giáo viên đó ở một tờ thứ ba nữa.</p>
+<p>Bạn làm xong. Nhưng khi đối chiếu, cô phát hiện bảng của bạn <strong>thiếu lớp 9A3</strong>. Bạn kiểm lại: lớp 9A3 có thật, có 7 học sinh, chỉ là <strong>ô "giáo viên chủ nhiệm" đang để trống</strong> — trường chưa phân công ai.</p>
+<p>Bạn đã vô tình làm biến mất cả một lớp học chỉ vì một ô trống. Vậy làm sao để ghép mà <strong>không đánh rơi ai</strong>?</p>
+<h2 id="khai-niem-thuat-ngu">📖 Khái niệm &amp; thuật ngữ<a class="headerlink" href="#khai-niem-thuat-ngu" title="Permanent link">&para;</a></h2>
+<h3 id="phep-ket-noi-nhac-lai-tu-bai-21">Phép kết nối, nhắc lại từ Bài 21<a class="headerlink" href="#phep-ket-noi-nhac-lai-tu-bai-21" title="Permanent link">&para;</a></h3>
+<p>Ở <a href="../21-dai-so-quan-he/">Bài 21</a> bạn đã gặp định nghĩa toán học: <code>R ⋈_θ S = σ_θ(R × S)</code>. Kết nối là <strong>tích Descartes rồi lọc</strong>.</p>
+<p>Tất cả sáu loại <code>JOIN</code> của SQL đều dựa trên ý đó, và chúng chỉ khác nhau ở <strong>một câu hỏi duy nhất</strong>:</p>
+<blockquote>
+<p><em>"Khi một dòng bên này không tìm được dòng nào khớp bên kia, thì giữ nó lại hay bỏ nó đi?"</em></p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>Loại</th>
+<th>Giữ dòng không khớp của bảng nào</th>
+<th>Số dòng trên ví dụ <code>lop</code> ⋈ <code>giao_vien</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong><code>INNER JOIN</code></strong></td>
+<td>Không giữ của bên nào</td>
+<td>5</td>
+</tr>
+<tr>
+<td><strong><code>LEFT OUTER JOIN</code></strong></td>
+<td>Giữ của <strong>bảng trái</strong></td>
+<td>6</td>
+</tr>
+<tr>
+<td><strong><code>RIGHT OUTER JOIN</code></strong></td>
+<td>Giữ của <strong>bảng phải</strong></td>
+<td>6</td>
+</tr>
+<tr>
+<td><strong><code>FULL OUTER JOIN</code></strong></td>
+<td>Giữ của <strong>cả hai</strong></td>
+<td>9</td>
+</tr>
+<tr>
+<td><strong><code>CROSS JOIN</code></strong></td>
+<td>Không có điều kiện — ghép tất cả với tất cả</td>
+<td>48</td>
+</tr>
+<tr>
+<td><strong><code>SELF JOIN</code></strong></td>
+<td>Không phải loại riêng; là <em>bất kỳ</em> loại nào, nhưng ghép bảng với chính nó</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>Kết nối trong</strong> (<em>INNER JOIN</em>) chỉ giữ những cặp <strong>khớp nhau</strong>. Đây là loại chiếm phần lớn công việc, và cũng là loại làm biến mất lớp <code>9A3</code> trong câu chuyện.</li>
+<li><strong>Kết nối ngoài bên trái</strong> (<em>LEFT OUTER JOIN</em>, viết ngắn là <code>LEFT JOIN</code>) giữ <strong>mọi</strong> dòng của bảng trái. Dòng nào không có bạn khớp bên phải thì các cột bên phải được điền <code>NULL</code>.</li>
+<li><strong>Kết nối ngoài bên phải</strong> (<em>RIGHT OUTER JOIN</em>) làm điều đối xứng: giữ mọi dòng bảng phải. Thực tế rất ít ai dùng, vì đổi chỗ hai bảng là được <code>LEFT JOIN</code> — mà <code>LEFT JOIN</code> thì dễ đọc hơn.</li>
+<li><strong>Kết nối ngoài đầy đủ</strong> (<em>FULL OUTER JOIN</em>) giữ mọi dòng của cả hai bên. Dùng khi bạn cần <strong>đối chiếu hai danh sách</strong> và muốn thấy cả phần lệch ở hai phía.</li>
+<li><strong>Kết nối chéo</strong> (<em>CROSS JOIN</em>) chính là <strong>tích Descartes</strong> ×: <code>m</code> dòng nhân <code>n</code> dòng ra <code>m × n</code> dòng. Nó có ích khi bạn cần sinh ra mọi tổ hợp — ví dụ lập bảng điểm rỗng cho mọi cặp <em>(học sinh, môn học)</em>.</li>
+<li><strong>Tự kết nối</strong> (<em>SELF JOIN</em>) không phải một từ khoá mới. Nó chỉ là tên gọi cho việc ghép một bảng với <strong>chính nó</strong>, và nó bắt buộc phải dùng <strong>bí danh</strong> — tức phép ρ của Bài 21 — để phân biệt hai bản sao.</li>
+</ul>
+<h3 id="on-hay-using"><code>ON</code> hay <code>USING</code>?<a class="headerlink" href="#on-hay-using" title="Permanent link">&para;</a></h3>
+<p>Hai cách viết điều kiện ghép:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th><code>ON</code></th>
+<th><code>USING</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cú pháp</td>
+<td><code>JOIN lop l ON h.ma_lop = l.ma_lop</code></td>
+<td><code>JOIN lop USING (ma_lop)</code></td>
+</tr>
+<tr>
+<td>Điều kiện</td>
+<td><strong>Bất kỳ</strong> biểu thức nào, kể cả <code>&lt;</code>, <code>&gt;</code>, nhiều cột, nhiều phép</td>
+<td>Chỉ so sánh <strong>bằng</strong>, và hai bên phải <strong>cùng tên cột</strong></td>
+</tr>
+<tr>
+<td>Cột trong kết quả</td>
+<td>Xuất hiện <strong>hai lần</strong> — <code>h.ma_lop</code> và <code>l.ma_lop</code></td>
+<td>Xuất hiện <strong>một lần</strong></td>
+</tr>
+</tbody>
+</table>
+<p><code>USING</code> gọn hơn và tự dọn cột trùng, nhưng nó chỉ dùng được khi hai bảng đặt tên cột giống nhau. <code>ON</code> thì luôn dùng được, nên nó là lựa chọn mặc định.</p>
+<h3 id="natural-join-tien-ma-nguy-hiem"><code>NATURAL JOIN</code> — tiện mà nguy hiểm<a class="headerlink" href="#natural-join-tien-ma-nguy-hiem" title="Permanent link">&para;</a></h3>
+<p><strong><code>NATURAL JOIN</code></strong> tự động ghép theo <strong>mọi cặp cột trùng tên</strong> giữa hai bảng, không cần bạn viết điều kiện gì.</p>
+<p>Nghe thì tuyệt. Nhưng hãy nghĩ tới điều này: nó dựa vào <strong>tên cột</strong>, mà tên cột có thể bị đổi bởi một câu <code>ALTER TABLE</code> mà bạn không hay biết. Thêm một cột <code>ghi_chu</code> vào cả hai bảng là <code>NATURAL JOIN</code> lặng lẽ ghép thêm theo cột đó, và kết quả đổi hoàn toàn — <strong>không có thông báo lỗi nào</strong>.</p>
+<p>Vì thế quy tắc trong hầu hết đội phát triển là: <strong>không dùng <code>NATURAL JOIN</code> trong mã sản xuất.</strong> Nó chỉ tiện khi bạn gõ nhanh để xem thử.</p>
+<h3 id="tich-descartes-bung-no">Tích Descartes bùng nổ<a class="headerlink" href="#tich-descartes-bung-no" title="Permanent link">&para;</a></h3>
+<p><strong>Tích Descartes bùng nổ</strong> (<em>Cartesian explosion</em>) là hiện tượng: bạn quên viết điều kiện ghép, và số dòng kết quả nhân lên theo tích chứ không theo tổng.</p>
+<p>Ghép 40 học sinh với 6 lớp <strong>không có</strong> điều kiện cho ra 240 dòng — vô hại. Nhưng ghép 50.000 dòng <code>hoc_sinh_lon</code> với 500.000 dòng <code>diem_lon</code> thì cho ra <strong>25 tỉ dòng</strong>: máy chủ ăn hết bộ nhớ, ổ đĩa đầy tệp tạm, và truy vấn không bao giờ kết thúc.</p>
+<p>Bẫy chết người là nó <strong>không phải lỗi cú pháp</strong>. Câu lệnh hợp lệ, nó cứ chạy.</p>
+<h3 id="bang-thuat-ngu">Bảng thuật ngữ<a class="headerlink" href="#bang-thuat-ngu" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Tiếng Việt</th>
+<th>English</th>
+<th>Nghĩa dễ hiểu</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kết nối trong</td>
+<td><em>INNER JOIN</em></td>
+<td>Chỉ giữ những cặp dòng khớp nhau ở cả hai bảng</td>
+</tr>
+<tr>
+<td>Kết nối ngoài bên trái</td>
+<td><em>LEFT OUTER JOIN</em></td>
+<td>Giữ mọi dòng bảng trái; cột bên phải điền <code>NULL</code> khi không khớp</td>
+</tr>
+<tr>
+<td>Kết nối ngoài bên phải</td>
+<td><em>RIGHT OUTER JOIN</em></td>
+<td>Đối xứng với <code>LEFT JOIN</code>; ít dùng vì đổi chỗ hai bảng là xong</td>
+</tr>
+<tr>
+<td>Kết nối ngoài đầy đủ</td>
+<td><em>FULL OUTER JOIN</em></td>
+<td>Giữ mọi dòng của cả hai bảng — dùng để đối chiếu hai danh sách</td>
+</tr>
+<tr>
+<td>Kết nối chéo</td>
+<td><em>CROSS JOIN</em></td>
+<td>Tích Descartes: ghép mọi dòng bên này với mọi dòng bên kia</td>
+</tr>
+<tr>
+<td>Tự kết nối</td>
+<td><em>SELF JOIN</em></td>
+<td>Ghép một bảng với chính nó, bắt buộc dùng bí danh</td>
+</tr>
+<tr>
+<td>Kết nối chống</td>
+<td><em>anti join</em></td>
+<td>Khuôn <code>LEFT JOIN ... WHERE cot_phai IS NULL</code> để tìm những dòng <strong>không</strong> có bạn khớp</td>
+</tr>
+<tr>
+<td>Tích Descartes bùng nổ</td>
+<td><em>Cartesian explosion</em></td>
+<td>Quên điều kiện ghép, số dòng nhân lên theo tích — không báo lỗi, chỉ treo máy</td>
+</tr>
+</tbody>
+</table>
+<h2 id="so-o">🖼️ Sơ đồ<a class="headerlink" href="#so-o" title="Permanent link">&para;</a></h2>
+<p>Sáu loại <code>JOIN</code> mô tả bằng tập hợp. Gọi <strong>A</strong> là bảng trái, <strong>B</strong> là bảng phải; vùng giữa là các dòng khớp nhau.</p>
+<pre class="mermaid"><code>flowchart TB
+    subgraph I["1 · INNER JOIN — chỉ phần chung"]
+        direction LR
+        I1["A riêng&lt;br/&gt;❌ bỏ"]
+        I2["&lt;b&gt;A ∩ B&lt;br/&gt;✅ giữ&lt;/b&gt;"]
+        I3["B riêng&lt;br/&gt;❌ bỏ"]
+        I1 --- I2 --- I3
+    end
+
+    subgraph L["2 · LEFT OUTER JOIN — cả A"]
+        direction LR
+        L1["&lt;b&gt;A riêng&lt;br/&gt;✅ giữ · B = NULL&lt;/b&gt;"]
+        L2["&lt;b&gt;A ∩ B&lt;br/&gt;✅ giữ&lt;/b&gt;"]
+        L3["B riêng&lt;br/&gt;❌ bỏ"]
+        L1 --- L2 --- L3
+    end
+
+    subgraph R["3 · RIGHT OUTER JOIN — cả B"]
+        direction LR
+        R1["A riêng&lt;br/&gt;❌ bỏ"]
+        R2["&lt;b&gt;A ∩ B&lt;br/&gt;✅ giữ&lt;/b&gt;"]
+        R3["&lt;b&gt;B riêng&lt;br/&gt;✅ giữ · A = NULL&lt;/b&gt;"]
+        R1 --- R2 --- R3
+    end
+
+    subgraph F["4 · FULL OUTER JOIN — cả hai"]
+        direction LR
+        F1["&lt;b&gt;A riêng&lt;br/&gt;✅ giữ&lt;/b&gt;"]
+        F2["&lt;b&gt;A ∩ B&lt;br/&gt;✅ giữ&lt;/b&gt;"]
+        F3["&lt;b&gt;B riêng&lt;br/&gt;✅ giữ&lt;/b&gt;"]
+        F1 --- F2 --- F3
+    end
+
+    style I2 fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px
+    style L1 fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px
+    style L2 fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px
+    style R2 fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px
+    style R3 fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px
+    style F1 fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px
+    style F2 fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px
+    style F3 fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px
+    style I1 fill:#ffcdd2,stroke:#c62828
+    style I3 fill:#ffcdd2,stroke:#c62828
+    style L3 fill:#ffcdd2,stroke:#c62828
+    style R1 fill:#ffcdd2,stroke:#c62828</code></pre>
+<p>Hai loại còn lại không nói bằng tập hợp được, vì chúng khác về bản chất:</p>
+<pre class="mermaid"><code>flowchart TB
+    subgraph C["5 · CROSS JOIN — không có điều kiện"]
+        direction LR
+        CA["A&lt;br/&gt;6 dòng"]
+        CX["×"]
+        CB["B&lt;br/&gt;8 dòng"]
+        CR["&lt;b&gt;48 dòng&lt;/b&gt;&lt;br/&gt;mọi tổ hợp"]
+        CA --- CX --- CB --&gt; CR
+    end
+
+    subgraph S["6 · SELF JOIN — một bảng, hai bí danh"]
+        direction LR
+        SA["hoc_sinh&lt;br/&gt;&lt;b&gt;AS a&lt;/b&gt;"]
+        SJ["ON a.x = b.x&lt;br/&gt;AND a.ma_hs &amp;lt; b.ma_hs"]
+        SB["hoc_sinh&lt;br/&gt;&lt;b&gt;AS b&lt;/b&gt;"]
+        SA --- SJ --- SB
+    end
+
+    style C fill:#fff8e1,stroke:#f9a825,stroke-width:2px
+    style S fill:#f3e5f5,stroke:#6a1b9a,stroke-width:2px
+    style CR fill:#ffe0b2,stroke:#ef6c00,stroke-width:2px</code></pre>
+<p>Và đây là điều đã xảy ra với lớp <code>9A3</code> trong câu chuyện mở đầu:</p>
+<pre class="mermaid"><code>flowchart LR
+    LOP["&lt;b&gt;lop&lt;/b&gt; · 6 dòng&lt;br/&gt;L01→GV01 · L02→GV02&lt;br/&gt;L03→GV03 · L04→GV04&lt;br/&gt;L05→GV05&lt;br/&gt;&lt;b&gt;L06 → NULL&lt;/b&gt;"]
+    IJ["INNER JOIN&lt;br/&gt;ON l.ma_gvcn = g.ma_gv"]
+    LJ["LEFT JOIN&lt;br/&gt;ON l.ma_gvcn = g.ma_gv"]
+    R1["&lt;b&gt;5 dòng&lt;/b&gt;&lt;br/&gt;❌ 9A3 biến mất"]
+    R2["&lt;b&gt;6 dòng&lt;/b&gt;&lt;br/&gt;✅ 9A3 còn · GVCN = NULL"]
+
+    LOP --&gt; IJ --&gt; R1
+    LOP --&gt; LJ --&gt; R2
+
+    style LOP fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
+    style R1 fill:#ffebee,stroke:#c62828,stroke-width:2px
+    style R2 fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px</code></pre>
+<h2 id="thuc-hanh">💻 Thực hành<a class="headerlink" href="#thuc-hanh" title="Permanent link">&para;</a></h2>
+<h3 id="inner-join-va-cai-lop-bi-anh-roi"><code>INNER JOIN</code> — và cái lớp bị đánh rơi<a class="headerlink" href="#inner-join-va-cai-lop-bi-anh-roi" title="Permanent link">&para;</a></h3>
+<p>Đây chính là câu lệnh mà "bạn" trong câu chuyện đã viết:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1">-- KỲ VỌNG: 5 dòng</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">ma_lop</span><span class="p">,</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">ten_lop</span><span class="p">,</span><span class="w"> </span><span class="k">g</span><span class="p">.</span><span class="n">ho_ten</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">ten_gvcn</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="k">FROM</span><span class="w"> </span><span class="n">lop</span><span class="w"> </span><span class="n">l</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="k">INNER</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">giao_vien</span><span class="w"> </span><span class="k">g</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">g</span><span class="p">.</span><span class="n">ma_gv</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">ma_gvcn</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">ma_lop</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Năm dòng, không phải sáu. Lớp <code>L06</code> (<code>9A3</code>) <strong>biến mất</strong> vì <code>ma_gvcn</code> của nó là <code>NULL</code>, và <code>NULL = 'GV01'</code> cho <code>UNKNOWN</code> — mà <code>INNER JOIN</code> chỉ giữ những cặp cho <code>TRUE</code>. Đây đúng là logic ba giá trị ở <a href="../24-select-where-order-by/">Bài 24</a> đang hoạt động, lần này bên trong mệnh đề <code>ON</code>.</p>
+<p>Từ khoá <code>INNER</code> có thể bỏ: viết <code>JOIN</code> không kèm gì thì PostgreSQL hiểu là <code>INNER JOIN</code>.</p>
+<h3 id="left-outer-join-giu-lai-moi-lop"><code>LEFT OUTER JOIN</code> — giữ lại mọi lớp<a class="headerlink" href="#left-outer-join-giu-lai-moi-lop" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1">-- KỲ VỌNG: 6 dòng</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1">-- KỲ VỌNG: ten_gvcn = NULL</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">ma_lop</span><span class="p">,</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">ten_lop</span><span class="p">,</span><span class="w"> </span><span class="k">g</span><span class="p">.</span><span class="n">ho_ten</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">ten_gvcn</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="k">FROM</span><span class="w"> </span><span class="n">lop</span><span class="w"> </span><span class="n">l</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="k">LEFT</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">giao_vien</span><span class="w"> </span><span class="k">g</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">g</span><span class="p">.</span><span class="n">ma_gv</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">ma_gvcn</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">ma_gvcn</span><span class="w"> </span><span class="n">NULLS</span><span class="w"> </span><span class="k">FIRST</span><span class="p">,</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">ma_lop</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Sáu dòng, đủ cả trường. Dòng đầu tiên là <code>L06 — 9A3</code> với <code>ten_gvcn</code> rỗng — <strong>PostgreSQL tự điền <code>NULL</code></strong> vào các cột bên phải khi không tìm được bạn khớp.</p>
+<p>Hãy để ý một điều quan trọng: cái <code>NULL</code> đó <strong>không có trong bảng nào</strong>. Bảng <code>giao_vien</code> không có dòng nào rỗng. <code>NULL</code> này do chính phép <code>LEFT JOIN</code> sinh ra.</p>
+<h3 id="right-outer-join-chi-la-left-join-soi-guong"><code>RIGHT OUTER JOIN</code> — chỉ là <code>LEFT JOIN</code> soi gương<a class="headerlink" href="#right-outer-join-chi-la-left-join-soi-guong" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1">-- KỲ VỌNG: 6 dòng</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">g</span><span class="p">.</span><span class="n">ho_ten</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">ten_gvcn</span><span class="p">,</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">ma_lop</span><span class="p">,</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">ten_lop</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="k">FROM</span><span class="w"> </span><span class="n">giao_vien</span><span class="w"> </span><span class="k">g</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="k">RIGHT</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">lop</span><span class="w"> </span><span class="n">l</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">g</span><span class="p">.</span><span class="n">ma_gv</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">ma_gvcn</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">ma_lop</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Cùng 6 dòng, cùng nội dung như câu <code>LEFT JOIN</code> trên — chỉ khác thứ tự cột. Đó là lý do <code>RIGHT JOIN</code> ít được dùng: đổi chỗ hai bảng rồi viết <code>LEFT JOIN</code> thì mạch đọc tự nhiên hơn nhiều, vì mắt người đọc từ trái sang phải và "bảng chính" nên đứng trước.</p>
+<h3 id="full-outer-join-oi-chieu-hai-danh-sach"><code>FULL OUTER JOIN</code> — đối chiếu hai danh sách<a class="headerlink" href="#full-outer-join-oi-chieu-hai-danh-sach" title="Permanent link">&para;</a></h3>
+<p>Câu hỏi: <em>"Đối chiếu danh sách giáo viên và danh sách lớp. Ai chưa chủ nhiệm lớp nào, và lớp nào chưa có chủ nhiệm?"</em></p>
+<div class="highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1">-- KỲ VỌNG: 9 dòng</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">g</span><span class="p">.</span><span class="n">ma_gv</span><span class="p">,</span><span class="w"> </span><span class="k">g</span><span class="p">.</span><span class="n">ho_ten</span><span class="p">,</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">ma_lop</span><span class="p">,</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">ten_lop</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="k">FROM</span><span class="w"> </span><span class="n">giao_vien</span><span class="w"> </span><span class="k">g</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="k">FULL</span><span class="w"> </span><span class="k">OUTER</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">lop</span><span class="w"> </span><span class="n">l</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">g</span><span class="p">.</span><span class="n">ma_gv</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">ma_gvcn</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="k">g</span><span class="p">.</span><span class="n">ma_gv</span><span class="w"> </span><span class="n">NULLS</span><span class="w"> </span><span class="k">LAST</span><span class="p">,</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">ma_lop</span><span class="w"> </span><span class="n">NULLS</span><span class="w"> </span><span class="k">LAST</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Chín dòng, phân tích ra thành ba nhóm:</p>
+<ul>
+<li><strong>5 dòng khớp</strong>: <code>GV01</code>–<code>GV05</code> ↔ <code>L01</code>–<code>L05</code>.</li>
+<li><strong>3 dòng chỉ có bên trái</strong>: <code>GV06</code>, <code>GV07</code>, <code>GV08</code> — chưa chủ nhiệm lớp nào, phần <code>lop</code> là <code>NULL</code>.</li>
+<li><strong>1 dòng chỉ có bên phải</strong>: <code>L06</code> — chưa có chủ nhiệm, phần <code>giao_vien</code> là <code>NULL</code>.</li>
+</ul>
+<p><code>5 + 3 + 1 = 9</code>. Không có <code>JOIN</code> nào khác cho bạn nhìn thấy cả ba nhóm cùng lúc.</p>
+<p>Tách riêng từng phần lệch bằng cách lọc trên <code>NULL</code>:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1">-- KỲ VỌNG: 3 dòng</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">g</span><span class="p">.</span><span class="n">ma_gv</span><span class="p">,</span><span class="w"> </span><span class="k">g</span><span class="p">.</span><span class="n">ho_ten</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="k">FROM</span><span class="w"> </span><span class="n">giao_vien</span><span class="w"> </span><span class="k">g</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="k">FULL</span><span class="w"> </span><span class="k">OUTER</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">lop</span><span class="w"> </span><span class="n">l</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">g</span><span class="p">.</span><span class="n">ma_gv</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">ma_gvcn</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">ma_lop</span><span class="w"> </span><span class="k">IS</span><span class="w"> </span><span class="k">NULL</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="k">g</span><span class="p">.</span><span class="n">ma_gv</span><span class="p">;</span>
+</span></code></pre></div>
+<h3 id="khuon-ket-noi-chong-tim-dong-mo-coi">Khuôn "kết nối chống" — tìm dòng mồ côi<a class="headerlink" href="#khuon-ket-noi-chong-tim-dong-mo-coi" title="Permanent link">&para;</a></h3>
+<p>Đây là khuôn câu lệnh bạn sẽ dùng nhiều nhất trong đời làm nghề, nên hãy nhớ nó như một công thức:</p>
+<blockquote>
+<p><code>LEFT JOIN</code> bảng con, rồi <code>WHERE &lt;khoá chính bảng con&gt; IS NULL</code>.</p>
+</blockquote>
+<p>Dịch ra tiếng Việt: <em>"ghép sao cho không đánh rơi ai, rồi chỉ giữ những dòng mà phép ghép </em><em>không tìm được</em><em> bạn khớp."</em> Người ta gọi khuôn này là <strong>kết nối chống</strong> (<em>anti join</em>).</p>
+<p>Áp dụng: <em>"Học sinh nào chưa có phụ huynh nào trong hệ thống?"</em></p>
+<div class="highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1">-- KỲ VỌNG: 1 dòng</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1">-- KỲ VỌNG: ma_hs = HS040</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">ma_hs</span><span class="p">,</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">ho_ten</span><span class="p">,</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">ma_lop</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span><span class="w"> </span><span class="n">h</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="k">LEFT</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">phu_huynh</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="n">ma_hs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">ma_hs</span>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="n">ma_ph</span><span class="w"> </span><span class="k">IS</span><span class="w"> </span><span class="k">NULL</span>
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">ma_hs</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Đúng một bạn: <strong><code>HS040</code> — Đinh Thị Vân</strong>. Bốn mươi học sinh, 45 phụ huynh, nhưng có một bạn chưa ai đăng ký thông tin liên lạc.</p>
+<p>Hãy xem cùng phép <code>LEFT JOIN</code> đó cho bao nhiêu dòng khi <strong>không</strong> lọc:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1">-- KỲ VỌNG: so_dong = 46</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_dong</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span><span class="w"> </span><span class="n">h</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="k">LEFT</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">phu_huynh</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="n">ma_hs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">ma_hs</span><span class="p">;</span>
+</span></code></pre></div>
+<p><strong>46</strong> chứ không phải 40. Vì sáu bạn có <strong>hai</strong> phụ huynh, nên mỗi bạn trong số đó sinh ra hai dòng. Cộng thêm <code>HS040</code> với một dòng <code>NULL</code>: <code>39 + 6 + 1 = 46</code>.</p>
+<div class="admonition warning">
+<p class="admonition-title"><code>JOIN</code> làm số dòng <strong>tăng lên</strong>, không chỉ giảm đi</p>
+<p>Nhiều người mới tưởng <code>JOIN</code> luôn thu hẹp kết quả. Sai. Nếu quan hệ là <strong>một-nhiều</strong>, mỗi dòng cha sẽ nhân lên thành nhiều dòng.</p>
+<p>Hậu quả cụ thể và rất hay gặp: bạn ghép <code>hoc_sinh</code> với <code>diem</code> rồi tính <code>count(*)</code> và tưởng mình đang đếm học sinh — trong khi thật ra bạn đang đếm <strong>số con điểm</strong>. <a href="../26-group-by-having/">Bài 26</a> sẽ dạy <code>count(DISTINCT ...)</code> để xử lý đúng chuyện này.</p>
+</div>
+<p>Ngược chiều: <em>"Giáo viên nào chưa chủ nhiệm lớp nào?"</em></p>
+<div class="highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1">-- KỲ VỌNG: 3 dòng</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">g</span><span class="p">.</span><span class="n">ma_gv</span><span class="p">,</span><span class="w"> </span><span class="k">g</span><span class="p">.</span><span class="n">ho_ten</span><span class="p">,</span><span class="w"> </span><span class="k">g</span><span class="p">.</span><span class="n">mon_chuyen_mon</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="k">FROM</span><span class="w"> </span><span class="n">giao_vien</span><span class="w"> </span><span class="k">g</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="k">LEFT</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">lop</span><span class="w"> </span><span class="n">l</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">ma_gvcn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">g</span><span class="p">.</span><span class="n">ma_gv</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">ma_lop</span><span class="w"> </span><span class="k">IS</span><span class="w"> </span><span class="k">NULL</span>
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="k">g</span><span class="p">.</span><span class="n">ma_gv</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Ba người: <code>GV06</code>, <code>GV07</code>, <code>GV08</code>. So sánh với câu <code>EXCEPT</code> ở <a href="../21-dai-so-quan-he/">Bài 21</a> — cùng câu trả lời, hai con đường khác nhau.</p>
+<h3 id="self-join-ghep-bang-voi-chinh-no"><code>SELF JOIN</code> — ghép bảng với chính nó<a class="headerlink" href="#self-join-ghep-bang-voi-chinh-no" title="Permanent link">&para;</a></h3>
+<p>Câu hỏi: <em>"Có cặp học sinh nào sinh cùng một ngày không?"</em></p>
+<div class="highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1">-- KỲ VỌNG: 0 dòng</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">ma_hs</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">ma_1</span><span class="p">,</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">ho_ten</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">ten_1</span><span class="p">,</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">       </span><span class="n">b</span><span class="p">.</span><span class="n">ma_hs</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">ma_2</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">.</span><span class="n">ho_ten</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">ten_2</span><span class="p">,</span>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">       </span><span class="n">a</span><span class="p">.</span><span class="n">ngay_sinh</span>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span><span class="w"> </span><span class="n">a</span>
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="k">JOIN</span><span class="w"> </span><span class="n">hoc_sinh</span><span class="w"> </span><span class="n">b</span>
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">  </span><span class="k">ON</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">ngay_sinh</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">b</span><span class="p">.</span><span class="n">ngay_sinh</span>
+</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">ma_hs</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">b</span><span class="p">.</span><span class="n">ma_hs</span>
+</span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">ma_hs</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">.</span><span class="n">ma_hs</span><span class="p">;</span>
+</span></code></pre></div>
+<p><strong>Không cặp nào.</strong> Bốn mươi học sinh của trường có 40 ngày sinh khác nhau hoàn toàn. Đây là một kết quả rất đáng giá về mặt học tập: truy vấn của bạn <strong>đúng</strong>, dữ liệu chỉ đơn giản là không có trường hợp nào thoả. Đừng vội nghĩ mình viết sai.</p>
+<p>Hai chi tiết trong mệnh đề <code>ON</code> cần giải thích:</p>
+<ul>
+<li><code>a.ngay_sinh = b.ngay_sinh</code> là điều kiện nghiệp vụ.</li>
+<li><code>a.ma_hs &lt; b.ma_hs</code> là <strong>mẹo bắt buộc</strong>. Không có nó, mỗi học sinh sẽ ghép với chính mình (vì hiển nhiên <code>a.ngay_sinh = a.ngay_sinh</code>), và mỗi cặp thật sẽ xuất hiện <strong>hai lần</strong> — một lần <code>(An, Bình)</code> và một lần <code>(Bình, An)</code>. Dấu <code>&lt;</code> giải quyết cả hai vấn đề bằng một điều kiện.</li>
+</ul>
+<p>Nới lỏng thành <strong>cùng tháng sinh</strong> để thấy <code>SELF JOIN</code> hoạt động thật:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1">-- KỲ VỌNG: so_cap = 48</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_cap</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span><span class="w"> </span><span class="n">a</span>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="k">JOIN</span><span class="w"> </span><span class="n">hoc_sinh</span><span class="w"> </span><span class="n">b</span>
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="w">  </span><span class="k">ON</span><span class="w"> </span><span class="k">EXTRACT</span><span class="p">(</span><span class="k">MONTH</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">ngay_sinh</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">EXTRACT</span><span class="p">(</span><span class="k">MONTH</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">b</span><span class="p">.</span><span class="n">ngay_sinh</span><span class="p">)</span>
+</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">ma_hs</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">b</span><span class="p">.</span><span class="n">ma_hs</span><span class="p">;</span>
+</span></code></pre></div>
+<p>48 cặp. Xem cụ thể các cặp sinh tháng 1:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1">-- KỲ VỌNG: 6 dòng</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">ma_hs</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">ma_1</span><span class="p">,</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">ho_ten</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">ten_1</span><span class="p">,</span>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">       </span><span class="n">b</span><span class="p">.</span><span class="n">ma_hs</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">ma_2</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">.</span><span class="n">ho_ten</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">ten_2</span>
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span><span class="w"> </span><span class="n">a</span>
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="k">JOIN</span><span class="w"> </span><span class="n">hoc_sinh</span><span class="w"> </span><span class="n">b</span>
+</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="w">  </span><span class="k">ON</span><span class="w"> </span><span class="k">EXTRACT</span><span class="p">(</span><span class="k">MONTH</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">ngay_sinh</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">EXTRACT</span><span class="p">(</span><span class="k">MONTH</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">b</span><span class="p">.</span><span class="n">ngay_sinh</span><span class="p">)</span>
+</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">ma_hs</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">b</span><span class="p">.</span><span class="n">ma_hs</span>
+</span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="k">WHERE</span><span class="w"> </span><span class="k">EXTRACT</span><span class="p">(</span><span class="k">MONTH</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">ngay_sinh</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span>
+</span><span id="__span-10-9"><a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">ma_hs</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">.</span><span class="n">ma_hs</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Bốn bạn sinh tháng 1 (<code>HS001</code>, <code>HS013</code>, <code>HS021</code>, <code>HS027</code>) tạo ra <code>4 × 3 ÷ 2 = 6</code> cặp. Nếu bỏ điều kiện <code>a.ma_hs &lt; b.ma_hs</code>, con số sẽ là <code>4 × 4 = 16</code> — gồm 4 cặp tự ghép và 12 cặp bị đếm hai lần.</p>
+<h3 id="cross-join-va-tich-descartes-bung-no"><code>CROSS JOIN</code> và tích Descartes bùng nổ<a class="headerlink" href="#cross-join-va-tich-descartes-bung-no" title="Permanent link">&para;</a></h3>
+<p><code>CROSS JOIN</code> có lúc <strong>rất</strong> hữu ích. Ví dụ: sinh một bảng điểm rỗng cho mọi cặp <em>(học sinh, môn học)</em> để giáo viên điền vào:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1">-- KỲ VỌNG: so_o_can_dien = 360</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_o_can_dien</span>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span><span class="w"> </span><span class="k">CROSS</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">mon_hoc</span><span class="p">;</span>
+</span></code></pre></div>
+<p>40 × 9 = 360 ô. Đây là dùng <code>CROSS JOIN</code> <strong>có ý thức</strong>.</p>
+<p>Còn đây là dùng nó <strong>vô tình</strong> — chỉ vì liệt kê hai bảng trong <code>FROM</code> mà quên điều kiện ghép:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1">-- QUÊN mệnh đề WHERE h.ma_lop = l.ma_lop</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="c1">-- KỲ VỌNG: so_dong = 240</span>
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_dong</span>
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span><span class="p">,</span><span class="w"> </span><span class="n">lop</span><span class="p">;</span>
+</span></code></pre></div>
+<p>240 dòng thay vì 40 — mỗi học sinh bị gán vào <strong>cả sáu</strong> lớp. Câu lệnh <strong>không báo lỗi</strong>, kết quả chỉ đơn giản là vô nghĩa.</p>
+<p>Với hai bảng nhỏ thì chỉ là kết quả sai. Nhưng hãy làm phép nhân với hai bảng lớn của Cấp 4:</p>
+<!-- sql:khong-chay -->
+<div class="highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1">-- ĐỪNG chạy: 50.000 × 500.000 = 25.000.000.000 dòng</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh_lon</span><span class="p">,</span><span class="w"> </span><span class="n">diem_lon</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Hai mươi lăm tỉ dòng. Máy chủ sẽ ăn hết bộ nhớ, ghi đầy ổ đĩa bằng tệp tạm, rồi treo. Đó là <strong>tích Descartes bùng nổ</strong>.</p>
+<div class="admonition tip">
+<p class="admonition-title">Cách tự bảo vệ</p>
+<ol>
+<li><strong>Luôn viết <code>JOIN ... ON ...</code></strong>, đừng dùng lối cũ <code>FROM a, b WHERE ...</code>. Với cú pháp <code>JOIN</code>, quên <code>ON</code> là <strong>lỗi cú pháp</strong> — PostgreSQL chặn bạn lại ngay. Với dấu phẩy thì không.</li>
+<li>Khi thấy số dòng lớn bất thường, hãy <strong>nhân số dòng các bảng với nhau</strong>. Nếu kết quả khớp với tích đó, bạn đã quên một điều kiện ghép.</li>
+<li>Khi thử một truy vấn ghép nhiều bảng lớn, gắn <code>LIMIT 100</code> trước.</li>
+</ol>
+</div>
+<h3 id="on-va-using"><code>ON</code> và <code>USING</code><a class="headerlink" href="#on-va-using" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1">-- KỲ VỌNG: 40 dòng</span>
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">ma_hs</span><span class="p">,</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">ho_ten</span><span class="p">,</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">ten_lop</span>
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span><span class="w"> </span><span class="n">h</span>
+</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="k">JOIN</span><span class="w"> </span><span class="n">lop</span><span class="w"> </span><span class="n">l</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">ma_lop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">ma_lop</span>
+</span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">ma_hs</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Cùng kết quả, viết bằng <code>USING</code>:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1">-- KỲ VỌNG: 40 dòng</span>
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">ma_hs</span><span class="p">,</span><span class="w"> </span><span class="n">ho_ten</span><span class="p">,</span><span class="w"> </span><span class="n">ten_lop</span><span class="p">,</span><span class="w"> </span><span class="n">ma_lop</span>
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span>
+</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="k">JOIN</span><span class="w"> </span><span class="n">lop</span><span class="w"> </span><span class="k">USING</span><span class="w"> </span><span class="p">(</span><span class="n">ma_lop</span><span class="p">)</span>
+</span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">ma_hs</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Chú ý ở câu thứ hai: <code>ma_lop</code> viết <strong>không có tiền tố bảng</strong>, và điều đó là bắt buộc — <code>USING</code> gộp hai cột <code>ma_lop</code> thành <strong>một</strong>, nên không còn <code>h.ma_lop</code> và <code>l.ma_lop</code> riêng biệt nữa.</p>
+<h3 id="natural-join-va-vi-sao-ung-dung"><code>NATURAL JOIN</code> — và vì sao đừng dùng<a class="headerlink" href="#natural-join-va-vi-sao-ung-dung" title="Permanent link">&para;</a></h3>
+<p>Trên cặp <code>hoc_sinh</code> / <code>lop</code>, <code>NATURAL JOIN</code> làm đúng điều bạn mong: hai bảng chỉ trùng nhau ở cột <code>ma_lop</code>.</p>
+<div class="highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1">-- KỲ VỌNG: so_dong = 40</span>
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_dong</span>
+</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span><span class="w"> </span><span class="k">NATURAL</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">lop</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Bây giờ thử với cặp <code>hoc_sinh</code> / <code>giao_vien</code>:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1">-- KỲ VỌNG: so_dong = 0</span>
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_dong</span>
+</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span><span class="w"> </span><span class="k">NATURAL</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">giao_vien</span><span class="p">;</span>
+</span></code></pre></div>
+<p><strong>Không dòng nào.</strong> Hai bảng này trùng nhau tới <strong>ba</strong> cột: <code>ho_ten</code>, <code>ngay_sinh</code>, <code>gioi_tinh</code>. <code>NATURAL JOIN</code> lặng lẽ ghép theo cả ba, tức là nó đang đi tìm <em>"những người vừa là học sinh vừa là giáo viên, cùng tên, cùng ngày sinh, cùng giới tính"</em>. Đương nhiên không có ai.</p>
+<p>Và đây mới là điều đáng sợ: <strong>không có thông báo lỗi nào.</strong> Bạn nhận về một bảng rỗng và phải tự đoán vì sao.</p>
+<p>Nếu viết bằng <code>ON</code>, ý định của bạn hiện rõ trên mặt câu lệnh và không có gì ngầm hiểu:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1">-- KỲ VỌNG: so_dong = 40</span>
+</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_dong</span>
+</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span><span class="w"> </span><span class="n">h</span>
+</span><span id="__span-18-4"><a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="k">JOIN</span><span class="w"> </span><span class="n">lop</span><span class="w"> </span><span class="n">l</span><span class="w">       </span><span class="k">ON</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">ma_lop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">ma_lop</span>
+</span><span id="__span-18-5"><a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="k">LEFT</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">giao_vien</span><span class="w"> </span><span class="k">g</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">g</span><span class="p">.</span><span class="n">ma_gv</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">ma_gvcn</span><span class="p">;</span>
+</span></code></pre></div>
+<h3 id="ghep-nhieu-bang-loi-hua-voi-co-hieu-pho">Ghép nhiều bảng — lời hứa với cô hiệu phó<a class="headerlink" href="#ghep-nhieu-bang-loi-hua-voi-co-hieu-pho" title="Permanent link">&para;</a></h3>
+<p>Cuối cùng, đây là bảng mà cô hiệu phó đã nhờ từ đầu bài: <strong>tên học sinh, tên lớp, tên giáo viên chủ nhiệm</strong> — và <strong>không đánh rơi lớp <code>9A3</code></strong>:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1">-- KỲ VỌNG: 40 dòng</span>
+</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="c1">-- KỲ VỌNG: so_khong_co_gvcn = 7</span>
+</span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w">                                </span><span class="k">AS</span><span class="w"> </span><span class="n">so_dong</span><span class="p">,</span>
+</span><span id="__span-19-4"><a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="w">       </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="n">FILTER</span><span class="w"> </span><span class="p">(</span><span class="k">WHERE</span><span class="w"> </span><span class="k">g</span><span class="p">.</span><span class="n">ma_gv</span><span class="w"> </span><span class="k">IS</span><span class="w"> </span><span class="k">NULL</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_khong_co_gvcn</span>
+</span><span id="__span-19-5"><a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span><span class="w"> </span><span class="n">h</span>
+</span><span id="__span-19-6"><a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a><span class="k">JOIN</span><span class="w"> </span><span class="n">lop</span><span class="w"> </span><span class="n">l</span><span class="w">            </span><span class="k">ON</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">ma_lop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">ma_lop</span>
+</span><span id="__span-19-7"><a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a><span class="k">LEFT</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">giao_vien</span><span class="w"> </span><span class="k">g</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">g</span><span class="p">.</span><span class="n">ma_gv</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">ma_gvcn</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Đủ 40 học sinh, trong đó 7 bạn của lớp <code>9A3</code> có ô giáo viên chủ nhiệm để rỗng. Chú ý cách chọn loại <code>JOIN</code> cho từng bước:</p>
+<ul>
+<li><code>hoc_sinh</code> → <code>lop</code> dùng <strong><code>JOIN</code> thường</strong>, vì <code>hoc_sinh.ma_lop</code> được khai <code>NOT NULL</code>: mọi học sinh chắc chắn có lớp, không thể đánh rơi ai.</li>
+<li><code>lop</code> → <code>giao_vien</code> dùng <strong><code>LEFT JOIN</code></strong>, vì <code>lop.ma_gvcn</code> <strong>cho phép <code>NULL</code></strong>.</li>
+</ul>
+<div class="admonition tip">
+<p class="admonition-title">Quy tắc chọn loại JOIN</p>
+<p>Nhìn vào khoá ngoại dùng để ghép:</p>
+<ul>
+<li>Khoá ngoại khai <strong><code>NOT NULL</code></strong> → <code>INNER JOIN</code> là an toàn, không mất dòng nào.</li>
+<li>Khoá ngoại <strong>cho phép <code>NULL</code></strong> → phải tự hỏi <em>"tôi có muốn giữ những dòng chưa có bạn khớp không?"</em>. Câu trả lời thường là <strong>có</strong>, và khi đó dùng <code>LEFT JOIN</code>.</li>
+</ul>
+<p>Nói cách khác: thiết kế lược đồ ở Cấp 1 quyết định luôn loại <code>JOIN</code> bạn phải viết ở Cấp 3.</p>
+</div>
+<h2 id="loi-thuong-gap">⚠️ Lỗi thường gặp<a class="headerlink" href="#loi-thuong-gap" title="Permanent link">&para;</a></h2>
+<div class="admonition danger">
+<p class="admonition-title">Lỗi 1: Dùng <code>INNER JOIN</code> khi khoá ngoại cho phép <code>NULL</code></p>
+<p>Đây là câu chuyện mở đầu, và là lỗi phổ biến nhất của cả bài.</p>
+<p>Triệu chứng: báo cáo thiếu dòng, nhưng thiếu <strong>âm thầm</strong> — không lỗi, không cảnh báo, chỉ là tổng số nhỏ hơn thực tế.</p>
+<p>Cách phát hiện: đếm số dòng của bảng chính <strong>trước</strong> khi ghép, rồi so với số dòng <strong>sau</strong> khi ghép. Nếu giảm mà bạn không cố ý lọc gì, bạn đã mất dòng:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1">-- KỲ VỌNG: truoc_khi_ghep = 6</span>
+</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="c1">-- KỲ VỌNG: inner_join = 5</span>
+</span><span id="__span-20-3"><a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="c1">-- KỲ VỌNG: left_join = 6</span>
+</span><span id="__span-20-4"><a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="k">SELECT</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">lop</span><span class="p">)</span><span class="w">                                                           </span><span class="k">AS</span><span class="w"> </span><span class="n">truoc_khi_ghep</span><span class="p">,</span>
+</span><span id="__span-20-5"><a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a><span class="w">       </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">lop</span><span class="w"> </span><span class="n">l</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">giao_vien</span><span class="w"> </span><span class="k">g</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">g</span><span class="p">.</span><span class="n">ma_gv</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">ma_gvcn</span><span class="p">)</span><span class="w">                 </span><span class="k">AS</span><span class="w"> </span><span class="n">inner_join</span><span class="p">,</span>
+</span><span id="__span-20-6"><a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a><span class="w">       </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">lop</span><span class="w"> </span><span class="n">l</span><span class="w"> </span><span class="k">LEFT</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">giao_vien</span><span class="w"> </span><span class="k">g</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">g</span><span class="p">.</span><span class="n">ma_gv</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">ma_gvcn</span><span class="p">)</span><span class="w">            </span><span class="k">AS</span><span class="w"> </span><span class="n">left_join</span><span class="p">;</span>
+</span></code></pre></div>
+</div>
+<div class="admonition danger">
+<p class="admonition-title">Lỗi 2: <code>LEFT JOIN</code> rồi lọc bảng phải trong <code>WHERE</code></p>
+<p>Lỗi này xoá sạch công dụng của <code>LEFT JOIN</code>, và cực kỳ khó nhìn ra khi đọc mã.</p>
+<div class="highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="c1">-- KỲ VỌNG: loc_trong_where = 3</span>
+</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="c1">-- KỲ VỌNG: loc_trong_on = 6</span>
+</span><span id="__span-21-3"><a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="k">SELECT</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">lop</span><span class="w"> </span><span class="n">l</span>
+</span><span id="__span-21-4"><a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="w">          </span><span class="k">LEFT</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">giao_vien</span><span class="w"> </span><span class="k">g</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">g</span><span class="p">.</span><span class="n">ma_gv</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">ma_gvcn</span>
+</span><span id="__span-21-5"><a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a><span class="w">          </span><span class="k">WHERE</span><span class="w"> </span><span class="k">g</span><span class="p">.</span><span class="n">gioi_tinh</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'Nữ'</span><span class="p">)</span><span class="w">                          </span><span class="k">AS</span><span class="w"> </span><span class="n">loc_trong_where</span><span class="p">,</span>
+</span><span id="__span-21-6"><a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a><span class="w">       </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">lop</span><span class="w"> </span><span class="n">l</span>
+</span><span id="__span-21-7"><a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a><span class="w">          </span><span class="k">LEFT</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">giao_vien</span><span class="w"> </span><span class="k">g</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">g</span><span class="p">.</span><span class="n">ma_gv</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">ma_gvcn</span>
+</span><span id="__span-21-8"><a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a><span class="w">                               </span><span class="k">AND</span><span class="w"> </span><span class="k">g</span><span class="p">.</span><span class="n">gioi_tinh</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'Nữ'</span><span class="p">)</span><span class="w">       </span><span class="k">AS</span><span class="w"> </span><span class="n">loc_trong_on</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Cùng một điều kiện, đặt ở hai chỗ, ra hai kết quả:</p>
+<ul>
+<li>Đặt trong <strong><code>WHERE</code></strong>: <code>LEFT JOIN</code> sinh ra dòng <code>L06</code> với <code>g.gioi_tinh = NULL</code>, rồi <code>WHERE NULL = 'Nữ'</code> cho <code>UNKNOWN</code> và <strong>loại dòng đó đi</strong>. Kết quả 3 dòng — <code>LEFT JOIN</code> vừa bị biến thành <code>INNER JOIN</code>.</li>
+<li>Đặt trong <strong><code>ON</code></strong>: điều kiện chỉ quyết định <em>"dòng nào bên phải được coi là khớp"</em>. Mọi lớp vẫn được giữ. Kết quả 6 dòng.</li>
+</ul>
+<p><strong>Quy tắc:</strong> điều kiện về <strong>bảng phải</strong> của một <code>LEFT JOIN</code> thì đặt trong <code>ON</code>. Điều kiện về <strong>bảng trái</strong> thì đặt ở <code>WHERE</code>. Ngoại lệ duy nhất là khuôn kết nối chống <code>WHERE cot_phai IS NULL</code> — ở đó bạn <strong>cố ý</strong> muốn lọc sau khi ghép.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Lỗi 3: Quên điều kiện ghép — tích Descartes bùng nổ</p>
+<div class="highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c1">-- KỲ VỌNG: dung_cach = 40</span>
+</span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="c1">-- KỲ VỌNG: quen_dieu_kien = 240</span>
+</span><span id="__span-22-3"><a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="k">SELECT</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span><span class="w"> </span><span class="n">h</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">lop</span><span class="w"> </span><span class="n">l</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">ma_lop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">ma_lop</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">dung_cach</span><span class="p">,</span>
+</span><span id="__span-22-4"><a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="w">       </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span><span class="p">,</span><span class="w"> </span><span class="n">lop</span><span class="p">)</span><span class="w">                                </span><span class="k">AS</span><span class="w"> </span><span class="n">quen_dieu_kien</span><span class="p">;</span>
+</span></code></pre></div>
+<p>240 = 40 × 6. Số dòng bằng đúng <strong>tích</strong> số dòng hai bảng là dấu hiệu chắc chắn của lỗi này.</p>
+<p>Dùng cú pháp <code>JOIN ... ON</code> thay cho <code>FROM a, b</code> để PostgreSQL bắt lỗi giúp bạn.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Lỗi 4: Dùng <code>NATURAL JOIN</code></p>
+<p>Nó dựa vào tên cột, mà tên cột thay đổi được. Một câu <code>ALTER TABLE ... ADD COLUMN ghi_chu</code> trên hai bảng là đủ để mọi <code>NATURAL JOIN</code> giữa chúng đổi kết quả — im lặng.</p>
+<p>Đã thấy ở phần thực hành: <code>hoc_sinh NATURAL JOIN giao_vien</code> trả về 0 dòng vì nó ghép theo cả ba cột <code>ho_ten</code>, <code>ngay_sinh</code>, <code>gioi_tinh</code>.</p>
+<p>Luôn viết <code>ON</code> (hoặc <code>USING</code> nếu muốn gọn). Ý định phải hiện rõ trên mặt câu lệnh.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Lỗi 5: <code>SELF JOIN</code> thiếu điều kiện chống trùng</p>
+<div class="highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="c1">-- KỲ VỌNG: co_dieu_kien_nho_hon = 6</span>
+</span><span id="__span-23-2"><a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a><span class="c1">-- KỲ VỌNG: khong_co_dieu_kien = 16</span>
+</span><span id="__span-23-3"><a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a><span class="k">SELECT</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">hoc_sinh</span><span class="w"> </span><span class="n">b</span>
+</span><span id="__span-23-4"><a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a><span class="w">          </span><span class="k">ON</span><span class="w"> </span><span class="k">EXTRACT</span><span class="p">(</span><span class="k">MONTH</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">ngay_sinh</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">EXTRACT</span><span class="p">(</span><span class="k">MONTH</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">b</span><span class="p">.</span><span class="n">ngay_sinh</span><span class="p">)</span>
+</span><span id="__span-23-5"><a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a><span class="w">         </span><span class="k">AND</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">ma_hs</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">b</span><span class="p">.</span><span class="n">ma_hs</span>
+</span><span id="__span-23-6"><a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a><span class="w">        </span><span class="k">WHERE</span><span class="w"> </span><span class="k">EXTRACT</span><span class="p">(</span><span class="k">MONTH</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">ngay_sinh</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w">        </span><span class="k">AS</span><span class="w"> </span><span class="n">co_dieu_kien_nho_hon</span><span class="p">,</span>
+</span><span id="__span-23-7"><a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a><span class="w">       </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">hoc_sinh</span><span class="w"> </span><span class="n">b</span>
+</span><span id="__span-23-8"><a id="__codelineno-23-8" name="__codelineno-23-8" href="#__codelineno-23-8"></a><span class="w">          </span><span class="k">ON</span><span class="w"> </span><span class="k">EXTRACT</span><span class="p">(</span><span class="k">MONTH</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">ngay_sinh</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">EXTRACT</span><span class="p">(</span><span class="k">MONTH</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">b</span><span class="p">.</span><span class="n">ngay_sinh</span><span class="p">)</span>
+</span><span id="__span-23-9"><a id="__codelineno-23-9" name="__codelineno-23-9" href="#__codelineno-23-9"></a><span class="w">        </span><span class="k">WHERE</span><span class="w"> </span><span class="k">EXTRACT</span><span class="p">(</span><span class="k">MONTH</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">ngay_sinh</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w">        </span><span class="k">AS</span><span class="w"> </span><span class="n">khong_co_dieu_kien</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Bốn học sinh sinh tháng 1: có điều kiện <code>&lt;</code> thì ra 6 cặp đúng; không có thì ra 16 — gồm 4 cặp một người ghép với chính mình, và 12 cặp bị đếm hai lần.</p>
+<p>Dùng <code>a.ma_hs &lt; b.ma_hs</code> khi muốn <strong>mỗi cặp đúng một lần</strong>; dùng <code>a.ma_hs &lt;&gt; b.ma_hs</code> khi bạn thật sự cần cả hai chiều.</p>
+</div>
+<h2 id="bai-tap">✍️ Bài tập<a class="headerlink" href="#bai-tap" title="Permanent link">&para;</a></h2>
+<ol>
+<li>
+<p>Liệt kê <strong>mọi cuốn sách</strong> kèm mã học sinh đã mượn nó, sao cho những cuốn <strong>chưa ai mượn</strong> vẫn xuất hiện trong kết quả. Dùng loại <code>JOIN</code> nào, và kết quả có bao nhiêu dòng?</p>
+</li>
+<li>
+<p>Viết truy vấn tìm những <strong>môn học chưa từng được phân công cho giáo viên nào</strong> (bảng <code>phan_cong_day</code>).</p>
+</li>
+<li>
+<p>Câu lệnh sau sai ở đâu? Sửa lại.</p>
+<p><!-- sql:khong-chay -->
+<div class="highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">ho_ten</span><span class="p">,</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="n">ho_ten</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">ten_phu_huynh</span>
+</span><span id="__span-24-2"><a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span><span class="w"> </span><span class="n">h</span>
+</span><span id="__span-24-3"><a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a><span class="k">LEFT</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">phu_huynh</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="n">ma_hs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">ma_hs</span>
+</span><span id="__span-24-4"><a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="n">quan_he</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'Mẹ'</span><span class="p">;</span>
+</span></code></pre></div></p>
+<p>Ý định: <em>"liệt kê mọi học sinh, kèm tên mẹ nếu có."</em></p>
+</li>
+<li>
+<p>Bảng <code>hoc_sinh</code> có 40 dòng, <code>diem</code> có 480 dòng. Hỏi <code>SELECT count(*) FROM hoc_sinh h JOIN diem d ON d.ma_hs = h.ma_hs</code> cho ra bao nhiêu? Và <code>SELECT count(*) FROM hoc_sinh, diem</code> cho ra bao nhiêu? Giải thích chênh lệch.</p>
+</li>
+<li>
+<p>Tìm mọi cặp <strong>giáo viên cùng dạy một lớp trong cùng học kỳ</strong> nhưng khác môn. Đây là <code>SELF JOIN</code> trên bảng nào, và cần mấy điều kiện trong <code>ON</code>?</p>
+</li>
+</ol>
+<details class="success">
+<summary>Đáp án</summary>
+<p><strong>Câu 1.</strong></p>
+<div class="highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="c1">-- KỲ VỌNG: 50 dòng</span>
+</span><span id="__span-25-2"><a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a><span class="c1">-- KỲ VỌNG: so_sach_chua_ai_muon = 0</span>
+</span><span id="__span-25-3"><a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w">                                </span><span class="k">AS</span><span class="w"> </span><span class="n">so_dong</span><span class="p">,</span>
+</span><span id="__span-25-4"><a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a><span class="w">       </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="n">FILTER</span><span class="w"> </span><span class="p">(</span><span class="k">WHERE</span><span class="w"> </span><span class="n">m</span><span class="p">.</span><span class="n">ma_muon</span><span class="w"> </span><span class="k">IS</span><span class="w"> </span><span class="k">NULL</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_sach_chua_ai_muon</span>
+</span><span id="__span-25-5"><a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a><span class="k">FROM</span><span class="w"> </span><span class="n">sach</span><span class="w"> </span><span class="n">s</span>
+</span><span id="__span-25-6"><a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a><span class="k">LEFT</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">muon_sach</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">m</span><span class="p">.</span><span class="n">ma_sach</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="n">ma_sach</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Dùng <strong><code>LEFT JOIN</code></strong> với <code>sach</code> ở vế trái, vì ta muốn giữ mọi cuốn sách kể cả cuốn chưa ai mượn.</p>
+<p>Kết quả: <strong>50 dòng</strong>, và <code>so_sach_chua_ai_muon = 0</code> — hoá ra cả 20 cuốn đều đã có người mượn ít nhất một lần. Vì có 50 lượt mượn rải trên 20 cuốn, mỗi cuốn được mượn nhiều lần, nên số dòng sau khi ghép là 50 chứ không phải 20.</p>
+<p>Đây lại là bài học <em>"<code>JOIN</code> làm số dòng tăng"</em>: vế trái có 20 dòng, kết quả có 50.</p>
+<p><strong>Câu 2.</strong></p>
+<div class="highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="c1">-- KỲ VỌNG: 1 dòng</span>
+</span><span id="__span-26-2"><a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a><span class="c1">-- KỲ VỌNG: ma_mon = MH08</span>
+</span><span id="__span-26-3"><a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">m</span><span class="p">.</span><span class="n">ma_mon</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="p">.</span><span class="n">ten_mon</span>
+</span><span id="__span-26-4"><a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a><span class="k">FROM</span><span class="w"> </span><span class="n">mon_hoc</span><span class="w"> </span><span class="n">m</span>
+</span><span id="__span-26-5"><a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a><span class="k">LEFT</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">phan_cong_day</span><span class="w"> </span><span class="n">pc</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">pc</span><span class="p">.</span><span class="n">ma_mon</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m</span><span class="p">.</span><span class="n">ma_mon</span>
+</span><span id="__span-26-6"><a id="__codelineno-26-6" name="__codelineno-26-6" href="#__codelineno-26-6"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">pc</span><span class="p">.</span><span class="n">ma_mon</span><span class="w"> </span><span class="k">IS</span><span class="w"> </span><span class="k">NULL</span>
+</span><span id="__span-26-7"><a id="__codelineno-26-7" name="__codelineno-26-7" href="#__codelineno-26-7"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">m</span><span class="p">.</span><span class="n">ma_mon</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Đúng một môn: <strong><code>MH08</code> — Địa lý</strong>. Trường có 8 giáo viên với 8 chuyên môn, nhưng bảng <code>mon_hoc</code> có 9 môn — không thầy cô nào chuyên Địa lý, nên môn đó chưa được phân công.</p>
+<p>Đây chính là khuôn <strong>kết nối chống</strong> áp dụng lần thứ ba trong bài.</p>
+<p><strong>Câu 3.</strong></p>
+<p>Sai vì điều kiện <code>p.quan_he = 'Mẹ'</code> nằm trong <strong><code>WHERE</code></strong>, tức là được áp <strong>sau khi</strong> ghép. Với những học sinh không có mẹ trong hệ thống, <code>LEFT JOIN</code> sinh ra dòng có <code>p.quan_he = NULL</code>; rồi <code>WHERE NULL = 'Mẹ'</code> cho <code>UNKNOWN</code> và dòng đó bị loại.</p>
+<p>Kết quả: truy vấn chỉ trả về những bạn <strong>có mẹ</strong>, tức là <code>LEFT JOIN</code> đã bị biến thành <code>INNER JOIN</code>. Trái hẳn với ý định "liệt kê <strong>mọi</strong> học sinh".</p>
+<p>Sửa bằng cách chuyển điều kiện vào <code>ON</code>:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a><span class="c1">-- KỲ VỌNG: so_dong = 40</span>
+</span><span id="__span-27-2"><a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a><span class="c1">-- KỲ VỌNG: so_khong_co_me = 20</span>
+</span><span id="__span-27-3"><a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w">                              </span><span class="k">AS</span><span class="w"> </span><span class="n">so_dong</span><span class="p">,</span>
+</span><span id="__span-27-4"><a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a><span class="w">       </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="n">FILTER</span><span class="w"> </span><span class="p">(</span><span class="k">WHERE</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="n">ma_ph</span><span class="w"> </span><span class="k">IS</span><span class="w"> </span><span class="k">NULL</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_khong_co_me</span>
+</span><span id="__span-27-5"><a id="__codelineno-27-5" name="__codelineno-27-5" href="#__codelineno-27-5"></a><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span><span class="w"> </span><span class="n">h</span>
+</span><span id="__span-27-6"><a id="__codelineno-27-6" name="__codelineno-27-6" href="#__codelineno-27-6"></a><span class="k">LEFT</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">phu_huynh</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="n">ma_hs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">ma_hs</span>
+</span><span id="__span-27-7"><a id="__codelineno-27-7" name="__codelineno-27-7" href="#__codelineno-27-7"></a><span class="w">                     </span><span class="k">AND</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="n">quan_he</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'Mẹ'</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Bây giờ đủ <strong>40 dòng</strong> — mỗi học sinh đúng một dòng, vì mỗi bạn có nhiều nhất một mẹ. Bảng <code>phu_huynh</code> có 20 dòng <code>quan_he = 'Mẹ'</code> thuộc 20 học sinh khác nhau, nên <strong>20 bạn</strong> còn lại không có mẹ đăng ký (chỉ có bố, hoặc ông bà, hoặc — như <code>HS040</code> — không có ai).</p>
+<p><strong>Câu 4.</strong></p>
+<div class="highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="c1">-- KỲ VỌNG: co_dieu_kien = 480</span>
+</span><span id="__span-28-2"><a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a><span class="c1">-- KỲ VỌNG: khong_dieu_kien = 19200</span>
+</span><span id="__span-28-3"><a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a><span class="k">SELECT</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span><span class="w"> </span><span class="n">h</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">diem</span><span class="w"> </span><span class="n">d</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">d</span><span class="p">.</span><span class="n">ma_hs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">ma_hs</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">co_dieu_kien</span><span class="p">,</span>
+</span><span id="__span-28-4"><a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a><span class="w">       </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span><span class="p">,</span><span class="w"> </span><span class="n">diem</span><span class="p">)</span><span class="w">                              </span><span class="k">AS</span><span class="w"> </span><span class="n">khong_dieu_kien</span><span class="p">;</span>
+</span></code></pre></div>
+<ul>
+<li><strong>Có điều kiện: 480 dòng.</strong> Mỗi con điểm khớp với đúng một học sinh (vì <code>diem.ma_hs</code> là khoá ngoại trỏ tới khoá chính của <code>hoc_sinh</code>), nên số dòng bằng số dòng của bảng "nhiều", tức là 480.</li>
+<li><strong>Không điều kiện: 19.200 dòng</strong> = 40 × 480. Mỗi học sinh bị ghép với <strong>toàn bộ</strong> 480 con điểm của cả trường.</li>
+</ul>
+<p>Chênh lệch 40 lần. Và nếu bạn tính <code>AVG(diem_so)</code> trên bảng 19.200 dòng đó, con số trả về vẫn "trông có vẻ hợp lý" — đó là điều làm lỗi này nguy hiểm.</p>
+<p><strong>Câu 5.</strong></p>
+<p><code>SELF JOIN</code> trên bảng <strong><code>phan_cong_day</code></strong>, cần <strong>bốn</strong> điều kiện trong <code>ON</code>:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-29-1"><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a><span class="c1">-- Bốn điều kiện: cùng lớp · cùng học kỳ · khác môn · mỗi cặp giáo viên đúng một lần</span>
+</span><span id="__span-29-2"><a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a><span class="c1">-- KỲ VỌNG: so_cap = 224</span>
+</span><span id="__span-29-3"><a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_cap</span>
+</span><span id="__span-29-4"><a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a><span class="k">FROM</span><span class="w"> </span><span class="n">phan_cong_day</span><span class="w"> </span><span class="n">a</span>
+</span><span id="__span-29-5"><a id="__codelineno-29-5" name="__codelineno-29-5" href="#__codelineno-29-5"></a><span class="k">JOIN</span><span class="w"> </span><span class="n">phan_cong_day</span><span class="w"> </span><span class="n">b</span>
+</span><span id="__span-29-6"><a id="__codelineno-29-6" name="__codelineno-29-6" href="#__codelineno-29-6"></a><span class="w">  </span><span class="k">ON</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">ma_lop</span><span class="w">  </span><span class="o">=</span><span class="w">  </span><span class="n">b</span><span class="p">.</span><span class="n">ma_lop</span>
+</span><span id="__span-29-7"><a id="__codelineno-29-7" name="__codelineno-29-7" href="#__codelineno-29-7"></a><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">hoc_ky</span><span class="w">  </span><span class="o">=</span><span class="w">  </span><span class="n">b</span><span class="p">.</span><span class="n">hoc_ky</span>
+</span><span id="__span-29-8"><a id="__codelineno-29-8" name="__codelineno-29-8" href="#__codelineno-29-8"></a><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">ma_mon</span><span class="w"> </span><span class="o">&lt;&gt;</span><span class="w">  </span><span class="n">b</span><span class="p">.</span><span class="n">ma_mon</span>
+</span><span id="__span-29-9"><a id="__codelineno-29-9" name="__codelineno-29-9" href="#__codelineno-29-9"></a><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">ma_gv</span><span class="w">   </span><span class="o">&lt;</span><span class="w">  </span><span class="n">b</span><span class="p">.</span><span class="n">ma_gv</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Kiểm lại con số bằng tay: bảng <code>phan_cong_day</code> có 64 dòng, phân bố thành 4 lớp × 2 học kỳ = 8 nhóm, mỗi nhóm đúng 8 dòng (8 giáo viên, mỗi người một môn). Trong mỗi nhóm, số cặp giáo viên khác nhau là <code>8 × 7 ÷ 2 = 28</code>. Vậy tổng là <code>8 × 28 = 224</code>.</p>
+<p>Điều kiện <code>a.ma_mon &lt;&gt; b.ma_mon</code> ở đây thực ra <strong>dư thừa</strong> — vì trong dữ liệu mẫu mỗi giáo viên chỉ dạy đúng một môn, nên hai giáo viên khác nhau đã chắc chắn khác môn. Nhưng vẫn nên viết ra, vì nó diễn đạt đúng yêu cầu của đề bài và sẽ cần thiết khi dữ liệu thay đổi.</p>
+</details>
+<h2 id="tom-tat">🔑 Tóm tắt<a class="headerlink" href="#tom-tat" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Sáu loại <code>JOIN</code> chỉ khác nhau ở <strong>một</strong> câu hỏi: <em>"dòng không tìm được bạn khớp thì giữ hay bỏ?"</em> — <code>INNER</code> bỏ cả hai bên, <code>LEFT</code> giữ bên trái, <code>RIGHT</code> giữ bên phải, <code>FULL OUTER</code> giữ cả hai, <code>CROSS</code> không có điều kiện, <code>SELF</code> là ghép bảng với chính nó.</li>
+<li>Khoá ngoại <strong>cho phép <code>NULL</code></strong> thì <code>INNER JOIN</code> sẽ <strong>âm thầm đánh rơi dòng</strong> — lớp <code>9A3</code> biến mất là ví dụ. Quy tắc chọn: khoá ngoại <code>NOT NULL</code> → <code>INNER JOIN</code> an toàn; khoá ngoại cho <code>NULL</code> → cân nhắc <code>LEFT JOIN</code>.</li>
+<li>Khuôn <strong>kết nối chống</strong> <code>LEFT JOIN ... WHERE &lt;khoá bảng phải&gt; IS NULL</code> là công cụ tìm "dòng mồ côi": học sinh chưa có phụ huynh, giáo viên chưa chủ nhiệm lớp, môn chưa được phân công.</li>
+<li>Đặt điều kiện về <strong>bảng phải</strong> của <code>LEFT JOIN</code> vào <code>WHERE</code> sẽ <strong>biến nó thành <code>INNER JOIN</code></strong> — vì <code>NULL = 'giá trị'</code> cho <code>UNKNOWN</code>. Điều kiện bảng phải phải đặt trong <code>ON</code>.</li>
+<li><code>JOIN</code> làm số dòng <strong>tăng lên</strong> khi quan hệ là một-nhiều, và quên điều kiện ghép thì gây <strong>tích Descartes bùng nổ</strong> mà không báo lỗi gì. Luôn viết <code>JOIN ... ON</code> thay cho <code>FROM a, b</code>; tránh <code>NATURAL JOIN</code>; và <code>SELF JOIN</code> thì luôn thêm <code>a.khoa &lt; b.khoa</code> để mỗi cặp chỉ xuất hiện một lần.</li>
+</ol>
+<hr />
+<p>⬅️ <a href="../24-select-where-order-by/">Bài 24 — SELECT, WHERE, ORDER BY, LIMIT</a> · ➡️ <a href="../26-group-by-having/">Bài 26 — GROUP BY, HAVING và các hàm tổng hợp</a></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Trở lại mục lục
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Chân trang" >
+        
+          
+          <a href="../24-select-where-order-by/" class="md-footer__link md-footer__link--prev" aria-label="Trước: Bài 24 — SELECT, WHERE, ORDER BY, LIMIT">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Trước
+              </span>
+              <div class="md-ellipsis">
+                Bài 24 — SELECT, WHERE, ORDER BY, LIMIT
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../26-group-by-having/" class="md-footer__link md-footer__link--next" aria-label="Sau: Bài 26 — GROUP BY, HAVING và các hàm tổng hợp">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Sau
+              </span>
+              <div class="md-ellipsis">
+                Bài 26 — GROUP BY, HAVING và các hàm tổng hợp
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Nội dung theo giấy phép CC BY 4.0
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/hungnguyen010518/database-tu-a-z" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.sections", "navigation.top", "navigation.footer", "navigation.indexes", "navigation.tracking", "toc.follow", "content.code.copy", "content.code.annotate", "search.highlight", "search.suggest"], "search": "../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "\u0110\u00e3 sao ch\u00e9p", "clipboard.copy": "Sao ch\u00e9p v\u00e0o b\u1ed9 nh\u1edb t\u1ea1m", "search.result.more.one": "1 t\u1eeb kh\u00e1c trong trang", "search.result.more.other": "# t\u1eeb kh\u00e1c trong trang", "search.result.none": "Kh\u00f4ng t\u00ecm th\u1ea5y t\u00e0i li\u1ec7u li\u00ean quan", "search.result.one": "1 t\u00e0i li\u1ec7u li\u00ean quan", "search.result.other": "# t\u00e0i li\u1ec7u li\u00ean quan", "search.result.placeholder": "Nh\u1eadp \u0111\u1ec3 b\u1eaft \u0111\u1ea7u t\u00ecm ki\u1ebfm", "search.result.term.missing": "Kh\u00f4ng", "select.version": "Ch\u1ecdn phi\u00ean b\u1ea3n"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.525ec568.min.js"></script>
+      
+    
+  </body>
+</html>
