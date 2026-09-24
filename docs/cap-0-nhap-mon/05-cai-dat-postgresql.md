@@ -734,4 +734,4 @@ Chưa hiểu `JOIN` và `GROUP BY` cũng không sao — Bài 25 và Bài 27 sẽ
 
 ---
 
-⬅️ [Bài 4 — Các mô hình dữ liệu](04-cac-mo-hinh-du-lieu.md) · ➡️ **Bài 6 — Mô hình hoá dữ liệu là gì** *(sắp có)*
+⬅️ [Bài 4 — Các mô hình dữ liệu](04-cac-mo-hinh-du-lieu.md) · ➡️ [Bài 6 — Mô hình quan hệ](../cap-1-mo-hinh-er/06-mo-hinh-quan-he.md)

@@ -88,5 +88,11 @@ nav:
       - "Bài 3 — DBMS là gì": cap-0-nhap-mon/03-dbms-la-gi.md
       - "Bài 4 — Các mô hình dữ liệu": cap-0-nhap-mon/04-cac-mo-hinh-du-lieu.md
       - "Bài 5 — Cài đặt PostgreSQL": cap-0-nhap-mon/05-cai-dat-postgresql.md
+  - "Cấp 1 — Mô hình quan hệ & Biểu đồ ER":
+      - "Bài 6 — Mô hình quan hệ: bảng, dòng, cột, miền giá trị, lược đồ": cap-1-mo-hinh-er/06-mo-hinh-quan-he.md
+      - "Bài 7 — Thực thể và các loại thuộc tính": cap-1-mo-hinh-er/07-thuc-the-va-thuoc-tinh.md
+      - "Bài 8 — Mối quan hệ, bậc và bản số (Cardinality)": cap-1-mo-hinh-er/08-moi-quan-he-va-cardinality.md
+      - "Bài 9 — Ràng buộc tham gia và Thực thể yếu": cap-1-mo-hinh-er/09-participation-va-thuc-the-yeu.md
+      - "Bài 10 — Biểu đồ ER — ký hiệu Chen": cap-1-mo-hinh-er/10-bieu-do-er-ky-hieu-chen.md
   - "Database mẫu": dataset.md
   - "Bảng thuật ngữ": glossary.md
