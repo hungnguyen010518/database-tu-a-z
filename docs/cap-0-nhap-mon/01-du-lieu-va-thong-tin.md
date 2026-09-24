@@ -278,4 +278,4 @@ Buổi chiều dò sổ bằng tay của bạn vừa được thay bằng **năm
 
 ---
 
-⬅️ [Trang chủ](../index.md) · ➡️ **Bài 2 — Từ sổ giấy đến Excel** *(sắp có)*
+⬅️ [Trang chủ](../index.md) · ➡️ [Bài 2 — Từ sổ giấy đến Excel](02-tu-so-giay-den-excel.md)
