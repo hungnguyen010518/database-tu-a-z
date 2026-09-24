@@ -109,7 +109,7 @@ Nếu trường khẳng định *"ai vào trường cũng phải là một trong
     | **Disjoint + toàn phần** | Ai cũng thuộc **đúng một** loại | Học sinh chia thành Khối 6/7/8/9 |
     | **Disjoint + bộ phận** | Thuộc tối đa một loại, được phép không loại nào | Học sinh chia thành Lớp trưởng / Lớp phó |
     | **Overlapping + toàn phần** | Ai cũng thuộc ít nhất một loại, có thể nhiều loại | **Câu chuyện đầu bài** nếu mọi người đều được xếp loại |
-    | **Overlapping + bộ phận** | Tự do nhất | Học sinh tham gia các câu lạc bộ |
+    | **Overlapping + bộ phận** | Tự do nhất | `NGƯỜI TRONG TRƯỜNG` chia thành `GIÁO VIÊN` / `NHÂN VIÊN` khi trường còn có cả khách mời chưa xếp loại |
 
     Khi vẽ EER mà quên ghi hai ràng buộc này thì biểu đồ mất gần hết giá trị — người đọc không biết cô thủ thư đứng ở đâu.
 
@@ -585,7 +585,7 @@ Luôn dọn bảng nháp sau khi thử nghiệm — nếu không, bài học sau
     - **Disjoint.** Một học sinh chỉ có **một** điểm trung bình, nên chỉ rơi vào **một** xếp loại. Không ai vừa giỏi vừa khá.
     - **Toàn phần** (với điều kiện có đủ hạng cho mọi khoảng điểm). Mọi học sinh đều có điểm trung bình nên đều được xếp loại.
 
-    Chú ý một điều thú vị: chuyên biệt hoá này dựa hoàn toàn vào **giá trị của một thuộc tính dẫn xuất** (điểm trung bình, tính từ bảng `diem`). Giáo trình gọi đó là *attribute-defined specialization*. Với loại này, **không nên** tạo bảng con — chỉ cần tính lại khi cần, vì xếp loại đổi mỗi kỳ.
+    Chú ý một điều thú vị: chuyên biệt hoá này dựa hoàn toàn vào **giá trị của một thuộc tính dẫn xuất** (điểm trung bình, tính từ bảng `diem`). Giáo trình gọi đó là **chuyên biệt hoá theo thuộc tính** (*attribute-defined specialization*). Với loại này, **không nên** tạo bảng con — chỉ cần tính lại khi cần, vì xếp loại đổi mỗi kỳ.
 
     **Câu 3.**
 

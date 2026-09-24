@@ -119,7 +119,7 @@ Ba việc bắt buộc:
 | Lược đồ thật làm gì | `ma_dd SERIAL` là khoá chính, **giữ** `UNIQUE (ma_hs, ngay)` | `ma_ph` là khoá chính, **không có** ràng buộc thay thế |
 
 !!! danger "`ma_dd` và `ma_ph` sinh ra ở ĐÂY, không có trong biểu đồ ER"
-    Hai cột này là sản phẩm của **Bước 2**, đúng như [Bài 9](09-participation-va-thuc-the-yeu.md) và [Bài 12](12-bay-loai-khoa.md) đã nói trước. Chúng là **khoá nhân tạo** (*surrogate key*), không phải thuộc tính của thực thể.
+    Hai cột này là sản phẩm của **Bước 2**, đúng như [Bài 9](09-participation-va-thuc-the-yeu.md) và [Bài 12](12-bay-loai-khoa.md) đã nói trước. Chúng là **khoá nhân tạo** ([Bài 12](12-bay-loai-khoa.md)), không phải thuộc tính của thực thể.
 
     Người thiết kế được phép làm vậy, nhưng có một **luật đi kèm**:
 
@@ -216,11 +216,13 @@ Vì sao **bắt buộc**? [Bài 8](08-moi-quan-he-va-cardinality.md) đã chứn
 !!! warning "Cả hai bảng này đều ĐỔI khoá chính so với quy tắc"
     Theo quy tắc, `diem` phải có khoá chính `(ma_hs, ma_mon)`. Nhưng lược đồ thật dùng `ma_diem SERIAL`.
 
-    Lý do chính đáng: cặp `(ma_hs, ma_mon)` **không đủ** — một học sinh có nhiều con điểm cùng môn (điểm 15 phút, 1 tiết, học kỳ). Khoá đúng phải là `(ma_hs, ma_mon, hoc_ky, loai_diem)` — bốn cột, và vẫn còn rủi ro nếu có hai bài 15 phút cùng kỳ.
+    Lý do: cặp `(ma_hs, ma_mon)` **không đủ** — một học sinh có nhiều con điểm cùng môn (15 phút, 1 tiết, học kỳ). Thêm `hoc_ky` và `loai_diem` vào cũng **vẫn chưa đủ**, vì một học kỳ có thể có **nhiều bài 15 phút** cùng môn.
 
-    Khi khoá tự nhiên phình ra như vậy, dùng **khoá nhân tạo** là hợp lý. Nhưng nhớ luật của Bước 2: phải giữ khoá tự nhiên bằng `UNIQUE`. Bảng `diem` **quên** làm điều đó — [Bài 12](12-bay-loai-khoa.md) đã chỉ ra đây là một lỗi thiết kế có thật trong dataset mẫu, cố ý để lại làm ví dụ.
+    Đi tiếp theo hướng đó thì không bao giờ tới đích: không tồn tại tổ hợp cột nào của `diem` mà nghiệp vụ bảo đảm không trùng. Nói cách khác, **`diem` không có khoá tự nhiên hợp lệ**, nên khoá nhân tạo `ma_diem` là lựa chọn đúng, và việc lược đồ **không** có ràng buộc `UNIQUE` nào cũng là đúng.
 
-    Với `muon_sach` thì khác: một bạn được phép mượn lại cùng cuốn sách nhiều lần, nên ở đây **không** tồn tại khoá tự nhiên nào để giữ. `ma_muon` là lựa chọn duy nhất đúng.
+    Luật của Bước 2 có vế điều kiện *"nếu khoá tự nhiên đó hợp lệ"* — `diem` rơi vào vế **không hợp lệ**, y như `muon_sach` (một bạn được phép mượn lại cùng cuốn sách nhiều lần) và y như `phu_huynh`.
+
+    [Bài 12](12-bay-loai-khoa.md) phân tích kỹ cả bốn trường hợp, và chỉ ra vì sao `count(DISTINCT (ma_hs, ma_mon, hoc_ky, loai_diem)) = 480` trên dữ liệu mẫu **không** chứng minh được điều ngược lại.
 
 ### Bước 6 — Thuộc tính đa trị
 
@@ -292,11 +294,31 @@ Ba cột đầu là ba phía của hình thoi; cột thứ tư là thuộc tính
 |---|---|
 | Tham gia toàn phần ở phía **1** (mỗi học sinh một lớp) | **Có** — `NOT NULL` |
 | Bản số 1:1 | **Có** — `UNIQUE` |
+| Bản số 1 trên một nhánh của quan hệ bậc ba | **Có** — nhưng phải thêm `UNIQUE` bằng tay, xem hộp dưới |
 | Tham gia toàn phần ở phía **N** (mỗi lớp ít nhất một học sinh) | **Không** — cần trigger |
-| Ràng buộc trên quan hệ bậc ba (*"mỗi lớp mỗi môn chỉ một giáo viên"*) | **Không** — khoá chính 4 cột không ép nổi |
+| Ràng buộc **giới hạn tổng** (*"một giáo viên không dạy quá 20 tiết mỗi tuần"*) | **Không** — cần cộng qua nhiều dòng, nhiều bảng |
 | Chuyên biệt hoá toàn phần / disjoint ([Bài 13](13-mo-hinh-eer.md)) | **Không** — cần trigger hoặc mẹo khoá |
 
 Khoảng cách này là **cố hữu**, không phải lỗi của ai. Cách xử lý đúng trong dự án thật: ghi rõ những ràng buộc không cưỡng chế được vào **tài liệu** và kiểm tra ở tầng ứng dụng, chứ đừng giả vờ là database đang lo hộ.
+
+!!! tip "Dòng thứ ba là bài học đắt giá nhất của mục này"
+    Giả sử trường ra quy định: *"Mỗi lớp, mỗi môn, mỗi học kỳ chỉ do **một** giáo viên dạy."* Trong biểu đồ ER, đó là **bản số 1** trên nhánh `GIÁO VIÊN` của hình thoi bậc ba.
+
+    Nhìn vào khoá chính `(ma_gv, ma_mon, ma_lop, hoc_ky)` thì thấy nó **không** ép được điều đó: hai dòng `(GV01, MH01, L01, 1)` và `(GV08, MH01, L01, 1)` khác nhau ở `ma_gv`, nên khoá chính vui vẻ nhận cả hai.
+
+    Nhưng đừng vội kết luận *"phải dùng trigger"*. SQL thuần làm được, chỉ cần thêm **một ràng buộc nữa**:
+
+    <!-- sql:khong-chay -->
+    ```sql
+    ALTER TABLE phan_cong_day ADD CONSTRAINT phan_cong_day_mot_gv
+        UNIQUE (ma_mon, ma_lop, hoc_ky);
+    ```
+
+    Đây là quy tắc sách vở: **quan hệ bậc ba có bản số 1 ở một phía thì khoá chính là tập CÁC PHÍA CÒN LẠI.** Phía `GIÁO VIÊN` có bản số 1, nên `(ma_mon, ma_lop, hoc_ky)` phải là khoá.
+
+    Điểm đắt giá: **Bước 7 không tự sinh ra ràng buộc này.** Thuật toán chỉ biết ghép mọi khoá lại thành khoá chính; nó không đọc bản số trên từng nhánh của hình thoi bậc ba. Người thiết kế phải quay lại biểu đồ ER và thêm tay.
+
+    (Lược đồ `truong_hoc` **không** khai ràng buộc này, vì quy định trên không nằm trong đặc tả của database mẫu. **Đừng chạy câu `ALTER` ở trên** trên database của khoá học — nó sẽ thành công và làm lệch lược đồ so với các bài sau.)
 
 ### Bảng thuật ngữ
 
@@ -506,28 +528,28 @@ DROP TABLE IF EXISTS b14_lop_thieu_unique CASCADE;
 
 ### Bước 6 — dựng thử bảng thuộc tính đa trị
 
-`truong_hoc` **không có** bảng `hoc_sinh_sdt`, vì nó chọn hướng thực thể yếu. Nhưng ta dựng thử để thấy Bước 6 cho ra cái gì:
+`truong_hoc` **không có** bảng `hoc_sinh_sdt`, vì nó chọn hướng thực thể yếu. Nhưng ta dựng thử để thấy Bước 6 cho ra cái gì. Bảng nháp mang tiền tố `b14_` và sẽ được xoá ở cuối mục — lược đồ thật không có bảng này:
 
 ```sql
-DROP TABLE IF EXISTS hoc_sinh_sdt CASCADE;
+DROP TABLE IF EXISTS b14_hoc_sinh_sdt CASCADE;
 
-CREATE TABLE hoc_sinh_sdt (
+CREATE TABLE b14_hoc_sinh_sdt (
     ma_hs         CHAR(5)     NOT NULL REFERENCES hoc_sinh(ma_hs) ON DELETE CASCADE,
     so_dien_thoai VARCHAR(15) NOT NULL,
     PRIMARY KEY (ma_hs, so_dien_thoai)
 );
 
-INSERT INTO hoc_sinh_sdt VALUES
+INSERT INTO b14_hoc_sinh_sdt VALUES
 ('HS001', '0912345001'),
 ('HS001', '0987000111'),
 ('HS002', '0912345003');
 ```
 
-Đúng **hai** cột, khoá chính là **cả hai cột ghép lại** — đúng công thức *"khoá chủ + chính giá trị đó"*.
+Đúng **hai** cột (ngoài tiền tố `b14_` chỉ dùng cho bảng nháp), khoá chính là **cả hai cột ghép lại** — đúng công thức *"khoá chủ + chính giá trị đó"*.
 
 ```sql
 SELECT ma_hs, count(*) AS so_dien_thoai_da_khai
-FROM hoc_sinh_sdt
+FROM b14_hoc_sinh_sdt
 GROUP BY ma_hs
 ORDER BY ma_hs;
 ```
@@ -549,8 +571,10 @@ ORDER BY ma_hs;
 
 Đó chính là ranh giới giữa **Bước 6** và **Bước 2**: cùng là "nhiều giá trị cho một học sinh", nhưng một bên là giá trị trơ, một bên là thực thể có đặc điểm riêng.
 
+Một điều nữa đáng để ý: `b14_hoc_sinh_sdt` **không** có cột khoá nhân tạo nào, vì tổ hợp `(ma_hs, so_dien_thoai)` là **khoá tự nhiên hợp lệ** — một học sinh không thể khai cùng một số điện thoại hai lần. Đây là trường hợp ngược với bảng `diem` mà [Bài 12](12-bay-loai-khoa.md) phân tích.
+
 ```sql
-DROP TABLE IF EXISTS hoc_sinh_sdt CASCADE;
+DROP TABLE IF EXISTS b14_hoc_sinh_sdt CASCADE;
 ```
 
 ### Bước 2 — hai thực thể yếu, hai kết quả khác nhau
@@ -670,7 +694,9 @@ Ba dòng đầu của bảng `hoc_sinh` kèm tuổi tính tại thời điểm c
 !!! warning "Lỗi 6: Tin rằng lược đồ đã giữ mọi ràng buộc của biểu đồ ER"
     Chuyển xong 7 bước rồi kết luận *"xong, database đảm bảo mọi thứ rồi"*.
 
-    Không đúng. Ba loại ràng buộc **không** đi qua nổi bước chuyển đổi: tham gia toàn phần ở phía N, ràng buộc trên quan hệ bậc ba, và ràng buộc chuyên biệt hoá.
+    Không đúng. Ba loại ràng buộc **không** đi qua nổi bước chuyển đổi: tham gia toàn phần ở phía N, ràng buộc giới hạn tổng, và ràng buộc chuyên biệt hoá.
+
+    Và có một loại thứ tư còn nguy hiểm hơn, vì nó **giữ được** mà thuật toán lại **không tự sinh ra**: bản số 1 trên một nhánh của quan hệ bậc ba, cần một `UNIQUE` thêm tay.
 
     Việc cần làm là **ghi lại** chúng vào tài liệu thiết kế và kiểm tra ở tầng ứng dụng — chứ không phải giả vờ chúng không tồn tại.
 

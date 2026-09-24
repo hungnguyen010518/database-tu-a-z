@@ -152,11 +152,13 @@ Hai khái niệm này luôn đi thành cặp:
 
 **Khoá tự nhiên** (*natural key*) là khoá được làm từ **dữ liệu có thật ngoài đời**, thứ tồn tại độc lập với database: số căn cước, mã học sinh nhà trường cấp, tên môn học, mã ISBN của sách.
 
-**Khoá nhân tạo** (*surrogate key*) là khoá do **hệ thống tự phát sinh**, không mang ý nghĩa gì ngoài việc đánh số: cột `SERIAL`, `UUID`, số thứ tự tăng dần.
+**Khoá nhân tạo** (*surrogate key*) là khoá **không mang ý nghĩa nghiệp vụ nào** — nó chỉ tồn tại để định danh dòng, và người dùng cuối không bao giờ cần đọc tới nó: cột `SERIAL`, `UUID`, hay một dãy mã do người thiết kế tự đặt.
+
+Chú ý: thuộc tính định nghĩa là **không mang ý nghĩa**, chứ không phải *"ai sinh ra nó"*. Một mã do database tự tăng và một mã do người nhập gõ tay đều là khoá nhân tạo, miễn là chúng không mô tả gì về thực thể ngoài đời.
 
 | | Khoá tự nhiên | Khoá nhân tạo |
 |---|---|---|
-| Nguồn gốc | Có sẵn ngoài đời | Database bịa ra |
+| Nguồn gốc | Có sẵn ngoài đời | Do hệ thống hoặc người thiết kế bịa ra |
 | Ví dụ trong `truong_hoc` | `ma_hs`, `ma_gv`, `ten_mon`, `email` | `ma_diem`, `ma_muon`, `ma_dd`, `ma_ph` |
 | Người dùng có đọc được không | Có — *"HS001"* có nghĩa với cô văn thư | Không — *"điểm số 137"* chẳng nói lên gì |
 | Có nguy cơ phải đổi không | **Có** — đời thực thay đổi | Không bao giờ |
@@ -171,6 +173,8 @@ Bốn khoá nhân tạo của `truong_hoc`, và lý do từng cái:
 | `ma_dd` | `diem_danh` | Một buổi điểm danh cũng vậy |
 | `ma_ph` | `phu_huynh` | Khoá bộ phận `quan_he` **không hợp lệ** — [Bài 9](09-participation-va-thuc-the-yeu.md) đã chứng minh bằng dữ liệu |
 
+Chú ý `ma_ph`: nó **không** phải cột `SERIAL`, mà là dãy `PH001`–`PH045` do người thiết kế tự đặt. Nó vẫn là khoá nhân tạo, vì `PH001` không mô tả gì về con người ấy cả.
+
 !!! danger "Khoá nhân tạo KHÔNG phải thuộc tính trong biểu đồ ER"
     `ma_ph` và `ma_dd` là hai cột **được sinh ra ở bước chuyển ER sang bảng** ([Bài 14](14-chuyen-er-sang-bang.md) Bước 2), không phải đặc điểm có thật của người phụ huynh hay của một buổi điểm danh.
 
@@ -183,16 +187,18 @@ Bốn khoá nhân tạo của `truong_hoc`, và lý do từng cái:
 
     Ngược lại, `ma_hs` và `ma_gv` **là** thuộc tính trong biểu đồ ER, vì nhà trường cấp mã đó cho từng người ở ngoài đời — chúng là **khoá tự nhiên**.
 
-!!! question "`ma_dd` và `ma_ph` khác nhau ở một điểm quan trọng"
-    Cả hai đều là khoá nhân tạo. Nhưng `diem_danh` **vẫn có** một khoá tự nhiên hợp lệ song song — cặp `(ma_hs, ngay)` — và lược đồ giữ nó bằng `UNIQUE (ma_hs, ngay)`.
+!!! question "Bốn khoá nhân tạo, nhưng chỉ MỘT bảng có khoá thay thế"
+    Cả bốn cột trên đều là khoá nhân tạo. Nhưng chỉ `diem_danh` **còn có thêm** một khoá tự nhiên hợp lệ song song — cặp `(ma_hs, ngay)` — và lược đồ giữ nó bằng `UNIQUE (ma_hs, ngay)`.
 
-    Còn `phu_huynh` thì **không có** khoá tự nhiên nào hợp lệ, nên không có ràng buộc `UNIQUE` nào tương ứng.
+    Ba bảng kia **không có** khoá tự nhiên nào hợp lệ, nên không có ràng buộc `UNIQUE` nào tương ứng, và đó là điều **đúng** chứ không phải thiếu sót.
 
-    Nói theo ngôn ngữ của bài này: `(ma_hs, ngay)` là một **khoá thay thế** của `diem_danh`; còn `phu_huynh` không có khoá thay thế nào cả.
+    Nói theo ngôn ngữ của bài này: `(ma_hs, ngay)` là một **khoá thay thế** của `diem_danh`; còn `phu_huynh`, `muon_sach`, `diem` không có khoá thay thế nào cả.
+
+    Phần Thực hành mục 6 sẽ dựng bảng so sánh đầy đủ bốn trường hợp, và chỉ ra vì sao `diem` rất dễ bị xếp nhầm.
 
 ### 7. Khoá ngoại
 
-**Khoá ngoại** (*foreign key*) là **một hoặc nhiều cột trong bảng này, mang giá trị của khoá chính bảng kia**, để nối hai bảng lại với nhau.
+**Khoá ngoại** — thuật ngữ đã gặp lần đầu ở [Bài 2](../cap-0-nhap-mon/02-tu-so-giay-den-excel.md) — là **một hoặc nhiều cột trong bảng này, mang giá trị của khoá chính bảng kia**, để nối hai bảng lại với nhau.
 
 Nó khác hẳn sáu loại trên ở một điểm căn bản: **sáu loại kia nói về việc phân biệt các dòng trong CÙNG một bảng; khoá ngoại nói về mối liên hệ GIỮA hai bảng.**
 
@@ -500,25 +506,78 @@ FROM phu_huynh;
 
 Kết quả `45` và `45`.
 
-Bây giờ so sánh một khoá nhân tạo với khoá tự nhiên song song của cùng bảng `diem`:
+Bây giờ tới một **câu hỏi bẫy**. Bảng `diem` dùng khoá nhân tạo `ma_diem`. Vậy nó còn khoá tự nhiên nào nữa không?
 
 ```sql
 SELECT count(*)                                             AS so_dong,
-       count(DISTINCT ma_diem)                              AS theo_khoa_nhan_tao,
-       count(DISTINCT (ma_hs, ma_mon, hoc_ky, loai_diem))   AS theo_khoa_tu_nhien
+       count(DISTINCT ma_diem)                              AS theo_ma_diem,
+       count(DISTINCT (ma_hs, ma_mon, hoc_ky, loai_diem))   AS theo_bon_cot
 FROM diem;
 ```
 
 Kết quả: `480`, `480`, `480`.
 
-Cả hai đều phân biệt được mọi dòng. Người thiết kế chọn `ma_diem` vì nó là **một cột số ngắn** thay vì bốn cột; nhưng hãy chú ý một điều:
+Nhìn con số thì bốn cột kia cũng phân biệt được mọi dòng. Rất dễ kết luận: *"vậy `(ma_hs, ma_mon, hoc_ky, loai_diem)` là khoá tự nhiên của `diem`, và lược đồ đã quên đặt `UNIQUE` lên nó."*
 
-!!! warning "`(ma_hs, ma_mon, hoc_ky, loai_diem)` đang KHÔNG được bảo vệ"
-    Truy vấn trên cho thấy tổ hợp này hiện không trùng. Nhưng bảng `diem` **không có** ràng buộc `UNIQUE` nào trên nó — hãy chạy lại truy vấn ở mục 4 mà xem.
+**Kết luận đó sai** — và nó sai vì đúng cái lỗi mà Quy tắc vàng ở mục 2 vừa cảnh báo.
 
-    Nghĩa là ngày mai ai đó hoàn toàn có thể nhập **hai** điểm Học kỳ môn Toán học kỳ 1 cho cùng bạn An, và database vui vẻ nhận cả hai.
+!!! danger "Đây là bẫy Quy tắc vàng, lần này giăng trên một bảng thật"
+    Hãy hỏi câu hỏi **nghiệp vụ** thay vì nhìn con số: *"Một học sinh có thể có hai con điểm cùng môn, cùng học kỳ, cùng loại không?"*
 
-    Đây đúng là cái bẫy mà mục 2 đã cảnh báo, lần này xảy ra trên một bảng thật. Thêm khoá nhân tạo mà quên bảo vệ khoá tự nhiên là lỗi thiết kế rất phổ biến. Đối chiếu: `diem_danh` **không** mắc lỗi này, vì nó có `UNIQUE (ma_hs, ngay)`.
+    Mở lược đồ ra xem miền giá trị của `loai_diem`:
+
+    ```
+    loai_diem VARCHAR(10) NOT NULL CHECK (loai_diem IN ('15 phút', '1 tiết', 'Học kỳ'))
+    ```
+
+    Có `'15 phút'`. Mà ở trường Việt Nam, một học sinh có **nhiều** bài kiểm tra 15 phút môn Toán trong một học kỳ là chuyện hoàn toàn bình thường. Vậy câu trả lời là **CÓ** — và tổ hợp bốn cột kia **không phải** khoá.
+
+    Thế tại sao `count(DISTINCT ...)` lại ra đúng `480`?
+
+Chạy câu này là rõ:
+
+```sql
+SELECT loai_diem, count(*) AS so_dong
+FROM diem
+GROUP BY loai_diem
+ORDER BY loai_diem;
+```
+
+Chỉ **hai** dòng: `1 tiết` (`120`) và `Học kỳ` (`360`). Dữ liệu mẫu **không có con điểm 15 phút nào**.
+
+Con số `480 = 480` chỉ là sự trùng hợp của bộ dữ liệu mẫu, không phải một luật. Đúng như Quy tắc vàng nói: **dữ liệu không chứng minh được khoá.**
+
+### Câu hỏi đúng: bảng này CÓ khoá tự nhiên hợp lệ không?
+
+Với mỗi bảng dùng khoá nhân tạo, câu hỏi cần đặt **không** phải *"ai đó có quên `UNIQUE` không?"* mà là:
+
+> **Ở mức nghiệp vụ, có tồn tại một tổ hợp cột nào KHÔNG BAO GIỜ được phép trùng không?**
+
+Nếu **có** thì phải giữ nó bằng `UNIQUE`. Nếu **không** thì khoá nhân tạo đứng một mình là đúng, và việc thiếu `UNIQUE` **không** phải thiếu sót.
+
+Bốn bảng dùng khoá nhân tạo của `truong_hoc`, bốn câu trả lời khác nhau:
+
+| Bảng | Có khoá tự nhiên hợp lệ? | Lý do **nghiệp vụ** | Lược đồ làm gì | Đánh giá |
+|---|---|---|---|---|
+| `diem_danh` | **Có** — `(ma_hs, ngay)` | Một học sinh mỗi ngày chỉ điểm danh một lần | `ma_dd` + **giữ** `UNIQUE (ma_hs, ngay)` | Đúng |
+| `phu_huynh` | **Không** | `HS029` có hai người cùng ghi `Bố` — [Bài 9](09-participation-va-thuc-the-yeu.md) đã chứng minh | `ma_ph`, không có `UNIQUE` | Đúng |
+| `muon_sach` | **Không** | Mượn lại cùng một cuốn sách nhiều lần là bình thường | `ma_muon`, không có `UNIQUE` | Đúng |
+| `diem` | **Không** | Nhiều bài 15 phút cùng môn cùng học kỳ là bình thường | `ma_diem`, không có `UNIQUE` | Đúng |
+
+Ba bảng dưới cùng **không** thiếu sót gì cả — chúng đúng, vì đơn giản là **không có gì để giữ**. Chỉ `diem_danh` có khoá tự nhiên hợp lệ, và lược đồ giữ nó thật.
+
+!!! danger "ĐỪNG thêm `UNIQUE (ma_hs, ma_mon, hoc_ky, loai_diem)` vào bảng `diem`"
+    Đây là cái bẫy nguy hiểm nhất của cả bài, vì câu lệnh sau **sẽ chạy thành công** trên dữ liệu hiện tại:
+
+    <!-- sql:khong-chay -->
+    ```sql
+    ALTER TABLE diem ADD CONSTRAINT diem_khoa_tu_nhien
+        UNIQUE (ma_hs, ma_mon, hoc_ky, loai_diem);
+    ```
+
+    Chạy được, không báo lỗi gì — vì dữ liệu mẫu chưa có điểm 15 phút. Nhưng từ giây phút đó, database **vĩnh viễn từ chối** con điểm 15 phút thứ hai của một học sinh, trong khi ràng buộc `CHECK` vẫn cho phép giá trị `'15 phút'` tồn tại. Lược đồ tự mâu thuẫn với chính nó.
+
+    Bài học: **một ràng buộc chạy được không có nghĩa là nó đúng.** Trước khi thêm bất kỳ `UNIQUE` nào, hãy hỏi câu hỏi nghiệp vụ, đừng hỏi dữ liệu.
 
 ### 7. Khoá ngoại — nối sang bảng khác
 
@@ -566,7 +625,7 @@ Kết quả `0` — và đó là điều **duy nhất** có thể xảy ra, vì 
 !!! warning "Lỗi 3: Nghĩ khoá chính phải là một cột"
     Thấy `phan_cong_day` không có cột `ma_pc` nào nên tưởng bảng này *"quên khoá chính"*.
 
-    Khoá chính của nó là **phức hợp bốn cột**. Thêm một cột `SERIAL` vào cho "gọn" nghe thì hay, nhưng nếu thêm mà **không** giữ `UNIQUE (ma_gv, ma_mon, ma_lop, hoc_ky)` thì bạn vừa mở cửa cho dữ liệu trùng — đúng cái bẫy mà bảng `diem` đang mắc.
+    Khoá chính của nó là **phức hợp bốn cột**. Thêm một cột `SERIAL` vào cho "gọn" nghe thì hay, nhưng nếu thêm mà **không** giữ `UNIQUE (ma_gv, ma_mon, ma_lop, hoc_ky)` thì bạn vừa mở cửa cho dữ liệu trùng. Ở đây tổ hợp bốn cột **là** khoá tự nhiên hợp lệ — một giáo viên không thể được phân công cùng một môn, cùng một lớp, cùng một học kỳ hai lần — nên nó bắt buộc phải được giữ.
 
 !!! warning "Lỗi 4: Dùng dữ liệu cá nhân hay đổi làm khoá chính"
     Chọn `email` hoặc `so_dien_thoai` làm khoá chính vì *"chắc chắn không trùng"*.
@@ -580,12 +639,19 @@ Kết quả `0` — và đó là điều **duy nhất** có thể xảy ra, vì 
 
     Khoá ngoại chỉ cần **trùng kiểu dữ liệu và trỏ đúng bảng**, tên thì đặt sao cho dễ hiểu. `ma_gvcn` nói rõ *"giáo viên chủ nhiệm"* — tốt hơn hẳn `ma_gv` chung chung. Và nếu một bảng có **hai** khoá ngoại cùng trỏ về một bảng cha thì bắt buộc phải đặt tên khác nhau.
 
-!!! warning "Lỗi 6: Thêm khoá nhân tạo rồi vứt bỏ khoá tự nhiên"
-    Đây là lỗi tinh vi nhất, và bảng `diem` là ví dụ sống.
+!!! warning "Lỗi 6: Thêm khoá nhân tạo rồi vứt bỏ khoá tự nhiên ĐANG CÓ"
+    Bảng `diem_danh` là ví dụ về cách làm **đúng**: có `ma_dd SERIAL PRIMARY KEY`, **và vẫn giữ** `UNIQUE (ma_hs, ngay)`.
 
-    Thêm `ma_diem SERIAL PRIMARY KEY` là hợp lý. Nhưng làm xong mà không thêm `UNIQUE (ma_hs, ma_mon, hoc_ky, loai_diem)` thì bảng mất khả năng chống trùng.
+    Thử tưởng tượng ai đó bỏ ràng buộc `UNIQUE` kia đi vì nghĩ *"đã có khoá chính rồi thì thừa"*. Hậu quả: một học sinh có thể bị điểm danh hai lần trong cùng một ngày, một lần `Có mặt` một lần `Vắng`, và không ai biết dòng nào đúng.
 
-    **Khoá nhân tạo bổ sung cho khoá tự nhiên, chứ không thay thế nó.** Mỗi khi thêm một cột `SERIAL`, hãy tự hỏi ngay: *"khoá tự nhiên của bảng này là gì, và tôi đã khai `UNIQUE` cho nó chưa?"*
+    **Khoá nhân tạo bổ sung cho khoá tự nhiên, chứ không thay thế nó.** Mỗi khi thêm một cột `SERIAL`, hãy tự hỏi ngay: *"bảng này có khoá tự nhiên hợp lệ không?"*
+
+!!! warning "Lỗi 7: Thêm `UNIQUE` cho một khoá tự nhiên KHÔNG tồn tại"
+    Đây là lỗi ngược lại của Lỗi 6, và nó tinh vi hơn hẳn, vì câu `ALTER TABLE` sẽ **chạy thành công**.
+
+    Thấy `diem` có khoá nhân tạo mà không có `UNIQUE` nào, người học vội kết luận *"thiếu rồi"* và thêm `UNIQUE (ma_hs, ma_mon, hoc_ky, loai_diem)`. Dữ liệu hiện tại chấp nhận, nên không có cảnh báo gì. Nhưng lược đồ vừa cấm vĩnh viễn con điểm 15 phút thứ hai — một chuyện hoàn toàn bình thường ở trường.
+
+    Phép thử trước khi thêm bất kỳ `UNIQUE` nào: **hỏi nghiệp vụ, đừng hỏi dữ liệu.** Câu hỏi đúng là *"tổ hợp này có bao giờ được phép trùng không?"*, không phải *"tổ hợp này hiện có trùng không?"*
 
 ## ✍️ Bài tập
 
@@ -634,7 +700,7 @@ Kết quả `0` — và đó là điều **duy nhất** có thể xảy ra, vì 
 
     Về **lược đồ**: không có ràng buộc `UNIQUE` nào trên tổ hợp đó. Chạy lại truy vấn liệt kê `contype = 'u'` ở phần Thực hành mục 4 là thấy — chỉ có năm ràng buộc, không cái nào thuộc `muon_sach`.
 
-    Kết luận: về **nghiệp vụ** nó **không nên** là khoá dự tuyển, vì một bạn hoàn toàn có thể mượn cùng một cuốn hai lần trong cùng ngày (mượn sáng, trả trưa, mượn lại chiều). Nên ở đây khoá nhân tạo `ma_muon` là lựa chọn đúng, và việc không có `UNIQUE` là **cố ý**, khác hẳn trường hợp bảng `diem`.
+    Kết luận: về **nghiệp vụ** nó **không** phải khoá dự tuyển, vì một bạn hoàn toàn có thể mượn cùng một cuốn hai lần trong cùng ngày (mượn sáng, trả trưa, mượn lại chiều). Nên ở đây khoá nhân tạo `ma_muon` là lựa chọn đúng, và việc không có `UNIQUE` là **cố ý** — **giống hệt** trường hợp bảng `diem` ở phần Thực hành mục 6.
 
     **Câu 3.**
 
@@ -645,9 +711,9 @@ Kết quả `0` — và đó là điều **duy nhất** có thể xảy ra, vì 
     | Khoá tự nhiên phức hợp | `(ma_hs, ma_mon_an, thoi_diem)` | Chỉ đúng nếu `thoi_diem` chính xác tới giây. Nếu chỉ lưu tới ngày thì hỏng — mua hai lần trong ngày là trùng |
     | **Khoá nhân tạo** | `ma_luot_mua SERIAL` | **Nên chọn** |
 
-    Lý do: một lượt mua ngoài đời **không có định danh tự nhiên** nào cả — giống hệt `diem`, `muon_sach`, `diem_danh` trong `truong_hoc`.
+    Lý do: một lượt mua ngoài đời **không có định danh tự nhiên** nào cả — giống hệt `diem` và `muon_sach` trong `truong_hoc`.
 
-    Nhưng nhớ bài học của Lỗi 6: nếu nghiệp vụ khẳng định *"một học sinh không thể mua cùng một món hai lần trong cùng một giây"* thì vẫn phải thêm `UNIQUE (ma_hs, ma_mon_an, thoi_diem)` bên cạnh khoá nhân tạo.
+    Bước tiếp theo là câu hỏi nghiệp vụ của Lỗi 6 và Lỗi 7: *"có tổ hợp cột nào không bao giờ được phép trùng không?"* Nếu căng tin khẳng định *"một học sinh không thể mua cùng một món hai lần trong cùng một giây"* thì thêm `UNIQUE (ma_hs, ma_mon_an, thoi_diem)`. Còn nếu không chắc — ví dụ `thoi_diem` chỉ chính xác tới phút — thì **đừng thêm**, y như bảng `diem`.
 
     **Câu 4.**
 
@@ -683,7 +749,7 @@ Kết quả `0` — và đó là điều **duy nhất** có thể xảy ra, vì 
 2. **Khoá chính** là khoá dự tuyển được chọn (đúng một cho mỗi bảng, không bao giờ `NULL`); những khoá dự tuyển còn lại là **khoá thay thế**, giữ bằng `UNIQUE`.
 3. **Khoá phức hợp** mô tả hình dạng (từ hai cột trở lên) — `phan_cong_day` có khoá chính bốn cột; **khoá tự nhiên** và **khoá nhân tạo** mô tả nguồn gốc.
 4. **Khoá ngoại** không phân biệt dòng trong bảng của nó, mà nối sang bảng khác — `hoc_sinh.ma_lop` chỉ có 6 giá trị cho 40 dòng.
-5. Khoá là **luật về dữ liệu tương lai**, nên chỉ ràng buộc trong lược đồ mới chứng minh được; `count(DISTINCT ...)` chỉ dùng để phát hiện vi phạm, và bảng `diem` là ví dụ sống về một khoá tự nhiên bị bỏ quên.
+5. Khoá là **luật về dữ liệu tương lai**, nên chỉ **nghiệp vụ** mới xác định được nó còn `count(DISTINCT ...)` chỉ dùng để phát hiện vi phạm — bảng `diem` là ví dụ sống: bốn cột của nó **trông** như khoá trên dữ liệu mẫu, nhưng vì trường được phép có nhiều bài 15 phút nên nó **không** phải khoá, và việc lược đồ không đặt `UNIQUE` là **đúng**.
 
 ---
 
