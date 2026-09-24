@@ -188,12 +188,12 @@ Chọn **một** trong ba cách dưới đây. Không cần làm cả ba.
     | Tham số | Nghĩa |
     |---|---|
     | `-d` | Chạy ngầm (*detached*), không chiếm cửa sổ dòng lệnh |
-    | `--name pg-khoahoc` | Đặt tên cho **vùng chứa**, để lát nữa gọi lại cho dễ |
+    | `--name pg-khoahoc` | Đặt tên cho **vùng chứa** (*container*) — cái "hộp" chạy sẵn PostgreSQL, tách biệt hẳn với máy thật của bạn — để lát nữa gọi lại cho dễ |
     | `-e POSTGRES_PASSWORD=hoc` | Mật khẩu của vai trò `postgres` là `hoc` |
     | `-e POSTGRES_DB=truong_hoc` | Tạo sẵn luôn database `truong_hoc` — **bỏ qua được Bước 3** |
     | `-p 5432:5432` | Nối cổng 5432 của máy bạn vào cổng 5432 trong vùng chứa |
     | `-v pg-khoahoc-data:/...` | Giữ dữ liệu lại kể cả khi xoá vùng chứa |
-    | `postgres:16` | **Ảnh** cần dùng — đúng phiên bản 16 của khóa học |
+    | `postgres:16` | **Ảnh** (*image*) cần dùng — khuôn mẫu để tạo ra vùng chứa; `:16` là đúng phiên bản PostgreSQL của khóa học |
 
     Kiểm tra đang chạy:
 
@@ -435,7 +435,7 @@ Phải hiện đúng **10** bảng: `diem`, `diem_danh`, `giao_vien`, `hoc_sinh`
 \d hoc_sinh
 ```
 
-Bạn sẽ thấy 6 cột, khoá chính `ma_hs`, và một khoá ngoại trỏ tới `lop`. Chính là lược đồ mà [Bài 3](03-dbms-la-gi.md) đã nói.
+Bạn sẽ thấy 6 cột, khoá chính `ma_hs`, và một **khoá ngoại** (*foreign key*) trỏ tới bảng `lop` — đúng lời hứa "`ma_lop` chỉ được chứa mã lớp có thật" mà [Bài 2](02-tu-so-giay-den-excel.md) đã giới thiệu. Chính là lược đồ mà [Bài 3](03-dbms-la-gi.md) đã nói.
 
 **Việc 3 — Đếm dữ liệu.** Câu quan trọng nhất của cả bài:
 
@@ -548,9 +548,16 @@ Chưa hiểu `JOIN` và `GROUP BY` cũng không sao — Bài 25 và Bài 27 sẽ
 
     ```bash
     docker rm -f pg-khoahoc
-    docker run -d --name pg-khoahoc -e POSTGRES_PASSWORD=hoc -e POSTGRES_DB=truong_hoc \
-      -p 5433:5432 postgres:16
+    docker run -d \
+      --name pg-khoahoc \
+      -e POSTGRES_PASSWORD=hoc \
+      -e POSTGRES_DB=truong_hoc \
+      -p 5433:5432 \
+      -v pg-khoahoc-data:/var/lib/postgresql/data \
+      postgres:16
     ```
+
+    Chỉ đúng **một** thứ đổi so với Bước 1: `5432:5432` thành `5433:5432` — nghĩa là máy bạn mở cổng 5433, còn bên trong vùng chứa PostgreSQL vẫn nằm ở 5432 như thường lệ. Dòng `-v pg-khoahoc-data:...` phải giữ nguyên, nếu không bạn sẽ mất phần dữ liệu bền vững mà Bước 1 đã thiết lập.
 
     Từ đó về sau nhớ thêm `-p 5433` vào mọi lệnh `psql` chạy từ máy thật.
 
@@ -572,11 +579,27 @@ Chưa hiểu `JOIN` và `GROUP BY` cũng không sao — Bài 25 và Bài 27 sẽ
 
     **Cách sửa với Windows:** không có cách xem lại mật khẩu cũ. Chạy lại bộ cài và chọn *Repair*, hoặc gỡ ra cài lại.
 
-    Một mẹo nhỏ để khỏi phải gõ mật khẩu mỗi lần — đặt biến môi trường:
+    Một mẹo nhỏ để khỏi phải gõ mật khẩu mỗi lần — đặt biến môi trường trước khi chạy `psql`:
 
-    ```bash
-    export PGPASSWORD=hoc
-    ```
+    === "Linux / macOS"
+
+        ```bash
+        export PGPASSWORD=hoc
+        ```
+
+    === "Windows — PowerShell"
+
+        ```text
+        $env:PGPASSWORD = "hoc"
+        ```
+
+    === "Windows — Command Prompt"
+
+        ```text
+        set PGPASSWORD=hoc
+        ```
+
+    Biến này chỉ sống trong cửa sổ dòng lệnh hiện tại; đóng cửa sổ là mất.
 
 !!! warning "Lỗi 3: `relation ... does not exist` — quên `-d truong_hoc`"
     ```text
