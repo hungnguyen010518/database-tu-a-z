@@ -231,6 +231,7 @@ flowchart TB
     HKD(["hoc_ky"])
     DSO(["diem_so"])
     LDI(["loai_diem"])
+    NNH(["ngay_nhap"])
     NMU(["ngay_muon"])
     NTD(["ngay_tra_du_kien"])
     NTR(["ngay_tra_thuc_te"])
@@ -256,6 +257,7 @@ flowchart TB
     RD --- HKD
     RD --- DSO
     RD --- LDI
+    RD --- NNH
 
     HS --- RM
     S --- RM
@@ -541,4 +543,4 @@ Kết quả `0`, đúng như sơ đồ đã báo trước bằng elip nét đứ
 
 ---
 
-⬅️ [Bài 9 — Ràng buộc tham gia và Thực thể yếu](09-participation-va-thuc-the-yeu.md) · ➡️ **Bài 11 — Crow's Foot và Mermaid** *(sắp có)*
+⬅️ [Bài 9 — Ràng buộc tham gia và Thực thể yếu](09-participation-va-thuc-the-yeu.md) · ➡️ [Bài 11 — Biểu đồ ER ký hiệu Crow's Foot](11-bieu-do-er-crows-foot.md)

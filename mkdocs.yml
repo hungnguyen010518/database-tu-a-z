@@ -94,5 +94,10 @@ nav:
       - "Bài 8 — Mối quan hệ, bậc và bản số (Cardinality)": cap-1-mo-hinh-er/08-moi-quan-he-va-cardinality.md
       - "Bài 9 — Ràng buộc tham gia và Thực thể yếu": cap-1-mo-hinh-er/09-participation-va-thuc-the-yeu.md
       - "Bài 10 — Biểu đồ ER — ký hiệu Chen": cap-1-mo-hinh-er/10-bieu-do-er-ky-hieu-chen.md
+      - "Bài 11 — Biểu đồ ER — ký hiệu Crow's Foot và vẽ bằng Mermaid": cap-1-mo-hinh-er/11-bieu-do-er-crows-foot.md
+      - "Bài 12 — Bảy loại khoá trong cơ sở dữ liệu": cap-1-mo-hinh-er/12-bay-loai-khoa.md
+      - "Bài 13 — Mô hình EER: Generalization, Specialization, Aggregation": cap-1-mo-hinh-er/13-mo-hinh-eer.md
+      - "Bài 14 — Chuyển biểu đồ ER thành lược đồ quan hệ": cap-1-mo-hinh-er/14-chuyen-er-sang-bang.md
+      - "Bài 15 — Ràng buộc toàn vẹn (Integrity Constraints)": cap-1-mo-hinh-er/15-rang-buoc-toan-ven.md
   - "Database mẫu": dataset.md
   - "Bảng thuật ngữ": glossary.md

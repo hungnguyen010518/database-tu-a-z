@@ -143,6 +143,23 @@ Một buổi điểm danh là *"ngày 15/09, bạn An có mặt"*. Nói trống 
 
 Và lần này khoá bộ phận **được lược đồ cưỡng chế thật**, bằng ràng buộc `UNIQUE (ma_hs, ngay)` trong `dataset/02-chuan-hoa.sql`. Đúng nghĩa *"trong phạm vi một học sinh, ngày phân biệt được mọi buổi điểm danh"*.
 
+!!! danger "Nhưng bảng `diem_danh` vẫn có `ma_dd SERIAL` — đọc kỹ chỗ này"
+    Chạy `\d diem_danh` thì bạn sẽ thấy khoá chính của bảng **không phải** `(ma_hs, ngay)` mà là một cột `ma_dd SERIAL`. Đúng như `phu_huynh` có `ma_ph`.
+
+    `ma_dd` cũng là một **khoá nhân tạo ở mức bảng**, được người thiết kế thêm vào lúc chuyển biểu đồ ER sang bảng (Bài 14) cho gọn — nó **không** phải một thuộc tính trong biểu đồ ER, y hệt `ma_ph`.
+
+    Nhưng hai trường hợp khác nhau ở một điểm quyết định:
+
+    | | `diem_danh` | `phu_huynh` |
+    |---|---|---|
+    | Khoá bộ phận có hợp lệ không | **Có** — `ngay` | **Không** — `quan_he` |
+    | Khoá tự nhiên `(khoá chủ + khoá bộ phận)` | `(ma_hs, ngay)` — **hợp lệ** | `(ma_hs, quan_he)` — **không hợp lệ** |
+    | Lược đồ có giữ khoá tự nhiên lại không | **Có** — `UNIQUE (ma_hs, ngay)` | Không có gì để giữ |
+
+    Nói cách khác: `diem_danh` dùng khoá nhân tạo **cho tiện**, nhưng **vẫn cưỡng chế** khoá bộ phận bằng `UNIQUE`. Còn `phu_huynh` dùng khoá nhân tạo vì **bắt buộc** — nó không có khoá tự nhiên nào để cưỡng chế.
+
+    Vì thế BUỔI ĐIỂM DANH vẫn là ví dụ *"thực thể yếu chuẩn"* của bài này: khoá bộ phận của nó tồn tại, hợp lệ, và được lược đồ bảo vệ thật. **Bài 12** sẽ gọi tên hai cột `ma_dd`, `ma_ph` là **khoá nhân tạo**, còn **Bài 14** sẽ chỉ rõ chúng sinh ra ở bước nào.
+
 !!! note "NGÀY không phải một tập thực thể"
     Đừng vẽ một hình chữ nhật `NGÀY` rồi nối `HỌC SINH` với nó. Trường không lưu dữ liệu gì về bản thân ngày 15/09/2026 cả — không tên, không mô tả, không gì hết. `ngay` chỉ là một **thuộc tính**. Bài 10 sẽ vẽ BUỔI ĐIỂM DANH đúng cách.
 

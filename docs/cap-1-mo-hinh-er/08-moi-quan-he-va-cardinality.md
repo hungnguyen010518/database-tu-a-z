@@ -179,10 +179,10 @@ Cách đọc từng ký hiệu (Bài 11 sẽ dạy đầy đủ bộ ký hiệu 
 
 | Ký hiệu | Đọc là |
 |---|---|
-| `\|\|` | đúng một |
-| `o\|` | không hoặc một |
+| <code>&#124;&#124;</code> | đúng một |
+| <code>o&#124;</code> | không hoặc một |
 | `}o` | không hoặc nhiều |
-| `}\|` | một hoặc nhiều |
+| <code>}&#124;</code> | một hoặc nhiều |
 
 Còn đây là mối quan hệ **bậc ba** — thứ mà `erDiagram` không vẽ nổi, nên phải mô phỏng bằng `flowchart` với hình thoi ở giữa:
 
