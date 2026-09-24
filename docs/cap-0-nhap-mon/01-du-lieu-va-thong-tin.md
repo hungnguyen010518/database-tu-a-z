@@ -144,6 +144,7 @@ Bài này ta chưa cài gì cả — từ **Bài 5** bạn mới chạy thật. 
 
 Ba câu hỏi của cô giáo, viết bằng **SQL** (*Structured Query Language* — ngôn ngữ truy vấn có cấu trúc), trông như sau:
 
+<!-- sql:khong-chay -->
 ```sql
 -- Câu 1: Bạn nào điểm Toán cao nhất lớp?
 SELECT ho_ten, diem_so
@@ -169,6 +170,7 @@ Kết quả mong đợi:
 |---|---|
 | Lê Hoàng Cường | 9.0 |
 
+<!-- sql:khong-chay -->
 ```sql
 -- Câu 2: Điểm trung bình môn Văn của lớp?
 SELECT AVG(diem_so) AS diem_trung_binh
@@ -216,7 +218,8 @@ Buổi chiều dò sổ bằng tay của bạn vừa được thay bằng **năm
 
 3. Câu lệnh sau đọc thành tiếng Việt là gì, và kết quả trên bảng ở câu 2 là gì?
 
-    ```sql
+    <!-- sql:khong-chay -->
+```sql
     SELECT ten_sach
     FROM sach
     WHERE nam_xb < 1960
