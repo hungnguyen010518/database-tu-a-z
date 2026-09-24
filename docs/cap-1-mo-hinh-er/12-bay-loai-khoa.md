@@ -219,8 +219,8 @@ Ba điều database bảo đảm nhờ khoá ngoại:
 | Khoá chính | *primary key* | Khoá dự tuyển được chọn làm định danh chính thức |
 | Khoá thay thế | *alternate key* | Khoá dự tuyển không được chọn, giữ bằng `UNIQUE` |
 | Khoá phức hợp | *composite key* | Khoá gồm từ hai cột trở lên |
-| Khoá tự nhiên | *natural key* | Khoá làm từ dữ liệu có thật ngoài đời |
-| Khoá nhân tạo | *surrogate key* | Khoá do hệ thống tự phát sinh, không mang ý nghĩa |
+| Khoá tự nhiên | *natural key* | Khoá làm từ dữ liệu có thật ngoài đời, **mang ý nghĩa nghiệp vụ** |
+| Khoá nhân tạo | *surrogate key* | Khoá **không mang ý nghĩa nghiệp vụ**, chỉ tồn tại để định danh dòng |
 | Khoá ngoại | *foreign key* | Cột mang giá trị khoá chính của bảng khác |
 
 ## 🖼️ Sơ đồ

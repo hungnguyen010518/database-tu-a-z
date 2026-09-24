@@ -198,10 +198,10 @@ Ba mức độ, tuỳ luật khó tới đâu:
 | Ràng buộc toàn vẹn | *integrity constraint* | Luật khai trong lược đồ, database bắt buộc kiểm tra |
 | Toàn vẹn miền | *domain integrity* | Mỗi ô nằm trong miền giá trị hợp lệ |
 | Toàn vẹn thực thể | *entity integrity* | Khoá chính không `NULL`, không trùng |
-| Toàn vẹn tham chiếu | *referential integrity* | Khoá ngoại luôn trỏ tới dòng có thật |
+| Toàn vẹn tham chiếu | *referential integrity* | Khoá ngoại luôn trỏ tới một dòng có thật — hoặc để `NULL` |
 | Ràng buộc ngữ nghĩa | *semantic constraint* | Luật nghiệp vụ riêng của bài toán |
 | Dòng mồ côi | *orphan row* | Dòng con trỏ tới dòng cha đã biến mất |
-| Ràng buộc hoãn | *deferrable constraint* | Ràng buộc chỉ kiểm tra lúc `COMMIT` |
+| Ràng buộc hoãn | *deferrable constraint* | Ràng buộc **hoãn được** việc kiểm tra tới lúc `COMMIT` thay vì kiểm ngay |
 
 ## 🖼️ Sơ đồ
 

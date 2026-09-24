@@ -187,7 +187,7 @@ Ba nhãn khoá mà Mermaid hiểu:
 | Tiếng Việt | English | Nghĩa dễ hiểu |
 |---|---|---|
 | Ký hiệu Crow's Foot | *Crow's Foot notation* | Bộ ký hiệu vẽ ER gọn, bảng có cột bên trong, bản số ghi bằng ký hiệu đầu đường |
-| Chân quạ | *crow's foot* | Ba nhánh toẽ ra ở đầu đường, nghĩa là "nhiều" |
+| Chân quạ | *crow's foot* | Ba nhánh toẽ ra **sát hình chữ nhật** — nửa **tối đa**, nghĩa là "nhiều" |
 | Ký hiệu IE | *Information Engineering notation* | Tên gọi học thuật khác của Crow's Foot |
 | Mức logic | *logical level* | Mức đã biết sẽ có bảng nào, cột nào — nhưng chưa chọn hệ quản trị |
 
