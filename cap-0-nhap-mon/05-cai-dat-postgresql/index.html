@@ -1133,7 +1133,7 @@
 </tr>
 <tr>
 <td><code>--name pg-khoahoc</code></td>
-<td>Đặt tên cho <strong>vùng chứa</strong>, để lát nữa gọi lại cho dễ</td>
+<td>Đặt tên cho <strong>vùng chứa</strong> (<em>container</em>) — cái "hộp" chạy sẵn PostgreSQL, tách biệt hẳn với máy thật của bạn — để lát nữa gọi lại cho dễ</td>
 </tr>
 <tr>
 <td><code>-e POSTGRES_PASSWORD=hoc</code></td>
@@ -1153,7 +1153,7 @@
 </tr>
 <tr>
 <td><code>postgres:16</code></td>
-<td><strong>Ảnh</strong> cần dùng — đúng phiên bản 16 của khóa học</td>
+<td><strong>Ảnh</strong> (<em>image</em>) cần dùng — khuôn mẫu để tạo ra vùng chứa; <code>:16</code> là đúng phiên bản PostgreSQL của khóa học</td>
 </tr>
 </tbody>
 </table>
@@ -1346,7 +1346,7 @@ Rồi chạy lại lệnh <code>docker run</code> ở trên. Đây là lợi th�
 <p><strong>Việc 2 — Xem cấu trúc một bảng.</strong></p>
 <div class="highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>\d hoc_sinh
 </span></code></pre></div>
-<p>Bạn sẽ thấy 6 cột, khoá chính <code>ma_hs</code>, và một khoá ngoại trỏ tới <code>lop</code>. Chính là lược đồ mà <a href="../03-dbms-la-gi/">Bài 3</a> đã nói.</p>
+<p>Bạn sẽ thấy 6 cột, khoá chính <code>ma_hs</code>, và một <strong>khoá ngoại</strong> (<em>foreign key</em>) trỏ tới bảng <code>lop</code> — đúng lời hứa "<code>ma_lop</code> chỉ được chứa mã lớp có thật" mà <a href="../02-tu-so-giay-den-excel/">Bài 2</a> đã giới thiệu. Chính là lược đồ mà <a href="../03-dbms-la-gi/">Bài 3</a> đã nói.</p>
 <p><strong>Việc 3 — Đếm dữ liệu.</strong> Câu quan trọng nhất của cả bài:</p>
 <div class="highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_hoc_sinh</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span><span class="p">;</span>
 </span></code></pre></div>
@@ -1496,9 +1496,15 @@ Rồi chạy lại lệnh <code>docker run</code> ở trên. Đây là lợi th�
 </span></code></pre></div>
 <p>Nếu đã có cái khác chiếm cổng, đơn giản nhất là <strong>dùng cổng khác</strong> cho vùng chứa của khóa học:</p>
 <div class="highlight"><pre><span></span><code><span id="__span-35-1"><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a>docker<span class="w"> </span>rm<span class="w"> </span>-f<span class="w"> </span>pg-khoahoc
-</span><span id="__span-35-2"><a id="__codelineno-35-2" name="__codelineno-35-2" href="#__codelineno-35-2"></a>docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </span>--name<span class="w"> </span>pg-khoahoc<span class="w"> </span>-e<span class="w"> </span><span class="nv">POSTGRES_PASSWORD</span><span class="o">=</span>hoc<span class="w"> </span>-e<span class="w"> </span><span class="nv">POSTGRES_DB</span><span class="o">=</span>truong_hoc<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-35-3"><a id="__codelineno-35-3" name="__codelineno-35-3" href="#__codelineno-35-3"></a><span class="w">  </span>-p<span class="w"> </span><span class="m">5433</span>:5432<span class="w"> </span>postgres:16
+</span><span id="__span-35-2"><a id="__codelineno-35-2" name="__codelineno-35-2" href="#__codelineno-35-2"></a>docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-35-3"><a id="__codelineno-35-3" name="__codelineno-35-3" href="#__codelineno-35-3"></a><span class="w">  </span>--name<span class="w"> </span>pg-khoahoc<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-35-4"><a id="__codelineno-35-4" name="__codelineno-35-4" href="#__codelineno-35-4"></a><span class="w">  </span>-e<span class="w"> </span><span class="nv">POSTGRES_PASSWORD</span><span class="o">=</span>hoc<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-35-5"><a id="__codelineno-35-5" name="__codelineno-35-5" href="#__codelineno-35-5"></a><span class="w">  </span>-e<span class="w"> </span><span class="nv">POSTGRES_DB</span><span class="o">=</span>truong_hoc<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-35-6"><a id="__codelineno-35-6" name="__codelineno-35-6" href="#__codelineno-35-6"></a><span class="w">  </span>-p<span class="w"> </span><span class="m">5433</span>:5432<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-35-7"><a id="__codelineno-35-7" name="__codelineno-35-7" href="#__codelineno-35-7"></a><span class="w">  </span>-v<span class="w"> </span>pg-khoahoc-data:/var/lib/postgresql/data<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-35-8"><a id="__codelineno-35-8" name="__codelineno-35-8" href="#__codelineno-35-8"></a><span class="w">  </span>postgres:16
 </span></code></pre></div>
+<p>Chỉ đúng <strong>một</strong> thứ đổi so với Bước 1: <code>5432:5432</code> thành <code>5433:5432</code> — nghĩa là máy bạn mở cổng 5433, còn bên trong vùng chứa PostgreSQL vẫn nằm ở 5432 như thường lệ. Dòng <code>-v pg-khoahoc-data:...</code> phải giữ nguyên, nếu không bạn sẽ mất phần dữ liệu bền vững mà Bước 1 đã thiết lập.</p>
 <p>Từ đó về sau nhớ thêm <code>-p 5433</code> vào mọi lệnh <code>psql</code> chạy từ máy thật.</p>
 </div>
 <div class="admonition warning">
@@ -1512,24 +1518,39 @@ Rồi chạy lại lệnh <code>docker run</code> ở trên. Đây là lợi th�
 <div class="highlight"><pre><span></span><code><span id="__span-37-1"><a id="__codelineno-37-1" name="__codelineno-37-1" href="#__codelineno-37-1"></a>sudo<span class="w"> </span>-u<span class="w"> </span>postgres<span class="w"> </span>psql<span class="w"> </span>-c<span class="w"> </span><span class="s2">"ALTER ROLE postgres WITH PASSWORD 'hoc';"</span>
 </span></code></pre></div>
 <p><strong>Cách sửa với Windows:</strong> không có cách xem lại mật khẩu cũ. Chạy lại bộ cài và chọn <em>Repair</em>, hoặc gỡ ra cài lại.</p>
-<p>Một mẹo nhỏ để khỏi phải gõ mật khẩu mỗi lần — đặt biến môi trường:</p>
+<p>Một mẹo nhỏ để khỏi phải gõ mật khẩu mỗi lần — đặt biến môi trường trước khi chạy <code>psql</code>:</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="4:3"><input checked="checked" id="__tabbed_4_1" name="__tabbed_4" type="radio" /><input id="__tabbed_4_2" name="__tabbed_4" type="radio" /><input id="__tabbed_4_3" name="__tabbed_4" type="radio" /><div class="tabbed-labels"><label for="__tabbed_4_1">Linux / macOS</label><label for="__tabbed_4_2">Windows — PowerShell</label><label for="__tabbed_4_3">Windows — Command Prompt</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span id="__span-38-1"><a id="__codelineno-38-1" name="__codelineno-38-1" href="#__codelineno-38-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">PGPASSWORD</span><span class="o">=</span>hoc
 </span></code></pre></div>
 </div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span id="__span-39-1"><a id="__codelineno-39-1" name="__codelineno-39-1" href="#__codelineno-39-1"></a>$env:PGPASSWORD = "hoc"
+</span></code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span id="__span-40-1"><a id="__codelineno-40-1" name="__codelineno-40-1" href="#__codelineno-40-1"></a>set PGPASSWORD=hoc
+</span></code></pre></div>
+</div>
+</div>
+</div>
+<p>Biến này chỉ sống trong cửa sổ dòng lệnh hiện tại; đóng cửa sổ là mất.</p>
+</div>
 <div class="admonition warning">
 <p class="admonition-title">Lỗi 3: <code>relation ... does not exist</code> — quên <code>-d truong_hoc</code></p>
-<div class="highlight"><pre><span></span><code><span id="__span-39-1"><a id="__codelineno-39-1" name="__codelineno-39-1" href="#__codelineno-39-1"></a>ERROR:  relation "hoc_sinh" does not exist
-</span><span id="__span-39-2"><a id="__codelineno-39-2" name="__codelineno-39-2" href="#__codelineno-39-2"></a>LINE 1: SELECT count(*) FROM hoc_sinh;
-</span><span id="__span-39-3"><a id="__codelineno-39-3" name="__codelineno-39-3" href="#__codelineno-39-3"></a>                             ^
+<div class="highlight"><pre><span></span><code><span id="__span-41-1"><a id="__codelineno-41-1" name="__codelineno-41-1" href="#__codelineno-41-1"></a>ERROR:  relation "hoc_sinh" does not exist
+</span><span id="__span-41-2"><a id="__codelineno-41-2" name="__codelineno-41-2" href="#__codelineno-41-2"></a>LINE 1: SELECT count(*) FROM hoc_sinh;
+</span><span id="__span-41-3"><a id="__codelineno-41-3" name="__codelineno-41-3" href="#__codelineno-41-3"></a>                             ^
 </span></code></pre></div>
 <p>Từ <code>relation</code> ở đây chính là "bảng" — nhớ <a href="../04-cac-mo-hinh-du-lieu/">Bài 4</a>: trong mô hình quan hệ, bảng có tên toán học là <em>relation</em>.</p>
 <p><strong>Nguyên nhân:</strong> bạn đang đứng trong database <code>postgres</code> (database quản trị) chứ không phải <code>truong_hoc</code>. Quên <code>-d truong_hoc</code> là <code>psql</code> đưa bạn vào database trùng tên người dùng hoặc <code>postgres</code>.</p>
 <p><strong>Cách kiểm tra</strong> — gõ ngay câu này mỗi khi gặp lỗi trên:</p>
-<div class="highlight"><pre><span></span><code><span id="__span-40-1"><a id="__codelineno-40-1" name="__codelineno-40-1" href="#__codelineno-40-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">current_database</span><span class="p">();</span>
+<div class="highlight"><pre><span></span><code><span id="__span-42-1"><a id="__codelineno-42-1" name="__codelineno-42-1" href="#__codelineno-42-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">current_database</span><span class="p">();</span>
 </span></code></pre></div>
 <p>Nếu nó trả về <code>postgres</code> thì bạn đã tìm ra thủ phạm.</p>
 <p><strong>Cách sửa:</strong> chuyển database ngay trong <code>psql</code>, không cần thoát ra:</p>
-<div class="highlight"><pre><span></span><code><span id="__span-41-1"><a id="__codelineno-41-1" name="__codelineno-41-1" href="#__codelineno-41-1"></a>\c truong_hoc
+<div class="highlight"><pre><span></span><code><span id="__span-43-1"><a id="__codelineno-43-1" name="__codelineno-43-1" href="#__codelineno-43-1"></a>\c truong_hoc
 </span></code></pre></div>
 <p>Hoặc lần sau kết nối thì thêm <code>-d truong_hoc</code>.</p>
 </div>
@@ -1538,7 +1559,7 @@ Rồi chạy lại lệnh <code>docker run</code> ở trên. Đây là lợi th�
 <p>Triệu chứng: <code>psql ... -f 02-chuan-hoa.sql</code> chạy trôi qua, nhưng <code>\dt</code> báo <code>Did not find any relations.</code></p>
 <p>Nguyên nhân gần như luôn là: tệp đã được nạp vào <strong>database khác</strong> với database bạn đang mở để kiểm tra. Chuyện này xảy ra khi lệnh nạp thiếu <code>-d truong_hoc</code>.</p>
 <p>Cách xác nhận: liệt kê mọi database rồi vào từng cái xem bảng nằm ở đâu.</p>
-<div class="highlight"><pre><span></span><code><span id="__span-42-1"><a id="__codelineno-42-1" name="__codelineno-42-1" href="#__codelineno-42-1"></a>\l
+<div class="highlight"><pre><span></span><code><span id="__span-44-1"><a id="__codelineno-44-1" name="__codelineno-44-1" href="#__codelineno-44-1"></a>\l
 </span></code></pre></div>
 <p>Và hãy luôn dùng <code>-v ON_ERROR_STOP=1</code> khi nạp tệp. Không có nó, một lỗi ở dòng 20 vẫn để <code>psql</code> chạy tiếp tới dòng 900 và báo "xong" một cách rất thuyết phục.</p>
 </div>
@@ -1549,7 +1570,7 @@ Rồi chạy lại lệnh <code>docker run</code> ở trên. Đây là lợi th�
 </li>
 <li>
 <p>Cho lệnh sau. Hãy chỉ ra từng tham số trả lời cho câu hỏi nào trong ba câu <em>"ở đâu — là ai — vào đâu"</em>:</p>
-<div class="highlight"><pre><span></span><code><span id="__span-43-1"><a id="__codelineno-43-1" name="__codelineno-43-1" href="#__codelineno-43-1"></a>psql<span class="w"> </span>-h<span class="w"> </span>localhost<span class="w"> </span>-p<span class="w"> </span><span class="m">5433</span><span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-d<span class="w"> </span>truong_hoc
+<div class="highlight"><pre><span></span><code><span id="__span-45-1"><a id="__codelineno-45-1" name="__codelineno-45-1" href="#__codelineno-45-1"></a>psql<span class="w"> </span>-h<span class="w"> </span>localhost<span class="w"> </span>-p<span class="w"> </span><span class="m">5433</span><span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-d<span class="w"> </span>truong_hoc
 </span></code></pre></div>
 </li>
 <li>
@@ -1605,7 +1626,7 @@ Rồi chạy lại lệnh <code>docker run</code> ở trên. Đây là lợi th�
 <p><strong>Câu 3.</strong></p>
 <p><em>Nguyên nhân 1 — đang đứng sai database.</em> Bạn ở trong <code>postgres</code> chứ không phải <code>truong_hoc</code>.</p>
 <p>Xác nhận:</p>
-<div class="highlight"><pre><span></span><code><span id="__span-44-1"><a id="__codelineno-44-1" name="__codelineno-44-1" href="#__codelineno-44-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">current_database</span><span class="p">();</span>
+<div class="highlight"><pre><span></span><code><span id="__span-46-1"><a id="__codelineno-46-1" name="__codelineno-46-1" href="#__codelineno-46-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">current_database</span><span class="p">();</span>
 </span></code></pre></div>
 <p>Nếu trả về <code>postgres</code> thì đúng là nó. Sửa bằng <code>\c truong_hoc</code>.</p>
 <p><em>Nguyên nhân 2 — dataset chưa được nạp (hoặc nạp dở).</em> Đúng database rồi nhưng bảng chưa tồn tại.</p>
@@ -1653,7 +1674,7 @@ Rồi chạy lại lệnh <code>docker run</code> ở trên. Đây là lợi th�
 <p>Nhiều khả năng tệp nạp <strong>bị dừng giữa chừng</strong> mà bạn ấy không để ý: một câu <code>INSERT</code> nào đó lỗi, nhưng vì thiếu <code>-v ON_ERROR_STOP=1</code> nên <code>psql</code> vẫn chạy tiếp và kết thúc êm ru. Các bảng đã được tạo (nên <code>\dt</code> hiện đủ 10) nhưng dữ liệu chỉ vào được một phần.</p>
 <p>Một khả năng khác: tệp đã bị nạp <strong>lồng vào một lần nạp trước đó bị lỗi</strong>, hoặc bị ngắt do mất kết nối giữa chừng.</p>
 <p>Cách sửa an toàn nhất là <strong>nạp lại từ đầu, có bật cờ dừng khi lỗi</strong>:</p>
-<div class="highlight"><pre><span></span><code><span id="__span-45-1"><a id="__codelineno-45-1" name="__codelineno-45-1" href="#__codelineno-45-1"></a>psql<span class="w"> </span>-h<span class="w"> </span>localhost<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-d<span class="w"> </span>truong_hoc<span class="w"> </span>-v<span class="w"> </span><span class="nv">ON_ERROR_STOP</span><span class="o">=</span><span class="m">1</span><span class="w"> </span>-f<span class="w"> </span>dataset/02-chuan-hoa.sql
+<div class="highlight"><pre><span></span><code><span id="__span-47-1"><a id="__codelineno-47-1" name="__codelineno-47-1" href="#__codelineno-47-1"></a>psql<span class="w"> </span>-h<span class="w"> </span>localhost<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-d<span class="w"> </span>truong_hoc<span class="w"> </span>-v<span class="w"> </span><span class="nv">ON_ERROR_STOP</span><span class="o">=</span><span class="m">1</span><span class="w"> </span>-f<span class="w"> </span>dataset/02-chuan-hoa.sql
 </span></code></pre></div>
 <p>Nạp lại hoàn toàn an toàn vì tệp mở đầu bằng một loạt <code>DROP TABLE IF EXISTS ... CASCADE;</code> — nó tự dọn sạch trước khi dựng lại. Lần này, nếu có lỗi thật, <code>psql</code> sẽ dừng ngay và in ra đúng dòng gây lỗi.</p>
 <p>Sau đó chạy lại câu kiểm tra mười bảng ở Bước 6 để đối chiếu đủ mười con số.</p>

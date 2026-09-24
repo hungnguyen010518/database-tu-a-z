@@ -924,7 +924,7 @@
 <p><strong>Bạn A</strong> vẽ <strong>cây</strong>: hiệu trưởng ở trên, dưới là các tổ trưởng, dưới nữa là giáo viên, dưới cùng là học sinh. Gọn gàng, nhìn phát hiểu ngay ai thuộc về ai. Nhưng tới bạn Minh — vừa ở lớp 8A1, vừa trong đội bóng, vừa trong câu lạc bộ tiếng Anh — thì cây gãy. Minh có tận ba "cha".</p>
 <p><strong>Bạn B</strong> bảo: <em>"Thì cứ nối bừa, ai liên quan tới ai thì kẻ một mũi tên."</em> Vẽ được hết thật. Nhưng năm phút sau tờ giấy trông như một mớ dây điện, và không ai dò nổi đường từ Minh tới cô hiệu trưởng.</p>
 <p><strong>Bạn C</strong> không vẽ hình. Bạn ấy kẻ <strong>ba bảng</strong>: bảng học sinh, bảng lớp, bảng câu lạc bộ; ai thuộc đâu thì ghi mã vào. Nhìn thì chán, nhưng trả lời câu hỏi nào cũng được.</p>
-<p><strong>Bạn D</strong> nói: <em>"Trong Python em tạo một object Lớp, bên trong chứa một list các object Học sinh là xong."</em> Code chạy ngon lành. Nhưng khi cô hỏi <em>"in ra mọi học sinh sinh tháng 5 toàn trường"</em> thì bạn ấy phải viết vòng lặp lồng ba tầng.</p>
+<p><strong>Bạn D</strong> làm mỗi lớp một <strong>tấm bìa hồ sơ</strong>: ngoài bìa ghi tên lớp và sĩ số, bên trong nhét phiếu của từng học sinh, và mặt sau bìa ghi sẵn cách tính sĩ số. Muốn biết gì về lớp 8A1 thì rút đúng một tấm bìa ra là có hết. Nhưng khi cô hỏi <em>"kể tên mọi học sinh sinh tháng 5 toàn trường"</em> thì bạn ấy phải mở từng tấm bìa, lật từng phiếu.</p>
 <p>Bốn bạn không ai sai. Mỗi bạn đang dùng một <strong>mô hình dữ liệu</strong> khác nhau — và tình cờ, cả bốn đều là những mô hình có thật, đã từng hoặc đang thống trị ngành công nghiệp này.</p>
 <p>Câu hỏi của bài: vì sao cách của bạn C — cách trông chán nhất — lại là cách cả thế giới dùng suốt 50 năm qua?</p>
 <h2 id="khai-niem-thuat-ngu">📖 Khái niệm &amp; thuật ngữ<a class="headerlink" href="#khai-niem-thuat-ngu" title="Permanent link">&para;</a></h2>
@@ -939,10 +939,24 @@
 <h3 id="mo-hinh-phan-cap-cach-cua-ban-a">Mô hình phân cấp — cách của bạn A<a class="headerlink" href="#mo-hinh-phan-cap-cach-cua-ban-a" title="Permanent link">&para;</a></h3>
 <p><strong>Mô hình phân cấp</strong> (<em>hierarchical model</em>) tổ chức dữ liệu thành <strong>cây</strong>: mỗi bản ghi có đúng <strong>một</strong> bản ghi cha, có thể có nhiều con.</p>
 <p>Ra đời khoảng 1966 với hệ <strong>IMS</strong> của IBM, dùng cho chương trình Apollo đưa người lên Mặt Trăng. Ưu điểm rất thật: đi từ cha xuống con cực nhanh, vì con nằm ngay cạnh cha trên đĩa.</p>
-<p>Nhược điểm cũng rất thật: thế giới không phải hình cây. Bạn Minh thuộc ba nhóm — mô hình phân cấp bắt bạn <strong>chép Minh ra ba bản</strong>, và ta quay lại đúng căn bệnh <strong>dư thừa dữ liệu</strong> của <a href="../02-tu-so-giay-den-excel/">Bài 2</a>. Hỏi ngược từ dưới lên (<em>"lớp 8A1 do ai chủ nhiệm?"</em>) thì lại rất chậm, vì cây chỉ thiết kế để đi xuôi.</p>
+<p>Nhược điểm cũng rất thật: thế giới không phải hình cây. Bạn Minh thuộc ba nhóm — mô hình phân cấp bắt bạn <strong>chép Minh ra ba bản</strong>, và ta quay lại đúng căn bệnh <strong>dư thừa dữ liệu</strong> của <a href="../02-tu-so-giay-den-excel/">Bài 2</a>. Hỏi ngược từ dưới lên (<em>"bạn Minh đang thuộc quyền tổ trưởng chuyên môn nào?"</em>) thì lại rất chậm, vì cây chỉ thiết kế để đi xuôi.</p>
 <p>Mô hình này chưa chết: cấu trúc thư mục trong máy tính, tệp XML, tệp JSON đều là cây.</p>
+<div class="admonition info">
+<p class="admonition-title">JSON là gì — giải thích một lần cho cả bài</p>
+<p>Từ <strong>JSON</strong> sẽ còn xuất hiện nhiều lần dưới đây, nên hãy làm quen ngay. Bạn không cần biết lập trình.</p>
+<p>JSON (<em>JavaScript Object Notation</em>) chỉ là <strong>một quy ước viết dữ liệu ra thành chữ</strong>, giống hệt cách bạn điền một tờ phiếu có nhãn sẵn. Mỗi ô là một cặp <em>tên nhãn</em> và <em>nội dung</em>, ngăn nhau bằng dấu hai chấm; cả tờ phiếu bọc trong một cặp ngoặc nhọn <code>{ }</code>; và khi một nhãn cần nhiều mục thì các mục xếp trong cặp ngoặc vuông <code>[ ]</code>.</p>
+<p>Tờ phiếu học sinh viết theo kiểu JSON trông như thế này:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">{</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">    </span><span class="nt">"ma_hs"</span><span class="p">:</span><span class="w"> </span><span class="s2">"HS001"</span><span class="p">,</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="nt">"ho_ten"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Nguyễn Văn An"</span><span class="p">,</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">    </span><span class="nt">"cac_cau_lac_bo"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"Bóng đá"</span><span class="p">,</span><span class="w"> </span><span class="s2">"Tiếng Anh"</span><span class="w"> </span><span class="p">]</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Đọc là: <em>"mã học sinh là HS001, họ tên là Nguyễn Văn An, các câu lạc bộ gồm Bóng đá và Tiếng Anh"</em>. Chỉ có thế.</p>
+<p>Vì sao JSON là cây? Vì một tờ phiếu có thể nhét trọn nhiều tờ phiếu con vào bên trong nó, còn tờ phiếu con thì luôn nằm trong đúng <strong>một</strong> tờ phiếu cha.</p>
+</div>
 <h3 id="mo-hinh-mang-cach-cua-ban-b">Mô hình mạng — cách của bạn B<a class="headerlink" href="#mo-hinh-mang-cach-cua-ban-b" title="Permanent link">&para;</a></h3>
-<p><strong>Mô hình mạng</strong> (<em>network model</em>), chuẩn hoá bởi nhóm <strong>CODASYL</strong> năm 1969, sửa đúng điểm yếu trên: một bản ghi được phép có <strong>nhiều cha</strong>. Minh nối thẳng tới cả ba nhóm, không cần chép ra ba bản.</p>
+<p><strong>Mô hình mạng</strong> (<em>network model</em>), được nhóm <strong>CODASYL</strong> đưa ra thành chuẩn chung năm 1969, sửa đúng điểm yếu trên: một bản ghi được phép có <strong>nhiều cha</strong>. Minh nối thẳng tới cả ba nhóm, không cần chép ra ba bản.</p>
 <p>Cái giá phải trả nằm ở chỗ khác. Muốn lấy dữ liệu, lập trình viên phải tự viết lộ trình đi: <em>"tìm bản ghi Minh, đi theo con trỏ 'thuộc lớp', rồi con trỏ 'có chủ nhiệm'…"</em>. Người ta gọi kiểu lập trình này là <strong>điều hướng thủ công</strong> (<em>navigational programming</em>).</p>
 <p>Hậu quả: chương trình <strong>dính chặt vào cách dữ liệu được nối</strong>. Đổi cấu trúc một chút là mọi chương trình phải viết lại. Đúng thứ mà <a href="../03-dbms-la-gi/">Bài 3</a> gọi là <strong>mất độc lập dữ liệu</strong>.</p>
 <h3 id="mo-hinh-quan-he-cach-cua-ban-c">Mô hình quan hệ — cách của bạn C<a class="headerlink" href="#mo-hinh-quan-he-cach-cua-ban-c" title="Permanent link">&para;</a></h3>
@@ -981,7 +995,7 @@
 <tr>
 <td><strong>Khoá–giá trị</strong> (<em>key-value</em>)</td>
 <td>Một cuốn từ điển: tra khoá ra giá trị</td>
-<td>Bộ nhớ đệm, phiên đăng nhập, giỏ hàng</td>
+<td>Bộ nhớ đệm, phiên đăng nhập, dữ liệu tạm</td>
 <td>Redis, DynamoDB</td>
 </tr>
 <tr>
@@ -1142,7 +1156,7 @@
         RX["✅ Không dư thừa · có ràng buộc&lt;br/&gt;✅ Hỏi gì cũng được, không cần chỉ đường"]
     end
 
-    subgraph DT["4️⃣ ĐỐI TƯỢNG — lưu thẳng object"]
+    subgraph DT["4️⃣ ĐỐI TƯỢNG — lưu thẳng đối tượng"]
         direction TB
         O1["&lt;b&gt;Lop&lt;/b&gt; 8A1&lt;br/&gt;hoc_sinh = An · Bình&lt;br/&gt;&lt;i&gt;+ phương thức siSoLop&lt;/i&gt;"]
         OX["⚠️ Code viết dễ&lt;br/&gt;❌ Hỏi ngoài dự kiến thì rất chậm"]
@@ -1177,11 +1191,11 @@
 <p>Đọc hiểu là đủ. Sau <a href="../05-cai-dat-postgresql/">Bài 5</a>, quay lại chạy thử toàn bộ phần này trên <code>truong_hoc</code>.</p>
 </div>
 <h3 id="mo-hinh-quan-he-noi-bang-gia-tri">Mô hình quan hệ: nối bằng giá trị<a class="headerlink" href="#mo-hinh-quan-he-noi-bang-gia-tri" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">ma_hs</span><span class="p">,</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">ho_ten</span><span class="p">,</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">ten_lop</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span><span class="w"> </span><span class="n">h</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="k">JOIN</span><span class="w"> </span><span class="n">lop</span><span class="w"> </span><span class="n">l</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">ma_lop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">ma_lop</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">ma_hs</span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="k">LIMIT</span><span class="w"> </span><span class="mi">5</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">ma_hs</span><span class="p">,</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">ho_ten</span><span class="p">,</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">ten_lop</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span><span class="w"> </span><span class="n">h</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="k">JOIN</span><span class="w"> </span><span class="n">lop</span><span class="w"> </span><span class="n">l</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">ma_lop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">ma_lop</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">ma_hs</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="k">LIMIT</span><span class="w"> </span><span class="mi">5</span><span class="p">;</span>
 </span></code></pre></div>
 <table>
 <thead>
@@ -1223,30 +1237,30 @@
 <p>(Chưa hiểu <code>JOIN</code> cũng không sao. Bài 25 và Bài 26 sẽ dạy kỹ.)</p>
 <h3 id="cung-du-lieu-o-bieu-dien-kieu-tai-lieu">Cũng dữ liệu đó, biểu diễn kiểu tài liệu<a class="headerlink" href="#cung-du-lieu-o-bieu-dien-kieu-tai-lieu" title="Permanent link">&para;</a></h3>
 <p>PostgreSQL có kiểu <code>JSONB</code>, nên ta dựng được ngay một "tài liệu" giống hệt thứ MongoDB lưu:</p>
-<div class="highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">jsonb_pretty</span><span class="p">(</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">    </span><span class="n">jsonb_build_object</span><span class="p">(</span>
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">        </span><span class="s1">'ma_lop'</span><span class="p">,</span><span class="w">   </span><span class="n">l</span><span class="p">.</span><span class="n">ma_lop</span><span class="p">,</span>
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">        </span><span class="s1">'ten_lop'</span><span class="p">,</span><span class="w">  </span><span class="n">l</span><span class="p">.</span><span class="n">ten_lop</span><span class="p">,</span>
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">        </span><span class="s1">'hoc_sinh'</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">jsonb_agg</span><span class="p">(</span>
-</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">                                </span><span class="n">jsonb_build_object</span><span class="p">(</span><span class="s1">'ma_hs'</span><span class="p">,</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">ma_hs</span><span class="p">,</span><span class="w"> </span><span class="s1">'ho_ten'</span><span class="p">,</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">ho_ten</span><span class="p">)</span>
-</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">                                </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">ma_hs</span><span class="p">)</span>
-</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">                     </span><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span><span class="w"> </span><span class="n">h</span>
-</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">                     </span><span class="k">WHERE</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">ma_lop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">ma_lop</span><span class="p">)</span>
-</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">    </span><span class="p">)</span>
-</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">tai_lieu_lop</span>
-</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="k">FROM</span><span class="w"> </span><span class="n">lop</span><span class="w"> </span><span class="n">l</span>
-</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">ma_lop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'L01'</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">jsonb_pretty</span><span class="p">(</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">    </span><span class="n">jsonb_build_object</span><span class="p">(</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">        </span><span class="s1">'ma_lop'</span><span class="p">,</span><span class="w">   </span><span class="n">l</span><span class="p">.</span><span class="n">ma_lop</span><span class="p">,</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">        </span><span class="s1">'ten_lop'</span><span class="p">,</span><span class="w">  </span><span class="n">l</span><span class="p">.</span><span class="n">ten_lop</span><span class="p">,</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">        </span><span class="s1">'hoc_sinh'</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">jsonb_agg</span><span class="p">(</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">                                </span><span class="n">jsonb_build_object</span><span class="p">(</span><span class="s1">'ma_hs'</span><span class="p">,</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">ma_hs</span><span class="p">,</span><span class="w"> </span><span class="s1">'ho_ten'</span><span class="p">,</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">ho_ten</span><span class="p">)</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">                                </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">ma_hs</span><span class="p">)</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">                     </span><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span><span class="w"> </span><span class="n">h</span>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">                     </span><span class="k">WHERE</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">ma_lop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">ma_lop</span><span class="p">)</span>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">    </span><span class="p">)</span>
+</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">tai_lieu_lop</span>
+</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="k">FROM</span><span class="w"> </span><span class="n">lop</span><span class="w"> </span><span class="n">l</span>
+</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">ma_lop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'L01'</span><span class="p">;</span>
 </span></code></pre></div>
 <p>Kết quả là <strong>một dòng duy nhất</strong>, chứa cả lớp lẫn toàn bộ học sinh lồng bên trong:</p>
-<div class="highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p">{</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">    </span><span class="nt">"ma_lop"</span><span class="p">:</span><span class="w"> </span><span class="s2">"L01"</span><span class="p">,</span>
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span><span class="nt">"ten_lop"</span><span class="p">:</span><span class="w"> </span><span class="s2">"8A1"</span><span class="p">,</span>
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">    </span><span class="nt">"hoc_sinh"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">        </span><span class="p">{</span><span class="w"> </span><span class="nt">"ma_hs"</span><span class="p">:</span><span class="w"> </span><span class="s2">"HS001"</span><span class="p">,</span><span class="w"> </span><span class="nt">"ho_ten"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Nguyễn Văn An"</span><span class="w"> </span><span class="p">},</span>
-</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">        </span><span class="p">{</span><span class="w"> </span><span class="nt">"ma_hs"</span><span class="p">:</span><span class="w"> </span><span class="s2">"HS002"</span><span class="p">,</span><span class="w"> </span><span class="nt">"ho_ten"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Trần Thị Bình"</span><span class="w"> </span><span class="p">},</span>
-</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">        </span><span class="err">...</span>
-</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">    </span><span class="p">]</span>
-</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="p">{</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">    </span><span class="nt">"ma_lop"</span><span class="p">:</span><span class="w"> </span><span class="s2">"L01"</span><span class="p">,</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span><span class="nt">"ten_lop"</span><span class="p">:</span><span class="w"> </span><span class="s2">"8A1"</span><span class="p">,</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">    </span><span class="nt">"hoc_sinh"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">        </span><span class="p">{</span><span class="w"> </span><span class="nt">"ma_hs"</span><span class="p">:</span><span class="w"> </span><span class="s2">"HS001"</span><span class="p">,</span><span class="w"> </span><span class="nt">"ho_ten"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Nguyễn Văn An"</span><span class="w"> </span><span class="p">},</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">        </span><span class="p">{</span><span class="w"> </span><span class="nt">"ma_hs"</span><span class="p">:</span><span class="w"> </span><span class="s2">"HS002"</span><span class="p">,</span><span class="w"> </span><span class="nt">"ho_ten"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Trần Thị Bình"</span><span class="w"> </span><span class="p">},</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">        </span><span class="err">...</span>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">    </span><span class="p">]</span>
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="p">}</span>
 </span></code></pre></div>
 <p>So sánh hai cách ngay tại đây:</p>
 <table>
@@ -1283,38 +1297,39 @@
 <p>Không cái nào thắng tuyệt đối. Tài liệu nhanh khi <strong>truy cập theo đúng hình dạng đã lưu</strong>; quan hệ mạnh khi <strong>câu hỏi có thể là bất cứ thứ gì</strong>.</p>
 <h3 id="mo-phong-kho-khoagia-tri">Mô phỏng kho khoá–giá trị<a class="headerlink" href="#mo-phong-kho-khoagia-tri" title="Permanent link">&para;</a></h3>
 <p>Họ khoá–giá trị đơn giản tới mức dựng thử bằng một bảng hai cột:</p>
-<div class="highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="k">BEGIN</span><span class="p">;</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">kho_khoa_gia_tri</span><span class="p">;</span>
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">kho_khoa_gia_tri</span><span class="w"> </span><span class="p">(</span>
-</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">    </span><span class="n">khoa</span><span class="w">      </span><span class="nb">TEXT</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span>
-</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">    </span><span class="n">gia_tri</span><span class="w">   </span><span class="nb">TEXT</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span>
-</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="p">);</span>
-</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
-</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">kho_khoa_gia_tri</span><span class="w"> </span><span class="k">VALUES</span>
-</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">    </span><span class="p">(</span><span class="s1">'phien:abc123'</span><span class="p">,</span><span class="w"> </span><span class="s1">'HS001'</span><span class="p">),</span>
-</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">    </span><span class="p">(</span><span class="s1">'phien:xyz789'</span><span class="p">,</span><span class="w"> </span><span class="s1">'HS007'</span><span class="p">),</span>
-</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">    </span><span class="p">(</span><span class="s1">'dem:luot_truy_cap'</span><span class="p">,</span><span class="w"> </span><span class="s1">'1042'</span><span class="p">);</span>
-</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>
-</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">gia_tri</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">kho_khoa_gia_tri</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">khoa</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'phien:abc123'</span><span class="p">;</span>
-</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>
-</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="k">ROLLBACK</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="k">BEGIN</span><span class="p">;</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">kho_khoa_gia_tri</span><span class="p">;</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">kho_khoa_gia_tri</span><span class="w"> </span><span class="p">(</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">    </span><span class="n">khoa</span><span class="w">      </span><span class="nb">TEXT</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">    </span><span class="n">gia_tri</span><span class="w">   </span><span class="nb">TEXT</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span>
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="p">);</span>
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
+</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">kho_khoa_gia_tri</span><span class="w"> </span><span class="k">VALUES</span>
+</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">    </span><span class="p">(</span><span class="s1">'phien:abc123'</span><span class="p">,</span><span class="w"> </span><span class="s1">'HS001'</span><span class="p">),</span>
+</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">    </span><span class="p">(</span><span class="s1">'phien:xyz789'</span><span class="p">,</span><span class="w"> </span><span class="s1">'HS007'</span><span class="p">),</span>
+</span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">    </span><span class="p">(</span><span class="s1">'dem:luot_truy_cap'</span><span class="p">,</span><span class="w"> </span><span class="s1">'1042'</span><span class="p">);</span>
+</span><span id="__span-4-13"><a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>
+</span><span id="__span-4-14"><a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">gia_tri</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">kho_khoa_gia_tri</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">khoa</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'phien:abc123'</span><span class="p">;</span>
+</span><span id="__span-4-15"><a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>
+</span><span id="__span-4-16"><a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="k">ROLLBACK</span><span class="p">;</span>
 </span></code></pre></div>
 <p>Chỉ có đúng <strong>một</strong> kiểu câu hỏi trả lời được: <em>"khoá này ứng với giá trị gì?"</em>. Không <code>WHERE</code> theo nội dung, không thống kê, không nối bảng.</p>
 <p>Đổi lại, nó nhanh kinh khủng và chia ra nghìn máy rất dễ — vì mỗi khoá độc lập hoàn toàn với mọi khoá khác. Đó là lý do Redis được dùng để giữ phiên đăng nhập, chứ không ai dùng nó để lưu bảng điểm.</p>
 <h3 id="con-o-thi-thi-trong-nhu-the-nao">Còn đồ thị thì trông như thế nào<a class="headerlink" href="#con-o-thi-thi-trong-nhu-the-nao" title="Permanent link">&para;</a></h3>
-<p>Cùng câu hỏi <em>"An học lớp nào"</em>, viết bằng Cypher — ngôn ngữ của Neo4j:</p>
-<!-- sql:khong-chay -->
-<div class="highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1">-- Đây là Cypher (Neo4j), KHÔNG phải SQL. Chỉ để bạn thấy sự khác biệt.</span>
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="k">MATCH</span><span class="w"> </span><span class="p">(</span><span class="n">hs</span><span class="p">:</span><span class="n">HocSinh</span><span class="w"> </span><span class="err">{</span><span class="n">ho_ten</span><span class="p">:</span><span class="w"> </span><span class="s1">'Nguyễn Văn An'</span><span class="err">}</span><span class="p">)</span><span class="o">-</span><span class="p">[:</span><span class="n">HOC_TAI</span><span class="p">]</span><span class="o">-&gt;</span><span class="p">(</span><span class="n">l</span><span class="p">:</span><span class="n">Lop</span><span class="p">)</span>
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="k">RETURN</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">ten_lop</span><span class="p">;</span>
+<div class="admonition note">
+<p class="admonition-title">Cú pháp của một DBMS khác — chỉ để đối chiếu</p>
+<p>Đoạn dưới đây <strong>không phải SQL</strong> và không chạy trên PostgreSQL. Đó là <strong>Cypher</strong>, ngôn ngữ của Neo4j, đặt ở đây chỉ để bạn thấy một mô hình khác diễn đạt cùng câu hỏi <em>"An học lớp nào"</em> ra sao.</p>
+<div class="highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="k">MATCH</span><span class="w"> </span><span class="p">(</span><span class="n">hs</span><span class="p">:</span><span class="n">HocSinh</span><span class="w"> </span><span class="p">{</span><span class="n">ho_ten</span><span class="p">:</span><span class="w"> </span><span class="s">'Nguyễn Văn An'</span><span class="p">})</span><span class="o">-[</span><span class="p">:</span><span class="n">HOC_TAI</span><span class="o">]-&gt;</span><span class="p">(</span><span class="n">l</span><span class="p">:</span><span class="n">Lop</span><span class="p">)</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="k">RETURN</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">ten_lop</span><span class="p">;</span>
 </span></code></pre></div>
+</div>
 <p>Quan hệ <code>HOC_TAI</code> là một <strong>đối tượng hạng nhất</strong> — nó có tên, có thuộc tính riêng. Trong mô hình quan hệ, quan hệ đó chỉ là một cột <code>ma_lop</code>.</p>
 <p>Khác biệt lộ rõ khi câu hỏi phải đi <strong>nhiều bước</strong>: <em>"tìm bạn của bạn của bạn của An"</em>. Với đồ thị là ba bước đi. Với SQL là ba lần <code>JOIN</code> bảng với chính nó — viết được, nhưng dài và chậm dần theo số bước.</p>
 <h2 id="loi-thuong-gap">⚠️ Lỗi thường gặp<a class="headerlink" href="#loi-thuong-gap" title="Permanent link">&para;</a></h2>
 <div class="admonition warning">
 <p class="admonition-title">Lỗi 1: Hiểu NoSQL là 'không dùng SQL'</p>
-<p>Cách hiểu phổ biến hơn là <strong>Not Only SQL</strong> — không chỉ có SQL. Bằng chứng: Cassandra có CQL, còn MongoDB từ bản 5 đã hỗ trợ cú pháp truy vấn kiểu SQL.</p>
+<p>Cách hiểu phổ biến hơn là <strong>Not Only SQL</strong> — không chỉ có SQL. Bằng chứng: Cassandra có hẳn một ngôn ngữ tên CQL với cú pháp rất giống SQL, còn MongoDB thì cung cấp riêng một lớp dịch để công cụ báo cáo hỏi nó bằng SQL.</p>
 <p>Điểm khác biệt thật sự <strong>không nằm ở ngôn ngữ</strong>, mà ở <strong>mô hình dữ liệu</strong> và ở việc <strong>chấp nhận đánh đổi tính nhất quán lấy khả năng mở rộng</strong>.</p>
 </div>
 <div class="admonition warning">
@@ -1329,7 +1344,7 @@
 </div>
 <div class="admonition warning">
 <p class="admonition-title">Lỗi 4: Tưởng mô hình phân cấp và mạng đã tuyệt chủng</p>
-<p>Chúng không chết, chỉ đổi chỗ đứng. Cây thư mục trong máy bạn là mô hình phân cấp. Tệp JSON và XML là mô hình phân cấp. Mạng xã hội là mô hình mạng.</p>
+<p>Chúng không chết, chỉ đổi chỗ đứng. Cây thư mục trong máy bạn là mô hình phân cấp; tệp JSON và XML cũng vậy. Còn ý tưởng cốt lõi của mô hình mạng — cho một bản ghi nối thẳng tới nhiều bản ghi khác — thì sống tiếp trong họ <strong>đồ thị</strong> của NoSQL, thứ đang chạy sau lưng các mạng xã hội.</p>
 <p>Bài học thật sự: <strong>các mô hình chồng lấn nhau</strong>. Chọn mô hình nào phụ thuộc vào <em>câu hỏi bạn sẽ hỏi nhiều nhất</em>, chứ không phụ thuộc năm ra đời.</p>
 </div>
 <h2 id="bai-tap">✍️ Bài tập<a class="headerlink" href="#bai-tap" title="Permanent link">&para;</a></h2>
@@ -1338,10 +1353,10 @@
 <p>Ghép mỗi mô tả với đúng một mô hình (phân cấp / mạng / quan hệ / đối tượng / NoSQL đồ thị):
    (a) mỗi bản ghi có đúng một cha; (b) dữ liệu là bảng, nối nhau bằng giá trị bằng nhau;
    (c) lập trình viên tự đi theo con trỏ; (d) quan hệ giữa các bản ghi có tên và thuộc tính riêng;
-   (e) lưu thẳng object kèm phương thức.</p>
+   (e) lưu thẳng đối tượng của ngôn ngữ lập trình, kèm cả phương thức của nó.</p>
 </li>
 <li>
-<p>Một ứng dụng cần lưu <strong>giỏ hàng tạm</strong> của người đang mua sắm: tra theo mã người dùng, không cần thống kê, cần cực nhanh, mất cũng không sao. Nên chọn họ NoSQL nào? Vì sao không dùng đồ thị?</p>
+<p>Cổng thông tin học sinh của trường cần lưu <strong>phiên đăng nhập</strong>: mỗi lần một bạn đăng nhập, hệ thống sinh một mã phiên và ghi lại bạn đó là ai; mỗi lần bạn ấy bấm sang trang khác, hệ thống tra mã phiên để biết ai đang xem. Chỉ tra theo mã phiên, không cần thống kê, cần cực nhanh, và mất cũng không sao (bạn ấy chỉ phải đăng nhập lại). Nên chọn họ NoSQL nào? Vì sao không dùng đồ thị?</p>
 </li>
 <li>
 <p>Vì sao mô hình quan hệ đạt được <strong>độc lập dữ liệu</strong> tốt hơn hẳn mô hình mạng? Trả lời bằng cách nhắc tới cặp khái niệm <em>khai báo</em> và <em>thủ tục</em>.</p>
@@ -1367,12 +1382,12 @@
 <p>Chọn họ <strong>khoá–giá trị</strong> (<em>key-value</em>), ví dụ Redis.</p>
 <p>Lý do khớp từng yêu cầu:</p>
 <ul>
-<li><em>Tra theo mã người dùng</em> → đúng một kiểu truy cập: khoá → giá trị. Không cần gì hơn.</li>
+<li><em>Tra theo mã phiên</em> → đúng một kiểu truy cập: khoá → giá trị. Không cần gì hơn.</li>
 <li><em>Cần cực nhanh</em> → kho khoá–giá trị thường giữ dữ liệu trong RAM, trả lời dưới một mili giây.</li>
-<li><em>Mất cũng không sao</em> → cho phép hy sinh độ bền để đổi lấy tốc độ; giỏ hàng tạm mất thì người dùng chọn lại.</li>
+<li><em>Mất cũng không sao</em> → cho phép hy sinh độ bền để đổi lấy tốc độ; phiên mất thì bạn học sinh chỉ phải đăng nhập lại.</li>
 <li><em>Không cần thống kê</em> → đúng điểm yếu duy nhất của họ này, mà ở đây lại không cần.</li>
 </ul>
-<p>Không dùng đồ thị vì đồ thị mạnh ở việc <strong>đi nhiều bước qua các mối quan hệ</strong>. Giỏ hàng chẳng có mối quan hệ nào phải đi cả — dùng đồ thị là trả tiền cho một năng lực không xài tới, lại còn chậm hơn.</p>
+<p>Không dùng đồ thị vì đồ thị mạnh ở việc <strong>đi nhiều bước qua các mối quan hệ</strong>. Một phiên đăng nhập chẳng có mối quan hệ nào phải đi cả — chỉ là "mã này ứng với bạn nào". Dùng đồ thị là trả tiền cho một năng lực không xài tới, lại còn chậm hơn.</p>
 <p><strong>Câu 3.</strong></p>
 <p>Mô hình mạng là <strong>thủ tục</strong> (<em>procedural</em>): chương trình phải viết rõ <em>từng bước đi</em> — bắt đầu ở bản ghi nào, theo con trỏ nào, rẽ hướng nào. Nghĩa là lộ trình vật lý bị <strong>viết cứng vào mã nguồn</strong>. Hôm nào đổi cách nối dữ liệu, mọi chương trình đang chạy đều sai.</p>
 <p>Mô hình quan hệ là <strong>khai báo</strong> (<em>declarative</em>): câu SQL chỉ mô tả <em>kết quả mong muốn</em> (<code>SELECT ... WHERE ...</code>), tuyệt nhiên không nói cách lấy. Việc chọn đọc bảng nào trước, có dùng chỉ mục hay không, dành cho <strong>bộ tối ưu truy vấn</strong>.</p>

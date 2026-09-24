@@ -983,6 +983,12 @@
 <td>Nguyễn Thị Lan</td>
 <td>lan.nt@thcs.edu.vn</td>
 </tr>
+<tr>
+<td>… <em>(còn 2 học sinh nữa của lớp 8A1)</em></td>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+</tr>
 </tbody>
 </table>
 <p>Sự thật <em>"lớp 8A1 do cô Nguyễn Thị Lan chủ nhiệm, email lan.nt@thcs.edu.vn"</em> là <strong>một</strong> sự thật. Nhưng nó đang được ghi <strong>6 lần</strong>, một lần cho mỗi học sinh.</p>
@@ -1274,8 +1280,11 @@
 <p>Ba căn bệnh biến mất cùng một lúc:</p>
 <ul>
 <li>Cô Lan đổi email? Sửa <strong>một</strong> dòng trong bảng <code>giao_vien</code>. Không thể sót.</li>
-<li>Lớp mới chưa có học sinh? Thêm một dòng vào <code>lop</code>. Xong. Dòng <code>L06</code> (lớp 9A3) trong bảng trên chính là ví dụ sống: lớp đã có thật, chỉ chưa có giáo viên chủ nhiệm.</li>
-<li>Học sinh chuyển trường hết? Xoá ở bảng <code>hoc_sinh</code>; bảng <code>lop</code> không suy suyển.</li>
+<li>
+<p>Lớp mới chưa có học sinh? Thêm một dòng vào <code>lop</code>. Xong — bảng <code>lop</code> không hề đòi phải có học sinh nào thì mới được ghi.</p>
+<p>Bảng trên còn cho thấy một trường hợp anh em với nó: dòng <code>L06</code> (lớp 9A3) có ô <code>ma_gvcn</code> <strong>để trống</strong>. Lớp đã có thật, đã có học sinh, chỉ là chưa phân công giáo viên chủ nhiệm — và bảng <code>lop</code> vẫn ghi nhận được bình thường. Cùng một nguyên tắc: <strong>thiếu một sự thật không được phép chặn việc ghi những sự thật còn lại</strong>.
+- Học sinh chuyển trường hết? Xoá ở bảng <code>hoc_sinh</code>; bảng <code>lop</code> không suy suyển.</p>
+</li>
 </ul>
 <h3 id="va-rang-buoc-thi-uoc-canh-gac-that-su">Và ràng buộc thì được canh gác thật sự<a class="headerlink" href="#va-rang-buoc-thi-uoc-canh-gac-that-su" title="Permanent link">&para;</a></h3>
 <p>Thử ghi một học sinh vào lớp <code>L99</code> không hề tồn tại:</p>
@@ -1287,6 +1296,9 @@
 <div class="highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>ERROR:  insert or update on table "hoc_sinh" violates foreign key constraint "hoc_sinh_ma_lop_fkey"
 </span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>DETAIL:  Key (ma_lop)=(L99) is not present in table "lop".
 </span></code></pre></div>
+<p>Hãy đọc kỹ chữ <code>foreign key</code> trong thông báo lỗi. Quy tắc mà PostgreSQL vừa dùng để từ chối có tên riêng: <strong>khoá ngoại</strong> (<em>foreign key</em>).</p>
+<p>Khoá ngoại là một lời hứa bạn khai báo sẵn cho database: <em>"cột <code>ma_lop</code> của bảng <code>hoc_sinh</code> chỉ được chứa những mã lớp </em><em>có thật</em><em> trong bảng <code>lop</code>"</em>. Từ lúc bạn khai báo, database tự canh lời hứa đó với mọi dòng, mãi mãi, không cần ai nhắc. <code>L99</code> không có trong bảng <code>lop</code>, nên dòng vừa rồi bị chặn.</p>
+<p>Đây cũng chính là sợi dây nối hai bảng lại với nhau sau khi ta tách chúng ra. Bài 13 sẽ dạy cách khai báo khoá ngoại, còn Bài 15 sẽ dạy phải làm gì khi xoá một dòng mà có bảng khác đang trỏ tới nó.</p>
 <p>Excel sẽ nhận dòng này không một lời phàn nàn. Đó là khác biệt lớn nhất giữa "một file bảng tính" và "một cơ sở dữ liệu": <strong>database có quyền nói KHÔNG</strong>.</p>
 <h2 id="loi-thuong-gap">⚠️ Lỗi thường gặp<a class="headerlink" href="#loi-thuong-gap" title="Permanent link">&para;</a></h2>
 <div class="admonition warning">
@@ -1297,7 +1309,7 @@
 <div class="admonition warning">
 <p class="admonition-title">Lỗi 2: Nghĩ rằng cẩn thận hơn thì sẽ hết lỗi</p>
 <p>Phản xạ tự nhiên là tự trách: "lần sau mình sửa kỹ hơn". Nhưng hãy thử tính: file thật của một trường có 500 học sinh, 30 lớp. Đổi email một cô là sửa khoảng 17 dòng, làm mỗi tháng vài lần, trong nhiều năm, bởi nhiều người khác nhau.</p>
-<p>Xác suất không sót một lần nào là gần bằng không. Thiết kế tốt không đòi hỏi con người phải hoàn hảo — nó làm cho <strong>việc sai trở thành bất khả thi</strong>. Ràng buộc khoá ngoại ở trên chính là tinh thần đó.</p>
+<p>Xác suất không sót một lần nào là gần bằng không. Thiết kế tốt không đòi hỏi con người phải hoàn hảo — nó làm cho <strong>việc sai trở thành bất khả thi</strong>. Ràng buộc <strong>khoá ngoại</strong> (<em>foreign key</em>) ở trên chính là tinh thần đó.</p>
 </div>
 <div class="admonition warning">
 <p class="admonition-title">Lỗi 3: Nghĩ Excel là thứ tồi tệ, phải bỏ đi</p>
@@ -1434,7 +1446,7 @@
 </tr>
 </tbody>
 </table>
-<p>Cột nối hai bảng là <strong><code>ma_clb</code></strong>: nó là định danh của bảng <code>cau_lac_bo</code>, và được mang sang bảng <code>thanh_vien</code> để chỉ ra mỗi thành viên thuộc câu lạc bộ nào. Ở Bài 13 bạn sẽ biết tên chính thức của cột mang sang này: <strong>khoá ngoại</strong>.</p>
+<p>Cột nối hai bảng là <strong><code>ma_clb</code></strong>: nó là định danh của bảng <code>cau_lac_bo</code>, và được mang sang bảng <code>thanh_vien</code> để chỉ ra mỗi thành viên thuộc câu lạc bộ nào. Cột mang sang như vậy chính là <strong>khoá ngoại</strong> (<em>foreign key</em>) mà phần Thực hành đã giới thiệu — và Bài 13 sẽ dạy cách khai báo nó.</p>
 <p>Kiểm lại cả ba căn bệnh:</p>
 <ul>
 <li>Thầy Tâm đổi số? Sửa <strong>1 dòng</strong> trong <code>cau_lac_bo</code>. Hết bệnh 1.</li>
