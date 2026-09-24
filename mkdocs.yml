@@ -99,5 +99,11 @@ nav:
       - "Bài 13 — Mô hình EER: Generalization, Specialization, Aggregation": cap-1-mo-hinh-er/13-mo-hinh-eer.md
       - "Bài 14 — Chuyển biểu đồ ER thành lược đồ quan hệ": cap-1-mo-hinh-er/14-chuyen-er-sang-bang.md
       - "Bài 15 — Ràng buộc toàn vẹn (Integrity Constraints)": cap-1-mo-hinh-er/15-rang-buoc-toan-ven.md
+  - "Cấp 2 — Chuẩn hoá":
+      - "Bài 16 — Phụ thuộc hàm và bao đóng": cap-2-chuan-hoa/16-phu-thuoc-ham.md
+      - "Bài 17 — Dạng chuẩn 1 (1NF) và Dạng chuẩn 2 (2NF)": cap-2-chuan-hoa/17-dang-chuan-1nf-2nf.md
+      - "Bài 18 — Dạng chuẩn 3 (3NF) và BCNF": cap-2-chuan-hoa/18-dang-chuan-3nf-bcnf.md
+      - "Bài 19 — 4NF, 5NF và 6NF": cap-2-chuan-hoa/19-dang-chuan-4nf-5nf-6nf.md
+      - "Bài 20 — Phi chuẩn hoá — khi nào nên phá luật": cap-2-chuan-hoa/20-denormalization.md
   - "Database mẫu": dataset.md
   - "Bảng thuật ngữ": glossary.md

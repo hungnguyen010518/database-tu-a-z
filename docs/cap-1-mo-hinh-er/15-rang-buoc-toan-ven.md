@@ -840,4 +840,4 @@ UNION ALL SELECT 'diem',      count(*) FROM diem;
 
 ---
 
-⬅️ [Bài 14 — Chuyển biểu đồ ER thành lược đồ quan hệ](14-chuyen-er-sang-bang.md) · ➡️ **Bài 16 — Phụ thuộc hàm** *(sắp có)*
+⬅️ [Bài 14 — Chuyển biểu đồ ER thành lược đồ quan hệ](14-chuyen-er-sang-bang.md) · ➡️ [Bài 16 — Phụ thuộc hàm và bao đóng](../cap-2-chuan-hoa/16-phu-thuoc-ham.md)
