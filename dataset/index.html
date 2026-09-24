@@ -869,7 +869,7 @@
 <p>Đây là <strong>biểu đồ ER</strong> (<em>ER diagram</em>) của toàn bộ database, vẽ theo ký hiệu Crow's Foot. Bây giờ bạn chưa cần hiểu các ký hiệu ở hai đầu đường nối — Bài 11 sẽ dạy kỹ. Cứ quay lại trang này khi cần tra cứu.</p>
 <pre class="mermaid"><code>erDiagram
     giao_vien ||--o{ phan_cong_day : "được phân công"
-    giao_vien |o--o{ lop : "chủ nhiệm"
+    giao_vien |o--o| lop : "chủ nhiệm"
     lop       ||--o{ hoc_sinh : "gồm có"
     lop       ||--o{ phan_cong_day : "được dạy tại"
     hoc_sinh  ||--o{ phu_huynh : "có"
@@ -1127,8 +1127,8 @@
 <tr>
 <td><code>ma_gvcn</code></td>
 <td><code>CHAR(4)</code></td>
-<td><strong>FK</strong> → <code>giao_vien</code>, cho phép <code>NULL</code></td>
-<td>Giáo viên chủ nhiệm</td>
+<td><strong>FK</strong> → <code>giao_vien</code>, <strong>UNIQUE</strong>, cho phép <code>NULL</code></td>
+<td>Giáo viên chủ nhiệm. <code>UNIQUE</code> là cách hiện thực quan hệ <strong>1:1</strong> — xem Bài 14</td>
 </tr>
 </tbody>
 </table>
