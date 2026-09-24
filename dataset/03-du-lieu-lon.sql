@@ -49,7 +49,7 @@ SELECT
     (n % 9) + 1,
     (n % 2) + 1,
     CASE n % 3 WHEN 0 THEN '15 phút' WHEN 1 THEN '1 tiết' ELSE 'Học kỳ' END,
-    ROUND((((n * 7919) % 601) / 100.0 + 4.0)::NUMERIC, 2),
+    ROUND((((n::BIGINT * 7919) % 601) / 100.0 + 4.0)::NUMERIC, 2),
     DATE '2024-09-01' + (n % 700)
 FROM generate_series(1, 500000) AS n;
 
