@@ -76,6 +76,17 @@ jobs:
             SELECT CASE WHEN count(*) >= 1 THEN 'OK: có lượt mượn chưa trả (NULL)'
                         ELSE 'LỖI: không có lượt mượn nào đang NULL' END
             FROM muon_sach WHERE ngay_tra_thuc_te IS NULL;"
+          psql -v ON_ERROR_STOP=1 -t -A -c "
+            SELECT CASE WHEN count(*) = 64 THEN 'OK: phan_cong_day có 64 dòng'
+                        ELSE 'LỖI: phan_cong_day = ' || count(*) END
+            FROM phan_cong_day;"
+          psql -v ON_ERROR_STOP=1 -t -A -c "
+            SELECT CASE WHEN count(*) = 1 THEN 'OK: lop.ma_gvcn có ràng buộc UNIQUE (quan hệ 1:1)'
+                        ELSE 'LỖI: thiếu UNIQUE trên lop.ma_gvcn' END
+            FROM pg_constraint
+            WHERE conrelid = 'lop'::regclass AND contype = 'u'
+              AND conkey = ARRAY[(SELECT attnum FROM pg_attribute
+                                  WHERE attrelid = 'lop'::regclass AND attname = 'ma_gvcn')];"
 
       - name: Chạy mọi câu SQL trích từ bài học
         run: |
