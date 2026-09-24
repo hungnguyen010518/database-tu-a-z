@@ -84,4 +84,5 @@ nav:
   - Trang chủ: index.md
   - "Cấp 0 — Nhập môn":
       - "Bài 1 — Dữ liệu, thông tin và tại sao phải lưu trữ": cap-0-nhap-mon/01-du-lieu-va-thong-tin.md
+  - "Database mẫu": dataset.md
   - "Bảng thuật ngữ": glossary.md

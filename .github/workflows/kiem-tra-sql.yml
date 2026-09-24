@@ -1,0 +1,89 @@
+name: Kiểm tra SQL trên PostgreSQL thật
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'dataset/**'
+      - 'docs/**'
+      - '.github/workflows/kiem-tra-sql.yml'
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  kiem-tra:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: hoc
+          POSTGRES_DB: truong_hoc
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+        ports:
+          - 5432:5432
+
+    env:
+      PGHOST: localhost
+      PGPORT: 5432
+      PGUSER: postgres
+      PGPASSWORD: hoc
+      PGDATABASE: truong_hoc
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cài psql
+        run: sudo apt-get update && sudo apt-get install -y postgresql-client
+
+      - name: Nạp lược đồ đã chuẩn hoá
+        run: psql -v ON_ERROR_STOP=1 -f dataset/02-chuan-hoa.sql
+
+      - name: Nạp bảng bẹt chưa chuẩn hoá
+        run: psql -v ON_ERROR_STOP=1 -f dataset/01-chua-chuan-hoa.sql
+
+      - name: Nạp dữ liệu lớn
+        run: psql -v ON_ERROR_STOP=1 -f dataset/03-du-lieu-lon.sql
+
+      - name: Kiểm tra số dòng đúng như mong đợi
+        run: |
+          psql -v ON_ERROR_STOP=1 -t -A -F' ' -c "
+            SELECT 'giao_vien', count(*) FROM giao_vien
+            UNION ALL SELECT 'lop', count(*) FROM lop
+            UNION ALL SELECT 'hoc_sinh', count(*) FROM hoc_sinh
+            UNION ALL SELECT 'phu_huynh', count(*) FROM phu_huynh
+            UNION ALL SELECT 'mon_hoc', count(*) FROM mon_hoc
+            UNION ALL SELECT 'diem', count(*) FROM diem
+            UNION ALL SELECT 'sach', count(*) FROM sach
+            UNION ALL SELECT 'muon_sach', count(*) FROM muon_sach
+            UNION ALL SELECT 'diem_danh', count(*) FROM diem_danh
+            UNION ALL SELECT 'diem_lon', count(*) FROM diem_lon;"
+          echo '--- Kiểm tra các ràng buộc mà bài học dựa vào ---'
+          psql -v ON_ERROR_STOP=1 -t -A -c "
+            SELECT CASE WHEN count(*) = 1 THEN 'OK: đúng 1 lớp chưa có GVCN'
+                        ELSE 'LỖI: số lớp chưa có GVCN = ' || count(*) END
+            FROM lop WHERE ma_gvcn IS NULL;"
+          psql -v ON_ERROR_STOP=1 -t -A -c "
+            SELECT CASE WHEN count(*) >= 1 THEN 'OK: có học sinh chưa có phụ huynh'
+                        ELSE 'LỖI: mọi học sinh đều có phụ huynh' END
+            FROM hoc_sinh h WHERE NOT EXISTS (SELECT 1 FROM phu_huynh p WHERE p.ma_hs = h.ma_hs);"
+          psql -v ON_ERROR_STOP=1 -t -A -c "
+            SELECT CASE WHEN count(*) >= 1 THEN 'OK: có lượt mượn chưa trả (NULL)'
+                        ELSE 'LỖI: không có lượt mượn nào đang NULL' END
+            FROM muon_sach WHERE ngay_tra_thuc_te IS NULL;"
+
+      - name: Chạy mọi câu SQL trích từ bài học
+        run: |
+          python3 scripts/trich_sql.py > /tmp/sql_bai_hoc.sql
+          echo "--- Số câu lệnh trích được: $(grep -c '^-- >>>' /tmp/sql_bai_hoc.sql) ---"
+          psql -v ON_ERROR_STOP=1 -f /tmp/sql_bai_hoc.sql > /tmp/ketqua.txt 2>&1 || {
+            echo '::error::Có câu SQL trong bài học chạy lỗi'
+            tail -50 /tmp/ketqua.txt
+            exit 1
+          }
+          echo 'Mọi câu SQL trong bài học đều chạy được.'
