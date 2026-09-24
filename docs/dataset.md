@@ -24,7 +24,7 @@ Tải về tại [thư mục `dataset/` trên GitHub](https://github.com/hungngu
 ```mermaid
 erDiagram
     giao_vien ||--o{ phan_cong_day : "được phân công"
-    giao_vien |o--o{ lop : "chủ nhiệm"
+    giao_vien |o--o| lop : "chủ nhiệm"
     lop       ||--o{ hoc_sinh : "gồm có"
     lop       ||--o{ phan_cong_day : "được dạy tại"
     hoc_sinh  ||--o{ phu_huynh : "có"
@@ -162,7 +162,7 @@ Bảng dưới đây là **nguồn tra cứu chính thức**. Mọi câu SQL tro
     | `ten_lop` | `VARCHAR(10)` | **UNIQUE** | Tên hiển thị, ví dụ `8A1` |
     | `khoi` | `SMALLINT` | `CHECK 6..9` | Khối lớp |
     | `nam_hoc` | `VARCHAR(9)` | `NOT NULL` | Ví dụ `2025-2026` |
-    | `ma_gvcn` | `CHAR(4)` | **FK** → `giao_vien`, cho phép `NULL` | Giáo viên chủ nhiệm |
+    | `ma_gvcn` | `CHAR(4)` | **FK** → `giao_vien`, **UNIQUE**, cho phép `NULL` | Giáo viên chủ nhiệm. `UNIQUE` là cách hiện thực quan hệ **1:1** — xem Bài 14 |
 
 === "hoc_sinh"
 

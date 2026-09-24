@@ -37,17 +37,20 @@ COMMENT ON TABLE  giao_vien IS 'Danh sách giáo viên của trường';
 COMMENT ON COLUMN giao_vien.email IS 'Khoá dự tuyển (candidate key) — xem Bài 12';
 
 -- ---------------------------------------------------------------------
--- 2. LỚP  — mỗi lớp có tối đa một giáo viên chủ nhiệm
+-- 2. LỚP  — quan hệ 1:1 với giáo viên: mỗi lớp tối đa một GVCN,
+--    và mỗi giáo viên chủ nhiệm tối đa một lớp (nhờ UNIQUE).
 -- ---------------------------------------------------------------------
 CREATE TABLE lop (
     ma_lop    CHAR(3)     PRIMARY KEY,
     ten_lop   VARCHAR(10) NOT NULL UNIQUE,
     khoi      SMALLINT    NOT NULL CHECK (khoi BETWEEN 6 AND 9),
     nam_hoc   VARCHAR(9)  NOT NULL,
-    ma_gvcn   CHAR(4)     REFERENCES giao_vien(ma_gv) ON DELETE SET NULL
+    ma_gvcn   CHAR(4)     UNIQUE REFERENCES giao_vien(ma_gv) ON DELETE SET NULL
 );
 
-COMMENT ON COLUMN lop.ma_gvcn IS 'Cho phép NULL: lớp chưa phân công chủ nhiệm — dùng dạy LEFT JOIN ở Bài 25';
+COMMENT ON COLUMN lop.ma_gvcn IS 'UNIQUE + cho phép NULL: đây là cách hiện thực quan hệ 1:1 '
+  'trong mô hình quan hệ (xem Bài 14). UNIQUE ép mỗi giáo viên chủ nhiệm tối đa một lớp; '
+  'NULL cho phép lớp chưa có chủ nhiệm — dùng dạy LEFT JOIN ở Bài 25.';
 
 -- ---------------------------------------------------------------------
 -- 3. HỌC SINH  — mỗi học sinh BẮT BUỘC thuộc một lớp (tham gia toàn phần)
