@@ -678,6 +678,16 @@
       
         
       
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
     
     
       
@@ -807,6 +817,111 @@
   
   <span class="md-ellipsis">
     Bài 10 — Biểu đồ ER — ký hiệu Chen
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/11-bieu-do-er-crows-foot/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 11 — Biểu đồ ER — ký hiệu Crow's Foot và vẽ bằng Mermaid
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/12-bay-loai-khoa/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 12 — Bảy loại khoá trong cơ sở dữ liệu
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/13-mo-hinh-eer/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 13 — Mô hình EER: Generalization, Specialization, Aggregation
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/14-chuyen-er-sang-bang/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 14 — Chuyển biểu đồ ER thành lược đồ quan hệ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/15-rang-buoc-toan-ven/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 15 — Ràng buộc toàn vẹn (Integrity Constraints)
   </span>
   
 
@@ -1462,7 +1577,7 @@
 </span></code></pre></div>
 <p>Hãy đọc kỹ chữ <code>foreign key</code> trong thông báo lỗi. Quy tắc mà PostgreSQL vừa dùng để từ chối có tên riêng: <strong>khoá ngoại</strong> (<em>foreign key</em>).</p>
 <p>Khoá ngoại là một lời hứa bạn khai báo sẵn cho database: <em>"cột <code>ma_lop</code> của bảng <code>hoc_sinh</code> chỉ được chứa những mã lớp </em><em>có thật</em><em> trong bảng <code>lop</code>"</em>. Từ lúc bạn khai báo, database tự canh lời hứa đó với mọi dòng, mãi mãi, không cần ai nhắc. <code>L99</code> không có trong bảng <code>lop</code>, nên dòng vừa rồi bị chặn.</p>
-<p>Đây cũng chính là sợi dây nối hai bảng lại với nhau sau khi ta tách chúng ra. Bài 13 sẽ dạy cách khai báo khoá ngoại, còn Bài 15 sẽ dạy phải làm gì khi xoá một dòng mà có bảng khác đang trỏ tới nó.</p>
+<p>Đây cũng chính là sợi dây nối hai bảng lại với nhau sau khi ta tách chúng ra. Bài 12 sẽ dạy cách khai báo khoá ngoại, còn Bài 15 sẽ dạy phải làm gì khi xoá một dòng mà có bảng khác đang trỏ tới nó.</p>
 <p>Excel sẽ nhận dòng này không một lời phàn nàn. Đó là khác biệt lớn nhất giữa "một file bảng tính" và "một cơ sở dữ liệu": <strong>database có quyền nói KHÔNG</strong>.</p>
 <h2 id="loi-thuong-gap">⚠️ Lỗi thường gặp<a class="headerlink" href="#loi-thuong-gap" title="Permanent link">&para;</a></h2>
 <div class="admonition warning">
@@ -1610,7 +1725,7 @@
 </tr>
 </tbody>
 </table>
-<p>Cột nối hai bảng là <strong><code>ma_clb</code></strong>: nó là định danh của bảng <code>cau_lac_bo</code>, và được mang sang bảng <code>thanh_vien</code> để chỉ ra mỗi thành viên thuộc câu lạc bộ nào. Cột mang sang như vậy chính là <strong>khoá ngoại</strong> (<em>foreign key</em>) mà phần Thực hành đã giới thiệu — và Bài 13 sẽ dạy cách khai báo nó.</p>
+<p>Cột nối hai bảng là <strong><code>ma_clb</code></strong>: nó là định danh của bảng <code>cau_lac_bo</code>, và được mang sang bảng <code>thanh_vien</code> để chỉ ra mỗi thành viên thuộc câu lạc bộ nào. Cột mang sang như vậy chính là <strong>khoá ngoại</strong> (<em>foreign key</em>) mà phần Thực hành đã giới thiệu — và Bài 12 sẽ dạy cách khai báo nó.</p>
 <p>Kiểm lại cả ba căn bệnh:</p>
 <ul>
 <li>Thầy Tâm đổi số? Sửa <strong>1 dòng</strong> trong <code>cau_lac_bo</code>. Hết bệnh 1.</li>

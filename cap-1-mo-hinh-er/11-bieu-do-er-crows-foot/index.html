@@ -1,0 +1,2178 @@
+
+<!doctype html>
+<html lang="vi" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Khóa học cơ sở dữ liệu tiếng Việt, từ con số 0 tới mức siêu nâng cao — giải thích để học sinh cấp 2 cũng hiểu được.">
+      
+      
+      
+        <link rel="canonical" href="https://hungnguyen010518.github.io/database-tu-a-z/cap-1-mo-hinh-er/11-bieu-do-er-crows-foot/">
+      
+      
+        <link rel="prev" href="../10-bieu-do-er-ky-hieu-chen/">
+      
+      
+        <link rel="next" href="../12-bay-loai-khoa/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.39">
+    
+    
+      
+        <title>Bài 11 — Biểu đồ ER — ký hiệu Crow's Foot và vẽ bằng Mermaid - Database từ A-Z</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.8c3ca2c6.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#bai-11-bieu-o-er-ky-hieu-crows-foot-va-ve-bang-mermaid" class="md-skip">
+          Bỏ qua
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Đầu trang">
+    <a href="../.." title="Database từ A-Z" class="md-header__button md-logo" aria-label="Database từ A-Z" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3C7.58 3 4 4.79 4 7s3.58 4 8 4 8-1.79 8-4-3.58-4-8-4M4 9v3c0 2.21 3.58 4 8 4s8-1.79 8-4V9c0 2.21-3.58 4-8 4s-8-1.79-8-4m0 5v3c0 2.21 3.58 4 8 4s8-1.79 8-4v-3c0 2.21-3.58 4-8 4s-8-1.79-8-4"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Database từ A-Z
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Bài 11 — Biểu đồ ER — ký hiệu Crow's Foot và vẽ bằng Mermaid
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Chuyển sang chế độ tối"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Chuyển sang chế độ tối" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Chuyển sang chế độ sáng"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Chuyển sang chế độ sáng" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Tìm kiếm" placeholder="Tìm kiếm" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Tìm kiếm">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Xoá" aria-label="Xoá" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/hungnguyen010518/database-tu-a-z" title="Xem mã nguồn" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    database-tu-a-z
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Thanh điều hướng" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Database từ A-Z" class="md-nav__button md-logo" aria-label="Database từ A-Z" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3C7.58 3 4 4.79 4 7s3.58 4 8 4 8-1.79 8-4-3.58-4-8-4M4 9v3c0 2.21 3.58 4 8 4s8-1.79 8-4V9c0 2.21-3.58 4-8 4s-8-1.79-8-4m0 5v3c0 2.21 3.58 4 8 4s8-1.79 8-4v-3c0 2.21-3.58 4-8 4s-8-1.79-8-4"/></svg>
+
+    </a>
+    Database từ A-Z
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/hungnguyen010518/database-tu-a-z" title="Xem mã nguồn" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    database-tu-a-z
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Trang chủ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Cấp 0 — Nhập môn
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Cấp 0 — Nhập môn
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-0-nhap-mon/01-du-lieu-va-thong-tin/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 1 — Dữ liệu, thông tin và tại sao phải lưu trữ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-0-nhap-mon/02-tu-so-giay-den-excel/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 2 — Từ sổ giấy đến Excel
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-0-nhap-mon/03-dbms-la-gi/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 3 — DBMS là gì
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-0-nhap-mon/04-cac-mo-hinh-du-lieu/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 4 — Các mô hình dữ liệu
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-0-nhap-mon/05-cai-dat-postgresql/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 5 — Cài đặt PostgreSQL
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Cấp 1 — Mô hình quan hệ & Biểu đồ ER
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Cấp 1 — Mô hình quan hệ & Biểu đồ ER
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-mo-hinh-quan-he/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 6 — Mô hình quan hệ: bảng, dòng, cột, miền giá trị, lược đồ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-thuc-the-va-thuoc-tinh/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 7 — Thực thể và các loại thuộc tính
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08-moi-quan-he-va-cardinality/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 8 — Mối quan hệ, bậc và bản số (Cardinality)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09-participation-va-thuc-the-yeu/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 9 — Ràng buộc tham gia và Thực thể yếu
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10-bieu-do-er-ky-hieu-chen/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 10 — Biểu đồ ER — ký hiệu Chen
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Bài 11 — Biểu đồ ER — ký hiệu Crow's Foot và vẽ bằng Mermaid
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Bài 11 — Biểu đồ ER — ký hiệu Crow's Foot và vẽ bằng Mermaid
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Mục lục">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Mục lục
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#cau-chuyen-mo-au" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧠 Câu chuyện mở đầu
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#khai-niem-thuat-ngu" class="md-nav__link">
+    <span class="md-ellipsis">
+      📖 Khái niệm &amp; thuật ngữ
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📖 Khái niệm & thuật ngữ">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#crows-foot-la-gi" class="md-nav__link">
+    <span class="md-ellipsis">
+      Crow's Foot là gì
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ky-hieu-crows-foot-gom-hai-nua" class="md-nav__link">
+    <span class="md-ellipsis">
+      Ký hiệu Crow's Foot gồm hai nửa
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bon-to-hop-can-thuoc-long" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bốn tổ hợp cần thuộc lòng
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#oi-chieu-chen-crows-foot" class="md-nav__link">
+    <span class="md-ellipsis">
+      Đối chiếu Chen ↔ Crow's Foot
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ba-thu-crows-foot-lam-mat" class="md-nav__link">
+    <span class="md-ellipsis">
+      Ba thứ Crow's Foot làm mất
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cu-phap-erdiagram-cua-mermaid" class="md-nav__link">
+    <span class="md-ellipsis">
+      Cú pháp erDiagram của Mermaid
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bang-thuat-ngu" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bảng thuật ngữ
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#so-o" class="md-nav__link">
+    <span class="md-ellipsis">
+      🖼️ Sơ đồ
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🖼️ Sơ đồ">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#so-o-1-bon-ky-hieu-oc-thanh-loi" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sơ đồ 1 — Bốn ký hiệu, đọc thành lời
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#so-o-2-bieu-o-er-hoan-chinh-cua-truong_hoc" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sơ đồ 2 — Biểu đồ ER hoàn chỉnh của truong_hoc
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#thuc-hanh" class="md-nav__link">
+    <span class="md-ellipsis">
+      💻 Thực hành
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="💻 Thực hành">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#suy-ra-ky-hieu-crows-foot-tu-chinh-luoc-o" class="md-nav__link">
+    <span class="md-ellipsis">
+      Suy ra ký hiệu Crow's Foot từ chính lược đồ
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#xem-tan-mat-rang-buoc-lam-nen-quan-he-11" class="md-nav__link">
+    <span class="md-ellipsis">
+      Xem tận mắt ràng buộc làm nên quan hệ 1:1
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kiem-chung-bang-du-lieu-unique-ang-lam-gi" class="md-nav__link">
+    <span class="md-ellipsis">
+      Kiểm chứng bằng dữ liệu: UNIQUE đang làm gì
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#so-sanh-voi-mot-quan-he-1n" class="md-nav__link">
+    <span class="md-ellipsis">
+      So sánh với một quan hệ 1:N
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bang-nao-la-bang-trung-gian" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bảng nào là bảng trung gian
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#loi-thuong-gap" class="md-nav__link">
+    <span class="md-ellipsis">
+      ⚠️ Lỗi thường gặp
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bai-tap" class="md-nav__link">
+    <span class="md-ellipsis">
+      ✍️ Bài tập
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tom-tat" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔑 Tóm tắt
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../12-bay-loai-khoa/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 12 — Bảy loại khoá trong cơ sở dữ liệu
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../13-mo-hinh-eer/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 13 — Mô hình EER: Generalization, Specialization, Aggregation
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../14-chuyen-er-sang-bang/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 14 — Chuyển biểu đồ ER thành lược đồ quan hệ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../15-rang-buoc-toan-ven/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 15 — Ràng buộc toàn vẹn (Integrity Constraints)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../dataset/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Database mẫu
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../glossary/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bảng thuật ngữ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Mục lục">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Mục lục
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#cau-chuyen-mo-au" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧠 Câu chuyện mở đầu
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#khai-niem-thuat-ngu" class="md-nav__link">
+    <span class="md-ellipsis">
+      📖 Khái niệm &amp; thuật ngữ
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📖 Khái niệm & thuật ngữ">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#crows-foot-la-gi" class="md-nav__link">
+    <span class="md-ellipsis">
+      Crow's Foot là gì
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ky-hieu-crows-foot-gom-hai-nua" class="md-nav__link">
+    <span class="md-ellipsis">
+      Ký hiệu Crow's Foot gồm hai nửa
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bon-to-hop-can-thuoc-long" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bốn tổ hợp cần thuộc lòng
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#oi-chieu-chen-crows-foot" class="md-nav__link">
+    <span class="md-ellipsis">
+      Đối chiếu Chen ↔ Crow's Foot
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ba-thu-crows-foot-lam-mat" class="md-nav__link">
+    <span class="md-ellipsis">
+      Ba thứ Crow's Foot làm mất
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cu-phap-erdiagram-cua-mermaid" class="md-nav__link">
+    <span class="md-ellipsis">
+      Cú pháp erDiagram của Mermaid
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bang-thuat-ngu" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bảng thuật ngữ
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#so-o" class="md-nav__link">
+    <span class="md-ellipsis">
+      🖼️ Sơ đồ
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🖼️ Sơ đồ">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#so-o-1-bon-ky-hieu-oc-thanh-loi" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sơ đồ 1 — Bốn ký hiệu, đọc thành lời
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#so-o-2-bieu-o-er-hoan-chinh-cua-truong_hoc" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sơ đồ 2 — Biểu đồ ER hoàn chỉnh của truong_hoc
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#thuc-hanh" class="md-nav__link">
+    <span class="md-ellipsis">
+      💻 Thực hành
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="💻 Thực hành">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#suy-ra-ky-hieu-crows-foot-tu-chinh-luoc-o" class="md-nav__link">
+    <span class="md-ellipsis">
+      Suy ra ký hiệu Crow's Foot từ chính lược đồ
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#xem-tan-mat-rang-buoc-lam-nen-quan-he-11" class="md-nav__link">
+    <span class="md-ellipsis">
+      Xem tận mắt ràng buộc làm nên quan hệ 1:1
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kiem-chung-bang-du-lieu-unique-ang-lam-gi" class="md-nav__link">
+    <span class="md-ellipsis">
+      Kiểm chứng bằng dữ liệu: UNIQUE đang làm gì
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#so-sanh-voi-mot-quan-he-1n" class="md-nav__link">
+    <span class="md-ellipsis">
+      So sánh với một quan hệ 1:N
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bang-nao-la-bang-trung-gian" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bảng nào là bảng trung gian
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#loi-thuong-gap" class="md-nav__link">
+    <span class="md-ellipsis">
+      ⚠️ Lỗi thường gặp
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bai-tap" class="md-nav__link">
+    <span class="md-ellipsis">
+      ✍️ Bài tập
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tom-tat" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔑 Tóm tắt
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="bai-11-bieu-o-er-ky-hieu-crows-foot-va-ve-bang-mermaid">Bài 11 — Biểu đồ ER — ký hiệu Crow's Foot và vẽ bằng Mermaid<a class="headerlink" href="#bai-11-bieu-o-er-ky-hieu-crows-foot-va-ve-bang-mermaid" title="Permanent link">&para;</a></h1>
+<div class="admonition abstract">
+<p class="admonition-title">🎯 Học xong bài này, bạn sẽ</p>
+<ul>
+<li>Đọc được <strong>ký hiệu Crow's Foot</strong> — bốn ký hiệu đầu đường và ý nghĩa của <strong>từng nửa</strong></li>
+<li>Đối chiếu được Chen ↔ Crow's Foot, và biết Crow's Foot <strong>bỏ mất</strong> những gì</li>
+<li>Tự viết được một sơ đồ <code>erDiagram</code> bằng Mermaid, kể cả phần khai báo cột</li>
+<li>Đọc được <strong>biểu đồ ER hoàn chỉnh của <code>truong_hoc</code></strong> — sơ đồ tham chiếu cho mọi bài sau</li>
+<li>Suy ra được ký hiệu đúng của một đường nối chỉ bằng cách soi <code>NOT NULL</code> và <code>UNIQUE</code></li>
+</ul>
+</div>
+<h2 id="cau-chuyen-mo-au">🧠 Câu chuyện mở đầu<a class="headerlink" href="#cau-chuyen-mo-au" title="Permanent link">&para;</a></h2>
+<p>Anh lập trình viên ở <a href="../10-bieu-do-er-ky-hieu-chen/">Bài 10</a> về nhà, mở máy tính lên và định gõ lại tờ giấy vừa vẽ với cô hiệu trưởng.</p>
+<p>Rồi anh khựng lại.</p>
+<p>Trên giấy, mỗi tập thực thể là một hình chữ nhật với <strong>cả chục elip</strong> treo lủng lẳng xung quanh. <code>HỌC SINH</code> có sáu elip, <code>GIÁO VIÊN</code> có bảy, <code>ĐIỂM</code> có bảy nữa. Cộng lại hơn năm mươi hình. Vẽ tay trên giấy A3 thì còn được, chứ nhét vừa một màn hình thì không.</p>
+<p>Mà anh còn cần thứ khác nữa. Sang tuần anh phải viết <code>CREATE TABLE</code>. Lúc đó anh cần biết <strong>mỗi bảng có cột gì, cột nào là khoá</strong> — chứ không cần biết <code>ho_ten</code> có tách được thành họ và tên hay không.</p>
+<p>Anh mở một công cụ vẽ sơ đồ database. Giao diện hiện ra khác hẳn: mỗi bảng là <strong>một hình chữ nhật có danh sách cột bên trong</strong>, không còn elip nào. Và ở hai đầu mỗi đường nối là những ký hiệu lạ — một cái trông đúng như <strong>bàn chân con quạ</strong>.</p>
+<p>Cùng một database, hai cách vẽ hoàn toàn khác nhau. Vậy cách vẽ thứ hai này là gì, và nó đánh đổi cái gì để lấy sự gọn gàng đó?</p>
+<h2 id="khai-niem-thuat-ngu">📖 Khái niệm &amp; thuật ngữ<a class="headerlink" href="#khai-niem-thuat-ngu" title="Permanent link">&para;</a></h2>
+<h3 id="crows-foot-la-gi">Crow's Foot là gì<a class="headerlink" href="#crows-foot-la-gi" title="Permanent link">&para;</a></h3>
+<p><strong>Ký hiệu Crow's Foot</strong> (<em>Crow's Foot notation</em>, còn gọi là <em>IE notation</em> — Information Engineering) là bộ ký hiệu vẽ biểu đồ ER do Gordon Everest đề xuất năm 1976, được đặt tên theo hình <strong>bàn chân quạ</strong> — ba nhánh toẽ ra — dùng để chỉ phía "nhiều".</p>
+<p>Hai khác biệt lớn nhất so với <a href="../10-bieu-do-er-ky-hieu-chen/">ký hiệu Chen</a>:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Chen</th>
+<th>Crow's Foot</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Thuộc tính vẽ ở đâu</td>
+<td>Mỗi thuộc tính một <strong>elip treo ra ngoài</strong></td>
+<td><strong>Liệt kê bên trong</strong> hình chữ nhật</td>
+</tr>
+<tr>
+<td>Bản số và tham gia ghi ở đâu</td>
+<td>Chữ <code>1</code>/<code>N</code> trên đường, đường đơn/đôi</td>
+<td><strong>Một ký hiệu ghép</strong> ở mỗi đầu đường</td>
+</tr>
+</tbody>
+</table>
+<p>Đổi lại sự gọn gàng, Crow's Foot <strong>mất</strong> ba thứ mà Chen diễn tả được. Chúng ta sẽ quay lại chỗ mất mát này ở cuối phần khái niệm — đó là lý do khoá học dạy Chen trước.</p>
+<h3 id="ky-hieu-crows-foot-gom-hai-nua">Ký hiệu Crow's Foot gồm hai nửa<a class="headerlink" href="#ky-hieu-crows-foot-gom-hai-nua" title="Permanent link">&para;</a></h3>
+<p>Đây là ý quan trọng nhất của cả bài, và cũng là chỗ người học hay đọc sai.</p>
+<p>Mỗi đầu đường nối là <strong>hai ký tự ghép lại</strong>, và <strong>mỗi ký tự trả lời một câu hỏi khác nhau</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Nửa</th>
+<th>Vị trí</th>
+<th>Trả lời câu hỏi</th>
+<th>Bài đã học</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Nửa <strong>ngoài</strong> (xa thực thể)</td>
+<td>sát thực thể</td>
+<td><strong>Tối thiểu bao nhiêu?</strong> → ràng buộc tham gia</td>
+<td><a href="../09-participation-va-thuc-the-yeu/">Bài 9</a></td>
+</tr>
+<tr>
+<td>Nửa <strong>trong</strong> (gần đường)</td>
+<td>phía đường nối</td>
+<td><strong>Tối đa bao nhiêu?</strong> → bản số</td>
+<td><a href="../08-moi-quan-he-va-cardinality/">Bài 8</a></td>
+</tr>
+</tbody>
+</table>
+<p>Đúng hai câu hỏi mà <a href="../09-participation-va-thuc-the-yeu/">Bài 9</a> đã dạy: <em>giới hạn dưới</em> và <em>giới hạn trên</em>. Crow's Foot chỉ làm một việc: gói cả hai vào một ký hiệu duy nhất.</p>
+<p>Bảng tra bốn ký hiệu, viết theo cú pháp Mermaid:</p>
+<table>
+<thead>
+<tr>
+<th>Mermaid</th>
+<th>Hình vẽ thật</th>
+<th>Nửa "tối thiểu"</th>
+<th>Nửa "tối đa"</th>
+<th>Đọc là</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>&#124;&#124;</code></td>
+<td>hai vạch thẳng</td>
+<td>vạch <code>&#124;</code> = <strong>tối thiểu 1</strong></td>
+<td>vạch <code>&#124;</code> = <strong>tối đa 1</strong></td>
+<td><strong>đúng một</strong></td>
+</tr>
+<tr>
+<td><code>o&#124;</code></td>
+<td>vòng tròn + vạch</td>
+<td>vòng tròn <code>o</code> = <strong>tối thiểu 0</strong></td>
+<td>vạch <code>&#124;</code> = <strong>tối đa 1</strong></td>
+<td><strong>không hoặc một</strong></td>
+</tr>
+<tr>
+<td><code>}&#124;</code></td>
+<td>chân quạ + vạch</td>
+<td>vạch <code>&#124;</code> = <strong>tối thiểu 1</strong></td>
+<td>chân quạ <code>}</code> = <strong>tối đa nhiều</strong></td>
+<td><strong>một hoặc nhiều</strong></td>
+</tr>
+<tr>
+<td><code>}o</code></td>
+<td>chân quạ + vòng tròn</td>
+<td>vòng tròn <code>o</code> = <strong>tối thiểu 0</strong></td>
+<td>chân quạ <code>}</code> = <strong>tối đa nhiều</strong></td>
+<td><strong>không hoặc nhiều</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Mẹo nhớ gọn trong hai dòng:</p>
+<blockquote>
+<p><strong>Vòng tròn <code>o</code> = con số 0.</strong> Thấy vòng tròn là "được phép không có".</p>
+<p><strong>Chân quạ <code>}</code> = nhiều.</strong> Thấy chân quạ toẽ ra là "được phép có nhiều".</p>
+</blockquote>
+<div class="admonition warning">
+<p class="admonition-title">Ký hiệu ở đầu nào thì mô tả thực thể ở đầu ĐÓ</p>
+<p>Viết <code>lop ||--o{ hoc_sinh</code> thì:</p>
+<ul>
+<li>Ký hiệu <code>||</code> nằm sát <code>lop</code> → nói về <strong><code>lop</code></strong>: <em>mỗi học sinh thuộc </em><em>đúng một</em><em> lớp</em>.</li>
+<li>Ký hiệu <code>o{</code> nằm sát <code>hoc_sinh</code> → nói về <strong><code>hoc_sinh</code></strong>: <em>mỗi lớp có </em><em>không hoặc nhiều</em><em> học sinh</em>.</li>
+</ul>
+<p>Rất nhiều người đọc ngược, rồi kết luận sai hoàn toàn về lược đồ. Cách đọc đúng luôn là: <strong>"mỗi thực thể ở đầu kia ứng với bao nhiêu thực thể ở đầu này?"</strong></p>
+<p>Trong Mermaid, chân quạ được gõ là <code>{</code> khi nằm bên phải và <code>}</code> khi nằm bên trái — chỉ là chuyện quay hình cho đúng chiều, ý nghĩa y hệt.</p>
+</div>
+<h3 id="bon-to-hop-can-thuoc-long">Bốn tổ hợp cần thuộc lòng<a class="headerlink" href="#bon-to-hop-can-thuoc-long" title="Permanent link">&para;</a></h3>
+<p>Ghép hai đầu lại thì ra một quan hệ hoàn chỉnh. Bốn tổ hợp hay gặp nhất:</p>
+<table>
+<thead>
+<tr>
+<th>Cú pháp Mermaid</th>
+<th>Tỉ lệ bản số</th>
+<th>Đọc thành lời</th>
+<th>Có trong <code>truong_hoc</code> không</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>a &#124;&#124;--o{ b</code></td>
+<td><strong>1:N</strong></td>
+<td>Mỗi <code>b</code> có đúng một <code>a</code>; mỗi <code>a</code> có 0..n <code>b</code></td>
+<td><strong>Có</strong> — <code>lop ||--o{ hoc_sinh</code></td>
+</tr>
+<tr>
+<td><code>a &#124;o--o&#124; b</code></td>
+<td><strong>1:1</strong>, hai phía đều tuỳ chọn</td>
+<td>Mỗi <code>b</code> có 0..1 <code>a</code>; mỗi <code>a</code> có 0..1 <code>b</code></td>
+<td><strong>Có</strong> — <code>giao_vien &#124;o--o&#124; lop</code></td>
+</tr>
+<tr>
+<td><code>a &#124;&#124;--&#124;&#124; b</code></td>
+<td><strong>1:1</strong>, hai phía đều bắt buộc</td>
+<td>Mỗi <code>b</code> có <strong>đúng một</strong> <code>a</code>, và ngược lại</td>
+<td><strong>Không</strong> — xem hộp dưới</td>
+</tr>
+<tr>
+<td><code>a }o--o{ b</code></td>
+<td><strong>M:N</strong></td>
+<td>Mỗi <code>b</code> có 0..n <code>a</code>; mỗi <code>a</code> có 0..n <code>b</code></td>
+<td>Có ở <strong>mức ý niệm</strong> — <code>hoc_sinh }o--o{ mon_hoc</code></td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">Vì sao <code>truong_hoc</code> không có <code>||--||</code> nào</p>
+<p><code>||--||</code> nghĩa là <em>"không bao giờ được phép tồn tại một bên mà thiếu bên kia"</em>. Áp vào cặp GIÁO VIÊN — LỚP thì thành: <em>mọi lớp phải có chủ nhiệm, </em><em>và</em><em> mọi giáo viên phải chủ nhiệm một lớp</em>. Trường có 8 giáo viên nhưng chỉ 6 lớp, nên điều đó bất khả thi.</p>
+<p>Thực tế, <code>||--||</code> rất hiếm gặp và khó hiện thực: nếu cả hai phía đều bắt buộc thì bạn không chèn nổi dòng đầu tiên vào bảng nào cả — chèn <code>lop</code> trước thì thiếu <code>giao_vien</code>, chèn <code>giao_vien</code> trước thì thiếu <code>lop</code>. Muốn làm thật phải dùng ràng buộc hoãn (<em>deferrable constraint</em>) mà <a href="../15-rang-buoc-toan-ven/">Bài 15</a> sẽ nhắc tới.</p>
+</div>
+<h3 id="oi-chieu-chen-crows-foot">Đối chiếu Chen ↔ Crow's Foot<a class="headerlink" href="#oi-chieu-chen-crows-foot" title="Permanent link">&para;</a></h3>
+<p>Bảng này để bạn dịch qua lại giữa hai bộ ký hiệu:</p>
+<table>
+<thead>
+<tr>
+<th>Ý nghĩa</th>
+<th>Chen</th>
+<th>Crow's Foot</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Tập thực thể mạnh</td>
+<td>Hình chữ nhật, thuộc tính treo elip ra ngoài</td>
+<td>Hình chữ nhật có danh sách cột bên trong</td>
+</tr>
+<tr>
+<td>Tập thực thể yếu</td>
+<td>Hình chữ nhật <strong>đôi</strong></td>
+<td><strong>Không có ký hiệu riêng</strong> — vẽ như bảng thường</td>
+</tr>
+<tr>
+<td>Mối quan hệ</td>
+<td>Hình <strong>thoi</strong> giữa hai thực thể</td>
+<td>Một <strong>đường nối</strong>, tên ghi trên đường</td>
+</tr>
+<tr>
+<td>Quan hệ nhận diện</td>
+<td>Hình thoi <strong>đôi</strong></td>
+<td><strong>Không có ký hiệu riêng</strong></td>
+</tr>
+<tr>
+<td>Bản số 1</td>
+<td>Chữ <code>1</code> trên đường</td>
+<td>Nửa trong là vạch <code>&#124;</code></td>
+</tr>
+<tr>
+<td>Bản số N / M</td>
+<td>Chữ <code>N</code> hoặc <code>M</code></td>
+<td>Nửa trong là chân quạ <code>}</code></td>
+</tr>
+<tr>
+<td>Tham gia toàn phần</td>
+<td>Đường <strong>đôi</strong></td>
+<td>Nửa ngoài là vạch <code>&#124;</code></td>
+</tr>
+<tr>
+<td>Tham gia bộ phận</td>
+<td>Đường <strong>đơn</strong></td>
+<td>Nửa ngoài là vòng tròn <code>o</code></td>
+</tr>
+<tr>
+<td>Thuộc tính khoá</td>
+<td>Elip <strong>gạch chân</strong></td>
+<td>Ghi <code>PK</code> sau tên cột</td>
+</tr>
+<tr>
+<td>Thuộc tính đa trị</td>
+<td>Elip <strong>đôi</strong></td>
+<td><strong>Không vẽ được</strong></td>
+</tr>
+<tr>
+<td>Thuộc tính dẫn xuất</td>
+<td>Elip <strong>nét đứt</strong></td>
+<td><strong>Không vẽ được</strong></td>
+</tr>
+<tr>
+<td>Quan hệ bậc ba</td>
+<td>Một hình thoi nối <strong>ba</strong> hình chữ nhật</td>
+<td><strong>Không vẽ được</strong> — phải tách thành bảng trung gian</td>
+</tr>
+</tbody>
+</table>
+<h3 id="ba-thu-crows-foot-lam-mat">Ba thứ Crow's Foot làm mất<a class="headerlink" href="#ba-thu-crows-foot-lam-mat" title="Permanent link">&para;</a></h3>
+<p>Nhìn ba dòng <strong>"Không vẽ được"</strong> ở cuối bảng trên. Đó chính là cái giá của sự gọn gàng:</p>
+<ol>
+<li><strong>Thuộc tính đa trị và dẫn xuất biến mất.</strong> Crow's Foot chỉ liệt kê được những cột <strong>sẽ có thật</strong> trong bảng. Mà <code>tuoi</code> (dẫn xuất) thì không lưu, còn số điện thoại đa trị thì đã bị tách sang bảng riêng.</li>
+<li><strong>Quan hệ bậc ba biến mất.</strong> <code>PHÂN CÔNG DẠY</code> nối ba thực thể; Crow's Foot chỉ vẽ được đường nối <strong>hai</strong> đầu. Nên nó buộc phải xuất hiện dưới dạng một <strong>hình chữ nhật <code>phan_cong_day</code></strong> nối ba đường riêng — tức là đã bị chuyển thành bảng trước khi vẽ.</li>
+<li><strong>Thực thể yếu trông y hệt thực thể mạnh.</strong> <code>phu_huynh</code> và <code>diem_danh</code> trong sơ đồ dưới đây không có dấu hiệu nào cho biết chúng là thực thể yếu; thông tin đó chỉ còn sót lại ở <code>ON DELETE CASCADE</code> trong lược đồ.</li>
+</ol>
+<div class="admonition tip">
+<p class="admonition-title">Rút ra: hai bộ ký hiệu phục vụ hai mục đích khác nhau</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Chen</th>
+<th>Crow's Foot</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Mức mô tả</td>
+<td><strong>Ý niệm</strong> — thế giới thực</td>
+<td><strong>Logic</strong> — gần với bảng</td>
+</tr>
+<tr>
+<td>Dùng để</td>
+<td>Nói chuyện với người dùng, ra đề thi</td>
+<td>Thiết kế lược đồ, sinh <code>CREATE TABLE</code></td>
+</tr>
+<tr>
+<td>Vẽ trước hay sau</td>
+<td><strong>Trước</strong></td>
+<td><strong>Sau</strong>, khi đã biết sẽ có những bảng nào</td>
+</tr>
+</tbody>
+</table>
+<p>Vì thế thứ tự học của khoá này là: Chen (Bài 10) → Crow's Foot (bài này) → thuật toán chuyển đổi nối hai thứ đó lại (<a href="../14-chuyen-er-sang-bang/">Bài 14</a>).</p>
+</div>
+<h3 id="cu-phap-erdiagram-cua-mermaid">Cú pháp <code>erDiagram</code> của Mermaid<a class="headerlink" href="#cu-phap-erdiagram-cua-mermaid" title="Permanent link">&para;</a></h3>
+<p>Một sơ đồ Crow's Foot trong Mermaid gồm <strong>hai phần</strong>, viết trong cùng một khối:</p>
+<p><strong>Phần 1 — các đường nối.</strong> Mỗi dòng một quan hệ:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>&lt;bảng trái&gt; &lt;ký hiệu trái&gt;--&lt;ký hiệu phải&gt; &lt;bảng phải&gt; : "nhãn"
+</span></code></pre></div>
+<p>Nhãn <strong>bắt buộc</strong> phải có và nên đặt trong ngoặc kép — nhãn tiếng Việt có dấu mà quên ngoặc kép là lỗi cú pháp.</p>
+<p><strong>Phần 2 — cột của từng bảng.</strong> Mỗi bảng một khối <code>{ }</code>, mỗi dòng một cột theo thứ tự <code>kiểu tên khoá</code>:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>hoc_sinh {
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    char ma_hs PK
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    varchar ho_ten
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    char ma_lop FK
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>}
+</span></code></pre></div>
+<p>Ba nhãn khoá mà Mermaid hiểu:</p>
+<table>
+<thead>
+<tr>
+<th>Nhãn</th>
+<th>Nghĩa</th>
+<th>Tiếng Anh</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>PK</code></td>
+<td>Khoá chính</td>
+<td><em>primary key</em></td>
+</tr>
+<tr>
+<td><code>FK</code></td>
+<td>Khoá ngoại</td>
+<td><em>foreign key</em></td>
+</tr>
+<tr>
+<td><code>UK</code></td>
+<td>Khoá duy nhất</td>
+<td><em>unique key</em></td>
+</tr>
+</tbody>
+</table>
+<div class="admonition danger">
+<p class="admonition-title">Một cột mang hai vai thì viết <code>PK, FK</code> — có dấu phẩy</p>
+<p>Trong <code>phan_cong_day</code>, cột <code>ma_gv</code> vừa nằm trong khoá chính vừa là khoá ngoại. Viết đúng là:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>char ma_gv PK, FK
+</span></code></pre></div>
+<p>Viết <code>PK_FK</code> hoặc <code>PK FK</code> (thiếu dấu phẩy) đều làm sơ đồ <strong>không render được</strong>. Đây là lỗi cú pháp hay gặp nhất khi gõ <code>erDiagram</code> bằng tay.</p>
+</div>
+<h3 id="bang-thuat-ngu">Bảng thuật ngữ<a class="headerlink" href="#bang-thuat-ngu" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Tiếng Việt</th>
+<th>English</th>
+<th>Nghĩa dễ hiểu</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Ký hiệu Crow's Foot</td>
+<td><em>Crow's Foot notation</em></td>
+<td>Bộ ký hiệu vẽ ER gọn, bảng có cột bên trong, bản số ghi bằng ký hiệu đầu đường</td>
+</tr>
+<tr>
+<td>Chân quạ</td>
+<td><em>crow's foot</em></td>
+<td>Ba nhánh toẽ ra ở đầu đường, nghĩa là "nhiều"</td>
+</tr>
+<tr>
+<td>Ký hiệu IE</td>
+<td><em>Information Engineering notation</em></td>
+<td>Tên gọi học thuật khác của Crow's Foot</td>
+</tr>
+<tr>
+<td>Mức logic</td>
+<td><em>logical level</em></td>
+<td>Mức đã biết sẽ có bảng nào, cột nào — nhưng chưa chọn hệ quản trị</td>
+</tr>
+</tbody>
+</table>
+<h2 id="so-o">🖼️ Sơ đồ<a class="headerlink" href="#so-o" title="Permanent link">&para;</a></h2>
+<h3 id="so-o-1-bon-ky-hieu-oc-thanh-loi">Sơ đồ 1 — Bốn ký hiệu, đọc thành lời<a class="headerlink" href="#so-o-1-bon-ky-hieu-oc-thanh-loi" title="Permanent link">&para;</a></h3>
+<p>Sơ đồ nhỏ này chỉ để bạn nhìn thấy <strong>hình dạng thật</strong> của bốn ký hiệu trong bảng tra:</p>
+<pre class="mermaid"><code>erDiagram
+lop ||--o{ hoc_sinh : "1-N · mỗi HS đúng 1 lớp · mỗi lớp 0..n HS"
+giao_vien |o--o| lop : "1-1 · mỗi lớp 0..1 GVCN · mỗi GV 0..1 lớp"
+hoc_sinh }o--o{ mon_hoc : "M-N ý niệm · sẽ tách thành bảng diem"
+lop ||--|{ hoc_sinh : "nếu bắt buộc mỗi lớp có ít nhất 1 HS"</code></pre>
+<p>Đọc từng đường, đi từ ký hiệu về phía thực thể mà nó chạm vào:</p>
+<table>
+<thead>
+<tr>
+<th>Đường</th>
+<th>Ký hiệu sát <code>lop</code></th>
+<th>Ký hiệu sát đầu kia</th>
+<th>Đọc thành lời</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><code>&#124;&#124;</code> đúng một</td>
+<td><code>o{</code> không hoặc nhiều</td>
+<td>Mỗi học sinh có <strong>đúng một</strong> lớp; mỗi lớp có <strong>0 hoặc nhiều</strong> học sinh</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>o&#124;</code> không hoặc một</td>
+<td><code>&#124;o</code> không hoặc một</td>
+<td>Mỗi lớp có <strong>0 hoặc 1</strong> GVCN; mỗi giáo viên chủ nhiệm <strong>0 hoặc 1</strong> lớp</td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>}o</code> / <code>o{</code></td>
+<td>hai đầu đều "nhiều"</td>
+<td>Mỗi học sinh nhiều môn; mỗi môn nhiều học sinh</td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>&#124;&#124;</code> đúng một</td>
+<td><code>&#124;{</code> <strong>một hoặc nhiều</strong></td>
+<td>Giống đường 1, nhưng thêm điều kiện mỗi lớp phải có ít nhất một học sinh</td>
+</tr>
+</tbody>
+</table>
+<p>Đường thứ tư chỉ có ở đây để bạn thấy ký hiệu <code>|{</code>. Lược đồ thật <strong>không</strong> ép điều kiện đó — <a href="../09-participation-va-thuc-the-yeu/">Bài 9</a> đã giải thích: ràng buộc ở phía "nhiều" thì SQL không cưỡng chế được bằng <code>NOT NULL</code>.</p>
+<h3 id="so-o-2-bieu-o-er-hoan-chinh-cua-truong_hoc">Sơ đồ 2 — Biểu đồ ER hoàn chỉnh của <code>truong_hoc</code><a class="headerlink" href="#so-o-2-bieu-o-er-hoan-chinh-cua-truong_hoc" title="Permanent link">&para;</a></h3>
+<p>Đây là <strong>sơ đồ tham chiếu</strong> của cả khoá học. <a href="../14-chuyen-er-sang-bang/">Bài 14</a> sẽ chứng minh nó sinh ra từ sơ đồ Chen của Bài 10, và Cấp 2 sẽ còn quay lại nó nhiều lần.</p>
+<pre class="mermaid"><code>erDiagram
+giao_vien |o--o| lop : "chủ nhiệm"
+giao_vien ||--o{ phan_cong_day : "được phân công"
+mon_hoc ||--o{ phan_cong_day : "của môn"
+lop ||--o{ phan_cong_day : "dạy tại lớp"
+lop ||--o{ hoc_sinh : "gồm có"
+hoc_sinh ||--o{ phu_huynh : "có người thân"
+hoc_sinh ||--o{ diem : "đạt"
+mon_hoc ||--o{ diem : "của môn"
+hoc_sinh ||--o{ muon_sach : "mượn"
+sach ||--o{ muon_sach : "được mượn"
+hoc_sinh ||--o{ diem_danh : "được điểm danh"
+
+giao_vien {
+    char ma_gv PK
+    varchar ho_ten
+    date ngay_sinh
+    varchar gioi_tinh
+    varchar mon_chuyen_mon
+    varchar email UK
+    numeric luong
+}
+lop {
+    char ma_lop PK
+    varchar ten_lop UK
+    smallint khoi
+    varchar nam_hoc
+    char ma_gvcn FK, UK
+}
+hoc_sinh {
+    char ma_hs PK
+    varchar ho_ten
+    date ngay_sinh
+    varchar gioi_tinh
+    varchar dia_chi
+    char ma_lop FK
+}
+phu_huynh {
+    char ma_ph PK
+    varchar ho_ten
+    varchar so_dien_thoai
+    varchar quan_he
+    char ma_hs FK
+}
+mon_hoc {
+    char ma_mon PK
+    varchar ten_mon UK
+    smallint so_tiet_tuan
+}
+phan_cong_day {
+    char ma_gv PK, FK
+    char ma_mon PK, FK
+    char ma_lop PK, FK
+    smallint hoc_ky PK
+}
+diem {
+    serial ma_diem PK
+    char ma_hs FK
+    char ma_mon FK
+    smallint hoc_ky
+    varchar loai_diem
+    numeric diem_so
+    date ngay_nhap
+}
+sach {
+    char ma_sach PK
+    varchar ten_sach
+    varchar tac_gia
+    smallint nam_xuat_ban
+    smallint so_luong
+}
+muon_sach {
+    serial ma_muon PK
+    char ma_hs FK
+    char ma_sach FK
+    date ngay_muon
+    date ngay_tra_du_kien
+    date ngay_tra_thuc_te
+}
+diem_danh {
+    serial ma_dd PK
+    char ma_hs FK
+    date ngay
+    varchar trang_thai
+    varchar ly_do
+}</code></pre>
+<p>Năm điều đáng chú ý khi đọc sơ đồ này:</p>
+<ol>
+<li><strong>Chỉ có duy nhất một đường <code>|o--o|</code></strong> — đường <code>giao_vien</code> ↔ <code>lop</code>. Đó là <strong>quan hệ 1:1</strong> duy nhất của database, và nó được hiện thực bằng <code>ma_gvcn FK, UK</code>. Chính chữ <code>UK</code> đó là cái làm nên 1:1.</li>
+<li><strong>Mười đường còn lại đều là <code>||--o{</code></strong> — tức 1:N. Đây là loại quan hệ áp đảo trong mọi database thật.</li>
+<li><strong><code>phan_cong_day</code> có ba đường chạm vào nó.</strong> Ở sơ đồ Chen (Bài 10) nó là <strong>một hình thoi bậc ba</strong>; ở đây nó đã hoá thành một hình chữ nhật. Crow's Foot không vẽ nổi hình thoi ba nhánh, nên buộc phải làm vậy.</li>
+<li><strong><code>diem</code> cũng là một hình chữ nhật, dù ở mức ý niệm nó là quan hệ M:N.</strong> Đường <code>hoc_sinh }o--o{ mon_hoc</code> trong Sơ đồ 1 chính là nó <strong>trước khi</strong> bị tách. So hai sơ đồ với nhau là thấy ngay M:N được hiện thực thế nào.</li>
+<li><strong><code>phu_huynh</code> và <code>diem_danh</code> trông y hệt các bảng khác.</strong> Chúng là <strong>thực thể yếu</strong> (Bài 9), nhưng Crow's Foot không có ký hiệu cho điều đó. Muốn biết, phải mở lược đồ ra xem <code>ON DELETE CASCADE</code>.</li>
+</ol>
+<div class="admonition question">
+<p class="admonition-title">Vì sao <code>diem</code> không nối thẳng <code>hoc_sinh</code> với <code>mon_hoc</code> bằng <code>}o--o{</code>?</p>
+<p>Vẽ như vậy <strong>cũng đúng</strong>, nhưng ở một mức khác. <code>}o--o{</code> là cách vẽ ở <strong>mức ý niệm</strong>: nó nói <em>"có quan hệ nhiều–nhiều"</em> mà chưa nói hiện thực ra sao.</p>
+<p>Sơ đồ 2 vẽ ở <strong>mức logic</strong> — mức đã quyết định sẽ có những bảng nào. Ở mức đó, M:N <strong>luôn</strong> đã được tách thành bảng trung gian, nên không còn đường <code>}o--o{</code> nào cả.</p>
+<p>Mẹo kiểm tra nhanh: một sơ đồ Crow's Foot có kèm danh sách cột mà <strong>vẫn còn</strong> đường <code>}o--o{</code> thì sơ đồ đó chưa xong việc — còn ít nhất một bảng chưa được vẽ ra.</p>
+</div>
+<h2 id="thuc-hanh">💻 Thực hành<a class="headerlink" href="#thuc-hanh" title="Permanent link">&para;</a></h2>
+<h3 id="suy-ra-ky-hieu-crows-foot-tu-chinh-luoc-o">Suy ra ký hiệu Crow's Foot từ chính lược đồ<a class="headerlink" href="#suy-ra-ky-hieu-crows-foot-tu-chinh-luoc-o" title="Permanent link">&para;</a></h3>
+<p>Điều hay nhất của Crow's Foot: <strong>mọi ký hiệu đều đọc được ra từ database</strong>, không cần đoán. Quy tắc đúng ba dòng:</p>
+<table>
+<thead>
+<tr>
+<th>Muốn biết</th>
+<th>Nhìn vào</th>
+<th>Kết quả</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Nửa <strong>tối thiểu</strong> ở phía cha</td>
+<td>cột khoá ngoại có <code>NOT NULL</code> không</td>
+<td>có → <code>&#124;</code> · không → <code>o</code></td>
+</tr>
+<tr>
+<td>Nửa <strong>tối đa</strong> ở phía con</td>
+<td>cột khoá ngoại có <code>UNIQUE</code> không</td>
+<td>có → <code>&#124;</code> (1:1) · không → <code>{</code> (1:N)</td>
+</tr>
+</tbody>
+</table>
+<p>Câu lệnh sau tự sinh ra bảng đó cho <strong>mọi</strong> khoá ngoại trong database:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">c</span><span class="p">.</span><span class="n">conrelid</span><span class="p">::</span><span class="n">regclass</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">bang_con</span><span class="p">,</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">       </span><span class="n">a</span><span class="p">.</span><span class="n">attname</span><span class="w">            </span><span class="k">AS</span><span class="w"> </span><span class="n">cot_khoa_ngoai</span><span class="p">,</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">       </span><span class="k">c</span><span class="p">.</span><span class="n">confrelid</span><span class="p">::</span><span class="n">regclass</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">bang_cha</span><span class="p">,</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">       </span><span class="n">a</span><span class="p">.</span><span class="n">attnotnull</span><span class="w">         </span><span class="k">AS</span><span class="w"> </span><span class="n">bat_buoc</span><span class="p">,</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">       </span><span class="k">EXISTS</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="mi">1</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">               </span><span class="k">FROM</span><span class="w"> </span><span class="n">pg_constraint</span><span class="w"> </span><span class="n">u</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">               </span><span class="k">WHERE</span><span class="w"> </span><span class="n">u</span><span class="p">.</span><span class="n">conrelid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">c</span><span class="p">.</span><span class="n">conrelid</span>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">                 </span><span class="k">AND</span><span class="w"> </span><span class="n">u</span><span class="p">.</span><span class="n">contype</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="p">(</span><span class="s1">'p'</span><span class="p">,</span><span class="w"> </span><span class="s1">'u'</span><span class="p">)</span>
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">                 </span><span class="k">AND</span><span class="w"> </span><span class="n">u</span><span class="p">.</span><span class="n">conkey</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">ARRAY</span><span class="p">[</span><span class="n">a</span><span class="p">.</span><span class="n">attnum</span><span class="p">])</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">duy_nhat</span>
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="k">FROM</span><span class="w"> </span><span class="n">pg_constraint</span><span class="w"> </span><span class="k">c</span>
+</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="k">JOIN</span><span class="w"> </span><span class="n">pg_attribute</span><span class="w"> </span><span class="n">a</span>
+</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">  </span><span class="k">ON</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">attrelid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">c</span><span class="p">.</span><span class="n">conrelid</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">attnum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ANY</span><span class="w"> </span><span class="p">(</span><span class="k">c</span><span class="p">.</span><span class="n">conkey</span><span class="p">)</span>
+</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="k">WHERE</span><span class="w"> </span><span class="k">c</span><span class="p">.</span><span class="n">contype</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'f'</span>
+</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="w">  </span><span class="k">AND</span><span class="w"> </span><span class="k">c</span><span class="p">.</span><span class="n">connamespace</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'public'</span><span class="p">::</span><span class="n">regnamespace</span>
+</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="k">c</span><span class="p">.</span><span class="n">conrelid</span><span class="p">::</span><span class="n">regclass</span><span class="p">::</span><span class="nb">text</span><span class="p">,</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">attname</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Kết quả <strong>11 dòng</strong> — đúng bằng số cột khoá ngoại của 10 bảng. Đọc chúng thành ký hiệu:</p>
+<table>
+<thead>
+<tr>
+<th>Dòng trong kết quả</th>
+<th><code>bat_buoc</code></th>
+<th><code>duy_nhat</code></th>
+<th>Ký hiệu Crow's Foot</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>diem</code> / <code>ma_hs</code>, <code>diem</code> / <code>ma_mon</code></td>
+<td><code>t</code></td>
+<td><code>f</code></td>
+<td><code>&#124;&#124;--o{</code> về phía <code>diem</code></td>
+</tr>
+<tr>
+<td><code>diem_danh</code> / <code>ma_hs</code></td>
+<td><code>t</code></td>
+<td><code>f</code></td>
+<td><code>hoc_sinh &#124;&#124;--o{ diem_danh</code></td>
+</tr>
+<tr>
+<td><code>hoc_sinh</code> / <code>ma_lop</code></td>
+<td><code>t</code></td>
+<td><code>f</code></td>
+<td><code>lop &#124;&#124;--o{ hoc_sinh</code></td>
+</tr>
+<tr>
+<td><code>lop</code> / <code>ma_gvcn</code></td>
+<td><code>f</code></td>
+<td><strong><code>t</code></strong></td>
+<td><code>giao_vien &#124;o--o&#124; lop</code></td>
+</tr>
+<tr>
+<td><code>muon_sach</code> / <code>ma_hs</code>, <code>ma_sach</code></td>
+<td><code>t</code></td>
+<td><code>f</code></td>
+<td><code>&#124;&#124;--o{</code> về phía <code>muon_sach</code></td>
+</tr>
+<tr>
+<td><code>phan_cong_day</code> / ba cột</td>
+<td><code>t</code></td>
+<td><code>f</code></td>
+<td><code>&#124;&#124;--o{</code> về phía <code>phan_cong_day</code></td>
+</tr>
+<tr>
+<td><code>phu_huynh</code> / <code>ma_hs</code></td>
+<td><code>t</code></td>
+<td><code>f</code></td>
+<td><code>hoc_sinh &#124;&#124;--o{ phu_huynh</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Đúng một dòng</strong> có <code>duy_nhat = t</code>, và đó chính là đường <code>|o--o|</code> duy nhất của Sơ đồ 2.</p>
+<h3 id="xem-tan-mat-rang-buoc-lam-nen-quan-he-11">Xem tận mắt ràng buộc làm nên quan hệ 1:1<a class="headerlink" href="#xem-tan-mat-rang-buoc-lam-nen-quan-he-11" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">conname</span><span class="p">,</span><span class="w"> </span><span class="n">contype</span><span class="p">,</span><span class="w"> </span><span class="n">pg_get_constraintdef</span><span class="p">(</span><span class="n">oid</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">dinh_nghia</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="k">FROM</span><span class="w"> </span><span class="n">pg_constraint</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">conrelid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'lop'</span><span class="p">::</span><span class="n">regclass</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span><span class="k">AND</span><span class="w"> </span><span class="n">contype</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="p">(</span><span class="s1">'p'</span><span class="p">,</span><span class="w"> </span><span class="s1">'u'</span><span class="p">,</span><span class="w"> </span><span class="s1">'f'</span><span class="p">)</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">contype</span><span class="p">,</span><span class="w"> </span><span class="n">conname</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Trong kết quả có ba dòng đáng chú ý:</p>
+<ul>
+<li><code>lop_pkey</code> — <code>PRIMARY KEY (ma_lop)</code></li>
+<li><code>lop_ma_gvcn_key</code> — <code>UNIQUE (ma_gvcn)</code> ← <strong>đây là chữ <code>UK</code> trong sơ đồ</strong></li>
+<li><code>lop_ma_gvcn_fkey</code> — <code>FOREIGN KEY (ma_gvcn) REFERENCES giao_vien(ma_gv) ON DELETE SET NULL</code> ← <strong>đây là chữ <code>FK</code></strong></li>
+</ul>
+<p>Hai ràng buộc riêng biệt, đặt trên <strong>cùng một cột</strong>, và phải có <strong>cả hai</strong> thì mới ra <code>|o--o|</code>. Bỏ <code>lop_ma_gvcn_key</code> đi thì sơ đồ tụt xuống thành <code>|o--o{</code> — mỗi giáo viên chủ nhiệm được nhiều lớp.</p>
+<h3 id="kiem-chung-bang-du-lieu-unique-ang-lam-gi">Kiểm chứng bằng dữ liệu: <code>UNIQUE</code> đang làm gì<a class="headerlink" href="#kiem-chung-bang-du-lieu-unique-ang-lam-gi" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w">                  </span><span class="k">AS</span><span class="w"> </span><span class="n">so_lop</span><span class="p">,</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">       </span><span class="k">count</span><span class="p">(</span><span class="n">ma_gvcn</span><span class="p">)</span><span class="w">            </span><span class="k">AS</span><span class="w"> </span><span class="n">so_lop_co_gvcn</span><span class="p">,</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">       </span><span class="k">count</span><span class="p">(</span><span class="k">DISTINCT</span><span class="w"> </span><span class="n">ma_gvcn</span><span class="p">)</span><span class="w">   </span><span class="k">AS</span><span class="w"> </span><span class="n">so_gvcn_khac_nhau</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="k">FROM</span><span class="w"> </span><span class="n">lop</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Kết quả: <code>6</code>, <code>5</code>, <code>5</code>.</p>
+<p>Đọc ra ký hiệu:</p>
+<ul>
+<li><code>6</code> lớp nhưng chỉ <code>5</code> lớp có chủ nhiệm → phía <code>lop</code> được phép trống → nửa ngoài là <strong>vòng tròn</strong>: <code>o|</code>.</li>
+<li><code>5</code> lớp có chủ nhiệm ứng với đúng <code>5</code> giáo viên khác nhau → không ai ôm hai lớp → nửa trong là <strong>vạch</strong>: <code>|</code>.</li>
+</ul>
+<p>Ghép lại: <code>|o--o|</code>. Sơ đồ và dữ liệu khớp nhau.</p>
+<h3 id="so-sanh-voi-mot-quan-he-1n">So sánh với một quan hệ 1:N<a class="headerlink" href="#so-sanh-voi-mot-quan-he-1n" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w">                </span><span class="k">AS</span><span class="w"> </span><span class="n">so_hoc_sinh</span><span class="p">,</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">       </span><span class="k">count</span><span class="p">(</span><span class="k">DISTINCT</span><span class="w"> </span><span class="n">ma_lop</span><span class="p">)</span><span class="w">  </span><span class="k">AS</span><span class="w"> </span><span class="n">so_lop_khac_nhau</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Kết quả: <code>40</code> và <code>6</code>.</p>
+<p>Bốn mươi dòng dồn vào sáu giá trị — nghĩa là có lớp chứa nhiều học sinh. Đó là <strong>chân quạ</strong>. Và vì <code>ma_lop</code> là <code>NOT NULL</code> nên phía <code>lop</code> là vạch. Ghép lại: <code>lop ||--o{ hoc_sinh</code>.</p>
+<h3 id="bang-nao-la-bang-trung-gian">Bảng nào là bảng trung gian<a class="headerlink" href="#bang-nao-la-bang-trung-gian" title="Permanent link">&para;</a></h3>
+<p>Bảng trung gian có một dấu hiệu rất dễ nhận: <strong>có từ hai khoá ngoại trở lên</strong>.</p>
+<div class="highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">conrelid</span><span class="p">::</span><span class="n">regclass</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">bang</span><span class="p">,</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">       </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w">           </span><span class="k">AS</span><span class="w"> </span><span class="n">so_khoa_ngoai</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="k">FROM</span><span class="w"> </span><span class="n">pg_constraint</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">contype</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'f'</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">  </span><span class="k">AND</span><span class="w"> </span><span class="n">connamespace</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'public'</span><span class="p">::</span><span class="n">regnamespace</span>
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="mi">1</span>
+</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="k">HAVING</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">2</span>
+</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="k">DESC</span><span class="p">,</span><span class="w"> </span><span class="n">conrelid</span><span class="p">::</span><span class="n">regclass</span><span class="p">::</span><span class="nb">text</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Ba bảng hiện ra: <code>phan_cong_day</code> (3 khoá ngoại), <code>diem</code> (2) và <code>muon_sach</code> (2).</p>
+<p>Đúng ba hình chữ nhật mà <a href="../10-bieu-do-er-ky-hieu-chen/">Bài 10</a> đã nói là <strong>vốn là hình thoi</strong> trong ký hiệu Chen. Crow's Foot buộc chúng phải hiện ra thành bảng — và câu SQL trên tìm lại được chúng chỉ bằng cách đếm khoá ngoại.</p>
+<h2 id="loi-thuong-gap">⚠️ Lỗi thường gặp<a class="headerlink" href="#loi-thuong-gap" title="Permanent link">&para;</a></h2>
+<div class="admonition warning">
+<p class="admonition-title">Lỗi 1: Đọc ký hiệu ngược đầu</p>
+<p>Nhìn <code>lop ||--o{ hoc_sinh</code> rồi đọc thành <em>"một lớp có đúng một học sinh"</em>. Sai hoàn toàn.</p>
+<p>Ký hiệu <code>||</code> nằm sát <code>lop</code>, nên nó nói về <strong><code>lop</code></strong>: <em>mỗi học sinh có đúng một lớp</em>. Ký hiệu chân quạ nằm sát <code>hoc_sinh</code>, nên nó nói về <strong><code>hoc_sinh</code></strong>: <em>mỗi lớp có nhiều học sinh</em>.</p>
+<p>Cách đọc chống sai: đặt ngón tay lên một ký hiệu, rồi hỏi <em>"ứng với </em><em>một</em><em> thực thể ở đầu kia, có bao nhiêu thực thể ở đầu </em><em>này</em><em>?"</em></p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Lỗi 2: Quên nửa 'tối thiểu'</p>
+<p>Vẽ <code>lop |{--o{ hoc_sinh</code> rồi bảo <em>"xong, 1:N đấy"</em>. Nhưng <code>|{</code> nghĩa là <em>"một hoặc nhiều lớp cho mỗi học sinh"</em> — tức là một học sinh học <strong>nhiều lớp cùng lúc</strong>.</p>
+<p>Mỗi ký hiệu có <strong>hai</strong> ký tự và cả hai đều mang nghĩa. Bỏ qua một nửa là mô tả sai lược đồ.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Lỗi 3: Vẽ <code>}o--o{</code> rồi vẫn liệt kê cột</p>
+<p>Một sơ đồ Crow's Foot <strong>có khai báo cột</strong> là sơ đồ ở mức logic, tức là mức đã biết database sẽ có những bảng nào. Ở mức đó, quan hệ M:N phải đã được tách thành bảng trung gian rồi.</p>
+<p>Còn đường <code>}o--o{</code> nghĩa là <em>"tôi chưa quyết định hiện thực ra sao"</em>. Hai thứ đó không đi cùng nhau được. Cứ để <code>}o--o{</code> mà vẫn liệt kê cột thì người đọc sẽ hỏi: <em>"vậy <code>diem_so</code> lưu ở bảng nào?"</em></p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Lỗi 4: Viết <code>PK_FK</code> trong <code>erDiagram</code></p>
+<p><div class="highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>char ma_gv PK_FK
+</span></code></pre></div>
+Mermaid không hiểu <code>PK_FK</code>, và cả sơ đồ sẽ không hiện ra — chỉ còn một khung báo lỗi đỏ.</p>
+<p>Viết đúng là <code>PK, FK</code> — <strong>hai nhãn, ngăn bằng dấu phẩy</strong>.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Lỗi 5: Tưởng Crow's Foot thay thế được Chen</p>
+<p>Vì Crow's Foot gọn hơn và các công cụ đều dùng nó, rất dễ kết luận <em>"học Chen làm gì cho mệt"</em>.</p>
+<p>Nhưng thử vẽ tình huống này bằng Crow's Foot: <em>"một học sinh có nhiều số điện thoại"</em>. Bạn sẽ buộc phải tạo ngay một bảng <code>hoc_sinh_sdt</code> — tức là đã <strong>quyết định xong cách hiện thực</strong> trước cả khi kịp hỏi cô hiệu trưởng xem có cần lưu gì thêm về số điện thoại đó không.</p>
+<p>Chen cho phép bạn ghi <em>"đây là thuộc tính đa trị"</em> rồi <strong>hoãn quyết định</strong> lại. Đó là giá trị của nó, và là lý do <a href="../14-chuyen-er-sang-bang/">Bài 14</a> tồn tại.</p>
+</div>
+<h2 id="bai-tap">✍️ Bài tập<a class="headerlink" href="#bai-tap" title="Permanent link">&para;</a></h2>
+<ol>
+<li>
+<p>Đọc thành lời (theo mẫu <em>"mỗi ... có ... ; mỗi ... có ..."</em>) từng đường dưới đây:</p>
+<p>a. <code>sach ||--o{ muon_sach</code>
+b. <code>giao_vien |o--o| lop</code>
+c. <code>phong_hoc ||--|{ thiet_bi</code>
+d. <code>mon_hoc }o--o{ giao_vien</code></p>
+</li>
+<li>
+<p>Trường mở thêm câu lạc bộ. Luật: mỗi học sinh tham gia <strong>tối đa một</strong> câu lạc bộ, có thể không tham gia câu lạc bộ nào; mỗi câu lạc bộ phải có <strong>ít nhất một</strong> thành viên. Viết dòng <code>erDiagram</code> đúng cho quan hệ này, và nói xem lược đồ SQL cần những ràng buộc gì.</p>
+</li>
+<li>
+<p>Nhìn Sơ đồ 2 và trả lời: nếu xoá ràng buộc <code>UNIQUE</code> trên <code>lop.ma_gvcn</code>, ký hiệu của đường <code>giao_vien</code> ↔ <code>lop</code> đổi thành gì? Câu chuyện đời thực tương ứng là gì?</p>
+</li>
+<li>
+<p>Viết câu SQL đếm xem mỗi bảng trong <code>truong_hoc</code> có bao nhiêu <strong>đường nối chạm vào nó</strong> trong Sơ đồ 2 — tức tổng số khoá ngoại <strong>đi ra</strong> cộng số khoá ngoại <strong>trỏ tới</strong>. Bảng nào nhiều nhất?</p>
+</li>
+<li>
+<p>Một bạn vẽ sơ đồ sau cho hệ thống thư viện và nói <em>"em vẽ theo Crow's Foot"</em>:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>hoc_sinh }o--o{ sach : "mượn"
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>muon_sach {
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>    serial ma_muon PK
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>    date ngay_muon
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>}
+</span></code></pre></div>
+<p>Chỉ ra <strong>hai</strong> lỗi và viết lại cho đúng.</p>
+</li>
+</ol>
+<details class="success">
+<summary>Đáp án</summary>
+<p><strong>Câu 1.</strong></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Đọc thành lời</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>a</td>
+<td>Mỗi lượt mượn ứng với <strong>đúng một</strong> cuốn sách; mỗi cuốn sách có <strong>0 hoặc nhiều</strong> lượt mượn</td>
+</tr>
+<tr>
+<td>b</td>
+<td>Mỗi lớp có <strong>0 hoặc 1</strong> giáo viên chủ nhiệm; mỗi giáo viên chủ nhiệm <strong>0 hoặc 1</strong> lớp</td>
+</tr>
+<tr>
+<td>c</td>
+<td>Mỗi thiết bị thuộc <strong>đúng một</strong> phòng học; mỗi phòng học có <strong>ít nhất một</strong> thiết bị</td>
+</tr>
+<tr>
+<td>d</td>
+<td>Mỗi giáo viên dạy <strong>0 hoặc nhiều</strong> môn; mỗi môn do <strong>0 hoặc nhiều</strong> giáo viên dạy</td>
+</tr>
+</tbody>
+</table>
+<p>Lưu ý câu c: ký hiệu <code>|{</code> (một hoặc nhiều) là chỗ duy nhất trong bốn câu có ràng buộc tham gia <strong>toàn phần ở phía nhiều</strong> — và đó cũng là ràng buộc mà SQL không cưỡng chế nổi bằng <code>NOT NULL</code> (<a href="../09-participation-va-thuc-the-yeu/">Bài 9</a>).</p>
+<p><strong>Câu 2.</strong></p>
+<div class="highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>cau_lac_bo ||--|{ hoc_sinh : "có thành viên"
+</span></code></pre></div>
+<p>Sai! Đọc lại: <code>||</code> sát <code>cau_lac_bo</code> nghĩa là <em>mỗi học sinh phải có đúng một câu lạc bộ</em> — trái với đề bài (được phép không tham gia). Viết đúng là:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>cau_lac_bo |o--|{ hoc_sinh : "có thành viên"
+</span></code></pre></div>
+<ul>
+<li><code>|o</code> sát <code>cau_lac_bo</code>: mỗi học sinh có <strong>0 hoặc 1</strong> câu lạc bộ.</li>
+<li><code>|{</code> sát <code>hoc_sinh</code>: mỗi câu lạc bộ có <strong>ít nhất một</strong> học sinh.</li>
+</ul>
+<p>Về lược đồ SQL: thêm cột <code>hoc_sinh.ma_clb</code> là khoá ngoại <strong>cho phép <code>NULL</code></strong> (vì <code>|o</code>) và <strong>không</strong> có <code>UNIQUE</code> (vì nhiều thành viên chung một câu lạc bộ). Còn điều kiện <em>"mỗi câu lạc bộ ít nhất một thành viên"</em> thì <strong>không</strong> ép được bằng ràng buộc cột — cần trigger hoặc kiểm tra ở tầng ứng dụng.</p>
+<p><strong>Câu 3.</strong>
+Đổi từ <code>giao_vien |o--o| lop</code> thành <code>giao_vien |o--o{ lop</code>.</p>
+<p>Câu chuyện đời thực: <strong>một giáo viên được phép chủ nhiệm nhiều lớp cùng lúc</strong>. Quan hệ tụt từ 1:1 xuống 1:N. Nửa ngoài vẫn là vòng tròn (lớp vẫn được phép chưa có chủ nhiệm), chỉ nửa trong đổi từ vạch sang chân quạ.</p>
+<p>Đây đúng là điều <a href="../08-moi-quan-he-va-cardinality/">Bài 8</a> đã cảnh báo: <strong><code>UNIQUE</code> là toàn bộ khác biệt giữa 1:1 và 1:N ở mức bảng.</strong></p>
+<p><strong>Câu 4.</strong></p>
+<div class="highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">bang</span><span class="p">,</span><span class="w"> </span><span class="k">sum</span><span class="p">(</span><span class="n">so_duong</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_duong_cham_vao</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="k">FROM</span><span class="w"> </span><span class="p">(</span>
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">    </span><span class="k">SELECT</span><span class="w"> </span><span class="n">conrelid</span><span class="p">::</span><span class="n">regclass</span><span class="p">::</span><span class="nb">text</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">bang</span><span class="p">,</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_duong</span>
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">    </span><span class="k">FROM</span><span class="w"> </span><span class="n">pg_constraint</span>
+</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="w">    </span><span class="k">WHERE</span><span class="w"> </span><span class="n">contype</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'f'</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">connamespace</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'public'</span><span class="p">::</span><span class="n">regnamespace</span>
+</span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="w">    </span><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="mi">1</span>
+</span><span id="__span-12-7"><a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="w">    </span><span class="k">UNION</span><span class="w"> </span><span class="k">ALL</span>
+</span><span id="__span-12-8"><a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="w">    </span><span class="k">SELECT</span><span class="w"> </span><span class="n">confrelid</span><span class="p">::</span><span class="n">regclass</span><span class="p">::</span><span class="nb">text</span><span class="p">,</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span>
+</span><span id="__span-12-9"><a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="w">    </span><span class="k">FROM</span><span class="w"> </span><span class="n">pg_constraint</span>
+</span><span id="__span-12-10"><a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="w">    </span><span class="k">WHERE</span><span class="w"> </span><span class="n">contype</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'f'</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">connamespace</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'public'</span><span class="p">::</span><span class="n">regnamespace</span>
+</span><span id="__span-12-11"><a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="w">    </span><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="mi">1</span>
+</span><span id="__span-12-12"><a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a><span class="p">)</span><span class="w"> </span><span class="n">t</span>
+</span><span id="__span-12-13"><a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">bang</span>
+</span><span id="__span-12-14"><a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="k">DESC</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+</span></code></pre></div>
+<p><code>hoc_sinh</code> đứng đầu: nó có 1 khoá ngoại đi ra (<code>ma_lop</code>) và 4 khoá ngoại trỏ tới (<code>phu_huynh</code>, <code>diem</code>, <code>muon_sach</code>, <code>diem_danh</code>) — tổng 5 đường.</p>
+<p>Điều này khớp đúng với Sơ đồ 2: <code>hoc_sinh</code> là <strong>trung tâm</strong> của cả biểu đồ. Trong một database thật, bảng có nhiều đường chạm vào nhất thường là bảng quan trọng nhất — và cũng là bảng nguy hiểm nhất khi xoá dòng, điều <a href="../15-rang-buoc-toan-ven/">Bài 15</a> sẽ bàn.</p>
+<p><strong>Câu 5.</strong>
+Hai lỗi:</p>
+<ol>
+<li><strong>Trộn hai mức.</strong> Đường <code>}o--o{</code> là mức ý niệm (chưa tách M:N), nhưng khối khai báo cột lại là mức logic. Đã vẽ <code>muon_sach</code> ra thì phải bỏ đường <code>}o--o{</code> đi.</li>
+<li><strong><code>muon_sach</code> không nối vào đâu cả, và thiếu hai khoá ngoại.</strong> Một bảng trung gian mà không có <code>ma_hs</code>, <code>ma_sach</code> thì không trung gian được gì.</li>
+</ol>
+<p>Viết lại:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>hoc_sinh ||--o{ muon_sach : "mượn"
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>sach ||--o{ muon_sach : "được mượn"
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>muon_sach {
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>    serial ma_muon PK
+</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>    char ma_hs FK
+</span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>    char ma_sach FK
+</span><span id="__span-13-7"><a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>    date ngay_muon
+</span><span id="__span-13-8"><a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>    date ngay_tra_du_kien
+</span><span id="__span-13-9"><a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>    date ngay_tra_thuc_te
+</span><span id="__span-13-10"><a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>}
+</span></code></pre></div>
+</details>
+<h2 id="tom-tat">🔑 Tóm tắt<a class="headerlink" href="#tom-tat" title="Permanent link">&para;</a></h2>
+<ol>
+<li><strong>Ký hiệu Crow's Foot</strong> vẽ mỗi bảng thành một hình chữ nhật <strong>có danh sách cột bên trong</strong>, và gói bản số cùng ràng buộc tham gia vào <strong>một ký hiệu hai nửa</strong> ở mỗi đầu đường.</li>
+<li>Nửa <strong>ngoài</strong> trả lời <em>tối thiểu bao nhiêu</em> (<code>o</code> = 0, <code>|</code> = 1); nửa <strong>trong</strong> trả lời <em>tối đa bao nhiêu</em> (<code>|</code> = 1, <code>}</code> = nhiều). Ký hiệu ở đầu nào thì mô tả thực thể ở đầu <strong>đó</strong>.</li>
+<li>Bốn tổ hợp cần thuộc: <code>||--o{</code> là 1:N, <code>|o--o|</code> là 1:1 tuỳ chọn, <code>||--||</code> là 1:1 bắt buộc (rất hiếm), <code>}o--o{</code> là M:N chưa tách.</li>
+<li>Crow's Foot <strong>mất</strong> ba thứ so với Chen: thuộc tính đa trị, thuộc tính dẫn xuất, và quan hệ bậc từ ba trở lên — nên nó là ký hiệu ở <strong>mức logic</strong>, vẽ <strong>sau</strong> khi đã biết sẽ có bảng nào.</li>
+<li>Mọi ký hiệu trong Sơ đồ 2 đều đọc ngược lại được từ lược đồ: <code>NOT NULL</code> quyết định nửa ngoài, <code>UNIQUE</code> quyết định nửa trong — và <code>truong_hoc</code> chỉ có <strong>đúng một</strong> đường <code>|o--o|</code>, ở cột <code>lop.ma_gvcn</code>.</li>
+</ol>
+<hr />
+<p>⬅️ <a href="../10-bieu-do-er-ky-hieu-chen/">Bài 10 — Biểu đồ ER ký hiệu Chen</a> · ➡️ <a href="../12-bay-loai-khoa/">Bài 12 — Bảy loại khoá trong cơ sở dữ liệu</a></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Trở lại mục lục
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Chân trang" >
+        
+          
+          <a href="../10-bieu-do-er-ky-hieu-chen/" class="md-footer__link md-footer__link--prev" aria-label="Trước: Bài 10 — Biểu đồ ER — ký hiệu Chen">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Trước
+              </span>
+              <div class="md-ellipsis">
+                Bài 10 — Biểu đồ ER — ký hiệu Chen
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../12-bay-loai-khoa/" class="md-footer__link md-footer__link--next" aria-label="Sau: Bài 12 — Bảy loại khoá trong cơ sở dữ liệu">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Sau
+              </span>
+              <div class="md-ellipsis">
+                Bài 12 — Bảy loại khoá trong cơ sở dữ liệu
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Nội dung theo giấy phép CC BY 4.0
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/hungnguyen010518/database-tu-a-z" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.sections", "navigation.top", "navigation.footer", "navigation.indexes", "navigation.tracking", "toc.follow", "content.code.copy", "content.code.annotate", "search.highlight", "search.suggest"], "search": "../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "\u0110\u00e3 sao ch\u00e9p", "clipboard.copy": "Sao ch\u00e9p v\u00e0o b\u1ed9 nh\u1edb t\u1ea1m", "search.result.more.one": "1 t\u1eeb kh\u00e1c trong trang", "search.result.more.other": "# t\u1eeb kh\u00e1c trong trang", "search.result.none": "Kh\u00f4ng t\u00ecm th\u1ea5y t\u00e0i li\u1ec7u li\u00ean quan", "search.result.one": "1 t\u00e0i li\u1ec7u li\u00ean quan", "search.result.other": "# t\u00e0i li\u1ec7u li\u00ean quan", "search.result.placeholder": "Nh\u1eadp \u0111\u1ec3 b\u1eaft \u0111\u1ea7u t\u00ecm ki\u1ebfm", "search.result.term.missing": "Kh\u00f4ng", "select.version": "Ch\u1ecdn phi\u00ean b\u1ea3n"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.525ec568.min.js"></script>
+      
+    
+  </body>
+</html>

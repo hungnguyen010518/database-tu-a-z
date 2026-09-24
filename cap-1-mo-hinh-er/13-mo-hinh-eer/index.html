@@ -1,0 +1,2218 @@
+
+<!doctype html>
+<html lang="vi" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Khóa học cơ sở dữ liệu tiếng Việt, từ con số 0 tới mức siêu nâng cao — giải thích để học sinh cấp 2 cũng hiểu được.">
+      
+      
+      
+        <link rel="canonical" href="https://hungnguyen010518.github.io/database-tu-a-z/cap-1-mo-hinh-er/13-mo-hinh-eer/">
+      
+      
+        <link rel="prev" href="../12-bay-loai-khoa/">
+      
+      
+        <link rel="next" href="../14-chuyen-er-sang-bang/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.39">
+    
+    
+      
+        <title>Bài 13 — Mô hình EER: Generalization, Specialization, Aggregation - Database từ A-Z</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.8c3ca2c6.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#bai-13-mo-hinh-eer-generalization-specialization-aggregation" class="md-skip">
+          Bỏ qua
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Đầu trang">
+    <a href="../.." title="Database từ A-Z" class="md-header__button md-logo" aria-label="Database từ A-Z" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3C7.58 3 4 4.79 4 7s3.58 4 8 4 8-1.79 8-4-3.58-4-8-4M4 9v3c0 2.21 3.58 4 8 4s8-1.79 8-4V9c0 2.21-3.58 4-8 4s-8-1.79-8-4m0 5v3c0 2.21 3.58 4 8 4s8-1.79 8-4v-3c0 2.21-3.58 4-8 4s-8-1.79-8-4"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Database từ A-Z
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Bài 13 — Mô hình EER: Generalization, Specialization, Aggregation
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Chuyển sang chế độ tối"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Chuyển sang chế độ tối" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Chuyển sang chế độ sáng"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Chuyển sang chế độ sáng" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Tìm kiếm" placeholder="Tìm kiếm" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Tìm kiếm">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Xoá" aria-label="Xoá" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/hungnguyen010518/database-tu-a-z" title="Xem mã nguồn" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    database-tu-a-z
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Thanh điều hướng" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Database từ A-Z" class="md-nav__button md-logo" aria-label="Database từ A-Z" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3C7.58 3 4 4.79 4 7s3.58 4 8 4 8-1.79 8-4-3.58-4-8-4M4 9v3c0 2.21 3.58 4 8 4s8-1.79 8-4V9c0 2.21-3.58 4-8 4s-8-1.79-8-4m0 5v3c0 2.21 3.58 4 8 4s8-1.79 8-4v-3c0 2.21-3.58 4-8 4s-8-1.79-8-4"/></svg>
+
+    </a>
+    Database từ A-Z
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/hungnguyen010518/database-tu-a-z" title="Xem mã nguồn" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    database-tu-a-z
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Trang chủ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Cấp 0 — Nhập môn
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Cấp 0 — Nhập môn
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-0-nhap-mon/01-du-lieu-va-thong-tin/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 1 — Dữ liệu, thông tin và tại sao phải lưu trữ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-0-nhap-mon/02-tu-so-giay-den-excel/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 2 — Từ sổ giấy đến Excel
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-0-nhap-mon/03-dbms-la-gi/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 3 — DBMS là gì
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-0-nhap-mon/04-cac-mo-hinh-du-lieu/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 4 — Các mô hình dữ liệu
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-0-nhap-mon/05-cai-dat-postgresql/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 5 — Cài đặt PostgreSQL
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Cấp 1 — Mô hình quan hệ & Biểu đồ ER
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Cấp 1 — Mô hình quan hệ & Biểu đồ ER
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-mo-hinh-quan-he/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 6 — Mô hình quan hệ: bảng, dòng, cột, miền giá trị, lược đồ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-thuc-the-va-thuoc-tinh/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 7 — Thực thể và các loại thuộc tính
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08-moi-quan-he-va-cardinality/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 8 — Mối quan hệ, bậc và bản số (Cardinality)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09-participation-va-thuc-the-yeu/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 9 — Ràng buộc tham gia và Thực thể yếu
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10-bieu-do-er-ky-hieu-chen/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 10 — Biểu đồ ER — ký hiệu Chen
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../11-bieu-do-er-crows-foot/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 11 — Biểu đồ ER — ký hiệu Crow's Foot và vẽ bằng Mermaid
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../12-bay-loai-khoa/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 12 — Bảy loại khoá trong cơ sở dữ liệu
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Bài 13 — Mô hình EER: Generalization, Specialization, Aggregation
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Bài 13 — Mô hình EER: Generalization, Specialization, Aggregation
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Mục lục">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Mục lục
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#cau-chuyen-mo-au" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧠 Câu chuyện mở đầu
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#khai-niem-thuat-ngu" class="md-nav__link">
+    <span class="md-ellipsis">
+      📖 Khái niệm &amp; thuật ngữ
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📖 Khái niệm & thuật ngữ">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#eer-la-gi" class="md-nav__link">
+    <span class="md-ellipsis">
+      EER là gì
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lop-cha-va-lop-con" class="md-nav__link">
+    <span class="md-ellipsis">
+      Lớp cha và lớp con
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#chuyen-biet-hoa-va-tong-quat-hoa-mot-cau-truc-hai-huong-i" class="md-nav__link">
+    <span class="md-ellipsis">
+      Chuyên biệt hoá và tổng quát hoá — một cấu trúc, hai hướng đi
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bon-rang-buoc-tren-mot-chuyen-biet-hoa" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bốn ràng buộc trên một chuyên biệt hoá
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ket-tap" class="md-nav__link">
+    <span class="md-ellipsis">
+      Kết tập
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ba-cach-hien-thuc-ke-thua-trong-bang-quan-he" class="md-nav__link">
+    <span class="md-ellipsis">
+      Ba cách hiện thực kế thừa trong bảng quan hệ
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bang-anh-oi-ba-cach" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bảng đánh đổi ba cách
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bang-thuat-ngu" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bảng thuật ngữ
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#so-o" class="md-nav__link">
+    <span class="md-ellipsis">
+      🖼️ Sơ đồ
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🖼️ Sơ đồ">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#so-o-1-cay-ke-thua-ve-bang-classdiagram" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sơ đồ 1 — Cây kế thừa, vẽ bằng classDiagram
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bang-anh-xa-sang-ky-hieu-eer-chuan" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bảng ánh xạ sang ký hiệu EER chuẩn
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#so-o-2-ket-tap" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sơ đồ 2 — Kết tập
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#thuc-hanh" class="md-nav__link">
+    <span class="md-ellipsis">
+      💻 Thực hành
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="💻 Thực hành">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cach-3-ang-chay-ngay-trong-truong_hoc" class="md-nav__link">
+    <span class="md-ellipsis">
+      Cách 3 đang chạy ngay trong truong_hoc
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dung-thu-cach-2-e-so-sanh" class="md-nav__link">
+    <span class="md-ellipsis">
+      Dựng thử Cách 2 để so sánh
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#so-sanh-cach-1-em-so-o-null" class="md-nav__link">
+    <span class="md-ellipsis">
+      So sánh Cách 1 — đếm số ô NULL
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#don-dep" class="md-nav__link">
+    <span class="md-ellipsis">
+      Dọn dẹp
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#loi-thuong-gap" class="md-nav__link">
+    <span class="md-ellipsis">
+      ⚠️ Lỗi thường gặp
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bai-tap" class="md-nav__link">
+    <span class="md-ellipsis">
+      ✍️ Bài tập
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tom-tat" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔑 Tóm tắt
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../14-chuyen-er-sang-bang/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 14 — Chuyển biểu đồ ER thành lược đồ quan hệ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../15-rang-buoc-toan-ven/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 15 — Ràng buộc toàn vẹn (Integrity Constraints)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../dataset/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Database mẫu
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../glossary/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bảng thuật ngữ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Mục lục">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Mục lục
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#cau-chuyen-mo-au" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧠 Câu chuyện mở đầu
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#khai-niem-thuat-ngu" class="md-nav__link">
+    <span class="md-ellipsis">
+      📖 Khái niệm &amp; thuật ngữ
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📖 Khái niệm & thuật ngữ">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#eer-la-gi" class="md-nav__link">
+    <span class="md-ellipsis">
+      EER là gì
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lop-cha-va-lop-con" class="md-nav__link">
+    <span class="md-ellipsis">
+      Lớp cha và lớp con
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#chuyen-biet-hoa-va-tong-quat-hoa-mot-cau-truc-hai-huong-i" class="md-nav__link">
+    <span class="md-ellipsis">
+      Chuyên biệt hoá và tổng quát hoá — một cấu trúc, hai hướng đi
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bon-rang-buoc-tren-mot-chuyen-biet-hoa" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bốn ràng buộc trên một chuyên biệt hoá
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ket-tap" class="md-nav__link">
+    <span class="md-ellipsis">
+      Kết tập
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ba-cach-hien-thuc-ke-thua-trong-bang-quan-he" class="md-nav__link">
+    <span class="md-ellipsis">
+      Ba cách hiện thực kế thừa trong bảng quan hệ
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bang-anh-oi-ba-cach" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bảng đánh đổi ba cách
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bang-thuat-ngu" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bảng thuật ngữ
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#so-o" class="md-nav__link">
+    <span class="md-ellipsis">
+      🖼️ Sơ đồ
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🖼️ Sơ đồ">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#so-o-1-cay-ke-thua-ve-bang-classdiagram" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sơ đồ 1 — Cây kế thừa, vẽ bằng classDiagram
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bang-anh-xa-sang-ky-hieu-eer-chuan" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bảng ánh xạ sang ký hiệu EER chuẩn
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#so-o-2-ket-tap" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sơ đồ 2 — Kết tập
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#thuc-hanh" class="md-nav__link">
+    <span class="md-ellipsis">
+      💻 Thực hành
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="💻 Thực hành">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cach-3-ang-chay-ngay-trong-truong_hoc" class="md-nav__link">
+    <span class="md-ellipsis">
+      Cách 3 đang chạy ngay trong truong_hoc
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dung-thu-cach-2-e-so-sanh" class="md-nav__link">
+    <span class="md-ellipsis">
+      Dựng thử Cách 2 để so sánh
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#so-sanh-cach-1-em-so-o-null" class="md-nav__link">
+    <span class="md-ellipsis">
+      So sánh Cách 1 — đếm số ô NULL
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#don-dep" class="md-nav__link">
+    <span class="md-ellipsis">
+      Dọn dẹp
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#loi-thuong-gap" class="md-nav__link">
+    <span class="md-ellipsis">
+      ⚠️ Lỗi thường gặp
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bai-tap" class="md-nav__link">
+    <span class="md-ellipsis">
+      ✍️ Bài tập
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tom-tat" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔑 Tóm tắt
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="bai-13-mo-hinh-eer-generalization-specialization-aggregation">Bài 13 — Mô hình EER: Generalization, Specialization, Aggregation<a class="headerlink" href="#bai-13-mo-hinh-eer-generalization-specialization-aggregation" title="Permanent link">&para;</a></h1>
+<div class="admonition abstract">
+<p class="admonition-title">🎯 Học xong bài này, bạn sẽ</p>
+<ul>
+<li>Biết <strong>EER</strong> bổ sung những gì so với mô hình ER cơ bản</li>
+<li>Phân biệt <strong>tổng quát hoá</strong> với <strong>chuyên biệt hoá</strong> — hai hướng đi của cùng một cấu trúc</li>
+<li>Đọc được bốn ràng buộc <strong>disjoint / overlapping</strong> và <strong>toàn phần / bộ phận</strong></li>
+<li>Hiểu <strong>kết tập</strong> và biết khi nào cần tới nó</li>
+<li>Chọn được một trong <strong>ba cách hiện thực kế thừa</strong> trong bảng quan hệ, và nói được lý do</li>
+</ul>
+</div>
+<h2 id="cau-chuyen-mo-au">🧠 Câu chuyện mở đầu<a class="headerlink" href="#cau-chuyen-mo-au" title="Permanent link">&para;</a></h2>
+<p>Trường làm thẻ ra vào mới. Bác bảo vệ cần một danh sách <strong>mọi người có mặt trong trường</strong>, kèm ảnh và ngày sinh.</p>
+<p>Cô văn thư mở máy tính, và khựng lại. Trường có ba danh sách riêng: học sinh, giáo viên, và nhân viên (bác bảo vệ, cô lao công, chú kế toán, cô thủ thư). Ba file Excel, ba cấu trúc cột khác nhau.</p>
+<p>Nhưng nhìn kỹ thì cả ba đều có <strong>họ tên, ngày sinh, giới tính, ảnh thẻ</strong>. Chỉ phần đuôi là khác: học sinh có <strong>lớp</strong>, giáo viên có <strong>môn chuyên môn</strong> và <strong>lương</strong>, nhân viên có <strong>bộ phận</strong> và <strong>lương</strong>.</p>
+<p>Cô nghĩ: <em>"Hay là gộp thành một danh sách 'Người trong trường', rồi mỗi loại ghi thêm phần riêng?"</em></p>
+<p>Rồi cô gặp ngay hai câu hỏi khó.</p>
+<p>Thứ nhất: <strong>cô thủ thư vừa là nhân viên, vừa dạy hai tiết Tin học mỗi tuần.</strong> Cô ấy đứng ở danh sách nào?</p>
+<p>Thứ hai: <strong>có ai chỉ là "người trong trường" mà không thuộc loại nào trong ba loại đó không?</strong> Nếu không thì danh sách gộp kia có ý nghĩa gì ngoài việc gom lại?</p>
+<p>Hai câu hỏi ấy chính là hai ràng buộc mà bài này sẽ dạy gọi tên.</p>
+<h2 id="khai-niem-thuat-ngu">📖 Khái niệm &amp; thuật ngữ<a class="headerlink" href="#khai-niem-thuat-ngu" title="Permanent link">&para;</a></h2>
+<h3 id="eer-la-gi">EER là gì<a class="headerlink" href="#eer-la-gi" title="Permanent link">&para;</a></h3>
+<p><strong>EER</strong> (<em>Enhanced ER</em> hoặc <em>Extended ER</em> — mô hình ER <strong>mở rộng</strong>) là mô hình ER cơ bản cộng thêm ba nhóm khái niệm, xuất hiện từ giữa thập niên 1980 khi người ta thấy ER gốc không mô tả nổi các hệ thống lớn:</p>
+<table>
+<thead>
+<tr>
+<th>Bổ sung</th>
+<th>Trả lời câu hỏi</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Lớp cha / lớp con</strong> (chuyên biệt hoá và tổng quát hoá)</td>
+<td><em>"Loại A là một dạng đặc biệt của loại B"</em> thì vẽ thế nào</td>
+</tr>
+<tr>
+<td><strong>Ràng buộc disjoint / overlapping / toàn phần / bộ phận</strong></td>
+<td>Một thực thể được thuộc mấy lớp con, và có bắt buộc thuộc lớp con nào không</td>
+</tr>
+<tr>
+<td><strong>Kết tập</strong></td>
+<td>Làm sao để một <strong>mối quan hệ</strong> tham gia vào một mối quan hệ khác</td>
+</tr>
+</tbody>
+</table>
+<p>Mọi thứ ở <a href="../07-thuc-the-va-thuoc-tinh/">Bài 7</a> đến <a href="../12-bay-loai-khoa/">Bài 12</a> vẫn giữ nguyên. EER chỉ <strong>thêm vào</strong>, không thay thế.</p>
+<h3 id="lop-cha-va-lop-con">Lớp cha và lớp con<a class="headerlink" href="#lop-cha-va-lop-con" title="Permanent link">&para;</a></h3>
+<p><strong>Lớp cha</strong> (<em>superclass</em>) là tập thực thể tổng quát. <strong>Lớp con</strong> (<em>subclass</em>) là tập thực thể chuyên biệt hơn, mà <strong>mọi thành viên của nó cũng là thành viên của lớp cha</strong>.</p>
+<p>Trong câu chuyện đầu bài:</p>
+<ul>
+<li>Lớp cha: <code>NGƯỜI TRONG TRƯỜNG</code></li>
+<li>Ba lớp con: <code>HỌC SINH</code>, <code>GIÁO VIÊN</code>, <code>NHÂN VIÊN</code></li>
+</ul>
+<p>Quan hệ giữa chúng gọi là <strong>quan hệ IS-A</strong> (<em>IS-A relationship</em>): <em>"Một HỌC SINH </em><em>là một</em><em> NGƯỜI TRONG TRƯỜNG."</em> Câu này đọc xuôi được thì mối quan hệ đúng.</p>
+<p>Tính chất quan trọng nhất: <strong>kế thừa thuộc tính</strong> (<em>attribute inheritance</em>). Lớp con <strong>tự động</strong> có mọi thuộc tính của lớp cha, không cần vẽ lại. <code>HỌC SINH</code> có <code>ho_ten</code>, <code>ngay_sinh</code>, <code>gioi_tinh</code> mà chẳng cần khai — vì <code>NGƯỜI TRONG TRƯỜNG</code> đã có.</p>
+<p>Lớp con cũng kế thừa luôn việc <strong>tham gia các mối quan hệ</strong> của lớp cha.</p>
+<h3 id="chuyen-biet-hoa-va-tong-quat-hoa-mot-cau-truc-hai-huong-i">Chuyên biệt hoá và tổng quát hoá — một cấu trúc, hai hướng đi<a class="headerlink" href="#chuyen-biet-hoa-va-tong-quat-hoa-mot-cau-truc-hai-huong-i" title="Permanent link">&para;</a></h3>
+<p>Đây là cặp khái niệm hay bị nhầm nhất, nhưng phân biệt thì cực kỳ đơn giản: <strong>chúng chỉ khác nhau ở chỗ bạn bắt đầu từ đâu.</strong></p>
+<p><strong>Chuyên biệt hoá</strong> (<em>specialization</em>) đi từ <strong>trên xuống</strong>: đã có lớp cha, nhận ra bên trong nó có những nhóm khác nhau, rồi tách ra thành các lớp con.</p>
+<blockquote>
+<p><em>"Trường có 'người trong trường'. À, nhưng người trong trường chia thành ba nhóm khác nhau hẳn..."</em></p>
+</blockquote>
+<p><strong>Tổng quát hoá</strong> (<em>generalization</em>) đi từ <strong>dưới lên</strong>: đã có nhiều tập thực thể riêng, nhận ra chúng có phần chung, rồi gom phần chung lên thành lớp cha.</p>
+<blockquote>
+<p><em>"Trường có ba danh sách. Ơ, cả ba đều có họ tên, ngày sinh, giới tính..."</em></p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Chuyên biệt hoá</th>
+<th>Tổng quát hoá</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>English</td>
+<td><em>specialization</em></td>
+<td><em>generalization</em></td>
+</tr>
+<tr>
+<td>Hướng</td>
+<td>Trên → dưới</td>
+<td>Dưới → trên</td>
+</tr>
+<tr>
+<td>Điểm xuất phát</td>
+<td>Một lớp cha</td>
+<td>Nhiều tập thực thể rời rạc</td>
+</tr>
+<tr>
+<td>Câu hỏi dẫn đường</td>
+<td><em>"Cái này chia thành mấy loại?"</em></td>
+<td><em>"Mấy cái này có gì chung?"</em></td>
+</tr>
+<tr>
+<td>Câu chuyện đầu bài</td>
+<td>—</td>
+<td><strong>Đây</strong> — cô văn thư gom ba danh sách</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition tip">
+<p class="admonition-title">Kết quả vẽ ra thì giống hệt nhau</p>
+<p>Dù đi từ trên xuống hay dưới lên, <strong>hình vẽ cuối cùng y hệt</strong>: một lớp cha, các lớp con, và ký hiệu IS-A nối chúng.</p>
+<p>Hai cái tên chỉ mô tả <strong>quá trình phân tích</strong>, không mô tả kết quả. Nên khi đọc một biểu đồ EER đã vẽ xong, bạn <strong>không thể</strong> biết người ta đã đi theo hướng nào — và cũng không cần biết.</p>
+</div>
+<h3 id="bon-rang-buoc-tren-mot-chuyen-biet-hoa">Bốn ràng buộc trên một chuyên biệt hoá<a class="headerlink" href="#bon-rang-buoc-tren-mot-chuyen-biet-hoa" title="Permanent link">&para;</a></h3>
+<p>Đây chính là hai câu hỏi khó của cô văn thư, nay được gọi tên.</p>
+<p><strong>Câu hỏi 1: một thực thể được thuộc mấy lớp con?</strong></p>
+<table>
+<thead>
+<tr>
+<th>Ràng buộc</th>
+<th>English</th>
+<th>Nghĩa</th>
+<th>Ký hiệu EER chuẩn</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Ràng buộc disjoint</strong></td>
+<td><em>disjoint</em></td>
+<td>Mỗi thực thể thuộc <strong>tối đa một</strong> lớp con</td>
+<td>Hình tròn chứa chữ <strong><code>d</code></strong></td>
+</tr>
+<tr>
+<td><strong>Ràng buộc overlapping</strong></td>
+<td><em>overlapping</em></td>
+<td>Một thực thể được thuộc <strong>nhiều</strong> lớp con cùng lúc</td>
+<td>Hình tròn chứa chữ <strong><code>o</code></strong></td>
+</tr>
+</tbody>
+</table>
+<p>Cô thủ thư vừa là nhân viên vừa dạy Tin học ⇒ chuyên biệt hoá này là <strong>overlapping</strong>. Nếu trường ra quy định <em>"đã là nhân viên thì không được đứng lớp"</em> thì nó thành <strong>disjoint</strong>.</p>
+<p><strong>Câu hỏi 2: có bắt buộc thuộc một lớp con nào không?</strong></p>
+<table>
+<thead>
+<tr>
+<th>Ràng buộc</th>
+<th>English</th>
+<th>Nghĩa</th>
+<th>Ký hiệu EER chuẩn</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Chuyên biệt hoá toàn phần</strong></td>
+<td><em>total specialization</em></td>
+<td><strong>Mọi</strong> thực thể lớp cha phải thuộc ít nhất một lớp con</td>
+<td>Đường <strong>gạch đôi</strong> nối lớp cha với hình tròn</td>
+</tr>
+<tr>
+<td><strong>Chuyên biệt hoá bộ phận</strong></td>
+<td><em>partial specialization</em></td>
+<td>Được phép có thực thể chỉ thuộc lớp cha</td>
+<td>Đường <strong>đơn</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Nếu trường khẳng định <em>"ai vào trường cũng phải là một trong ba loại"</em> thì đây là <strong>toàn phần</strong>. Nếu có thêm loại "khách tham quan" chưa được xếp loại thì là <strong>bộ phận</strong>.</p>
+<div class="admonition note">
+<p class="admonition-title">Hai câu hỏi độc lập → bốn tổ hợp</p>
+<p>Giống hệt cặp <em>bản số / ràng buộc tham gia</em> ở <a href="../09-participation-va-thuc-the-yeu/">Bài 9</a>, hai ràng buộc này độc lập nhau:</p>
+<table>
+<thead>
+<tr>
+<th>Tổ hợp</th>
+<th>Đọc là</th>
+<th>Ví dụ ở trường</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Disjoint + toàn phần</strong></td>
+<td>Ai cũng thuộc <strong>đúng một</strong> loại</td>
+<td>Học sinh chia thành Khối 6/7/8/9</td>
+</tr>
+<tr>
+<td><strong>Disjoint + bộ phận</strong></td>
+<td>Thuộc tối đa một loại, được phép không loại nào</td>
+<td>Học sinh chia thành Lớp trưởng / Lớp phó</td>
+</tr>
+<tr>
+<td><strong>Overlapping + toàn phần</strong></td>
+<td>Ai cũng thuộc ít nhất một loại, có thể nhiều loại</td>
+<td><strong>Câu chuyện đầu bài</strong> nếu mọi người đều được xếp loại</td>
+</tr>
+<tr>
+<td><strong>Overlapping + bộ phận</strong></td>
+<td>Tự do nhất</td>
+<td>Học sinh tham gia các câu lạc bộ</td>
+</tr>
+</tbody>
+</table>
+<p>Khi vẽ EER mà quên ghi hai ràng buộc này thì biểu đồ mất gần hết giá trị — người đọc không biết cô thủ thư đứng ở đâu.</p>
+</div>
+<h3 id="ket-tap">Kết tập<a class="headerlink" href="#ket-tap" title="Permanent link">&para;</a></h3>
+<p><strong>Kết tập</strong> (<em>aggregation</em>) là kỹ thuật <strong>coi cả một mối quan hệ như một thực thể duy nhất</strong>, để mối quan hệ đó có thể tham gia vào một mối quan hệ khác.</p>
+<p>Nghe trừu tượng, nhưng nhu cầu thì rất cụ thể. Xét thư viện:</p>
+<ul>
+<li><code>HỌC SINH</code> — <em>MƯỢN</em> — <code>SÁCH</code> là một mối quan hệ M:N (<a href="../08-moi-quan-he-va-cardinality/">Bài 8</a>).</li>
+<li>Bây giờ trường muốn ghi thêm: <strong>thủ thư nào đã làm thủ tục cho lượt mượn đó</strong>.</li>
+</ul>
+<p>Vấn đề: trong ER cơ bản, <strong>hình thoi không nối được vào hình thoi</strong>. Bạn không thể vẽ một mối quan hệ <em>XỬ LÝ BỞI</em> nối <code>THỦ THƯ</code> với hình thoi <em>MƯỢN</em>.</p>
+<p>Kết tập giải quyết bằng cách vẽ <strong>một khung bao quanh</strong> cụm <code>HỌC SINH — MƯỢN — SÁCH</code>, rồi coi cả khung đó là một thực thể tên <code>LƯỢT MƯỢN</code>. Bây giờ <code>THỦ THƯ</code> nối vào khung ấy được bình thường.</p>
+<div class="admonition question">
+<p class="admonition-title">Khi nào cần kết tập, khi nào chỉ cần quan hệ bậc ba?</p>
+<p>Hai thứ này rất dễ nhầm. Phép thử:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Quan hệ bậc ba</th>
+<th>Kết tập</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Hình dạng</td>
+<td>Một hình thoi nối <strong>ba</strong> thực thể ngang hàng</td>
+<td>Một khung bao quanh <strong>quan hệ đã có</strong>, rồi nối tiếp</td>
+</tr>
+<tr>
+<td>Ba phía có ngang hàng không</td>
+<td><strong>Có</strong> — <em>Cô Lan dạy Toán cho 8A1</em> là một sự thật ba chiều</td>
+<td><strong>Không</strong> — <em>"mượn"</em> có ý nghĩa trọn vẹn trước khi nhắc tới thủ thư</td>
+</tr>
+<tr>
+<td>Bỏ một phía đi</td>
+<td>Mất thông tin, câu trở nên vô nghĩa</td>
+<td>Vẫn còn ý nghĩa</td>
+</tr>
+<tr>
+<td>Ví dụ</td>
+<td><code>PHÂN CÔNG DẠY</code> trong <code>truong_hoc</code></td>
+<td><code>LƯỢT MƯỢN</code> — <em>XỬ LÝ BỞI</em> — <code>THỦ THƯ</code></td>
+</tr>
+</tbody>
+</table>
+<p>Câu hỏi quyết định: <strong>"Mối quan hệ gốc có đứng vững một mình không?"</strong> <em>"Bạn An mượn cuốn Dế Mèn"</em> là một sự thật hoàn chỉnh; thủ thư chỉ là thông tin gắn thêm ⇒ <strong>kết tập</strong>. Còn <em>"Cô Lan dạy Toán"</em> mà thiếu lớp thì chưa nói lên điều gì ⇒ <strong>bậc ba</strong>.</p>
+</div>
+<div class="admonition info">
+<p class="admonition-title">Ở mức bảng, kết tập gần như biến mất</p>
+<p>Khi chuyển sang bảng (<a href="../14-chuyen-er-sang-bang/">Bài 14</a>), mối quan hệ M:N đã thành bảng <code>muon_sach</code> với khoá chính <code>ma_muon</code>. Lúc đó <code>muon_sach</code> <strong>đã là một bảng thật</strong>, nên chỉ cần thêm cột <code>ma_thu_thu</code> là xong.</p>
+<p>Nói cách khác: kết tập là một khái niệm của <strong>mức ý niệm</strong>, sinh ra để bù cho hạn chế <em>"thoi không nối được vào thoi"</em> của bản vẽ ER. Ở mức bảng, hạn chế đó không tồn tại.</p>
+</div>
+<h3 id="ba-cach-hien-thuc-ke-thua-trong-bang-quan-he">Ba cách hiện thực kế thừa trong bảng quan hệ<a class="headerlink" href="#ba-cach-hien-thuc-ke-thua-trong-bang-quan-he" title="Permanent link">&para;</a></h3>
+<p>Mô hình quan hệ <strong>không có</strong> khái niệm kế thừa. Nên khi chuyển một cây EER sang bảng, bạn phải chọn một trong ba cách. Đây là quyết định thiết kế thật, và cả ba đều được dùng trong thực tế.</p>
+<p><strong>Cách 1 — Gộp một bảng</strong> (<em>single table</em> / <em>single table inheritance</em>)</p>
+<p>Một bảng duy nhất chứa <strong>mọi cột của cha lẫn của mọi con</strong>, cộng một cột <code>vai_tro</code> cho biết dòng đó là loại gì.</p>
+<div class="highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>nguoi_trong_truong(ma_nguoi, ho_ten, ngay_sinh, gioi_tinh, vai_tro,
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>                   ma_lop, mon_chuyen_mon, luong, bo_phan)
+</span></code></pre></div>
+<p>Với một dòng học sinh thì <code>mon_chuyen_mon</code>, <code>luong</code>, <code>bo_phan</code> đều để <code>NULL</code>.</p>
+<p><strong>Cách 2 — Bảng cho mỗi lớp con</strong> (<em>table per subclass</em> / <em>class table inheritance</em>)</p>
+<p>Một bảng cho lớp cha (chứa cột chung), cộng mỗi lớp con một bảng chứa <strong>phần riêng</strong>, dùng chung khoá chính và trỏ về bảng cha bằng khoá ngoại.</p>
+<div class="highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>nguoi(ma_nguoi, ho_ten, ngay_sinh, gioi_tinh)
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>hoc_sinh(ma_nguoi → nguoi, ma_lop)
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>giao_vien(ma_nguoi → nguoi, mon_chuyen_mon, luong)
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>nhan_vien(ma_nguoi → nguoi, bo_phan, luong)
+</span></code></pre></div>
+<p><strong>Cách 3 — Bảng cho mỗi lớp con cụ thể</strong> (<em>table per concrete class</em>)</p>
+<p>Không có bảng cha. Mỗi lớp con một bảng <strong>đầy đủ</strong>, tự lặp lại các cột chung.</p>
+<div class="highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>hoc_sinh(ma_hs, ho_ten, ngay_sinh, gioi_tinh, ma_lop)
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>giao_vien(ma_gv, ho_ten, ngay_sinh, gioi_tinh, mon_chuyen_mon, luong)
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>nhan_vien(ma_nv, ho_ten, ngay_sinh, gioi_tinh, bo_phan)
+</span></code></pre></div>
+<div class="admonition success">
+<p class="admonition-title"><code>truong_hoc</code> đang dùng Cách 3</p>
+<p>Nhìn kỹ lược đồ mẫu: <code>hoc_sinh</code> và <code>giao_vien</code> là hai bảng độc lập, mỗi bảng tự có <code>ho_ten</code>, <code>ngay_sinh</code>, <code>gioi_tinh</code>. Không có bảng <code>nguoi_trong_truong</code> nào cả.</p>
+<p>Đó chính là <strong>Cách 3</strong>. Và nó có đúng những nhược điểm mà bảng đánh đổi dưới đây liệt kê — phần Thực hành sẽ cho bạn thấy tận mắt.</p>
+</div>
+<h3 id="bang-anh-oi-ba-cach">Bảng đánh đổi ba cách<a class="headerlink" href="#bang-anh-oi-ba-cach" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Tiêu chí</th>
+<th>Cách 1 — Gộp một bảng</th>
+<th>Cách 2 — Bảng mỗi lớp con</th>
+<th>Cách 3 — Bảng mỗi lớp cụ thể</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Số bảng</td>
+<td><strong>1</strong></td>
+<td>1 + số lớp con</td>
+<td>Số lớp con</td>
+</tr>
+<tr>
+<td>Lấy danh sách <strong>mọi người</strong></td>
+<td><strong>Dễ nhất</strong> — một <code>SELECT</code></td>
+<td>Dễ — <code>SELECT</code> bảng cha</td>
+<td><strong>Khó</strong> — phải <code>UNION ALL</code></td>
+</tr>
+<tr>
+<td>Lấy đầy đủ thông tin một giáo viên</td>
+<td><strong>Dễ nhất</strong> — một dòng</td>
+<td>Cần <code>JOIN</code> 2 bảng</td>
+<td><strong>Dễ</strong> — một dòng</td>
+</tr>
+<tr>
+<td>Số cột <code>NULL</code></td>
+<td><strong>Rất nhiều</strong></td>
+<td>Không có</td>
+<td>Không có</td>
+</tr>
+<tr>
+<td>Ép <code>NOT NULL</code> cho thuộc tính riêng</td>
+<td><strong>Không làm được</strong></td>
+<td><strong>Làm được</strong></td>
+<td><strong>Làm được</strong></td>
+</tr>
+<tr>
+<td>Hỗ trợ overlapping</td>
+<td>Không — một dòng một <code>vai_tro</code></td>
+<td><strong>Tốt</strong> — thêm dòng ở hai bảng con</td>
+<td>Rất tệ — phải lưu trùng</td>
+</tr>
+<tr>
+<td>Khoá chính không trùng giữa các loại</td>
+<td>Bảo đảm</td>
+<td>Bảo đảm</td>
+<td><strong>Không</strong> — <code>HS001</code> và <code>GV01</code> độc lập</td>
+</tr>
+<tr>
+<td>Thêm một lớp con mới</td>
+<td>Thêm cột vào bảng đang chạy</td>
+<td>Thêm một bảng mới</td>
+<td>Thêm một bảng mới</td>
+</tr>
+<tr>
+<td>Nên dùng khi</td>
+<td>Lớp con ít, khác nhau vài cột</td>
+<td>Lớp con nhiều thuộc tính riêng, cần overlapping</td>
+<td>Các lớp con <strong>gần như không dùng chung</strong> gì</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition warning">
+<p class="admonition-title">Không có cách nào 'đúng' tuyệt đối</p>
+<p>Câu hỏi quyết định là: <strong>bạn truy vấn theo lớp cha hay theo lớp con nhiều hơn?</strong></p>
+<ul>
+<li>Hay hỏi <em>"mọi người trong trường"</em> → Cách 1 hoặc 2.</li>
+<li>Hầu như chỉ hỏi <em>"danh sách học sinh"</em>, <em>"danh sách giáo viên"</em> riêng rẽ → Cách 3.</li>
+</ul>
+<p><code>truong_hoc</code> chọn Cách 3 vì đúng như vậy: gần như mọi bài học đều hỏi riêng học sinh hoặc riêng giáo viên. Cái giá phải trả chỉ hiện ra khi bác bảo vệ cần danh sách gộp.</p>
+</div>
+<h3 id="bang-thuat-ngu">Bảng thuật ngữ<a class="headerlink" href="#bang-thuat-ngu" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Tiếng Việt</th>
+<th>English</th>
+<th>Nghĩa dễ hiểu</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Mô hình ER mở rộng</td>
+<td><em>EER — Enhanced / Extended ER</em></td>
+<td>ER cơ bản cộng kế thừa, ràng buộc lớp con và kết tập</td>
+</tr>
+<tr>
+<td>Lớp cha</td>
+<td><em>superclass</em></td>
+<td>Tập thực thể tổng quát</td>
+</tr>
+<tr>
+<td>Lớp con</td>
+<td><em>subclass</em></td>
+<td>Tập thực thể chuyên biệt, mọi thành viên cũng thuộc lớp cha</td>
+</tr>
+<tr>
+<td>Quan hệ IS-A</td>
+<td><em>IS-A relationship</em></td>
+<td><em>"X là một Y"</em> — nối lớp con với lớp cha</td>
+</tr>
+<tr>
+<td>Kế thừa thuộc tính</td>
+<td><em>attribute inheritance</em></td>
+<td>Lớp con tự động có mọi thuộc tính của lớp cha</td>
+</tr>
+<tr>
+<td>Chuyên biệt hoá</td>
+<td><em>specialization</em></td>
+<td>Đi từ lớp cha xuống, tách ra các lớp con</td>
+</tr>
+<tr>
+<td>Tổng quát hoá</td>
+<td><em>generalization</em></td>
+<td>Đi từ nhiều tập thực thể lên, gom phần chung</td>
+</tr>
+<tr>
+<td>Ràng buộc disjoint</td>
+<td><em>disjoint</em></td>
+<td>Mỗi thực thể thuộc tối đa một lớp con — ký hiệu <code>d</code></td>
+</tr>
+<tr>
+<td>Ràng buộc overlapping</td>
+<td><em>overlapping</em></td>
+<td>Được thuộc nhiều lớp con cùng lúc — ký hiệu <code>o</code></td>
+</tr>
+<tr>
+<td>Chuyên biệt hoá toàn phần</td>
+<td><em>total specialization</em></td>
+<td>Mọi thực thể cha phải thuộc ít nhất một lớp con — gạch đôi</td>
+</tr>
+<tr>
+<td>Chuyên biệt hoá bộ phận</td>
+<td><em>partial specialization</em></td>
+<td>Được phép chỉ thuộc lớp cha — gạch đơn</td>
+</tr>
+<tr>
+<td>Kết tập</td>
+<td><em>aggregation</em></td>
+<td>Coi cả một mối quan hệ như một thực thể để nối tiếp</td>
+</tr>
+</tbody>
+</table>
+<h2 id="so-o">🖼️ Sơ đồ<a class="headerlink" href="#so-o" title="Permanent link">&para;</a></h2>
+<h3 id="so-o-1-cay-ke-thua-ve-bang-classdiagram">Sơ đồ 1 — Cây kế thừa, vẽ bằng <code>classDiagram</code><a class="headerlink" href="#so-o-1-cay-ke-thua-ve-bang-classdiagram" title="Permanent link">&para;</a></h3>
+<p>Mermaid <strong>không có</strong> kiểu sơ đồ EER. Sơ đồ dưới đây dùng <code>classDiagram</code> để <strong>mô phỏng</strong>: mũi tên tam giác rỗng <code>&lt;|--</code> vốn là ký hiệu kế thừa của UML, ở đây đọc là <strong>quan hệ IS-A</strong>.</p>
+<pre class="mermaid"><code>classDiagram
+class NGUOI_TRONG_TRUONG {
+    ma_nguoi
+    ho_ten
+    ngay_sinh
+    gioi_tinh
+    anh_the
+}
+class HOC_SINH {
+    ma_lop
+}
+class GIAO_VIEN {
+    mon_chuyen_mon
+    luong
+}
+class NHAN_VIEN {
+    bo_phan
+    luong
+}
+NGUOI_TRONG_TRUONG &lt;|-- HOC_SINH : IS-A
+NGUOI_TRONG_TRUONG &lt;|-- GIAO_VIEN : IS-A
+NGUOI_TRONG_TRUONG &lt;|-- NHAN_VIEN : IS-A
+note for NGUOI_TRONG_TRUONG "Chuyen biet hoa overlapping va toan phan"</code></pre>
+<p>Ba lớp con chỉ liệt kê <strong>phần riêng</strong> của mình. <code>HOC_SINH</code> không ghi <code>ho_ten</code> vì nó <strong>kế thừa</strong> từ lớp cha — đúng nguyên tắc <em>attribute inheritance</em>. Thuộc tính khoá của lớp cha là <code>ma_nguoi</code>, và cả ba lớp con <strong>dùng chung</strong> khoá đó.</p>
+<p>Dòng <code>note</code> ở cuối sơ đồ ghi hai ràng buộc bằng chữ, vì Mermaid không có hình cho chúng — bảng ngay dưới đây giải thích vì sao.</p>
+<h3 id="bang-anh-xa-sang-ky-hieu-eer-chuan">Bảng ánh xạ sang ký hiệu EER chuẩn<a class="headerlink" href="#bang-anh-xa-sang-ky-hieu-eer-chuan" title="Permanent link">&para;</a></h3>
+<p>Đây là bảng bạn cần khi làm bài trên giấy hoặc đọc giáo trình:</p>
+<table>
+<thead>
+<tr>
+<th>Ý nghĩa</th>
+<th>Ký hiệu EER chuẩn</th>
+<th>Mermaid mô phỏng bằng</th>
+<th>Khác biệt cần nhớ</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Quan hệ IS-A</td>
+<td>Hình tròn nối lớp cha xuống các lớp con, kèm ký hiệu tập con <strong>⊂</strong> trên từng nhánh</td>
+<td>Mũi tên tam giác rỗng <code>&lt;&#124;--</code></td>
+<td>EER dùng hình tròn làm nút chia, UML dùng mũi tên</td>
+</tr>
+<tr>
+<td>Disjoint</td>
+<td>Hình tròn chứa chữ <strong><code>d</code></strong></td>
+<td>Ghi bằng chữ trong <code>note</code></td>
+<td><strong>Không có hình tương đương</strong></td>
+</tr>
+<tr>
+<td>Overlapping</td>
+<td>Hình tròn chứa chữ <strong><code>o</code></strong></td>
+<td>Ghi bằng chữ trong <code>note</code></td>
+<td><strong>Không có hình tương đương</strong></td>
+</tr>
+<tr>
+<td>Chuyên biệt hoá toàn phần</td>
+<td>Đường <strong>gạch đôi</strong> từ lớp cha tới hình tròn</td>
+<td>Ghi bằng chữ trong <code>note</code></td>
+<td><strong>Không có hình tương đương</strong></td>
+</tr>
+<tr>
+<td>Chuyên biệt hoá bộ phận</td>
+<td>Đường <strong>đơn</strong> từ lớp cha tới hình tròn</td>
+<td>Ghi bằng chữ trong <code>note</code></td>
+<td><strong>Không có hình tương đương</strong></td>
+</tr>
+<tr>
+<td>Thuộc tính riêng của lớp con</td>
+<td>Elip treo vào hình chữ nhật lớp con</td>
+<td>Dòng trong khối <code>{ }</code></td>
+<td>Gọn hơn, nhưng mất phân biệt đa trị / dẫn xuất</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition warning">
+<p class="admonition-title">Khi làm bài thi, hãy vẽ đúng ký hiệu EER chuẩn</p>
+<p>Bốn dòng <em>"không có hình tương đương"</em> trong bảng trên là bốn chỗ Mermaid chịu thua. Trên giấy thì rất dễ: vẽ một <strong>hình tròn</strong> giữa lớp cha và các lớp con, viết <code>d</code> hoặc <code>o</code> vào trong, rồi nối lớp cha bằng <strong>một gạch</strong> (bộ phận) hoặc <strong>hai gạch</strong> (toàn phần).</p>
+<p>Nhớ hai chữ cái: <strong><code>d</code> = disjoint = tách rời</strong>, <strong><code>o</code> = overlapping = chồng lấn</strong>.</p>
+</div>
+<h3 id="so-o-2-ket-tap">Sơ đồ 2 — Kết tập<a class="headerlink" href="#so-o-2-ket-tap" title="Permanent link">&para;</a></h3>
+<p>Khung nét đứt bao quanh cụm <code>HỌC SINH — MƯỢN — SÁCH</code> chính là <strong>kết tập</strong>. Trong ký hiệu EER chuẩn, khung này là một hình chữ nhật nét liền bao trọn cả ba hình bên trong.</p>
+<pre class="mermaid"><code>flowchart TB
+    subgraph KT["KẾT TẬP — coi cả cụm này là MỘT thực thể tên LƯỢT MƯỢN"]
+        HS["&lt;b&gt;HỌC SINH&lt;/b&gt;"]
+        R{"&lt;b&gt;MƯỢN&lt;/b&gt;&lt;br/&gt;M — N"}
+        S["&lt;b&gt;SÁCH&lt;/b&gt;"]
+        HS --- R
+        R --- S
+    end
+
+    TT["&lt;b&gt;THỦ THƯ&lt;/b&gt;"]
+    R2{"&lt;b&gt;XỬ LÝ BỞI&lt;/b&gt;&lt;br/&gt;N — 1"}
+
+    KT --- R2
+    R2 --- TT
+
+    style HS fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
+    style S fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
+    style TT fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
+    style R fill:#fff8e1,stroke:#f9a825,stroke-width:2px
+    style R2 fill:#fff8e1,stroke:#f9a825,stroke-width:2px</code></pre>
+<p>Đọc sơ đồ: <em>"Một </em><em>lượt mượn</em><em> — tức là một bộ ba (học sinh, sách, thời điểm) — được </em><em>xử lý bởi</em><em> một thủ thư."</em></p>
+<p>Không có kết tập thì bạn buộc phải vẽ một quan hệ <strong>bậc ba</strong> <code>HỌC SINH — SÁCH — THỦ THƯ</code>, và như vậy là nói sai: nó ngụ ý rằng <em>"mượn"</em> chỉ có nghĩa khi đã biết thủ thư, điều không đúng.</p>
+<h2 id="thuc-hanh">💻 Thực hành<a class="headerlink" href="#thuc-hanh" title="Permanent link">&para;</a></h2>
+<h3 id="cach-3-ang-chay-ngay-trong-truong_hoc">Cách 3 đang chạy ngay trong <code>truong_hoc</code><a class="headerlink" href="#cach-3-ang-chay-ngay-trong-truong_hoc" title="Permanent link">&para;</a></h3>
+<p>Lược đồ mẫu không có bảng <code>nguoi_trong_truong</code>. Muốn làm danh sách cho bác bảo vệ, bạn phải tự ghép:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">ho_ten</span><span class="p">,</span><span class="w"> </span><span class="n">ngay_sinh</span><span class="p">,</span><span class="w"> </span><span class="n">gioi_tinh</span><span class="p">,</span><span class="w"> </span><span class="s1">'Học sinh'</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">vai_tro</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="k">UNION</span><span class="w"> </span><span class="k">ALL</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">ho_ten</span><span class="p">,</span><span class="w"> </span><span class="n">ngay_sinh</span><span class="p">,</span><span class="w"> </span><span class="n">gioi_tinh</span><span class="p">,</span><span class="w"> </span><span class="s1">'Giáo viên'</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="k">FROM</span><span class="w"> </span><span class="n">giao_vien</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">ngay_sinh</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="k">LIMIT</span><span class="w"> </span><span class="mi">5</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Năm dòng đầu tiên là năm người <strong>già nhất</strong> trường — và tất cả đều là giáo viên, vì thầy cô sinh từ 1975 tới 1992 còn học sinh sinh 2011–2012.</p>
+<p>Tổng số người trong trường:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span><span class="p">)</span><span class="w">  </span><span class="k">AS</span><span class="w"> </span><span class="n">so_hoc_sinh</span><span class="p">,</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">       </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">giao_vien</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_giao_vien</span><span class="p">,</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">       </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">giao_vien</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">tong_so_nguoi</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Kết quả: <code>40</code>, <code>8</code>, <code>48</code>.</p>
+<p>Chú ý cái giá của Cách 3: để trả lời một câu hỏi rất tự nhiên (<em>"có bao nhiêu người trong trường?"</em>) bạn phải <strong>biết trước danh sách mọi bảng lớp con</strong>. Thêm bảng <code>nhan_vien</code> vào ngày mai là phải đi sửa lại mọi truy vấn kiểu này.</p>
+<p>Và khoá chính thì không thống nhất:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="s1">'hoc_sinh'</span><span class="w">  </span><span class="k">AS</span><span class="w"> </span><span class="n">bang</span><span class="p">,</span><span class="w"> </span><span class="k">min</span><span class="p">(</span><span class="n">ma_hs</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">ma_nho_nhat</span><span class="p">,</span><span class="w"> </span><span class="k">max</span><span class="p">(</span><span class="n">ma_hs</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">ma_lon_nhat</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="k">UNION</span><span class="w"> </span><span class="k">ALL</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="k">SELECT</span><span class="w"> </span><span class="s1">'giao_vien'</span><span class="p">,</span><span class="w"> </span><span class="k">min</span><span class="p">(</span><span class="n">ma_gv</span><span class="p">),</span><span class="w"> </span><span class="k">max</span><span class="p">(</span><span class="n">ma_gv</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">giao_vien</span><span class="p">;</span>
+</span></code></pre></div>
+<p><code>HS001</code>–<code>HS040</code> và <code>GV01</code>–<code>GV08</code>. Hai hệ mã <strong>độc lập</strong>, do người thiết kế tự đặt cho không đụng nhau. Nếu vô ý đặt trùng thì không gì ngăn được — đúng dòng <em>"Khoá chính không trùng giữa các loại: </em><em>Không</em><em>"</em> trong bảng đánh đổi.</p>
+<h3 id="dung-thu-cach-2-e-so-sanh">Dựng thử Cách 2 để so sánh<a class="headerlink" href="#dung-thu-cach-2-e-so-sanh" title="Permanent link">&para;</a></h3>
+<p>Bây giờ ta dựng một bộ bảng nháp theo <strong>Cách 2</strong> và nhìn tận mắt sự khác biệt. Mọi bảng đều có tiền tố <code>b13_</code> và sẽ được xoá ở cuối bài.</p>
+<div class="highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">b13_hoc_sinh</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">;</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">b13_giao_vien</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">;</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">b13_nhan_vien</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">;</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">b13_nguoi</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">;</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">b13_nguoi</span><span class="w"> </span><span class="p">(</span>
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">    </span><span class="n">ma_nguoi</span><span class="w">  </span><span class="nb">CHAR</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span><span class="w">     </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span>
+</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">    </span><span class="n">ho_ten</span><span class="w">    </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">60</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">    </span><span class="n">ngay_sinh</span><span class="w"> </span><span class="nb">DATE</span><span class="w">        </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+</span><span id="__span-6-10"><a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="w">    </span><span class="n">gioi_tinh</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="w">  </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">CHECK</span><span class="w"> </span><span class="p">(</span><span class="n">gioi_tinh</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="p">(</span><span class="s1">'Nam'</span><span class="p">,</span><span class="w"> </span><span class="s1">'Nữ'</span><span class="p">))</span>
+</span><span id="__span-6-11"><a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="p">);</span>
+</span><span id="__span-6-12"><a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>
+</span><span id="__span-6-13"><a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">b13_hoc_sinh</span><span class="w"> </span><span class="p">(</span>
+</span><span id="__span-6-14"><a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="w">    </span><span class="n">ma_nguoi</span><span class="w"> </span><span class="nb">CHAR</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="w"> </span><span class="k">REFERENCES</span><span class="w"> </span><span class="n">b13_nguoi</span><span class="p">(</span><span class="n">ma_nguoi</span><span class="p">)</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">DELETE</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">,</span>
+</span><span id="__span-6-15"><a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="w">    </span><span class="n">ma_lop</span><span class="w">   </span><span class="nb">CHAR</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span>
+</span><span id="__span-6-16"><a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="p">);</span>
+</span><span id="__span-6-17"><a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>
+</span><span id="__span-6-18"><a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">b13_giao_vien</span><span class="w"> </span><span class="p">(</span>
+</span><span id="__span-6-19"><a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a><span class="w">    </span><span class="n">ma_nguoi</span><span class="w">       </span><span class="nb">CHAR</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span><span class="w">       </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="w"> </span><span class="k">REFERENCES</span><span class="w"> </span><span class="n">b13_nguoi</span><span class="p">(</span><span class="n">ma_nguoi</span><span class="p">)</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">DELETE</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">,</span>
+</span><span id="__span-6-20"><a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a><span class="w">    </span><span class="n">mon_chuyen_mon</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span><span class="w">   </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+</span><span id="__span-6-21"><a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a><span class="w">    </span><span class="n">luong</span><span class="w">          </span><span class="nb">NUMERIC</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">CHECK</span><span class="w"> </span><span class="p">(</span><span class="n">luong</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+</span><span id="__span-6-22"><a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a><span class="p">);</span>
+</span><span id="__span-6-23"><a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a>
+</span><span id="__span-6-24"><a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">b13_nhan_vien</span><span class="w"> </span><span class="p">(</span>
+</span><span id="__span-6-25"><a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a><span class="w">    </span><span class="n">ma_nguoi</span><span class="w"> </span><span class="nb">CHAR</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span><span class="w">       </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="w"> </span><span class="k">REFERENCES</span><span class="w"> </span><span class="n">b13_nguoi</span><span class="p">(</span><span class="n">ma_nguoi</span><span class="p">)</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">DELETE</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">,</span>
+</span><span id="__span-6-26"><a id="__codelineno-6-26" name="__codelineno-6-26" href="#__codelineno-6-26"></a><span class="w">    </span><span class="n">bo_phan</span><span class="w">  </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span><span class="w">   </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+</span><span id="__span-6-27"><a id="__codelineno-6-27" name="__codelineno-6-27" href="#__codelineno-6-27"></a><span class="w">    </span><span class="n">luong</span><span class="w">    </span><span class="nb">NUMERIC</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">CHECK</span><span class="w"> </span><span class="p">(</span><span class="n">luong</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+</span><span id="__span-6-28"><a id="__codelineno-6-28" name="__codelineno-6-28" href="#__codelineno-6-28"></a><span class="p">);</span>
+</span></code></pre></div>
+<p>Hai chi tiết đáng chú ý trong đoạn <code>CREATE TABLE</code> trên:</p>
+<ol>
+<li><strong>Khoá chính của bảng con đồng thời là khoá ngoại</strong> trỏ về bảng cha. Đó chính là cách mô hình quan hệ diễn tả <em>"mỗi học sinh là một người, và dùng chung định danh"</em>.</li>
+<li><strong><code>ON DELETE CASCADE</code></strong>: xoá một người thì phần chuyên biệt của họ biến mất theo. Giống hệt thực thể yếu ở <a href="../09-participation-va-thuc-the-yeu/">Bài 9</a> — vì bản chất cũng là phụ thuộc tồn tại.</li>
+</ol>
+<p>Nạp dữ liệu, trong đó <strong><code>NG0004</code> là cô thủ thư vừa dạy Tin học</strong> — trường hợp <em>overlapping</em> của câu chuyện đầu bài:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">b13_nguoi</span><span class="w"> </span><span class="p">(</span><span class="n">ma_nguoi</span><span class="p">,</span><span class="w"> </span><span class="n">ho_ten</span><span class="p">,</span><span class="w"> </span><span class="n">ngay_sinh</span><span class="p">,</span><span class="w"> </span><span class="n">gioi_tinh</span><span class="p">)</span><span class="w"> </span><span class="k">VALUES</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="p">(</span><span class="s1">'NG0001'</span><span class="p">,</span><span class="w"> </span><span class="s1">'Nguyễn Văn An'</span><span class="p">,</span><span class="w">    </span><span class="s1">'2012-01-15'</span><span class="p">,</span><span class="w"> </span><span class="s1">'Nam'</span><span class="p">),</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="p">(</span><span class="s1">'NG0002'</span><span class="p">,</span><span class="w"> </span><span class="s1">'Nguyễn Thị Lan'</span><span class="p">,</span><span class="w">   </span><span class="s1">'1985-03-12'</span><span class="p">,</span><span class="w"> </span><span class="s1">'Nữ'</span><span class="p">),</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="p">(</span><span class="s1">'NG0003'</span><span class="p">,</span><span class="w"> </span><span class="s1">'Trần Văn Bảo Vệ'</span><span class="p">,</span><span class="w">  </span><span class="s1">'1970-06-01'</span><span class="p">,</span><span class="w"> </span><span class="s1">'Nam'</span><span class="p">),</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="p">(</span><span class="s1">'NG0004'</span><span class="p">,</span><span class="w"> </span><span class="s1">'Lê Thị Thư'</span><span class="p">,</span><span class="w">       </span><span class="s1">'1983-02-20'</span><span class="p">,</span><span class="w"> </span><span class="s1">'Nữ'</span><span class="p">);</span>
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">b13_hoc_sinh</span><span class="w">  </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="s1">'NG0001'</span><span class="p">,</span><span class="w"> </span><span class="s1">'L01'</span><span class="p">);</span>
+</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">b13_giao_vien</span><span class="w"> </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="s1">'NG0002'</span><span class="p">,</span><span class="w"> </span><span class="s1">'Toán'</span><span class="p">,</span><span class="w">     </span><span class="mi">14500000</span><span class="p">);</span>
+</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">b13_nhan_vien</span><span class="w"> </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="s1">'NG0003'</span><span class="p">,</span><span class="w"> </span><span class="s1">'Bảo vệ'</span><span class="p">,</span><span class="w">    </span><span class="mi">8000000</span><span class="p">);</span>
+</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">b13_nhan_vien</span><span class="w"> </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="s1">'NG0004'</span><span class="p">,</span><span class="w"> </span><span class="s1">'Thư viện'</span><span class="p">,</span><span class="w">  </span><span class="mi">9000000</span><span class="p">);</span>
+</span><span id="__span-7-11"><a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">b13_giao_vien</span><span class="w"> </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="s1">'NG0004'</span><span class="p">,</span><span class="w"> </span><span class="s1">'Tin học'</span><span class="p">,</span><span class="w">   </span><span class="mi">3000000</span><span class="p">);</span>
+</span></code></pre></div>
+<p>Danh sách mọi người — bây giờ chỉ cần <strong>một</strong> câu, không cần <code>UNION ALL</code>:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">n</span><span class="p">.</span><span class="n">ma_nguoi</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="p">.</span><span class="n">ho_ten</span><span class="p">,</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">       </span><span class="p">(</span><span class="n">hs</span><span class="p">.</span><span class="n">ma_nguoi</span><span class="w"> </span><span class="k">IS</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">la_hoc_sinh</span><span class="p">,</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">       </span><span class="p">(</span><span class="n">gv</span><span class="p">.</span><span class="n">ma_nguoi</span><span class="w"> </span><span class="k">IS</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">la_giao_vien</span><span class="p">,</span>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">       </span><span class="p">(</span><span class="n">nv</span><span class="p">.</span><span class="n">ma_nguoi</span><span class="w"> </span><span class="k">IS</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">la_nhan_vien</span>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="k">FROM</span><span class="w"> </span><span class="n">b13_nguoi</span><span class="w"> </span><span class="n">n</span>
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="k">LEFT</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">b13_hoc_sinh</span><span class="w">  </span><span class="n">hs</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">hs</span><span class="p">.</span><span class="n">ma_nguoi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">n</span><span class="p">.</span><span class="n">ma_nguoi</span>
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="k">LEFT</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">b13_giao_vien</span><span class="w"> </span><span class="n">gv</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">gv</span><span class="p">.</span><span class="n">ma_nguoi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">n</span><span class="p">.</span><span class="n">ma_nguoi</span>
+</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="k">LEFT</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">b13_nhan_vien</span><span class="w"> </span><span class="n">nv</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">nv</span><span class="p">.</span><span class="n">ma_nguoi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">n</span><span class="p">.</span><span class="n">ma_nguoi</span>
+</span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">n</span><span class="p">.</span><span class="n">ma_nguoi</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Bốn dòng. Dòng <code>NG0004</code> có <strong>cả hai</strong> cột <code>la_giao_vien</code> và <code>la_nhan_vien</code> bằng <code>t</code> — đó là <strong>overlapping</strong> hiện ra bằng dữ liệu.</p>
+<p>Tìm thẳng những người thuộc từ hai lớp con trở lên:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">n</span><span class="p">.</span><span class="n">ma_nguoi</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="p">.</span><span class="n">ho_ten</span><span class="p">,</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">       </span><span class="p">(</span><span class="n">hs</span><span class="p">.</span><span class="n">ma_nguoi</span><span class="w"> </span><span class="k">IS</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">)::</span><span class="nb">int</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">     </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="n">gv</span><span class="p">.</span><span class="n">ma_nguoi</span><span class="w"> </span><span class="k">IS</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">)::</span><span class="nb">int</span>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">     </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="n">nv</span><span class="p">.</span><span class="n">ma_nguoi</span><span class="w"> </span><span class="k">IS</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">)::</span><span class="nb">int</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_lop_con</span>
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="k">FROM</span><span class="w"> </span><span class="n">b13_nguoi</span><span class="w"> </span><span class="n">n</span>
+</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="k">LEFT</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">b13_hoc_sinh</span><span class="w">  </span><span class="n">hs</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">hs</span><span class="p">.</span><span class="n">ma_nguoi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">n</span><span class="p">.</span><span class="n">ma_nguoi</span>
+</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="k">LEFT</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">b13_giao_vien</span><span class="w"> </span><span class="n">gv</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">gv</span><span class="p">.</span><span class="n">ma_nguoi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">n</span><span class="p">.</span><span class="n">ma_nguoi</span>
+</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="k">LEFT</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">b13_nhan_vien</span><span class="w"> </span><span class="n">nv</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">nv</span><span class="p">.</span><span class="n">ma_nguoi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">n</span><span class="p">.</span><span class="n">ma_nguoi</span>
+</span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="k">WHERE</span><span class="w"> </span><span class="p">(</span><span class="n">hs</span><span class="p">.</span><span class="n">ma_nguoi</span><span class="w"> </span><span class="k">IS</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">)::</span><span class="nb">int</span>
+</span><span id="__span-9-10"><a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="w">    </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="n">gv</span><span class="p">.</span><span class="n">ma_nguoi</span><span class="w"> </span><span class="k">IS</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">)::</span><span class="nb">int</span>
+</span><span id="__span-9-11"><a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="w">    </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="n">nv</span><span class="p">.</span><span class="n">ma_nguoi</span><span class="w"> </span><span class="k">IS</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">)::</span><span class="nb">int</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Đúng <strong>một dòng</strong>: <code>NG0004</code> | Lê Thị Thư | <code>2</code>.</p>
+<p>Nếu chuyên biệt hoá này là <strong>disjoint</strong>, câu lệnh trên <strong>bắt buộc</strong> phải trả về 0 dòng. Đây chính là cách kiểm tra ràng buộc disjoint bằng SQL.</p>
+<div class="admonition tip">
+<p class="admonition-title">Cách 2 không tự ép disjoint — phải tự làm</p>
+<p>Mô hình quan hệ mặc định cho phép overlapping: không gì ngăn một <code>ma_nguoi</code> xuất hiện ở cả ba bảng con.</p>
+<p>Muốn ép <strong>disjoint</strong>, bạn phải thêm cơ chế riêng — thường là một cột <code>vai_tro</code> trong bảng cha, đưa nó vào khoá của bảng con, và dùng <code>CHECK</code> để khoá cứng giá trị. Hoặc dùng trigger. Không có cú pháp sẵn nào cho việc này.</p>
+</div>
+<p>Kiểm tra <strong>chuyên biệt hoá toàn phần</strong> — tức là có ai chỉ nằm ở bảng cha mà không thuộc lớp con nào không:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_nguoi_khong_thuoc_lop_con_nao</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="k">FROM</span><span class="w"> </span><span class="n">b13_nguoi</span><span class="w"> </span><span class="n">n</span>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="k">WHERE</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">b13_hoc_sinh</span><span class="w">  </span><span class="n">x</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">x</span><span class="p">.</span><span class="n">ma_nguoi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">n</span><span class="p">.</span><span class="n">ma_nguoi</span><span class="p">)</span>
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">  </span><span class="k">AND</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">b13_giao_vien</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">x</span><span class="p">.</span><span class="n">ma_nguoi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">n</span><span class="p">.</span><span class="n">ma_nguoi</span><span class="p">)</span>
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">  </span><span class="k">AND</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">b13_nhan_vien</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">x</span><span class="p">.</span><span class="n">ma_nguoi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">n</span><span class="p">.</span><span class="n">ma_nguoi</span><span class="p">);</span>
+</span></code></pre></div>
+<p>Kết quả <code>0</code> — dữ liệu hiện thoả mãn <strong>toàn phần</strong>. Nhưng như <a href="../12-bay-loai-khoa/">Bài 12</a> đã dạy: dữ liệu thoả mãn <strong>không</strong> có nghĩa là lược đồ cưỡng chế. Thêm một dòng vào <code>b13_nguoi</code> mà không thêm vào bảng con nào thì database vẫn nhận — chuyên biệt hoá toàn phần cũng là thứ SQL không ép được bằng ràng buộc cột.</p>
+<h3 id="so-sanh-cach-1-em-so-o-null">So sánh Cách 1 — đếm số ô <code>NULL</code><a class="headerlink" href="#so-sanh-cach-1-em-so-o-null" title="Permanent link">&para;</a></h3>
+<p>Dựng nhanh bảng gộp để thấy vấn đề của Cách 1:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">b13_nguoi_gop</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">;</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">b13_nguoi_gop</span><span class="w"> </span><span class="p">(</span>
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="w">    </span><span class="n">ma_nguoi</span><span class="w">       </span><span class="nb">CHAR</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span><span class="w">     </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span>
+</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="w">    </span><span class="n">ho_ten</span><span class="w">         </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">60</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="w">    </span><span class="n">ngay_sinh</span><span class="w">      </span><span class="nb">DATE</span><span class="w">        </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+</span><span id="__span-11-7"><a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="w">    </span><span class="n">vai_tro</span><span class="w">        </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">CHECK</span><span class="w"> </span><span class="p">(</span><span class="n">vai_tro</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="p">(</span><span class="s1">'Học sinh'</span><span class="p">,</span><span class="w"> </span><span class="s1">'Giáo viên'</span><span class="p">,</span><span class="w"> </span><span class="s1">'Nhân viên'</span><span class="p">)),</span>
+</span><span id="__span-11-8"><a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="w">    </span><span class="n">ma_lop</span><span class="w">         </span><span class="nb">CHAR</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span>
+</span><span id="__span-11-9"><a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="w">    </span><span class="n">mon_chuyen_mon</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">30</span><span class="p">),</span>
+</span><span id="__span-11-10"><a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="w">    </span><span class="n">bo_phan</span><span class="w">        </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">30</span><span class="p">),</span>
+</span><span id="__span-11-11"><a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a><span class="w">    </span><span class="n">luong</span><span class="w">          </span><span class="nb">NUMERIC</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+</span><span id="__span-11-12"><a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a><span class="p">);</span>
+</span><span id="__span-11-13"><a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>
+</span><span id="__span-11-14"><a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">b13_nguoi_gop</span><span class="w"> </span><span class="k">VALUES</span>
+</span><span id="__span-11-15"><a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a><span class="p">(</span><span class="s1">'NG0001'</span><span class="p">,</span><span class="w"> </span><span class="s1">'Nguyễn Văn An'</span><span class="p">,</span><span class="w">   </span><span class="s1">'2012-01-15'</span><span class="p">,</span><span class="w"> </span><span class="s1">'Học sinh'</span><span class="p">,</span><span class="w">  </span><span class="s1">'L01'</span><span class="p">,</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span><span class="w">      </span><span class="k">NULL</span><span class="p">,</span><span class="w">       </span><span class="k">NULL</span><span class="p">),</span>
+</span><span id="__span-11-16"><a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a><span class="p">(</span><span class="s1">'NG0002'</span><span class="p">,</span><span class="w"> </span><span class="s1">'Nguyễn Thị Lan'</span><span class="p">,</span><span class="w">  </span><span class="s1">'1985-03-12'</span><span class="p">,</span><span class="w"> </span><span class="s1">'Giáo viên'</span><span class="p">,</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span><span class="w">  </span><span class="s1">'Toán'</span><span class="p">,</span><span class="w">    </span><span class="k">NULL</span><span class="p">,</span><span class="w">       </span><span class="mi">14500000</span><span class="p">),</span>
+</span><span id="__span-11-17"><a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a><span class="p">(</span><span class="s1">'NG0003'</span><span class="p">,</span><span class="w"> </span><span class="s1">'Trần Văn Bảo Vệ'</span><span class="p">,</span><span class="w"> </span><span class="s1">'1970-06-01'</span><span class="p">,</span><span class="w"> </span><span class="s1">'Nhân viên'</span><span class="p">,</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span><span class="w">  </span><span class="k">NULL</span><span class="p">,</span><span class="w">      </span><span class="s1">'Bảo vệ'</span><span class="p">,</span><span class="w">    </span><span class="mi">8000000</span><span class="p">);</span>
+</span></code></pre></div>
+<p>Đếm số ô trống trên bốn cột chuyên biệt:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">4</span><span class="w">                                        </span><span class="k">AS</span><span class="w"> </span><span class="n">tong_so_o</span><span class="p">,</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="w">       </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">4</span>
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">     </span><span class="o">-</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="n">ma_lop</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="n">mon_chuyen_mon</span><span class="p">)</span>
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">     </span><span class="o">-</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="n">bo_phan</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="n">luong</span><span class="p">)</span><span class="w">                       </span><span class="k">AS</span><span class="w"> </span><span class="n">so_o_null</span>
+</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="k">FROM</span><span class="w"> </span><span class="n">b13_nguoi_gop</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Kết quả: <code>12</code> ô, trong đó <code>7</code> ô là <code>NULL</code> — gần <strong>60%</strong> bỏ trống, và mới chỉ có ba lớp con với bốn cột riêng.</p>
+<p>Đó là nhược điểm lớn nhất của Cách 1. Kèm theo một nhược điểm còn tệ hơn: <strong>không thể khai <code>NOT NULL</code> cho <code>ma_lop</code></strong>, dù về nghiệp vụ mọi học sinh đều bắt buộc có lớp — vì cột đó phải để trống cho giáo viên và nhân viên.</p>
+<p>Ngược lại, ở Cách 2 thì <code>b13_hoc_sinh.ma_lop</code> được khai <code>NOT NULL</code> đàng hoàng, đúng ràng buộc tham gia toàn phần của <a href="../09-participation-va-thuc-the-yeu/">Bài 9</a>.</p>
+<p>Và Cách 1 <strong>không</strong> diễn tả nổi trường hợp cô thủ thư: một dòng chỉ có một <code>vai_tro</code>.</p>
+<h3 id="don-dep">Dọn dẹp<a class="headerlink" href="#don-dep" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">b13_nguoi_gop</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">;</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">b13_hoc_sinh</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">;</span>
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">b13_giao_vien</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">;</span>
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">b13_nhan_vien</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">;</span>
+</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">b13_nguoi</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Luôn dọn bảng nháp sau khi thử nghiệm — nếu không, bài học sau chạy <code>\dt</code> sẽ thấy một đống bảng lạ không biết của ai.</p>
+<h2 id="loi-thuong-gap">⚠️ Lỗi thường gặp<a class="headerlink" href="#loi-thuong-gap" title="Permanent link">&para;</a></h2>
+<div class="admonition warning">
+<p class="admonition-title">Lỗi 1: Nhầm chuyên biệt hoá với tổng quát hoá</p>
+<p>Nói <em>"tôi vừa tổng quát hoá HỌC SINH thành LỚP TRƯỞNG và HỌC SINH THƯỜNG"</em>. Sai chiều.</p>
+<p>Đi <strong>từ một lớp cha xuống nhiều lớp con</strong> là <strong>chuyên biệt hoá</strong>. Đi <strong>từ nhiều tập thực thể lên một lớp cha</strong> mới là <strong>tổng quát hoá</strong>.</p>
+<p>Mẹo nhớ: <em>chuyên biệt</em> = làm cho <strong>hẹp</strong> hơn, đi <strong>xuống</strong>. <em>Tổng quát</em> = làm cho <strong>rộng</strong> hơn, đi <strong>lên</strong>.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Lỗi 2: Vẽ IS-A thành một mối quan hệ bình thường</p>
+<p>Vẽ hình thoi <code>LÀ MỘT</code> nối <code>HỌC SINH</code> với <code>NGƯỜI TRONG TRƯỜNG</code>, ghi bản số <code>1 — 1</code>.</p>
+<p>Sai về bản chất. Mối quan hệ nối <strong>hai thực thể khác nhau</strong>; IS-A nói rằng chúng là <strong>cùng một thực thể nhìn ở hai mức tổng quát</strong>. Bạn An và "người trong trường tên An" không phải hai người rồi ghép lại — đó là một người.</p>
+<p>Dấu hiệu nhận ra sự khác biệt: qua IS-A thì <strong>khoá chính được dùng chung</strong>. Qua một mối quan hệ thường thì mỗi bên có khoá riêng.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Lỗi 3: Quên ghi hai ràng buộc</p>
+<p>Vẽ cây kế thừa xong là thấy đẹp rồi nộp. Nhưng thiếu chữ <code>d</code>/<code>o</code> và thiếu gạch đơn/gạch đôi thì người đọc <strong>không trả lời nổi</strong> hai câu hỏi của cô văn thư.</p>
+<p>Cũng giống <a href="../09-participation-va-thuc-the-yeu/">Bài 9</a>: vẽ bản số mà quên ràng buộc tham gia là mô tả chưa xong việc.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Lỗi 4: Dùng kế thừa cho quan hệ 'có một' thay vì 'là một'</p>
+<p>Vẽ <code>LỚP</code> là lớp con của <code>TRƯỜNG</code>, vì <em>"lớp nằm trong trường"</em>.</p>
+<p>Phép thử một câu: đọc to <strong>"X là một Y"</strong>. <em>"Lớp 8A1 </em><em>là một</em><em> trường"</em> — nghe sai ngay. Vậy đây không phải IS-A mà là <strong>HAS-A</strong>, tức một mối quan hệ 1:N thông thường.</p>
+<p>Cùng phép thử: <em>"Học sinh </em><em>là một</em><em> người trong trường"</em> — nghe xuôi ⇒ IS-A đúng.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Lỗi 5: Chọn Cách 1 vì 'ít bảng cho gọn'</p>
+<p>Gộp một bảng nghe hấp dẫn khi mới có hai lớp con. Nhưng mỗi lớp con thêm vào là thêm vài cột luôn <code>NULL</code>, và bạn <strong>vĩnh viễn</strong> mất khả năng khai <code>NOT NULL</code> cho chúng.</p>
+<p>Sau vài năm, bảng phình lên 60 cột mà mỗi dòng chỉ dùng 10 cột. Lúc đó tách ra thì phải sửa mọi truy vấn đang chạy.</p>
+<p>Hỏi trước khi chọn: <em>"số lớp con có khả năng tăng không, và các lớp con có nhiều thuộc tính riêng không?"</em> Nếu cả hai là <strong>có</strong> thì đừng chọn Cách 1.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Lỗi 6: Dùng kết tập ở chỗ đáng lẽ là quan hệ bậc ba</p>
+<p>Vẽ khung kết tập quanh <code>GIÁO VIÊN — DẠY — MÔN HỌC</code> rồi nối sang <code>LỚP</code>.</p>
+<p>Sai, vì <em>"cô Lan dạy Toán"</em> <strong>không đứng vững một mình</strong> — thiếu lớp thì câu đó chưa phải một sự thật hoàn chỉnh về phân công. Ba phía ngang hàng nhau ⇒ <strong>quan hệ bậc ba</strong>, đúng như <code>phan_cong_day</code>.</p>
+<p>So sánh: <em>"bạn An mượn cuốn Dế Mèn"</em> thì đứng vững, thủ thư chỉ là thông tin thêm ⇒ kết tập.</p>
+</div>
+<h2 id="bai-tap">✍️ Bài tập<a class="headerlink" href="#bai-tap" title="Permanent link">&para;</a></h2>
+<ol>
+<li>
+<p>Với mỗi cặp dưới đây, cho biết đó là <strong>IS-A</strong> hay <strong>HAS-A</strong>:</p>
+<p>a. <code>SÁCH</code> và <code>SÁCH GIÁO KHOA</code>
+b. <code>LỚP</code> và <code>HỌC SINH</code>
+c. <code>NGƯỜI TRONG TRƯỜNG</code> và <code>GIÁO VIÊN</code>
+d. <code>THƯ VIỆN</code> và <code>SÁCH</code></p>
+</li>
+<li>
+<p>Trường chia học sinh thành <code>HỌC SINH GIỎI</code>, <code>HỌC SINH KHÁ</code>, <code>HỌC SINH TRUNG BÌNH</code> theo điểm trung bình cuối năm. Hãy xác định <strong>hai</strong> ràng buộc của chuyên biệt hoá này và giải thích.</p>
+</li>
+<li>
+<p>Trường mở thêm câu lạc bộ: mỗi học sinh có thể tham gia <code>CLB BÓNG ĐÁ</code>, <code>CLB CỜ VUA</code>, <code>CLB VĂN NGHỆ</code>, hoặc không tham gia gì. Xác định hai ràng buộc, rồi nói cách hiện thực nào trong ba cách là phù hợp nhất.</p>
+</li>
+<li>
+<p>Cho cây EER: <code>PHƯƠNG TIỆN</code> (biển số, chủ sở hữu) chuyên biệt hoá thành <code>XE MÁY</code> (dung tích) và <code>Ô TÔ</code> (số chỗ, hạng xe), disjoint + toàn phần. Hãy viết lược đồ bảng theo <strong>cả ba cách</strong>, và nói cách nào bạn chọn.</p>
+</li>
+<li>
+<p>Trường muốn ghi lại: <strong>giáo viên nào đã nhập con điểm nào</strong>. Hiện tại <code>HỌC SINH — CÓ ĐIỂM — MÔN HỌC</code> đã là quan hệ M:N. Hỏi: đây là kết tập hay quan hệ bậc ba? Ở mức bảng thì làm thế nào?</p>
+</li>
+</ol>
+<details class="success">
+<summary>Đáp án</summary>
+<p><strong>Câu 1.</strong></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Cặp</th>
+<th>Loại</th>
+<th>Lý do</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>a</td>
+<td><code>SÁCH</code> — <code>SÁCH GIÁO KHOA</code></td>
+<td><strong>IS-A</strong></td>
+<td><em>"Sách giáo khoa là một cuốn sách"</em> — nghe xuôi</td>
+</tr>
+<tr>
+<td>b</td>
+<td><code>LỚP</code> — <code>HỌC SINH</code></td>
+<td><strong>HAS-A</strong></td>
+<td><em>"Học sinh là một lớp"</em> — nghe sai. Đây là quan hệ 1:N</td>
+</tr>
+<tr>
+<td>c</td>
+<td><code>NGƯỜI TRONG TRƯỜNG</code> — <code>GIÁO VIÊN</code></td>
+<td><strong>IS-A</strong></td>
+<td><em>"Giáo viên là một người trong trường"</em></td>
+</tr>
+<tr>
+<td>d</td>
+<td><code>THƯ VIỆN</code> — <code>SÁCH</code></td>
+<td><strong>HAS-A</strong></td>
+<td>Thư viện <strong>chứa</strong> sách, không phải là sách</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Câu 2.</strong></p>
+<ul>
+<li><strong>Disjoint.</strong> Một học sinh chỉ có <strong>một</strong> điểm trung bình, nên chỉ rơi vào <strong>một</strong> xếp loại. Không ai vừa giỏi vừa khá.</li>
+<li><strong>Toàn phần</strong> (với điều kiện có đủ hạng cho mọi khoảng điểm). Mọi học sinh đều có điểm trung bình nên đều được xếp loại.</li>
+</ul>
+<p>Chú ý một điều thú vị: chuyên biệt hoá này dựa hoàn toàn vào <strong>giá trị của một thuộc tính dẫn xuất</strong> (điểm trung bình, tính từ bảng <code>diem</code>). Giáo trình gọi đó là <em>attribute-defined specialization</em>. Với loại này, <strong>không nên</strong> tạo bảng con — chỉ cần tính lại khi cần, vì xếp loại đổi mỗi kỳ.</p>
+<p><strong>Câu 3.</strong></p>
+<ul>
+<li><strong>Overlapping</strong> — một bạn tham gia được nhiều câu lạc bộ.</li>
+<li><strong>Bộ phận</strong> — được phép không tham gia câu lạc bộ nào.</li>
+</ul>
+<p>Cách hiện thực: <strong>không dùng kế thừa gì cả</strong>. Đây thật ra không phải chuyên biệt hoá mà là một <strong>quan hệ M:N</strong> giữa <code>HỌC SINH</code> và <code>CÂU LẠC BỘ</code>, hiện thực bằng bảng trung gian <code>thanh_vien_clb(ma_hs, ma_clb, ngay_tham_gia)</code>.</p>
+<p>Đây là bẫy hay gặp: overlapping + bộ phận thường là dấu hiệu bạn đang nhìn nhầm một <strong>quan hệ M:N</strong> thành chuyên biệt hoá. Phép thử: các "lớp con" có <strong>thuộc tính riêng</strong> không? Ở đây không — <code>CLB BÓNG ĐÁ</code> chẳng thêm cột nào cho học sinh cả.</p>
+<p><strong>Câu 4.</strong></p>
+<p>Cách 1 — gộp một bảng:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>phuong_tien(bien_so PK, chu_so_huu, loai, dung_tich, so_cho, hang_xe)
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>    CHECK (loai IN ('Xe máy', 'Ô tô'))
+</span></code></pre></div>
+<p>Cách 2 — bảng mỗi lớp con:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>phuong_tien(bien_so PK, chu_so_huu)
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>xe_may(bien_so PK → phuong_tien, dung_tich NOT NULL)
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>o_to(bien_so PK → phuong_tien, so_cho NOT NULL, hang_xe NOT NULL)
+</span></code></pre></div>
+<p>Cách 3 — bảng mỗi lớp cụ thể:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>xe_may(bien_so PK, chu_so_huu, dung_tich)
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>o_to(bien_so PK, chu_so_huu, so_cho, hang_xe)
+</span></code></pre></div>
+<p><strong>Chọn Cách 1.</strong> Lý do: chuyên biệt hoá này là <strong>disjoint + toàn phần</strong>, chỉ có hai lớp con, mỗi lớp con thêm 1–2 cột. Số ô <code>NULL</code> rất ít, và đổi lại bạn được: một khoá chính duy nhất (biển số không trùng giữa hai loại), và truy vấn <em>"mọi phương tiện"</em> chỉ cần một <code>SELECT</code>.</p>
+<p>Cách 3 là lựa chọn <strong>tệ nhất</strong> ở đây, vì biển số phải là duy nhất trên toàn bộ phương tiện mà hai bảng rời thì không ép được điều đó.</p>
+<p><strong>Câu 5.</strong>
+Đây là <strong>kết tập</strong>. <em>"Bạn An được 8.5 môn Toán"</em> là một sự thật hoàn chỉnh; <em>"ai nhập con điểm đó"</em> là thông tin gắn thêm vào cả cụm.</p>
+<p>Ở mức bảng thì rất đơn giản, vì <code>diem</code> <strong>đã là một bảng thật</strong> với khoá chính <code>ma_diem</code>:</p>
+<p><!-- sql:khong-chay -->
+<div class="highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="k">ALTER</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">diem</span><span class="w"> </span><span class="k">ADD</span><span class="w"> </span><span class="k">COLUMN</span><span class="w"> </span><span class="n">ma_gv_nhap</span><span class="w"> </span><span class="nb">CHAR</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="w"> </span><span class="k">REFERENCES</span><span class="w"> </span><span class="n">giao_vien</span><span class="p">(</span><span class="n">ma_gv</span><span class="p">);</span>
+</span></code></pre></div></p>
+<p>(Câu lệnh này chỉ để minh hoạ — khoá học <strong>không</strong> chạy nó, vì <code>dataset/02-chuan-hoa.sql</code> là lược đồ đã chốt.)</p>
+<p>Đúng như phần khái niệm đã nói: ở mức bảng, kết tập gần như biến mất — nó chỉ là một cột khoá ngoại thêm vào bảng trung gian.</p>
+</details>
+<h2 id="tom-tat">🔑 Tóm tắt<a class="headerlink" href="#tom-tat" title="Permanent link">&para;</a></h2>
+<ol>
+<li><strong>EER</strong> bổ sung cho ER ba thứ: <strong>lớp cha / lớp con</strong> với kế thừa thuộc tính, bốn <strong>ràng buộc</strong> trên chuyên biệt hoá, và <strong>kết tập</strong>.</li>
+<li><strong>Chuyên biệt hoá</strong> đi từ trên xuống, <strong>tổng quát hoá</strong> đi từ dưới lên — hai quá trình khác nhau nhưng cho ra <strong>cùng một hình vẽ</strong>.</li>
+<li>Mỗi chuyên biệt hoá cần <strong>hai</strong> ràng buộc: <strong>disjoint <code>d</code></strong> hay <strong>overlapping <code>o</code></strong>, và <strong>toàn phần</strong> (gạch đôi) hay <strong>bộ phận</strong> (gạch đơn).</li>
+<li><strong>Kết tập</strong> coi cả một mối quan hệ như một thực thể, dùng khi mối quan hệ gốc <strong>đứng vững một mình</strong> — khác với quan hệ bậc ba, nơi ba phía ngang hàng nhau.</li>
+<li>Mô hình quan hệ không có kế thừa, nên phải chọn một trong <strong>ba cách</strong>: gộp một bảng (nhiều <code>NULL</code>, không ép được <code>NOT NULL</code>), bảng mỗi lớp con (sạch nhất, hỗ trợ overlapping, phải <code>JOIN</code>), bảng mỗi lớp cụ thể (<code>truong_hoc</code> đang dùng, khó gộp danh sách).</li>
+</ol>
+<hr />
+<p>⬅️ <a href="../12-bay-loai-khoa/">Bài 12 — Bảy loại khoá trong cơ sở dữ liệu</a> · ➡️ <a href="../14-chuyen-er-sang-bang/">Bài 14 — Chuyển biểu đồ ER thành lược đồ quan hệ</a></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Trở lại mục lục
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Chân trang" >
+        
+          
+          <a href="../12-bay-loai-khoa/" class="md-footer__link md-footer__link--prev" aria-label="Trước: Bài 12 — Bảy loại khoá trong cơ sở dữ liệu">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Trước
+              </span>
+              <div class="md-ellipsis">
+                Bài 12 — Bảy loại khoá trong cơ sở dữ liệu
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../14-chuyen-er-sang-bang/" class="md-footer__link md-footer__link--next" aria-label="Sau: Bài 14 — Chuyển biểu đồ ER thành lược đồ quan hệ">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Sau
+              </span>
+              <div class="md-ellipsis">
+                Bài 14 — Chuyển biểu đồ ER thành lược đồ quan hệ
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Nội dung theo giấy phép CC BY 4.0
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/hungnguyen010518/database-tu-a-z" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.sections", "navigation.top", "navigation.footer", "navigation.indexes", "navigation.tracking", "toc.follow", "content.code.copy", "content.code.annotate", "search.highlight", "search.suggest"], "search": "../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "\u0110\u00e3 sao ch\u00e9p", "clipboard.copy": "Sao ch\u00e9p v\u00e0o b\u1ed9 nh\u1edb t\u1ea1m", "search.result.more.one": "1 t\u1eeb kh\u00e1c trong trang", "search.result.more.other": "# t\u1eeb kh\u00e1c trong trang", "search.result.none": "Kh\u00f4ng t\u00ecm th\u1ea5y t\u00e0i li\u1ec7u li\u00ean quan", "search.result.one": "1 t\u00e0i li\u1ec7u li\u00ean quan", "search.result.other": "# t\u00e0i li\u1ec7u li\u00ean quan", "search.result.placeholder": "Nh\u1eadp \u0111\u1ec3 b\u1eaft \u0111\u1ea7u t\u00ecm ki\u1ebfm", "search.result.term.missing": "Kh\u00f4ng", "select.version": "Ch\u1ecdn phi\u00ean b\u1ea3n"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.525ec568.min.js"></script>
+      
+    
+  </body>
+</html>

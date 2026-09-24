@@ -1,0 +1,2298 @@
+
+<!doctype html>
+<html lang="vi" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Khóa học cơ sở dữ liệu tiếng Việt, từ con số 0 tới mức siêu nâng cao — giải thích để học sinh cấp 2 cũng hiểu được.">
+      
+      
+      
+        <link rel="canonical" href="https://hungnguyen010518.github.io/database-tu-a-z/cap-1-mo-hinh-er/12-bay-loai-khoa/">
+      
+      
+        <link rel="prev" href="../11-bieu-do-er-crows-foot/">
+      
+      
+        <link rel="next" href="../13-mo-hinh-eer/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.39">
+    
+    
+      
+        <title>Bài 12 — Bảy loại khoá trong cơ sở dữ liệu - Database từ A-Z</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.8c3ca2c6.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#bai-12-bay-loai-khoa-trong-co-so-du-lieu" class="md-skip">
+          Bỏ qua
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Đầu trang">
+    <a href="../.." title="Database từ A-Z" class="md-header__button md-logo" aria-label="Database từ A-Z" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3C7.58 3 4 4.79 4 7s3.58 4 8 4 8-1.79 8-4-3.58-4-8-4M4 9v3c0 2.21 3.58 4 8 4s8-1.79 8-4V9c0 2.21-3.58 4-8 4s-8-1.79-8-4m0 5v3c0 2.21 3.58 4 8 4s8-1.79 8-4v-3c0 2.21-3.58 4-8 4s-8-1.79-8-4"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Database từ A-Z
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Bài 12 — Bảy loại khoá trong cơ sở dữ liệu
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Chuyển sang chế độ tối"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Chuyển sang chế độ tối" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Chuyển sang chế độ sáng"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Chuyển sang chế độ sáng" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Tìm kiếm" placeholder="Tìm kiếm" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Tìm kiếm">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Xoá" aria-label="Xoá" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/hungnguyen010518/database-tu-a-z" title="Xem mã nguồn" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    database-tu-a-z
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Thanh điều hướng" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Database từ A-Z" class="md-nav__button md-logo" aria-label="Database từ A-Z" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3C7.58 3 4 4.79 4 7s3.58 4 8 4 8-1.79 8-4-3.58-4-8-4M4 9v3c0 2.21 3.58 4 8 4s8-1.79 8-4V9c0 2.21-3.58 4-8 4s-8-1.79-8-4m0 5v3c0 2.21 3.58 4 8 4s8-1.79 8-4v-3c0 2.21-3.58 4-8 4s-8-1.79-8-4"/></svg>
+
+    </a>
+    Database từ A-Z
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/hungnguyen010518/database-tu-a-z" title="Xem mã nguồn" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    database-tu-a-z
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Trang chủ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Cấp 0 — Nhập môn
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Cấp 0 — Nhập môn
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-0-nhap-mon/01-du-lieu-va-thong-tin/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 1 — Dữ liệu, thông tin và tại sao phải lưu trữ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-0-nhap-mon/02-tu-so-giay-den-excel/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 2 — Từ sổ giấy đến Excel
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-0-nhap-mon/03-dbms-la-gi/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 3 — DBMS là gì
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-0-nhap-mon/04-cac-mo-hinh-du-lieu/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 4 — Các mô hình dữ liệu
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-0-nhap-mon/05-cai-dat-postgresql/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 5 — Cài đặt PostgreSQL
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Cấp 1 — Mô hình quan hệ & Biểu đồ ER
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Cấp 1 — Mô hình quan hệ & Biểu đồ ER
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-mo-hinh-quan-he/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 6 — Mô hình quan hệ: bảng, dòng, cột, miền giá trị, lược đồ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-thuc-the-va-thuoc-tinh/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 7 — Thực thể và các loại thuộc tính
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08-moi-quan-he-va-cardinality/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 8 — Mối quan hệ, bậc và bản số (Cardinality)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09-participation-va-thuc-the-yeu/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 9 — Ràng buộc tham gia và Thực thể yếu
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10-bieu-do-er-ky-hieu-chen/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 10 — Biểu đồ ER — ký hiệu Chen
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../11-bieu-do-er-crows-foot/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 11 — Biểu đồ ER — ký hiệu Crow's Foot và vẽ bằng Mermaid
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Bài 12 — Bảy loại khoá trong cơ sở dữ liệu
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Bài 12 — Bảy loại khoá trong cơ sở dữ liệu
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Mục lục">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Mục lục
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#cau-chuyen-mo-au" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧠 Câu chuyện mở đầu
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#khai-niem-thuat-ngu" class="md-nav__link">
+    <span class="md-ellipsis">
+      📖 Khái niệm &amp; thuật ngữ
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📖 Khái niệm & thuật ngữ">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mot-inh-nghia-goc-bay-cai-ten" class="md-nav__link">
+    <span class="md-ellipsis">
+      Một định nghĩa gốc, bảy cái tên
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1-sieu-khoa" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Siêu khoá
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-khoa-du-tuyen" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Khoá dự tuyển
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-khoa-chinh" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Khoá chính
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-khoa-thay-the" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Khoá thay thế
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-khoa-phuc-hop" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. Khoá phức hợp
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-khoa-nhan-tao-va-khoa-tu-nhien" class="md-nav__link">
+    <span class="md-ellipsis">
+      6. Khoá nhân tạo — và khoá tự nhiên
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7-khoa-ngoai" class="md-nav__link">
+    <span class="md-ellipsis">
+      7. Khoá ngoại
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bang-thuat-ngu" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bảng thuật ngữ
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#so-o" class="md-nav__link">
+    <span class="md-ellipsis">
+      🖼️ Sơ đồ
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🖼️ Sơ đồ">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#so-o-1-quan-he-bao-ham-giua-cac-loai-khoa" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sơ đồ 1 — Quan hệ bao hàm giữa các loại khoá
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#so-o-2-khoa-chinh-i-vao-bang-khac-thanh-khoa-ngoai" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sơ đồ 2 — Khoá chính đi vào bảng khác thành khoá ngoại
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#thuc-hanh" class="md-nav__link">
+    <span class="md-ellipsis">
+      💻 Thực hành
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="💻 Thực hành">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-sieu-khoa-thua-cot-van-la-khoa" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Siêu khoá — thừa cột vẫn là khoá
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-khoa-du-tuyen-toi-gian-moi-uoc-tinh" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Khoá dự tuyển — tối giản mới được tính
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-khoa-chinh-cai-uoc-chon" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Khoá chính — cái được chọn
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-khoa-thay-the-cai-khong-uoc-chon" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Khoá thay thế — cái không được chọn
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-khoa-phuc-hop-bon-cot-cua-phan_cong_day" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. Khoá phức hợp — bốn cột của phan_cong_day
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-khoa-nhan-tao-cot-serial" class="md-nav__link">
+    <span class="md-ellipsis">
+      6. Khoá nhân tạo — cột SERIAL
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7-khoa-ngoai-noi-sang-bang-khac" class="md-nav__link">
+    <span class="md-ellipsis">
+      7. Khoá ngoại — nối sang bảng khác
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#loi-thuong-gap" class="md-nav__link">
+    <span class="md-ellipsis">
+      ⚠️ Lỗi thường gặp
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bai-tap" class="md-nav__link">
+    <span class="md-ellipsis">
+      ✍️ Bài tập
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tom-tat" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔑 Tóm tắt
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../13-mo-hinh-eer/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 13 — Mô hình EER: Generalization, Specialization, Aggregation
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../14-chuyen-er-sang-bang/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 14 — Chuyển biểu đồ ER thành lược đồ quan hệ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../15-rang-buoc-toan-ven/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 15 — Ràng buộc toàn vẹn (Integrity Constraints)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../dataset/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Database mẫu
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../glossary/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bảng thuật ngữ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Mục lục">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Mục lục
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#cau-chuyen-mo-au" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧠 Câu chuyện mở đầu
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#khai-niem-thuat-ngu" class="md-nav__link">
+    <span class="md-ellipsis">
+      📖 Khái niệm &amp; thuật ngữ
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📖 Khái niệm & thuật ngữ">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mot-inh-nghia-goc-bay-cai-ten" class="md-nav__link">
+    <span class="md-ellipsis">
+      Một định nghĩa gốc, bảy cái tên
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1-sieu-khoa" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Siêu khoá
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-khoa-du-tuyen" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Khoá dự tuyển
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-khoa-chinh" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Khoá chính
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-khoa-thay-the" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Khoá thay thế
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-khoa-phuc-hop" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. Khoá phức hợp
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-khoa-nhan-tao-va-khoa-tu-nhien" class="md-nav__link">
+    <span class="md-ellipsis">
+      6. Khoá nhân tạo — và khoá tự nhiên
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7-khoa-ngoai" class="md-nav__link">
+    <span class="md-ellipsis">
+      7. Khoá ngoại
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bang-thuat-ngu" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bảng thuật ngữ
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#so-o" class="md-nav__link">
+    <span class="md-ellipsis">
+      🖼️ Sơ đồ
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🖼️ Sơ đồ">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#so-o-1-quan-he-bao-ham-giua-cac-loai-khoa" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sơ đồ 1 — Quan hệ bao hàm giữa các loại khoá
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#so-o-2-khoa-chinh-i-vao-bang-khac-thanh-khoa-ngoai" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sơ đồ 2 — Khoá chính đi vào bảng khác thành khoá ngoại
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#thuc-hanh" class="md-nav__link">
+    <span class="md-ellipsis">
+      💻 Thực hành
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="💻 Thực hành">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-sieu-khoa-thua-cot-van-la-khoa" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Siêu khoá — thừa cột vẫn là khoá
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-khoa-du-tuyen-toi-gian-moi-uoc-tinh" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Khoá dự tuyển — tối giản mới được tính
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-khoa-chinh-cai-uoc-chon" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Khoá chính — cái được chọn
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-khoa-thay-the-cai-khong-uoc-chon" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Khoá thay thế — cái không được chọn
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-khoa-phuc-hop-bon-cot-cua-phan_cong_day" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. Khoá phức hợp — bốn cột của phan_cong_day
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-khoa-nhan-tao-cot-serial" class="md-nav__link">
+    <span class="md-ellipsis">
+      6. Khoá nhân tạo — cột SERIAL
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7-khoa-ngoai-noi-sang-bang-khac" class="md-nav__link">
+    <span class="md-ellipsis">
+      7. Khoá ngoại — nối sang bảng khác
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#loi-thuong-gap" class="md-nav__link">
+    <span class="md-ellipsis">
+      ⚠️ Lỗi thường gặp
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bai-tap" class="md-nav__link">
+    <span class="md-ellipsis">
+      ✍️ Bài tập
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tom-tat" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔑 Tóm tắt
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="bai-12-bay-loai-khoa-trong-co-so-du-lieu">Bài 12 — Bảy loại khoá trong cơ sở dữ liệu<a class="headerlink" href="#bai-12-bay-loai-khoa-trong-co-so-du-lieu" title="Permanent link">&para;</a></h1>
+<div class="admonition abstract">
+<p class="admonition-title">🎯 Học xong bài này, bạn sẽ</p>
+<ul>
+<li>Gọi đúng tên <strong>bảy loại khoá</strong>: siêu khoá, khoá dự tuyển, khoá chính, khoá thay thế, khoá phức hợp, khoá nhân tạo, khoá ngoại</li>
+<li>Hiểu quan hệ bao hàm giữa chúng — cái nào là tập con của cái nào</li>
+<li>Phân biệt <strong>khoá tự nhiên</strong> với <strong>khoá nhân tạo</strong>, và biết khi nào nên chọn cái nào</li>
+<li>Chứng minh được từng loại khoá bằng một câu SQL chạy trên <code>truong_hoc</code></li>
+<li>Biết vì sao <em>"dữ liệu hiện không trùng"</em> <strong>không</strong> đủ để kết luận một cột là khoá</li>
+</ul>
+</div>
+<h2 id="cau-chuyen-mo-au">🧠 Câu chuyện mở đầu<a class="headerlink" href="#cau-chuyen-mo-au" title="Permanent link">&para;</a></h2>
+<p>Lớp 8A1 có hai bạn cùng tên <strong>Nguyễn Văn An</strong>.</p>
+<p>Đầu năm chưa ai để ý. Đến khi cô giáo vào điểm kiểm tra giữa kỳ thì rắc rối nổ ra: cô gọi <em>"An được 9 điểm"</em>, và cả hai bạn cùng giơ tay.</p>
+<p>Cô thử thêm chi tiết: <em>"An ngồi bàn ba"</em>. Vẫn hai bạn — hai bàn ba, hai dãy khác nhau. Cô thử <em>"An sinh tháng Một"</em>. Trùng nốt.</p>
+<p>Cuối cùng cô mở sổ điểm ra và đọc: <em>"HS001"</em>. Chỉ một bạn đứng dậy.</p>
+<p>Chiều hôm đó, cô văn thư nói thêm một chuyện thú vị: <em>"Thật ra mỗi bạn còn một thứ nữa cũng không bao giờ trùng — địa chỉ email nhà trường cấp. Nhưng cô vẫn quen gọi mã học sinh hơn, vì nó ngắn."</em></p>
+<p>Vậy là có <strong>hai</strong> thứ đều phân biệt được học sinh, nhưng nhà trường chỉ <strong>chọn một</strong> để dùng chính thức. Thứ được chọn gọi là gì, thứ bị bỏ lại gọi là gì? Và nếu gộp <em>"tên + ngày sinh + địa chỉ"</em> lại cho chắc ăn thì có gọi là khoá không?</p>
+<h2 id="khai-niem-thuat-ngu">📖 Khái niệm &amp; thuật ngữ<a class="headerlink" href="#khai-niem-thuat-ngu" title="Permanent link">&para;</a></h2>
+<h3 id="mot-inh-nghia-goc-bay-cai-ten">Một định nghĩa gốc, bảy cái tên<a class="headerlink" href="#mot-inh-nghia-goc-bay-cai-ten" title="Permanent link">&para;</a></h3>
+<p>Mọi loại khoá đều xoay quanh đúng một ý: <strong>một tập cột đủ sức phân biệt mọi dòng trong bảng</strong>. Bảy cái tên chỉ là bảy góc nhìn khác nhau lên ý đó.</p>
+<p>Hai câu hỏi sinh ra toàn bộ bảy loại:</p>
+<ol>
+<li><em>Tập cột này có </em><em>đủ</em><em> để phân biệt không?</em> → siêu khoá</li>
+<li><em>Nó có </em><em>thừa</em><em> cột nào không?</em> → khoá dự tuyển</li>
+<li><em>Ta </em><em>chọn</em><em> cái nào làm chính?</em> → khoá chính, khoá thay thế</li>
+<li>Ba loại còn lại mô tả <strong>hình dạng</strong> hoặc <strong>nguồn gốc</strong> của khoá: phức hợp (nhiều cột), nhân tạo (do ta tự bịa ra), ngoại (mượn của bảng khác).</li>
+</ol>
+<h3 id="1-sieu-khoa">1. Siêu khoá<a class="headerlink" href="#1-sieu-khoa" title="Permanent link">&para;</a></h3>
+<p><strong>Siêu khoá</strong> (<em>super key</em>) là <strong>một tập cột mà không có hai dòng nào trùng nhau trên toàn bộ tập đó</strong>.</p>
+<p>Chú ý: định nghĩa <strong>không</strong> yêu cầu tối giản. Thừa cột vẫn là siêu khoá.</p>
+<p>Trong <code>giao_vien</code>, tất cả những tập sau đều là siêu khoá:</p>
+<ul>
+<li><code>{ma_gv}</code></li>
+<li><code>{email}</code></li>
+<li><code>{ma_gv, ho_ten}</code></li>
+<li><code>{ma_gv, ho_ten, email, luong}</code></li>
+<li>toàn bộ 7 cột</li>
+</ul>
+<p>Lý do rất đơn giản: đã phân biệt được bằng <code>ma_gv</code> rồi thì thêm bao nhiêu cột nữa cũng vẫn phân biệt được. <strong>Thêm cột thì khả năng phân biệt chỉ có tăng chứ không giảm.</strong></p>
+<h3 id="2-khoa-du-tuyen">2. Khoá dự tuyển<a class="headerlink" href="#2-khoa-du-tuyen" title="Permanent link">&para;</a></h3>
+<p><strong>Khoá dự tuyển</strong> (<em>candidate key</em>) là <strong>siêu khoá tối giản</strong> — bỏ đi bất kỳ cột nào thì nó mất luôn khả năng phân biệt.</p>
+<p>Đây là chỗ chữ <em>"tối giản"</em> làm nên tất cả:</p>
+<table>
+<thead>
+<tr>
+<th>Tập cột</th>
+<th>Siêu khoá?</th>
+<th>Tối giản?</th>
+<th>Kết luận</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>{ma_gv}</code></td>
+<td>Có</td>
+<td>Có — bỏ <code>ma_gv</code> thì còn tập rỗng</td>
+<td><strong>Khoá dự tuyển</strong></td>
+</tr>
+<tr>
+<td><code>{email}</code></td>
+<td>Có</td>
+<td>Có</td>
+<td><strong>Khoá dự tuyển</strong></td>
+</tr>
+<tr>
+<td><code>{ma_gv, ho_ten}</code></td>
+<td>Có</td>
+<td><strong>Không</strong> — bỏ <code>ho_ten</code> vẫn phân biệt được</td>
+<td>Chỉ là siêu khoá</td>
+</tr>
+<tr>
+<td><code>{ho_ten}</code></td>
+<td><strong>Không</strong> — hai người có thể trùng tên</td>
+<td>—</td>
+<td>Không phải khoá gì cả</td>
+</tr>
+</tbody>
+</table>
+<p>Một bảng có <strong>ít nhất một</strong> khoá dự tuyển (trường hợp xấu nhất: toàn bộ các cột), và có thể có <strong>nhiều</strong> khoá dự tuyển. Bảng <code>giao_vien</code> có hai: <code>{ma_gv}</code> và <code>{email}</code>.</p>
+<div class="admonition danger">
+<p class="admonition-title">Dữ liệu không trùng KHÔNG chứng minh được đó là khoá dự tuyển</p>
+<p>Đây là hiểu lầm nguy hiểm nhất của cả bài.</p>
+<p>Hiện tại 8 giáo viên có 8 cái <code>ho_ten</code> khác nhau. Chạy <code>count(DISTINCT ho_ten)</code> ra đúng <code>8</code>. Vậy <code>{ho_ten}</code> có phải khoá dự tuyển không? <strong>Không.</strong></p>
+<p>Khoá là một <strong>luật về mọi dữ liệu có thể có trong tương lai</strong>, không phải một quan sát về dữ liệu hôm nay. Ngày mai tuyển thêm một cô cũng tên <em>Lê Thị Mai</em> là luật vỡ ngay.</p>
+<p>Phép thử đúng gồm hai bước:</p>
+<ol>
+<li><strong>Hỏi nghiệp vụ</strong>: <em>"Có khi nào hai dòng trùng nhau ở cột này không?"</em> Nếu câu trả lời là <em>"về nguyên tắc thì có"</em> → không phải khoá.</li>
+<li><strong>Xem lược đồ</strong>: có ràng buộc <code>PRIMARY KEY</code> hoặc <code>UNIQUE</code> trên tập cột đó không? Nếu không có, database <strong>không hề</strong> bảo vệ điều bạn đang tin.</li>
+</ol>
+<p>Phần Thực hành sẽ chạy đúng hai bước này.</p>
+</div>
+<h3 id="3-khoa-chinh">3. Khoá chính<a class="headerlink" href="#3-khoa-chinh" title="Permanent link">&para;</a></h3>
+<p><strong>Khoá chính</strong> (<em>primary key</em>) là <strong>khoá dự tuyển được người thiết kế chọn</strong> làm định danh chính thức của bảng.</p>
+<p>Mỗi bảng có <strong>đúng một</strong> khoá chính. Nó có hai đặc quyền mà các khoá dự tuyển khác không có:</p>
+<ol>
+<li><strong>Không bao giờ được <code>NULL</code></strong> — đây là <strong>toàn vẹn thực thể</strong>, và <a href="../15-rang-buoc-toan-ven/">Bài 15</a> sẽ nói kỹ.</li>
+<li><strong>Là thứ mà khoá ngoại của bảng khác trỏ vào</strong> — nên đổi nó là đụng tới cả database.</li>
+</ol>
+<p>Tiêu chí chọn, theo thứ tự quan trọng:</p>
+<table>
+<thead>
+<tr>
+<th>Tiêu chí</th>
+<th>Vì sao</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Không bao giờ đổi</strong></td>
+<td>Đổi khoá chính là phải đổi theo mọi khoá ngoại đang trỏ vào</td>
+</tr>
+<tr>
+<td><strong>Không bao giờ <code>NULL</code></strong></td>
+<td>Bắt buộc theo định nghĩa</td>
+</tr>
+<tr>
+<td><strong>Ngắn gọn</strong></td>
+<td>Nó bị nhân bản sang mọi bảng con, và được lập chỉ mục</td>
+</tr>
+<tr>
+<td><strong>Vô nghĩa càng tốt</strong></td>
+<td>Thứ mang ý nghĩa đời thực thì đời thực đổi lúc nào không hay</td>
+</tr>
+</tbody>
+</table>
+<p><code>giao_vien</code> chọn <code>ma_gv</code> chứ không chọn <code>email</code>: <code>CHAR(4)</code> ngắn hơn <code>VARCHAR(80)</code> rất nhiều, và email thì đổi được (cô đổi tên, đổi nhà cung cấp mail), còn mã giáo viên thì không.</p>
+<h3 id="4-khoa-thay-the">4. Khoá thay thế<a class="headerlink" href="#4-khoa-thay-the" title="Permanent link">&para;</a></h3>
+<p><strong>Khoá thay thế</strong> (<em>alternate key</em>) là <strong>khoá dự tuyển không được chọn làm khoá chính</strong>.</p>
+<p>Công thức dễ nhớ:</p>
+<blockquote>
+<p>khoá dự tuyển − khoá chính = khoá thay thế</p>
+</blockquote>
+<p>Nó <strong>không</strong> bị vứt đi. Trong SQL, khoá thay thế được giữ bằng ràng buộc <code>UNIQUE</code>. Trong <code>truong_hoc</code> có ba khoá thay thế:</p>
+<table>
+<thead>
+<tr>
+<th>Bảng</th>
+<th>Khoá chính</th>
+<th>Khoá thay thế</th>
+<th>Ràng buộc giữ nó</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>giao_vien</code></td>
+<td><code>ma_gv</code></td>
+<td><code>email</code></td>
+<td><code>giao_vien_email_key</code></td>
+</tr>
+<tr>
+<td><code>lop</code></td>
+<td><code>ma_lop</code></td>
+<td><code>ten_lop</code></td>
+<td><code>lop_ten_lop_key</code></td>
+</tr>
+<tr>
+<td><code>mon_hoc</code></td>
+<td><code>ma_mon</code></td>
+<td><code>ten_mon</code></td>
+<td><code>mon_hoc_ten_mon_key</code></td>
+</tr>
+</tbody>
+</table>
+<div class="admonition warning">
+<p class="admonition-title">Bỏ <code>UNIQUE</code> là vứt mất khoá thay thế</p>
+<p>Nhiều người nghĩ <em>"đã có khoá chính rồi, <code>UNIQUE</code> kia thừa"</em>. Không thừa chút nào.</p>
+<p>Không có <code>giao_vien_email_key</code> thì hai giáo viên hoàn toàn có thể dùng chung một email — và hệ thống gửi thông báo sẽ gửi nhầm người. Khoá chính chỉ bảo vệ <strong>một</strong> cách phân biệt; những cách phân biệt còn lại phải tự khai báo lấy.</p>
+<p>Lưu ý cột <code>lop.ma_gvcn</code> cũng có <code>UNIQUE</code> (<code>lop_ma_gvcn_key</code>) nhưng <strong>không phải</strong> khoá thay thế — nó cho phép <code>NULL</code>, và mục đích của nó là ép quan hệ <strong>1:1</strong> (<a href="../08-moi-quan-he-va-cardinality/">Bài 8</a>), chứ không phải để định danh dòng.</p>
+</div>
+<h3 id="5-khoa-phuc-hop">5. Khoá phức hợp<a class="headerlink" href="#5-khoa-phuc-hop" title="Permanent link">&para;</a></h3>
+<p><strong>Khoá phức hợp</strong> (<em>composite key</em>) là khoá gồm <strong>từ hai cột trở lên</strong>.</p>
+<p>Nó không phải một loại riêng biệt nằm ngoài bốn loại trên — nó mô tả <strong>hình dạng</strong>. Một khoá chính có thể đồng thời là khoá phức hợp.</p>
+<p>Ví dụ trung tâm: bảng <code>phan_cong_day</code> có khoá chính gồm <strong>bốn</strong> cột <code>(ma_gv, ma_mon, ma_lop, hoc_ky)</code>, đúng như <a href="../08-moi-quan-he-va-cardinality/">Bài 8</a> đã báo trước khi phân tích mối quan hệ bậc ba.</p>
+<p>Vì sao phải cả bốn? Thử bỏ từng cột:</p>
+<table>
+<thead>
+<tr>
+<th>Bỏ cột nào</th>
+<th>Hậu quả</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Bỏ <code>hoc_ky</code></td>
+<td>Cô Lan dạy Toán cho 8A1 <strong>cả hai học kỳ</strong> → hai dòng trùng nhau</td>
+</tr>
+<tr>
+<td>Bỏ <code>ma_lop</code></td>
+<td>Cô Lan dạy Toán cho <strong>nhiều lớp</strong> → trùng</td>
+</tr>
+<tr>
+<td>Bỏ <code>ma_mon</code></td>
+<td>Thầy Khoa dạy nhiều môn thì trùng</td>
+</tr>
+<tr>
+<td>Bỏ <code>ma_gv</code></td>
+<td>Một lớp học một môn do nhiều giáo viên dạy thì trùng</td>
+</tr>
+</tbody>
+</table>
+<p>Bỏ cột nào cũng hỏng → khoá này <strong>tối giản</strong> → nó là một khoá dự tuyển, và được chọn làm khoá chính.</p>
+<div class="admonition tip">
+<p class="admonition-title">Khoá phức hợp khác 'nhiều ràng buộc UNIQUE'</p>
+<p><code>UNIQUE (ma_hs, ngay)</code> của <code>diem_danh</code> nghĩa là <strong>cặp</strong> không được trùng. Một học sinh xuất hiện nhiều lần được, một ngày xuất hiện nhiều lần được — chỉ cặp là không.</p>
+<p>Còn viết <code>UNIQUE (ma_hs)</code> và <code>UNIQUE (ngay)</code> riêng lẻ thì nghĩa hoàn toàn khác: mỗi học sinh chỉ được điểm danh <strong>một lần duy nhất trong đời</strong>. Sai hẳn.</p>
+</div>
+<h3 id="6-khoa-nhan-tao-va-khoa-tu-nhien">6. Khoá nhân tạo — và khoá tự nhiên<a class="headerlink" href="#6-khoa-nhan-tao-va-khoa-tu-nhien" title="Permanent link">&para;</a></h3>
+<p>Hai khái niệm này luôn đi thành cặp:</p>
+<p><strong>Khoá tự nhiên</strong> (<em>natural key</em>) là khoá được làm từ <strong>dữ liệu có thật ngoài đời</strong>, thứ tồn tại độc lập với database: số căn cước, mã học sinh nhà trường cấp, tên môn học, mã ISBN của sách.</p>
+<p><strong>Khoá nhân tạo</strong> (<em>surrogate key</em>) là khoá do <strong>hệ thống tự phát sinh</strong>, không mang ý nghĩa gì ngoài việc đánh số: cột <code>SERIAL</code>, <code>UUID</code>, số thứ tự tăng dần.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Khoá tự nhiên</th>
+<th>Khoá nhân tạo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Nguồn gốc</td>
+<td>Có sẵn ngoài đời</td>
+<td>Database bịa ra</td>
+</tr>
+<tr>
+<td>Ví dụ trong <code>truong_hoc</code></td>
+<td><code>ma_hs</code>, <code>ma_gv</code>, <code>ten_mon</code>, <code>email</code></td>
+<td><code>ma_diem</code>, <code>ma_muon</code>, <code>ma_dd</code>, <code>ma_ph</code></td>
+</tr>
+<tr>
+<td>Người dùng có đọc được không</td>
+<td>Có — <em>"HS001"</em> có nghĩa với cô văn thư</td>
+<td>Không — <em>"điểm số 137"</em> chẳng nói lên gì</td>
+</tr>
+<tr>
+<td>Có nguy cơ phải đổi không</td>
+<td><strong>Có</strong> — đời thực thay đổi</td>
+<td>Không bao giờ</td>
+</tr>
+<tr>
+<td>Khi nào nên dùng</td>
+<td>Khi có sẵn một định danh ổn định, ngắn</td>
+<td>Khi không có, hoặc khoá tự nhiên quá dài / hay đổi</td>
+</tr>
+</tbody>
+</table>
+<p>Bốn khoá nhân tạo của <code>truong_hoc</code>, và lý do từng cái:</p>
+<table>
+<thead>
+<tr>
+<th>Cột</th>
+<th>Bảng</th>
+<th>Vì sao phải nhân tạo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ma_diem</code></td>
+<td><code>diem</code></td>
+<td>Một con điểm ngoài đời không có "mã" nào cả</td>
+</tr>
+<tr>
+<td><code>ma_muon</code></td>
+<td><code>muon_sach</code></td>
+<td>Một lượt mượn cũng vậy</td>
+</tr>
+<tr>
+<td><code>ma_dd</code></td>
+<td><code>diem_danh</code></td>
+<td>Một buổi điểm danh cũng vậy</td>
+</tr>
+<tr>
+<td><code>ma_ph</code></td>
+<td><code>phu_huynh</code></td>
+<td>Khoá bộ phận <code>quan_he</code> <strong>không hợp lệ</strong> — <a href="../09-participation-va-thuc-the-yeu/">Bài 9</a> đã chứng minh bằng dữ liệu</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition danger">
+<p class="admonition-title">Khoá nhân tạo KHÔNG phải thuộc tính trong biểu đồ ER</p>
+<p><code>ma_ph</code> và <code>ma_dd</code> là hai cột <strong>được sinh ra ở bước chuyển ER sang bảng</strong> (<a href="../14-chuyen-er-sang-bang/">Bài 14</a> Bước 2), không phải đặc điểm có thật của người phụ huynh hay của một buổi điểm danh.</p>
+<p>Đây là lý do <a href="../09-participation-va-thuc-the-yeu/">Bài 9</a> vẫn gọi PHỤ HUYNH và BUỔI ĐIỂM DANH là <strong>thực thể yếu</strong>, dù bảng của chúng có khoá chính riêng. Hai mức khác nhau:</p>
+<table>
+<thead>
+<tr>
+<th>Mức</th>
+<th>Câu hỏi</th>
+<th>PHỤ HUYNH</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Ý niệm</strong> (biểu đồ ER)</td>
+<td>Có thuộc tính khoá <strong>tự nhiên</strong> không?</td>
+<td>Không → <strong>thực thể yếu</strong></td>
+</tr>
+<tr>
+<td><strong>Bảng</strong> (sau chuyển đổi)</td>
+<td>Bảng có cột khoá chính không?</td>
+<td>Có — <code>ma_ph</code>, một khoá <strong>nhân tạo</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Ngược lại, <code>ma_hs</code> và <code>ma_gv</code> <strong>là</strong> thuộc tính trong biểu đồ ER, vì nhà trường cấp mã đó cho từng người ở ngoài đời — chúng là <strong>khoá tự nhiên</strong>.</p>
+</div>
+<div class="admonition question">
+<p class="admonition-title"><code>ma_dd</code> và <code>ma_ph</code> khác nhau ở một điểm quan trọng</p>
+<p>Cả hai đều là khoá nhân tạo. Nhưng <code>diem_danh</code> <strong>vẫn có</strong> một khoá tự nhiên hợp lệ song song — cặp <code>(ma_hs, ngay)</code> — và lược đồ giữ nó bằng <code>UNIQUE (ma_hs, ngay)</code>.</p>
+<p>Còn <code>phu_huynh</code> thì <strong>không có</strong> khoá tự nhiên nào hợp lệ, nên không có ràng buộc <code>UNIQUE</code> nào tương ứng.</p>
+<p>Nói theo ngôn ngữ của bài này: <code>(ma_hs, ngay)</code> là một <strong>khoá thay thế</strong> của <code>diem_danh</code>; còn <code>phu_huynh</code> không có khoá thay thế nào cả.</p>
+</div>
+<h3 id="7-khoa-ngoai">7. Khoá ngoại<a class="headerlink" href="#7-khoa-ngoai" title="Permanent link">&para;</a></h3>
+<p><strong>Khoá ngoại</strong> (<em>foreign key</em>) là <strong>một hoặc nhiều cột trong bảng này, mang giá trị của khoá chính bảng kia</strong>, để nối hai bảng lại với nhau.</p>
+<p>Nó khác hẳn sáu loại trên ở một điểm căn bản: <strong>sáu loại kia nói về việc phân biệt các dòng trong CÙNG một bảng; khoá ngoại nói về mối liên hệ GIỮA hai bảng.</strong></p>
+<p>Cột <code>hoc_sinh.ma_lop</code> là khoá ngoại trỏ về <code>lop.ma_lop</code>. Nó <strong>không</strong> phân biệt các học sinh — bốn mươi học sinh chỉ có sáu giá trị <code>ma_lop</code>.</p>
+<p>Ba điều database bảo đảm nhờ khoá ngoại:</p>
+<ol>
+<li>Mọi giá trị ghi vào <code>hoc_sinh.ma_lop</code> <strong>phải có thật</strong> trong <code>lop</code>.</li>
+<li>Không xoá được một dòng <code>lop</code> khi còn học sinh trỏ vào (trừ khi khai <code>CASCADE</code>).</li>
+<li>Đây chính là <strong>toàn vẹn tham chiếu</strong> — chủ đề chính của <a href="../15-rang-buoc-toan-ven/">Bài 15</a>.</li>
+</ol>
+<h3 id="bang-thuat-ngu">Bảng thuật ngữ<a class="headerlink" href="#bang-thuat-ngu" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Tiếng Việt</th>
+<th>English</th>
+<th>Nghĩa dễ hiểu</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Siêu khoá</td>
+<td><em>super key</em></td>
+<td>Tập cột phân biệt được mọi dòng, được phép thừa cột</td>
+</tr>
+<tr>
+<td>Khoá dự tuyển</td>
+<td><em>candidate key</em></td>
+<td>Siêu khoá tối giản — bỏ cột nào cũng hỏng</td>
+</tr>
+<tr>
+<td>Khoá chính</td>
+<td><em>primary key</em></td>
+<td>Khoá dự tuyển được chọn làm định danh chính thức</td>
+</tr>
+<tr>
+<td>Khoá thay thế</td>
+<td><em>alternate key</em></td>
+<td>Khoá dự tuyển không được chọn, giữ bằng <code>UNIQUE</code></td>
+</tr>
+<tr>
+<td>Khoá phức hợp</td>
+<td><em>composite key</em></td>
+<td>Khoá gồm từ hai cột trở lên</td>
+</tr>
+<tr>
+<td>Khoá tự nhiên</td>
+<td><em>natural key</em></td>
+<td>Khoá làm từ dữ liệu có thật ngoài đời</td>
+</tr>
+<tr>
+<td>Khoá nhân tạo</td>
+<td><em>surrogate key</em></td>
+<td>Khoá do hệ thống tự phát sinh, không mang ý nghĩa</td>
+</tr>
+<tr>
+<td>Khoá ngoại</td>
+<td><em>foreign key</em></td>
+<td>Cột mang giá trị khoá chính của bảng khác</td>
+</tr>
+</tbody>
+</table>
+<h2 id="so-o">🖼️ Sơ đồ<a class="headerlink" href="#so-o" title="Permanent link">&para;</a></h2>
+<h3 id="so-o-1-quan-he-bao-ham-giua-cac-loai-khoa">Sơ đồ 1 — Quan hệ bao hàm giữa các loại khoá<a class="headerlink" href="#so-o-1-quan-he-bao-ham-giua-cac-loai-khoa" title="Permanent link">&para;</a></h3>
+<p>Bốn loại đầu tiên <strong>lồng vào nhau</strong> như những vòng tròn đồng tâm. Ba loại còn lại mô tả hình dạng hoặc nguồn gốc, nên nằm bên cạnh:</p>
+<pre class="mermaid"><code>flowchart TB
+    A["Mọi tập con của các cột&lt;br/&gt;ví dụ giao_vien có 2 mũ 7 = 128 tập"]
+    B["&lt;b&gt;SIÊU KHOÁ&lt;/b&gt;&lt;br/&gt;phân biệt được mọi dòng&lt;br/&gt;được phép thừa cột&lt;br/&gt;ma_gv · email · ma_gv+ho_ten · cả 7 cột"]
+    C["&lt;b&gt;KHOÁ DỰ TUYỂN&lt;/b&gt;&lt;br/&gt;siêu khoá TỐI GIẢN&lt;br/&gt;bỏ cột nào cũng hỏng&lt;br/&gt;ma_gv · email"]
+    D["&lt;b&gt;KHOÁ CHÍNH&lt;/b&gt;&lt;br/&gt;được CHỌN làm định danh&lt;br/&gt;đúng một cho mỗi bảng&lt;br/&gt;ma_gv"]
+    E["&lt;b&gt;KHOÁ THAY THẾ&lt;/b&gt;&lt;br/&gt;dự tuyển KHÔNG được chọn&lt;br/&gt;giữ bằng UNIQUE&lt;br/&gt;email"]
+
+    A --&gt; B
+    B --&gt; C
+    C --&gt; D
+    C --&gt; E
+
+    F["&lt;b&gt;KHOÁ PHỨC HỢP&lt;/b&gt;&lt;br/&gt;hình dạng: từ 2 cột trở lên&lt;br/&gt;phan_cong_day 4 cột"]
+    G["&lt;b&gt;KHOÁ NHÂN TẠO&lt;/b&gt;&lt;br/&gt;nguồn gốc: hệ thống bịa ra&lt;br/&gt;ma_diem · ma_muon · ma_dd · ma_ph"]
+    H["&lt;b&gt;KHOÁ TỰ NHIÊN&lt;/b&gt;&lt;br/&gt;nguồn gốc: có thật ngoài đời&lt;br/&gt;ma_hs · ten_mon · email"]
+    I["&lt;b&gt;KHOÁ NGOẠI&lt;/b&gt;&lt;br/&gt;KHÔNG phân biệt dòng&lt;br/&gt;nối sang bảng khác&lt;br/&gt;hoc_sinh.ma_lop"]
+
+    D -.-&gt; F
+    D -.-&gt; G
+    D -.-&gt; H
+    D ==&gt; I
+
+    style A fill:#eceff1,stroke:#607d8b
+    style B fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
+    style C fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
+    style D fill:#fff8e1,stroke:#f9a825,stroke-width:4px
+    style E fill:#fff3e0,stroke:#ef6c00,stroke-width:2px
+    style F fill:#f3e5f5,stroke:#6a1b9a
+    style G fill:#f3e5f5,stroke:#6a1b9a
+    style H fill:#f3e5f5,stroke:#6a1b9a
+    style I fill:#ffebee,stroke:#c62828,stroke-width:2px</code></pre>
+<p>Đọc sơ đồ theo ba tầng:</p>
+<table>
+<thead>
+<tr>
+<th>Tầng</th>
+<th>Câu hỏi</th>
+<th>Kết quả</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Xám → xanh</td>
+<td><em>Có phân biệt được mọi dòng không?</em></td>
+<td>Lọc ra <strong>siêu khoá</strong></td>
+</tr>
+<tr>
+<td>Xanh → lục</td>
+<td><em>Có thừa cột nào không?</em></td>
+<td>Lọc ra <strong>khoá dự tuyển</strong></td>
+</tr>
+<tr>
+<td>Lục → vàng/cam</td>
+<td><em>Ta chọn cái nào?</em></td>
+<td>Chia thành <strong>khoá chính</strong> và <strong>khoá thay thế</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Ba ô tím không nằm trong chuỗi lọc — chúng chỉ mô tả <em>"khoá này gồm mấy cột"</em> và <em>"khoá này từ đâu ra"</em>. Ô đỏ <code>KHOÁ NGOẠI</code> thì thuộc một câu chuyện khác hẳn: mũi tên đậm nghĩa là <em>"khoá chính của bảng này được đem sang bảng khác làm khoá ngoại"</em>.</p>
+<h3 id="so-o-2-khoa-chinh-i-vao-bang-khac-thanh-khoa-ngoai">Sơ đồ 2 — Khoá chính đi vào bảng khác thành khoá ngoại<a class="headerlink" href="#so-o-2-khoa-chinh-i-vao-bang-khac-thanh-khoa-ngoai" title="Permanent link">&para;</a></h3>
+<pre class="mermaid"><code>erDiagram
+giao_vien |o--o| lop : "ma_gv thành ma_gvcn"
+lop ||--o{ hoc_sinh : "ma_lop thành ma_lop"
+
+giao_vien {
+    char ma_gv PK
+    varchar email UK
+    varchar ho_ten
+}
+lop {
+    char ma_lop PK
+    varchar ten_lop UK
+    char ma_gvcn FK, UK
+}
+hoc_sinh {
+    char ma_hs PK
+    varchar ho_ten
+    char ma_lop FK
+}</code></pre>
+<p>Ba điều đọc ra từ sơ đồ này:</p>
+<ul>
+<li><code>ma_gv</code> là <strong>khoá chính</strong> ở <code>giao_vien</code>, nhưng khi sang <code>lop</code> nó đổi tên thành <code>ma_gvcn</code> và đóng vai <strong>khoá ngoại</strong>. Cùng một giá trị, hai vai trò khác nhau.</li>
+<li><code>email</code> và <code>ten_lop</code> đeo nhãn <code>UK</code> — đó là <strong>khoá thay thế</strong>.</li>
+<li><code>ma_gvcn</code> đeo <strong>cả hai</strong> nhãn <code>FK, UK</code>. Chữ <code>FK</code> là khoá ngoại; chữ <code>UK</code> ở đây <strong>không</strong> phải khoá thay thế mà là thứ ép quan hệ 1:1.</li>
+</ul>
+<h2 id="thuc-hanh">💻 Thực hành<a class="headerlink" href="#thuc-hanh" title="Permanent link">&para;</a></h2>
+<h3 id="1-sieu-khoa-thua-cot-van-la-khoa">1. Siêu khoá — thừa cột vẫn là khoá<a class="headerlink" href="#1-sieu-khoa-thua-cot-van-la-khoa" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w">                                        </span><span class="k">AS</span><span class="w"> </span><span class="n">so_dong</span><span class="p">,</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">       </span><span class="k">count</span><span class="p">(</span><span class="k">DISTINCT</span><span class="w"> </span><span class="n">ma_gv</span><span class="p">)</span><span class="w">                           </span><span class="k">AS</span><span class="w"> </span><span class="n">chi_ma_gv</span><span class="p">,</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">       </span><span class="k">count</span><span class="p">(</span><span class="k">DISTINCT</span><span class="w"> </span><span class="p">(</span><span class="n">ma_gv</span><span class="p">,</span><span class="w"> </span><span class="n">ho_ten</span><span class="p">))</span><span class="w">                 </span><span class="k">AS</span><span class="w"> </span><span class="n">ma_gv_va_ho_ten</span><span class="p">,</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">       </span><span class="k">count</span><span class="p">(</span><span class="k">DISTINCT</span><span class="w"> </span><span class="p">(</span><span class="n">ma_gv</span><span class="p">,</span><span class="w"> </span><span class="n">ho_ten</span><span class="p">,</span><span class="w"> </span><span class="n">email</span><span class="p">,</span><span class="w"> </span><span class="n">luong</span><span class="p">))</span><span class="w">   </span><span class="k">AS</span><span class="w"> </span><span class="n">bon_cot</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="k">FROM</span><span class="w"> </span><span class="n">giao_vien</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Kết quả: <code>8</code>, <code>8</code>, <code>8</code>, <code>8</code>.</p>
+<p>Cả bốn con số bằng nhau và bằng số dòng. Đó chính là <strong>định nghĩa siêu khoá</strong> viết bằng SQL: <em>số tổ hợp khác nhau = số dòng</em>.</p>
+<p>Thêm cột vào một siêu khoá thì nó vẫn là siêu khoá. Nên số lượng siêu khoá của <code>giao_vien</code> rất lớn — mọi tập cột có chứa <code>ma_gv</code> đều là siêu khoá, tức là <code>2⁶ = 64</code> tập, cộng thêm các tập chứa <code>email</code>.</p>
+<h3 id="2-khoa-du-tuyen-toi-gian-moi-uoc-tinh">2. Khoá dự tuyển — tối giản mới được tính<a class="headerlink" href="#2-khoa-du-tuyen-toi-gian-moi-uoc-tinh" title="Permanent link">&para;</a></h3>
+<p><code>{ma_gv}</code> là khoá dự tuyển vì bỏ đi thì chỉ còn tập rỗng. <code>{email}</code> cũng vậy:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w">              </span><span class="k">AS</span><span class="w"> </span><span class="n">so_dong</span><span class="p">,</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">       </span><span class="k">count</span><span class="p">(</span><span class="k">DISTINCT</span><span class="w"> </span><span class="n">email</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_email_khac_nhau</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="k">FROM</span><span class="w"> </span><span class="n">giao_vien</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Kết quả: <code>8</code> và <code>8</code>. Một siêu khoá một cột thì đương nhiên tối giản → <strong>khoá dự tuyển</strong>.</p>
+<p>Còn <code>{ma_gv, ho_ten}</code> thì <strong>không</strong> tối giản, vì bỏ <code>ho_ten</code> đi vẫn phân biệt được (thí nghiệm 1 đã chứng minh: <code>chi_ma_gv = 8</code>). Nó chỉ là siêu khoá.</p>
+<p>Bây giờ tới phần quan trọng nhất — <code>{ho_ten}</code> thì sao?</p>
+<div class="highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w">               </span><span class="k">AS</span><span class="w"> </span><span class="n">so_dong</span><span class="p">,</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">       </span><span class="k">count</span><span class="p">(</span><span class="k">DISTINCT</span><span class="w"> </span><span class="n">ho_ten</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_ho_ten_khac_nhau</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="k">FROM</span><span class="w"> </span><span class="n">giao_vien</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Kết quả: <code>8</code> và <code>8</code>. Dữ liệu <strong>hiện tại</strong> không trùng!</p>
+<p>Nhưng <code>{ho_ten}</code> <strong>không phải</strong> khoá dự tuyển. Bằng chứng nằm ở lược đồ, không nằm ở dữ liệu:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">conname</span><span class="p">,</span><span class="w"> </span><span class="n">contype</span><span class="p">,</span><span class="w"> </span><span class="n">pg_get_constraintdef</span><span class="p">(</span><span class="n">oid</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">dinh_nghia</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="k">FROM</span><span class="w"> </span><span class="n">pg_constraint</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">conrelid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'giao_vien'</span><span class="p">::</span><span class="n">regclass</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span><span class="k">AND</span><span class="w"> </span><span class="n">contype</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="p">(</span><span class="s1">'p'</span><span class="p">,</span><span class="w"> </span><span class="s1">'u'</span><span class="p">)</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">contype</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Đúng <strong>hai</strong> dòng: <code>giao_vien_pkey</code> (<code>PRIMARY KEY (ma_gv)</code>) và <code>giao_vien_email_key</code> (<code>UNIQUE (email)</code>).</p>
+<p>Không có dòng nào cho <code>ho_ten</code>. Nghĩa là database <strong>không hề hứa</strong> rằng <code>ho_ten</code> không trùng — và câu chuyện hai bạn Nguyễn Văn An ở đầu bài cho thấy nó trùng thật.</p>
+<div class="admonition tip">
+<p class="admonition-title">Quy tắc vàng</p>
+<p><strong>Khoá dự tuyển được xác định bằng luật nghiệp vụ, rồi được database cưỡng chế bằng ràng buộc.</strong> Truy vấn <code>count(DISTINCT ...)</code> chỉ dùng để <strong>phát hiện</strong> một khoá đã bị vi phạm, chứ không bao giờ dùng để <strong>chứng minh</strong> một khoá là đúng.</p>
+</div>
+<h3 id="3-khoa-chinh-cai-uoc-chon">3. Khoá chính — cái được chọn<a class="headerlink" href="#3-khoa-chinh-cai-uoc-chon" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">c</span><span class="p">.</span><span class="n">conrelid</span><span class="p">::</span><span class="n">regclass</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">bang</span><span class="p">,</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">       </span><span class="k">c</span><span class="p">.</span><span class="n">conname</span><span class="w">            </span><span class="k">AS</span><span class="w"> </span><span class="n">ten_rang_buoc</span><span class="p">,</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">       </span><span class="n">string_agg</span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">attname</span><span class="p">,</span><span class="w"> </span><span class="s1">', '</span><span class="w"> </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">attnum</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">cac_cot</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="k">FROM</span><span class="w"> </span><span class="n">pg_constraint</span><span class="w"> </span><span class="k">c</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="k">JOIN</span><span class="w"> </span><span class="n">pg_attribute</span><span class="w"> </span><span class="n">a</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span><span class="k">ON</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">attrelid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">c</span><span class="p">.</span><span class="n">conrelid</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">attnum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ANY</span><span class="w"> </span><span class="p">(</span><span class="k">c</span><span class="p">.</span><span class="n">conkey</span><span class="p">)</span>
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="k">WHERE</span><span class="w"> </span><span class="k">c</span><span class="p">.</span><span class="n">contype</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'p'</span>
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">  </span><span class="k">AND</span><span class="w"> </span><span class="k">c</span><span class="p">.</span><span class="n">conrelid</span><span class="p">::</span><span class="n">regclass</span><span class="p">::</span><span class="nb">text</span><span class="w"> </span><span class="k">IN</span>
+</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">      </span><span class="p">(</span><span class="s1">'giao_vien'</span><span class="p">,</span><span class="w"> </span><span class="s1">'lop'</span><span class="p">,</span><span class="w"> </span><span class="s1">'hoc_sinh'</span><span class="p">,</span><span class="w"> </span><span class="s1">'phu_huynh'</span><span class="p">,</span><span class="w"> </span><span class="s1">'mon_hoc'</span><span class="p">,</span>
+</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">       </span><span class="s1">'phan_cong_day'</span><span class="p">,</span><span class="w"> </span><span class="s1">'diem'</span><span class="p">,</span><span class="w"> </span><span class="s1">'sach'</span><span class="p">,</span><span class="w"> </span><span class="s1">'muon_sach'</span><span class="p">,</span><span class="w"> </span><span class="s1">'diem_danh'</span><span class="p">)</span>
+</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span>
+</span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="k">c</span><span class="p">.</span><span class="n">conrelid</span><span class="p">::</span><span class="n">regclass</span><span class="p">::</span><span class="nb">text</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Đúng <strong>10 dòng</strong> — mỗi bảng đúng một khoá chính, không hơn không kém. Chín bảng có khoá chính một cột; riêng <code>phan_cong_day</code> có bốn cột.</p>
+<p>Và khoá chính không bao giờ <code>NULL</code> được, kể cả khi bạn không viết <code>NOT NULL</code>:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">column_name</span><span class="p">,</span><span class="w"> </span><span class="n">is_nullable</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="k">FROM</span><span class="w"> </span><span class="n">information_schema</span><span class="p">.</span><span class="n">columns</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">table_schema</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'public'</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="k">table_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'giao_vien'</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="k">column_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'ma_gv'</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Kết quả: <code>ma_gv</code> | <code>NO</code>. Lược đồ <code>dataset/02-chuan-hoa.sql</code> chỉ viết <code>ma_gv CHAR(4) PRIMARY KEY</code> — chữ <code>NOT NULL</code> là do PostgreSQL tự thêm, vì đó là <strong>toàn vẹn thực thể</strong> (<a href="../15-rang-buoc-toan-ven/">Bài 15</a>).</p>
+<h3 id="4-khoa-thay-the-cai-khong-uoc-chon">4. Khoá thay thế — cái không được chọn<a class="headerlink" href="#4-khoa-thay-the-cai-khong-uoc-chon" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">conrelid</span><span class="p">::</span><span class="n">regclass</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">bang</span><span class="p">,</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">       </span><span class="n">conname</span><span class="w">            </span><span class="k">AS</span><span class="w"> </span><span class="n">ten_rang_buoc</span><span class="p">,</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">       </span><span class="n">pg_get_constraintdef</span><span class="p">(</span><span class="n">oid</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">dinh_nghia</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="k">FROM</span><span class="w"> </span><span class="n">pg_constraint</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">contype</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'u'</span>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span><span class="k">AND</span><span class="w"> </span><span class="n">connamespace</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'public'</span><span class="p">::</span><span class="n">regnamespace</span>
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">conrelid</span><span class="p">::</span><span class="n">regclass</span><span class="p">::</span><span class="nb">text</span><span class="p">,</span><span class="w"> </span><span class="n">conname</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Đúng <strong>năm</strong> dòng:</p>
+<table>
+<thead>
+<tr>
+<th>Bảng</th>
+<th>Ràng buộc</th>
+<th>Định nghĩa</th>
+<th>Có phải khoá thay thế không</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>diem_danh</code></td>
+<td><code>diem_danh_ma_hs_ngay_key</code></td>
+<td><code>UNIQUE (ma_hs, ngay)</code></td>
+<td><strong>Có</strong> — và là khoá thay thế <strong>phức hợp</strong></td>
+</tr>
+<tr>
+<td><code>giao_vien</code></td>
+<td><code>giao_vien_email_key</code></td>
+<td><code>UNIQUE (email)</code></td>
+<td><strong>Có</strong></td>
+</tr>
+<tr>
+<td><code>lop</code></td>
+<td><code>lop_ma_gvcn_key</code></td>
+<td><code>UNIQUE (ma_gvcn)</code></td>
+<td><strong>Không</strong> — ép quan hệ 1:1, và cho phép <code>NULL</code></td>
+</tr>
+<tr>
+<td><code>lop</code></td>
+<td><code>lop_ten_lop_key</code></td>
+<td><code>UNIQUE (ten_lop)</code></td>
+<td><strong>Có</strong></td>
+</tr>
+<tr>
+<td><code>mon_hoc</code></td>
+<td><code>mon_hoc_ten_mon_key</code></td>
+<td><code>UNIQUE (ten_mon)</code></td>
+<td><strong>Có</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Bây giờ thử vi phạm khoá thay thế <code>email</code>:</p>
+<!-- sql:co-y-loi -->
+<div class="highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">giao_vien</span><span class="w"> </span><span class="p">(</span><span class="n">ma_gv</span><span class="p">,</span><span class="w"> </span><span class="n">ho_ten</span><span class="p">,</span><span class="w"> </span><span class="n">ngay_sinh</span><span class="p">,</span><span class="w"> </span><span class="n">gioi_tinh</span><span class="p">,</span><span class="w"> </span><span class="n">mon_chuyen_mon</span><span class="p">,</span><span class="w"> </span><span class="n">email</span><span class="p">,</span><span class="w"> </span><span class="n">luong</span><span class="p">)</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="s1">'GV99'</span><span class="p">,</span><span class="w"> </span><span class="s1">'Người Trùng Email'</span><span class="p">,</span><span class="w"> </span><span class="s1">'1990-01-01'</span><span class="p">,</span><span class="w"> </span><span class="s1">'Nam'</span><span class="p">,</span><span class="w"> </span><span class="s1">'Toán'</span><span class="p">,</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">        </span><span class="s1">'lan.nt@thcs.edu.vn'</span><span class="p">,</span><span class="w"> </span><span class="mi">10000000</span><span class="p">);</span>
+</span></code></pre></div>
+<p>PostgreSQL 16 từ chối:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>ERROR:  duplicate key value violates unique constraint "giao_vien_email_key"
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>DETAIL:  Key (email)=(lan.nt@thcs.edu.vn) already exists.
+</span></code></pre></div>
+<p>Đọc kỹ thông báo: nó gọi đích danh <strong>tên ràng buộc</strong> và <strong>giá trị gây trùng</strong>. Đây là cách nhanh nhất để biết mình vừa vi phạm khoá nào.</p>
+<h3 id="5-khoa-phuc-hop-bon-cot-cua-phan_cong_day">5. Khoá phức hợp — bốn cột của <code>phan_cong_day</code><a class="headerlink" href="#5-khoa-phuc-hop-bon-cot-cua-phan_cong_day" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">attname</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">cot</span><span class="p">,</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">attnum</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">thu_tu</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="k">FROM</span><span class="w"> </span><span class="n">pg_constraint</span><span class="w"> </span><span class="k">c</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="k">JOIN</span><span class="w"> </span><span class="n">pg_attribute</span><span class="w"> </span><span class="n">a</span>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">  </span><span class="k">ON</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">attrelid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">c</span><span class="p">.</span><span class="n">conrelid</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">attnum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ANY</span><span class="w"> </span><span class="p">(</span><span class="k">c</span><span class="p">.</span><span class="n">conkey</span><span class="p">)</span>
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="k">WHERE</span><span class="w"> </span><span class="k">c</span><span class="p">.</span><span class="n">conrelid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'phan_cong_day'</span><span class="p">::</span><span class="n">regclass</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="k">c</span><span class="p">.</span><span class="n">contype</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'p'</span>
+</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">attnum</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Bốn dòng: <code>ma_gv</code>, <code>ma_mon</code>, <code>ma_lop</code>, <code>hoc_ky</code>.</p>
+<p>Thử bỏ từng cột ra xem dữ liệu có sinh trùng lặp không:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="s1">'bỏ hoc_ky'</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">bo_cot</span><span class="p">,</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_to_hop_bi_trung</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="k">FROM</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">ma_gv</span><span class="p">,</span><span class="w"> </span><span class="n">ma_mon</span><span class="p">,</span><span class="w"> </span><span class="n">ma_lop</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">phan_cong_day</span>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">      </span><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="k">HAVING</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="n">t</span>
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="k">UNION</span><span class="w"> </span><span class="k">ALL</span>
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="k">SELECT</span><span class="w"> </span><span class="s1">'bỏ ma_lop'</span><span class="p">,</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span>
+</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="k">FROM</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">ma_gv</span><span class="p">,</span><span class="w"> </span><span class="n">ma_mon</span><span class="p">,</span><span class="w"> </span><span class="n">hoc_ky</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">phan_cong_day</span>
+</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="w">      </span><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="k">HAVING</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="n">t</span>
+</span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="k">UNION</span><span class="w"> </span><span class="k">ALL</span>
+</span><span id="__span-10-9"><a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="k">SELECT</span><span class="w"> </span><span class="s1">'bỏ ma_mon'</span><span class="p">,</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span>
+</span><span id="__span-10-10"><a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="k">FROM</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">ma_gv</span><span class="p">,</span><span class="w"> </span><span class="n">ma_lop</span><span class="p">,</span><span class="w"> </span><span class="n">hoc_ky</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">phan_cong_day</span>
+</span><span id="__span-10-11"><a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="w">      </span><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="k">HAVING</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="n">t</span>
+</span><span id="__span-10-12"><a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="k">UNION</span><span class="w"> </span><span class="k">ALL</span>
+</span><span id="__span-10-13"><a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="k">SELECT</span><span class="w"> </span><span class="s1">'bỏ ma_gv'</span><span class="p">,</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span>
+</span><span id="__span-10-14"><a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="k">FROM</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">ma_mon</span><span class="p">,</span><span class="w"> </span><span class="n">ma_lop</span><span class="p">,</span><span class="w"> </span><span class="n">hoc_ky</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">phan_cong_day</span>
+</span><span id="__span-10-15"><a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="w">      </span><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="k">HAVING</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="n">t</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Kết quả rất đáng suy nghĩ:</p>
+<table>
+<thead>
+<tr>
+<th>Bỏ cột</th>
+<th>Số tổ hợp bị trùng</th>
+<th>Đọc ra</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>hoc_ky</code></td>
+<td><code>32</code></td>
+<td>Bỏ là trùng ngay → cột này <strong>chắc chắn</strong> cần</td>
+</tr>
+<tr>
+<td><code>ma_lop</code></td>
+<td><code>16</code></td>
+<td>Bỏ là trùng ngay → cột này <strong>chắc chắn</strong> cần</td>
+</tr>
+<tr>
+<td><code>ma_mon</code></td>
+<td><strong><code>0</code></strong></td>
+<td>Dữ liệu hiện tại <strong>không</strong> chứng minh được gì</td>
+</tr>
+<tr>
+<td><code>ma_gv</code></td>
+<td><strong><code>0</code></strong></td>
+<td>Dữ liệu hiện tại <strong>không</strong> chứng minh được gì</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition danger">
+<p class="admonition-title">Hai dòng bằng 0 là bài học quan trọng nhất của mục này</p>
+<p>Vì sao bỏ <code>ma_mon</code> mà không trùng? Vì trong dữ liệu mẫu, <strong>mỗi giáo viên chỉ dạy đúng môn chuyên môn của mình</strong> — biết <code>ma_gv</code> là suy ra được <code>ma_mon</code>. Tương tự ở chiều ngược lại.</p>
+<p>Nhưng đó là <strong>sự trùng hợp của dữ liệu hôm nay</strong>, không phải luật. Ngày mai thầy Khoa (Tin học) được phân dạy thêm Toán cho 8A1 học kỳ 1, thì hai dòng <code>(GV08, MH09, L01, 1)</code> và <code>(GV08, MH01, L01, 1)</code> sẽ trùng nhau ngay nếu thiếu <code>ma_mon</code>.</p>
+<p>Đúng như <strong>Quy tắc vàng</strong> ở mục 2: dữ liệu chỉ <strong>phát hiện</strong> được vi phạm, chứ không <strong>chứng minh</strong> được khoá. Kết luận <em>"bốn cột này tối giản"</em> đến từ <strong>luật nghiệp vụ</strong> — <em>một giáo viên có thể dạy nhiều môn, một môn có thể do nhiều giáo viên dạy</em> — chứ không đến từ con số <code>0</code> ở trên.</p>
+</div>
+<p>Với luật nghiệp vụ đó, bỏ cột nào cũng hỏng → khoá này tối giản → nó là <strong>khoá dự tuyển</strong>, và đã được chọn làm <strong>khoá chính phức hợp</strong>.</p>
+<h3 id="6-khoa-nhan-tao-cot-serial">6. Khoá nhân tạo — cột <code>SERIAL</code><a class="headerlink" href="#6-khoa-nhan-tao-cot-serial" title="Permanent link">&para;</a></h3>
+<p>Cách nhận ra khoá nhân tạo kiểu <code>SERIAL</code> trong PostgreSQL: cột đó có giá trị mặc định gọi <code>nextval</code>.</p>
+<div class="highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">table_name</span><span class="p">,</span><span class="w"> </span><span class="k">column_name</span><span class="p">,</span><span class="w"> </span><span class="n">data_type</span><span class="p">,</span><span class="w"> </span><span class="n">column_default</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="k">FROM</span><span class="w"> </span><span class="n">information_schema</span><span class="p">.</span><span class="n">columns</span>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">table_schema</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'public'</span>
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="w">  </span><span class="k">AND</span><span class="w"> </span><span class="n">column_default</span><span class="w"> </span><span class="k">LIKE</span><span class="w"> </span><span class="s1">'nextval%'</span>
+</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="w">  </span><span class="k">AND</span><span class="w"> </span><span class="k">table_name</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="p">(</span><span class="s1">'diem'</span><span class="p">,</span><span class="w"> </span><span class="s1">'muon_sach'</span><span class="p">,</span><span class="w"> </span><span class="s1">'diem_danh'</span><span class="p">)</span>
+</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="k">table_name</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Ba dòng: <code>diem.ma_diem</code>, <code>diem_danh.ma_dd</code>, <code>muon_sach.ma_muon</code>. Cả ba đều là <code>integer</code> với mặc định <code>nextval('...')</code> — nghĩa là <strong>giá trị do database sinh ra</strong>, không do người nhập.</p>
+<p>Còn <code>ma_ph</code> thì khác: nó là khoá nhân tạo nhưng được sinh bằng tay theo mẫu <code>PH001</code>, nên không có <code>nextval</code>:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_dong</span><span class="p">,</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="k">DISTINCT</span><span class="w"> </span><span class="n">ma_ph</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_ma_khac_nhau</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="k">FROM</span><span class="w"> </span><span class="n">phu_huynh</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Kết quả <code>45</code> và <code>45</code>.</p>
+<p>Bây giờ so sánh một khoá nhân tạo với khoá tự nhiên song song của cùng bảng <code>diem</code>:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w">                                             </span><span class="k">AS</span><span class="w"> </span><span class="n">so_dong</span><span class="p">,</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="w">       </span><span class="k">count</span><span class="p">(</span><span class="k">DISTINCT</span><span class="w"> </span><span class="n">ma_diem</span><span class="p">)</span><span class="w">                              </span><span class="k">AS</span><span class="w"> </span><span class="n">theo_khoa_nhan_tao</span><span class="p">,</span>
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="w">       </span><span class="k">count</span><span class="p">(</span><span class="k">DISTINCT</span><span class="w"> </span><span class="p">(</span><span class="n">ma_hs</span><span class="p">,</span><span class="w"> </span><span class="n">ma_mon</span><span class="p">,</span><span class="w"> </span><span class="n">hoc_ky</span><span class="p">,</span><span class="w"> </span><span class="n">loai_diem</span><span class="p">))</span><span class="w">   </span><span class="k">AS</span><span class="w"> </span><span class="n">theo_khoa_tu_nhien</span>
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="k">FROM</span><span class="w"> </span><span class="n">diem</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Kết quả: <code>480</code>, <code>480</code>, <code>480</code>.</p>
+<p>Cả hai đều phân biệt được mọi dòng. Người thiết kế chọn <code>ma_diem</code> vì nó là <strong>một cột số ngắn</strong> thay vì bốn cột; nhưng hãy chú ý một điều:</p>
+<div class="admonition warning">
+<p class="admonition-title"><code>(ma_hs, ma_mon, hoc_ky, loai_diem)</code> đang KHÔNG được bảo vệ</p>
+<p>Truy vấn trên cho thấy tổ hợp này hiện không trùng. Nhưng bảng <code>diem</code> <strong>không có</strong> ràng buộc <code>UNIQUE</code> nào trên nó — hãy chạy lại truy vấn ở mục 4 mà xem.</p>
+<p>Nghĩa là ngày mai ai đó hoàn toàn có thể nhập <strong>hai</strong> điểm Học kỳ môn Toán học kỳ 1 cho cùng bạn An, và database vui vẻ nhận cả hai.</p>
+<p>Đây đúng là cái bẫy mà mục 2 đã cảnh báo, lần này xảy ra trên một bảng thật. Thêm khoá nhân tạo mà quên bảo vệ khoá tự nhiên là lỗi thiết kế rất phổ biến. Đối chiếu: <code>diem_danh</code> <strong>không</strong> mắc lỗi này, vì nó có <code>UNIQUE (ma_hs, ngay)</code>.</p>
+</div>
+<h3 id="7-khoa-ngoai-noi-sang-bang-khac">7. Khoá ngoại — nối sang bảng khác<a class="headerlink" href="#7-khoa-ngoai-noi-sang-bang-khac" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">conname</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">ten_rang_buoc</span><span class="p">,</span>
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="w">       </span><span class="n">pg_get_constraintdef</span><span class="p">(</span><span class="n">oid</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">dinh_nghia</span>
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="k">FROM</span><span class="w"> </span><span class="n">pg_constraint</span>
+</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">conrelid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'hoc_sinh'</span><span class="p">::</span><span class="n">regclass</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">contype</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'f'</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Một dòng: <code>hoc_sinh_ma_lop_fkey</code> — <code>FOREIGN KEY (ma_lop) REFERENCES lop(ma_lop) ON DELETE RESTRICT</code>.</p>
+<p>Và khoá ngoại <strong>không</strong> phân biệt được các dòng — đây là điểm khác biệt căn bản so với sáu loại trên:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w">               </span><span class="k">AS</span><span class="w"> </span><span class="n">so_hoc_sinh</span><span class="p">,</span>
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="w">       </span><span class="k">count</span><span class="p">(</span><span class="k">DISTINCT</span><span class="w"> </span><span class="n">ma_lop</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_gia_tri_khoa_ngoai</span>
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Kết quả: <code>40</code> và <code>6</code>. Số tổ hợp <strong>nhỏ hơn hẳn</strong> số dòng → <code>ma_lop</code> không phải siêu khoá của <code>hoc_sinh</code>, và không bao giờ có ý định làm điều đó.</p>
+<p>Cái nó bảo đảm là <strong>mọi giá trị đều có thật ở bảng cha</strong>:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_hoc_sinh_tro_vao_lop_khong_ton_tai</span>
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span><span class="w"> </span><span class="n">h</span>
+</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="k">WHERE</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">lop</span><span class="w"> </span><span class="n">l</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">ma_lop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">ma_lop</span><span class="p">);</span>
+</span></code></pre></div>
+<p>Kết quả <code>0</code> — và đó là điều <strong>duy nhất</strong> có thể xảy ra, vì ràng buộc khoá ngoại chặn từ lúc <code>INSERT</code>. <a href="../15-rang-buoc-toan-ven/">Bài 15</a> gọi tên hiện tượng này là <strong>toàn vẹn tham chiếu</strong>.</p>
+<h2 id="loi-thuong-gap">⚠️ Lỗi thường gặp<a class="headerlink" href="#loi-thuong-gap" title="Permanent link">&para;</a></h2>
+<div class="admonition warning">
+<p class="admonition-title">Lỗi 1: Kết luận 'khoá' từ dữ liệu hiện có</p>
+<p>Chạy <code>count(DISTINCT ho_ten)</code> thấy bằng số dòng rồi tuyên bố <em>"<code>ho_ten</code> là khoá"</em>.</p>
+<p>Khoá là <strong>luật về mọi dữ liệu tương lai</strong>. Dữ liệu hôm nay không trùng chỉ có nghĩa là luật <strong>chưa</strong> bị vi phạm. Muốn chắc chắn thì phải có ràng buộc <code>PRIMARY KEY</code> hoặc <code>UNIQUE</code> — và nếu chưa có thì hãy thêm vào, đừng chỉ hy vọng.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Lỗi 2: Nhầm siêu khoá với khoá dự tuyển</p>
+<p>Trả lời <em>"<code>{ma_gv, ho_ten}</code> là khoá dự tuyển của <code>giao_vien</code>"</em>. Sai — nó là siêu khoá <strong>không tối giản</strong>.</p>
+<p>Phép thử đúng một câu: <strong>bỏ từng cột ra, nếu vẫn phân biệt được thì cột đó thừa.</strong> Còn thừa cột thì còn chưa phải khoá dự tuyển.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Lỗi 3: Nghĩ khoá chính phải là một cột</p>
+<p>Thấy <code>phan_cong_day</code> không có cột <code>ma_pc</code> nào nên tưởng bảng này <em>"quên khoá chính"</em>.</p>
+<p>Khoá chính của nó là <strong>phức hợp bốn cột</strong>. Thêm một cột <code>SERIAL</code> vào cho "gọn" nghe thì hay, nhưng nếu thêm mà <strong>không</strong> giữ <code>UNIQUE (ma_gv, ma_mon, ma_lop, hoc_ky)</code> thì bạn vừa mở cửa cho dữ liệu trùng — đúng cái bẫy mà bảng <code>diem</code> đang mắc.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Lỗi 4: Dùng dữ liệu cá nhân hay đổi làm khoá chính</p>
+<p>Chọn <code>email</code> hoặc <code>so_dien_thoai</code> làm khoá chính vì <em>"chắc chắn không trùng"</em>.</p>
+<p>Không trùng thì đúng, nhưng <strong>hay đổi</strong>. Cô Mai đổi email, và thế là mọi bảng con đang trỏ vào email cũ hỏng hết. Khoá chính cần <strong>bất biến</strong> hơn là cần độc nhất.</p>
+<p>Cách làm đúng: <code>ma_gv</code> làm khoá chính (bất biến), <code>email</code> làm khoá thay thế với ràng buộc <code>UNIQUE</code> (vẫn được bảo vệ, mà đổi được tự do).</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Lỗi 5: Tưởng khoá ngoại phải trùng tên với khoá chính</p>
+<p>Nhìn cột <code>lop.ma_gvcn</code> rồi thắc mắc <em>"sao không tên là <code>ma_gv</code>?"</em>.</p>
+<p>Khoá ngoại chỉ cần <strong>trùng kiểu dữ liệu và trỏ đúng bảng</strong>, tên thì đặt sao cho dễ hiểu. <code>ma_gvcn</code> nói rõ <em>"giáo viên chủ nhiệm"</em> — tốt hơn hẳn <code>ma_gv</code> chung chung. Và nếu một bảng có <strong>hai</strong> khoá ngoại cùng trỏ về một bảng cha thì bắt buộc phải đặt tên khác nhau.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Lỗi 6: Thêm khoá nhân tạo rồi vứt bỏ khoá tự nhiên</p>
+<p>Đây là lỗi tinh vi nhất, và bảng <code>diem</code> là ví dụ sống.</p>
+<p>Thêm <code>ma_diem SERIAL PRIMARY KEY</code> là hợp lý. Nhưng làm xong mà không thêm <code>UNIQUE (ma_hs, ma_mon, hoc_ky, loai_diem)</code> thì bảng mất khả năng chống trùng.</p>
+<p><strong>Khoá nhân tạo bổ sung cho khoá tự nhiên, chứ không thay thế nó.</strong> Mỗi khi thêm một cột <code>SERIAL</code>, hãy tự hỏi ngay: <em>"khoá tự nhiên của bảng này là gì, và tôi đã khai <code>UNIQUE</code> cho nó chưa?"</em></p>
+</div>
+<h2 id="bai-tap">✍️ Bài tập<a class="headerlink" href="#bai-tap" title="Permanent link">&para;</a></h2>
+<ol>
+<li>
+<p>Với bảng <code>lop(ma_lop, ten_lop, khoi, nam_hoc, ma_gvcn)</code>, hãy liệt kê:</p>
+<p>a. Hai khoá dự tuyển.
+b. Một siêu khoá <strong>không phải</strong> khoá dự tuyển.
+c. Khoá chính và khoá thay thế.
+d. <code>ma_gvcn</code> thuộc loại khoá nào?</p>
+</li>
+<li>
+<p>Bảng <code>muon_sach</code> có <code>ma_muon SERIAL PRIMARY KEY</code>. Hỏi: tổ hợp <code>(ma_hs, ma_sach, ngay_muon)</code> có phải khoá dự tuyển không? Hãy viết câu SQL kiểm tra, rồi trả lời cả về mặt <strong>dữ liệu</strong> lẫn về mặt <strong>lược đồ</strong>.</p>
+</li>
+<li>
+<p>Trường mở hệ thống căng tin, lưu mỗi lượt mua: <em>ai mua, món gì, lúc nào, số lượng bao nhiêu</em>. Hãy đề xuất khoá chính và giải thích lựa chọn giữa khoá tự nhiên và khoá nhân tạo.</p>
+</li>
+<li>
+<p>Viết một câu SQL liệt kê <strong>mọi ràng buộc kiểu khoá</strong> (<code>PRIMARY KEY</code>, <code>UNIQUE</code>, <code>FOREIGN KEY</code>) của cả 10 bảng, kèm cột nào và loại gì.</p>
+</li>
+<li>
+<p>Một bạn thiết kế bảng danh bạ học sinh như sau và nói <em>"<code>so_dien_thoai</code> chắc chắn không trùng nên em cho nó làm khoá chính"</em>:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>danh_ba(so_dien_thoai, ho_ten, ma_lop, dia_chi)
+</span></code></pre></div>
+<p>Nêu <strong>ba</strong> vấn đề với thiết kế này.</p>
+</li>
+</ol>
+<details class="success">
+<summary>Đáp án</summary>
+<p><strong>Câu 1.</strong></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Trả lời</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>a</td>
+<td><code>{ma_lop}</code> và <code>{ten_lop}</code> — cả hai đều có ràng buộc trong lược đồ (<code>lop_pkey</code>, <code>lop_ten_lop_key</code>)</td>
+</tr>
+<tr>
+<td>b</td>
+<td><code>{ma_lop, khoi}</code> hoặc <code>{ten_lop, nam_hoc}</code> — phân biệt được nhưng <strong>thừa cột</strong></td>
+</tr>
+<tr>
+<td>c</td>
+<td>Khoá chính <code>ma_lop</code>; khoá thay thế <code>ten_lop</code></td>
+</tr>
+<tr>
+<td>d</td>
+<td><code>ma_gvcn</code> là <strong>khoá ngoại</strong> trỏ về <code>giao_vien(ma_gv)</code>. Nó có <code>UNIQUE</code> nhưng <strong>không</strong> phải khoá thay thế, vì nó cho phép <code>NULL</code> — lớp 9A3 để trống. Một khoá dự tuyển không bao giờ được phép <code>NULL</code>. Vai trò của <code>UNIQUE</code> ở đây là ép quan hệ <strong>1:1</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Chỗ d là câu phân biệt hay nhất của bài: <strong>không phải cứ <code>UNIQUE</code> là khoá thay thế.</strong></p>
+<p><strong>Câu 2.</strong></p>
+<div class="highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w">                                      </span><span class="k">AS</span><span class="w"> </span><span class="n">so_dong</span><span class="p">,</span>
+</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="w">       </span><span class="k">count</span><span class="p">(</span><span class="k">DISTINCT</span><span class="w"> </span><span class="p">(</span><span class="n">ma_hs</span><span class="p">,</span><span class="w"> </span><span class="n">ma_sach</span><span class="p">,</span><span class="w"> </span><span class="n">ngay_muon</span><span class="p">))</span><span class="w">   </span><span class="k">AS</span><span class="w"> </span><span class="n">so_to_hop</span>
+</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="k">FROM</span><span class="w"> </span><span class="n">muon_sach</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Về <strong>dữ liệu</strong>: hai con số bằng nhau (<code>50</code> và <code>50</code>) — tổ hợp này hiện không trùng.</p>
+<p>Về <strong>lược đồ</strong>: không có ràng buộc <code>UNIQUE</code> nào trên tổ hợp đó. Chạy lại truy vấn liệt kê <code>contype = 'u'</code> ở phần Thực hành mục 4 là thấy — chỉ có năm ràng buộc, không cái nào thuộc <code>muon_sach</code>.</p>
+<p>Kết luận: về <strong>nghiệp vụ</strong> nó <strong>không nên</strong> là khoá dự tuyển, vì một bạn hoàn toàn có thể mượn cùng một cuốn hai lần trong cùng ngày (mượn sáng, trả trưa, mượn lại chiều). Nên ở đây khoá nhân tạo <code>ma_muon</code> là lựa chọn đúng, và việc không có <code>UNIQUE</code> là <strong>cố ý</strong>, khác hẳn trường hợp bảng <code>diem</code>.</p>
+<p><strong>Câu 3.</strong></p>
+<p>Các cột: <code>ma_hs</code>, <code>ma_mon_an</code>, <code>thoi_diem</code>, <code>so_luong</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Phương án</th>
+<th>Khoá chính</th>
+<th>Đánh giá</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Khoá tự nhiên phức hợp</td>
+<td><code>(ma_hs, ma_mon_an, thoi_diem)</code></td>
+<td>Chỉ đúng nếu <code>thoi_diem</code> chính xác tới giây. Nếu chỉ lưu tới ngày thì hỏng — mua hai lần trong ngày là trùng</td>
+</tr>
+<tr>
+<td><strong>Khoá nhân tạo</strong></td>
+<td><code>ma_luot_mua SERIAL</code></td>
+<td><strong>Nên chọn</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Lý do: một lượt mua ngoài đời <strong>không có định danh tự nhiên</strong> nào cả — giống hệt <code>diem</code>, <code>muon_sach</code>, <code>diem_danh</code> trong <code>truong_hoc</code>.</p>
+<p>Nhưng nhớ bài học của Lỗi 6: nếu nghiệp vụ khẳng định <em>"một học sinh không thể mua cùng một món hai lần trong cùng một giây"</em> thì vẫn phải thêm <code>UNIQUE (ma_hs, ma_mon_an, thoi_diem)</code> bên cạnh khoá nhân tạo.</p>
+<p><strong>Câu 4.</strong></p>
+<div class="highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">c</span><span class="p">.</span><span class="n">conrelid</span><span class="p">::</span><span class="n">regclass</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">bang</span><span class="p">,</span>
+</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="w">       </span><span class="k">CASE</span><span class="w"> </span><span class="k">c</span><span class="p">.</span><span class="n">contype</span><span class="w"> </span><span class="k">WHEN</span><span class="w"> </span><span class="s1">'p'</span><span class="w"> </span><span class="k">THEN</span><span class="w"> </span><span class="s1">'PRIMARY KEY'</span>
+</span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="w">                      </span><span class="k">WHEN</span><span class="w"> </span><span class="s1">'u'</span><span class="w"> </span><span class="k">THEN</span><span class="w"> </span><span class="s1">'UNIQUE'</span>
+</span><span id="__span-19-4"><a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="w">                      </span><span class="k">WHEN</span><span class="w"> </span><span class="s1">'f'</span><span class="w"> </span><span class="k">THEN</span><span class="w"> </span><span class="s1">'FOREIGN KEY'</span><span class="w"> </span><span class="k">END</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">loai</span><span class="p">,</span>
+</span><span id="__span-19-5"><a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a><span class="w">       </span><span class="k">c</span><span class="p">.</span><span class="n">conname</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">ten_rang_buoc</span><span class="p">,</span>
+</span><span id="__span-19-6"><a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a><span class="w">       </span><span class="n">pg_get_constraintdef</span><span class="p">(</span><span class="k">c</span><span class="p">.</span><span class="n">oid</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">dinh_nghia</span>
+</span><span id="__span-19-7"><a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a><span class="k">FROM</span><span class="w"> </span><span class="n">pg_constraint</span><span class="w"> </span><span class="k">c</span>
+</span><span id="__span-19-8"><a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a><span class="k">WHERE</span><span class="w"> </span><span class="k">c</span><span class="p">.</span><span class="n">contype</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="p">(</span><span class="s1">'p'</span><span class="p">,</span><span class="w"> </span><span class="s1">'u'</span><span class="p">,</span><span class="w"> </span><span class="s1">'f'</span><span class="p">)</span>
+</span><span id="__span-19-9"><a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a><span class="w">  </span><span class="k">AND</span><span class="w"> </span><span class="k">c</span><span class="p">.</span><span class="n">conrelid</span><span class="p">::</span><span class="n">regclass</span><span class="p">::</span><span class="nb">text</span><span class="w"> </span><span class="k">IN</span>
+</span><span id="__span-19-10"><a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a><span class="w">      </span><span class="p">(</span><span class="s1">'giao_vien'</span><span class="p">,</span><span class="w"> </span><span class="s1">'lop'</span><span class="p">,</span><span class="w"> </span><span class="s1">'hoc_sinh'</span><span class="p">,</span><span class="w"> </span><span class="s1">'phu_huynh'</span><span class="p">,</span><span class="w"> </span><span class="s1">'mon_hoc'</span><span class="p">,</span>
+</span><span id="__span-19-11"><a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a><span class="w">       </span><span class="s1">'phan_cong_day'</span><span class="p">,</span><span class="w"> </span><span class="s1">'diem'</span><span class="p">,</span><span class="w"> </span><span class="s1">'sach'</span><span class="p">,</span><span class="w"> </span><span class="s1">'muon_sach'</span><span class="p">,</span><span class="w"> </span><span class="s1">'diem_danh'</span><span class="p">)</span>
+</span><span id="__span-19-12"><a id="__codelineno-19-12" name="__codelineno-19-12" href="#__codelineno-19-12"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Kết quả gồm 10 khoá chính, 5 ràng buộc <code>UNIQUE</code> và 11 khoá ngoại — tổng <strong>26 dòng</strong>. Đây là bản kiểm kê đầy đủ mọi khoá của database.</p>
+<p><strong>Câu 5.</strong>
+Ba vấn đề:</p>
+<ol>
+<li><strong>Số điện thoại đổi được.</strong> Đổi số là phải cập nhật mọi bảng đang trỏ vào. Nó không đủ <strong>bất biến</strong> để làm khoá chính.</li>
+<li><strong>Số điện thoại có thể thiếu hoặc dùng chung.</strong> Học sinh chưa có điện thoại thì cột này phải <code>NULL</code> — mà khoá chính không được <code>NULL</code>. Hai anh em ruột dùng chung một số cũng hỏng.</li>
+<li><strong>Bảng này trùng lặp với <code>hoc_sinh</code>.</strong> <code>ho_ten</code>, <code>ma_lop</code>, <code>dia_chi</code> đã có sẵn trong <code>hoc_sinh</code> rồi. Đây là dấu hiệu chưa chuẩn hoá — Cấp 2 sẽ dạy cách phát hiện và sửa.</li>
+</ol>
+<p>Thiết kế đúng: bỏ hẳn bảng <code>danh_ba</code>, thêm cột <code>so_dien_thoai</code> vào <code>hoc_sinh</code> (hoặc bảng riêng <code>hoc_sinh_sdt</code> nếu là <strong>thuộc tính đa trị</strong>, xem <a href="../14-chuyen-er-sang-bang/">Bài 14</a> Bước 6), giữ <code>ma_hs</code> làm khoá chính và đặt <code>UNIQUE</code> lên số điện thoại <strong>chỉ khi</strong> nghiệp vụ thật sự yêu cầu.</p>
+</details>
+<h2 id="tom-tat">🔑 Tóm tắt<a class="headerlink" href="#tom-tat" title="Permanent link">&para;</a></h2>
+<ol>
+<li><strong>Siêu khoá</strong> phân biệt được mọi dòng và <strong>được phép thừa cột</strong>; <strong>khoá dự tuyển</strong> là siêu khoá <strong>tối giản</strong> — bỏ cột nào cũng hỏng.</li>
+<li><strong>Khoá chính</strong> là khoá dự tuyển được chọn (đúng một cho mỗi bảng, không bao giờ <code>NULL</code>); những khoá dự tuyển còn lại là <strong>khoá thay thế</strong>, giữ bằng <code>UNIQUE</code>.</li>
+<li><strong>Khoá phức hợp</strong> mô tả hình dạng (từ hai cột trở lên) — <code>phan_cong_day</code> có khoá chính bốn cột; <strong>khoá tự nhiên</strong> và <strong>khoá nhân tạo</strong> mô tả nguồn gốc.</li>
+<li><strong>Khoá ngoại</strong> không phân biệt dòng trong bảng của nó, mà nối sang bảng khác — <code>hoc_sinh.ma_lop</code> chỉ có 6 giá trị cho 40 dòng.</li>
+<li>Khoá là <strong>luật về dữ liệu tương lai</strong>, nên chỉ ràng buộc trong lược đồ mới chứng minh được; <code>count(DISTINCT ...)</code> chỉ dùng để phát hiện vi phạm, và bảng <code>diem</code> là ví dụ sống về một khoá tự nhiên bị bỏ quên.</li>
+</ol>
+<hr />
+<p>⬅️ <a href="../11-bieu-do-er-crows-foot/">Bài 11 — Biểu đồ ER ký hiệu Crow's Foot</a> · ➡️ <a href="../13-mo-hinh-eer/">Bài 13 — Mô hình EER</a></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Trở lại mục lục
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Chân trang" >
+        
+          
+          <a href="../11-bieu-do-er-crows-foot/" class="md-footer__link md-footer__link--prev" aria-label="Trước: Bài 11 — Biểu đồ ER — ký hiệu Crow&#39;s Foot và vẽ bằng Mermaid">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Trước
+              </span>
+              <div class="md-ellipsis">
+                Bài 11 — Biểu đồ ER — ký hiệu Crow's Foot và vẽ bằng Mermaid
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../13-mo-hinh-eer/" class="md-footer__link md-footer__link--next" aria-label="Sau: Bài 13 — Mô hình EER: Generalization, Specialization, Aggregation">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Sau
+              </span>
+              <div class="md-ellipsis">
+                Bài 13 — Mô hình EER: Generalization, Specialization, Aggregation
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Nội dung theo giấy phép CC BY 4.0
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/hungnguyen010518/database-tu-a-z" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.sections", "navigation.top", "navigation.footer", "navigation.indexes", "navigation.tracking", "toc.follow", "content.code.copy", "content.code.annotate", "search.highlight", "search.suggest"], "search": "../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "\u0110\u00e3 sao ch\u00e9p", "clipboard.copy": "Sao ch\u00e9p v\u00e0o b\u1ed9 nh\u1edb t\u1ea1m", "search.result.more.one": "1 t\u1eeb kh\u00e1c trong trang", "search.result.more.other": "# t\u1eeb kh\u00e1c trong trang", "search.result.none": "Kh\u00f4ng t\u00ecm th\u1ea5y t\u00e0i li\u1ec7u li\u00ean quan", "search.result.one": "1 t\u00e0i li\u1ec7u li\u00ean quan", "search.result.other": "# t\u00e0i li\u1ec7u li\u00ean quan", "search.result.placeholder": "Nh\u1eadp \u0111\u1ec3 b\u1eaft \u0111\u1ea7u t\u00ecm ki\u1ebfm", "search.result.term.missing": "Kh\u00f4ng", "select.version": "Ch\u1ecdn phi\u00ean b\u1ea3n"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.525ec568.min.js"></script>
+      
+    
+  </body>
+</html>
