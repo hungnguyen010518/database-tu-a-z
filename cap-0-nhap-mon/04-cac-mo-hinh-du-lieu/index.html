@@ -1,0 +1,1517 @@
+
+<!doctype html>
+<html lang="vi" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Khóa học cơ sở dữ liệu tiếng Việt, từ con số 0 tới mức siêu nâng cao — giải thích để học sinh cấp 2 cũng hiểu được.">
+      
+      
+      
+        <link rel="canonical" href="https://hungnguyen010518.github.io/database-tu-a-z/cap-0-nhap-mon/04-cac-mo-hinh-du-lieu/">
+      
+      
+        <link rel="prev" href="../03-dbms-la-gi/">
+      
+      
+        <link rel="next" href="../05-cai-dat-postgresql/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.39">
+    
+    
+      
+        <title>Bài 4 — Các mô hình dữ liệu - Database từ A-Z</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.8c3ca2c6.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#bai-4-cac-mo-hinh-du-lieu-vi-sao-mo-hinh-quan-he-thang" class="md-skip">
+          Bỏ qua
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Đầu trang">
+    <a href="../.." title="Database từ A-Z" class="md-header__button md-logo" aria-label="Database từ A-Z" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3C7.58 3 4 4.79 4 7s3.58 4 8 4 8-1.79 8-4-3.58-4-8-4M4 9v3c0 2.21 3.58 4 8 4s8-1.79 8-4V9c0 2.21-3.58 4-8 4s-8-1.79-8-4m0 5v3c0 2.21 3.58 4 8 4s8-1.79 8-4v-3c0 2.21-3.58 4-8 4s-8-1.79-8-4"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Database từ A-Z
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Bài 4 — Các mô hình dữ liệu
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Chuyển sang chế độ tối"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Chuyển sang chế độ tối" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Chuyển sang chế độ sáng"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Chuyển sang chế độ sáng" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Tìm kiếm" placeholder="Tìm kiếm" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Tìm kiếm">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Xoá" aria-label="Xoá" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/hungnguyen010518/database-tu-a-z" title="Xem mã nguồn" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    database-tu-a-z
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Thanh điều hướng" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Database từ A-Z" class="md-nav__button md-logo" aria-label="Database từ A-Z" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3C7.58 3 4 4.79 4 7s3.58 4 8 4 8-1.79 8-4-3.58-4-8-4M4 9v3c0 2.21 3.58 4 8 4s8-1.79 8-4V9c0 2.21-3.58 4-8 4s-8-1.79-8-4m0 5v3c0 2.21 3.58 4 8 4s8-1.79 8-4v-3c0 2.21-3.58 4-8 4s-8-1.79-8-4"/></svg>
+
+    </a>
+    Database từ A-Z
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/hungnguyen010518/database-tu-a-z" title="Xem mã nguồn" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    database-tu-a-z
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Trang chủ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Cấp 0 — Nhập môn
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Cấp 0 — Nhập môn
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-du-lieu-va-thong-tin/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 1 — Dữ liệu, thông tin và tại sao phải lưu trữ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-tu-so-giay-den-excel/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 2 — Từ sổ giấy đến Excel
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-dbms-la-gi/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 3 — DBMS là gì
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Bài 4 — Các mô hình dữ liệu
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Bài 4 — Các mô hình dữ liệu
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Mục lục">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Mục lục
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#cau-chuyen-mo-au" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧠 Câu chuyện mở đầu
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#khai-niem-thuat-ngu" class="md-nav__link">
+    <span class="md-ellipsis">
+      📖 Khái niệm &amp; thuật ngữ
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📖 Khái niệm & thuật ngữ">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mo-hinh-du-lieu-la-gi" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mô hình dữ liệu là gì
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mo-hinh-phan-cap-cach-cua-ban-a" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mô hình phân cấp — cách của bạn A
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mo-hinh-mang-cach-cua-ban-b" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mô hình mạng — cách của bạn B
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mo-hinh-quan-he-cach-cua-ban-c" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mô hình quan hệ — cách của bạn C
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mo-hinh-oi-tuong-cach-cua-ban-d" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mô hình đối tượng — cách của bạn D
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nosql-lan-song-2009" class="md-nav__link">
+    <span class="md-ellipsis">
+      NoSQL — làn sóng 2009
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bang-thuat-ngu" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bảng thuật ngữ
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#so-o" class="md-nav__link">
+    <span class="md-ellipsis">
+      🖼️ Sơ đồ
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#thuc-hanh" class="md-nav__link">
+    <span class="md-ellipsis">
+      💻 Thực hành
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="💻 Thực hành">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mo-hinh-quan-he-noi-bang-gia-tri" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mô hình quan hệ: nối bằng giá trị
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cung-du-lieu-o-bieu-dien-kieu-tai-lieu" class="md-nav__link">
+    <span class="md-ellipsis">
+      Cũng dữ liệu đó, biểu diễn kiểu tài liệu
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mo-phong-kho-khoagia-tri" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mô phỏng kho khoá–giá trị
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#con-o-thi-thi-trong-nhu-the-nao" class="md-nav__link">
+    <span class="md-ellipsis">
+      Còn đồ thị thì trông như thế nào
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#loi-thuong-gap" class="md-nav__link">
+    <span class="md-ellipsis">
+      ⚠️ Lỗi thường gặp
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bai-tap" class="md-nav__link">
+    <span class="md-ellipsis">
+      ✍️ Bài tập
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tom-tat" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔑 Tóm tắt
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05-cai-dat-postgresql/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 5 — Cài đặt PostgreSQL
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../dataset/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Database mẫu
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../glossary/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bảng thuật ngữ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Mục lục">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Mục lục
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#cau-chuyen-mo-au" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧠 Câu chuyện mở đầu
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#khai-niem-thuat-ngu" class="md-nav__link">
+    <span class="md-ellipsis">
+      📖 Khái niệm &amp; thuật ngữ
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📖 Khái niệm & thuật ngữ">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mo-hinh-du-lieu-la-gi" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mô hình dữ liệu là gì
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mo-hinh-phan-cap-cach-cua-ban-a" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mô hình phân cấp — cách của bạn A
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mo-hinh-mang-cach-cua-ban-b" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mô hình mạng — cách của bạn B
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mo-hinh-quan-he-cach-cua-ban-c" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mô hình quan hệ — cách của bạn C
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mo-hinh-oi-tuong-cach-cua-ban-d" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mô hình đối tượng — cách của bạn D
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nosql-lan-song-2009" class="md-nav__link">
+    <span class="md-ellipsis">
+      NoSQL — làn sóng 2009
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bang-thuat-ngu" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bảng thuật ngữ
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#so-o" class="md-nav__link">
+    <span class="md-ellipsis">
+      🖼️ Sơ đồ
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#thuc-hanh" class="md-nav__link">
+    <span class="md-ellipsis">
+      💻 Thực hành
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="💻 Thực hành">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mo-hinh-quan-he-noi-bang-gia-tri" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mô hình quan hệ: nối bằng giá trị
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cung-du-lieu-o-bieu-dien-kieu-tai-lieu" class="md-nav__link">
+    <span class="md-ellipsis">
+      Cũng dữ liệu đó, biểu diễn kiểu tài liệu
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mo-phong-kho-khoagia-tri" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mô phỏng kho khoá–giá trị
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#con-o-thi-thi-trong-nhu-the-nao" class="md-nav__link">
+    <span class="md-ellipsis">
+      Còn đồ thị thì trông như thế nào
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#loi-thuong-gap" class="md-nav__link">
+    <span class="md-ellipsis">
+      ⚠️ Lỗi thường gặp
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bai-tap" class="md-nav__link">
+    <span class="md-ellipsis">
+      ✍️ Bài tập
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tom-tat" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔑 Tóm tắt
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="bai-4-cac-mo-hinh-du-lieu-vi-sao-mo-hinh-quan-he-thang">Bài 4 — Các mô hình dữ liệu: vì sao mô hình quan hệ thắng<a class="headerlink" href="#bai-4-cac-mo-hinh-du-lieu-vi-sao-mo-hinh-quan-he-thang" title="Permanent link">&para;</a></h1>
+<div class="admonition abstract">
+<p class="admonition-title">🎯 Học xong bài này, bạn sẽ</p>
+<ul>
+<li>Hiểu <strong>mô hình dữ liệu</strong> là gì và vì sao chọn mô hình lại quan trọng hơn chọn phần mềm</li>
+<li>Kể được bốn mô hình cổ điển: phân cấp, mạng, quan hệ, đối tượng — mỗi cái giải quyết gì và vấp ở đâu</li>
+<li>Giải thích được vì sao mô hình quan hệ thống trị suốt 50 năm</li>
+<li>Gọi tên bốn họ NoSQL và biết khi nào chúng hợp lý hơn</li>
+</ul>
+</div>
+<h2 id="cau-chuyen-mo-au">🧠 Câu chuyện mở đầu<a class="headerlink" href="#cau-chuyen-mo-au" title="Permanent link">&para;</a></h2>
+<p>Cô giáo giao bài tập nhóm: <em>"Các em vẽ sơ đồ tổ chức của trường mình."</em></p>
+<p>Nhóm bạn tranh luận cả buổi, vì hoá ra có nhiều cách vẽ, và cách nào cũng có lý.</p>
+<p><strong>Bạn A</strong> vẽ <strong>cây</strong>: hiệu trưởng ở trên, dưới là các tổ trưởng, dưới nữa là giáo viên, dưới cùng là học sinh. Gọn gàng, nhìn phát hiểu ngay ai thuộc về ai. Nhưng tới bạn Minh — vừa ở lớp 8A1, vừa trong đội bóng, vừa trong câu lạc bộ tiếng Anh — thì cây gãy. Minh có tận ba "cha".</p>
+<p><strong>Bạn B</strong> bảo: <em>"Thì cứ nối bừa, ai liên quan tới ai thì kẻ một mũi tên."</em> Vẽ được hết thật. Nhưng năm phút sau tờ giấy trông như một mớ dây điện, và không ai dò nổi đường từ Minh tới cô hiệu trưởng.</p>
+<p><strong>Bạn C</strong> không vẽ hình. Bạn ấy kẻ <strong>ba bảng</strong>: bảng học sinh, bảng lớp, bảng câu lạc bộ; ai thuộc đâu thì ghi mã vào. Nhìn thì chán, nhưng trả lời câu hỏi nào cũng được.</p>
+<p><strong>Bạn D</strong> nói: <em>"Trong Python em tạo một object Lớp, bên trong chứa một list các object Học sinh là xong."</em> Code chạy ngon lành. Nhưng khi cô hỏi <em>"in ra mọi học sinh sinh tháng 5 toàn trường"</em> thì bạn ấy phải viết vòng lặp lồng ba tầng.</p>
+<p>Bốn bạn không ai sai. Mỗi bạn đang dùng một <strong>mô hình dữ liệu</strong> khác nhau — và tình cờ, cả bốn đều là những mô hình có thật, đã từng hoặc đang thống trị ngành công nghiệp này.</p>
+<p>Câu hỏi của bài: vì sao cách của bạn C — cách trông chán nhất — lại là cách cả thế giới dùng suốt 50 năm qua?</p>
+<h2 id="khai-niem-thuat-ngu">📖 Khái niệm &amp; thuật ngữ<a class="headerlink" href="#khai-niem-thuat-ngu" title="Permanent link">&para;</a></h2>
+<h3 id="mo-hinh-du-lieu-la-gi">Mô hình dữ liệu là gì<a class="headerlink" href="#mo-hinh-du-lieu-la-gi" title="Permanent link">&para;</a></h3>
+<p><strong>Mô hình dữ liệu</strong> (<em>data model</em>) là tập quy ước trả lời ba câu hỏi:</p>
+<ol>
+<li>Dữ liệu được <strong>tổ chức</strong> theo hình dạng nào? (cây? bảng? đồ thị?)</li>
+<li>Có thể đặt ra những <strong>ràng buộc</strong> nào?</li>
+<li>Có thể <strong>thao tác</strong> trên nó bằng những phép gì?</li>
+</ol>
+<p>Chọn mô hình là quyết định nền móng. Đổi từ PostgreSQL sang MySQL là chuyện vài ngày — cả hai đều là mô hình quan hệ. Đổi từ mô hình quan hệ sang mô hình tài liệu là viết lại gần như toàn bộ ứng dụng.</p>
+<h3 id="mo-hinh-phan-cap-cach-cua-ban-a">Mô hình phân cấp — cách của bạn A<a class="headerlink" href="#mo-hinh-phan-cap-cach-cua-ban-a" title="Permanent link">&para;</a></h3>
+<p><strong>Mô hình phân cấp</strong> (<em>hierarchical model</em>) tổ chức dữ liệu thành <strong>cây</strong>: mỗi bản ghi có đúng <strong>một</strong> bản ghi cha, có thể có nhiều con.</p>
+<p>Ra đời khoảng 1966 với hệ <strong>IMS</strong> của IBM, dùng cho chương trình Apollo đưa người lên Mặt Trăng. Ưu điểm rất thật: đi từ cha xuống con cực nhanh, vì con nằm ngay cạnh cha trên đĩa.</p>
+<p>Nhược điểm cũng rất thật: thế giới không phải hình cây. Bạn Minh thuộc ba nhóm — mô hình phân cấp bắt bạn <strong>chép Minh ra ba bản</strong>, và ta quay lại đúng căn bệnh <strong>dư thừa dữ liệu</strong> của <a href="../02-tu-so-giay-den-excel/">Bài 2</a>. Hỏi ngược từ dưới lên (<em>"lớp 8A1 do ai chủ nhiệm?"</em>) thì lại rất chậm, vì cây chỉ thiết kế để đi xuôi.</p>
+<p>Mô hình này chưa chết: cấu trúc thư mục trong máy tính, tệp XML, tệp JSON đều là cây.</p>
+<h3 id="mo-hinh-mang-cach-cua-ban-b">Mô hình mạng — cách của bạn B<a class="headerlink" href="#mo-hinh-mang-cach-cua-ban-b" title="Permanent link">&para;</a></h3>
+<p><strong>Mô hình mạng</strong> (<em>network model</em>), chuẩn hoá bởi nhóm <strong>CODASYL</strong> năm 1969, sửa đúng điểm yếu trên: một bản ghi được phép có <strong>nhiều cha</strong>. Minh nối thẳng tới cả ba nhóm, không cần chép ra ba bản.</p>
+<p>Cái giá phải trả nằm ở chỗ khác. Muốn lấy dữ liệu, lập trình viên phải tự viết lộ trình đi: <em>"tìm bản ghi Minh, đi theo con trỏ 'thuộc lớp', rồi con trỏ 'có chủ nhiệm'…"</em>. Người ta gọi kiểu lập trình này là <strong>điều hướng thủ công</strong> (<em>navigational programming</em>).</p>
+<p>Hậu quả: chương trình <strong>dính chặt vào cách dữ liệu được nối</strong>. Đổi cấu trúc một chút là mọi chương trình phải viết lại. Đúng thứ mà <a href="../03-dbms-la-gi/">Bài 3</a> gọi là <strong>mất độc lập dữ liệu</strong>.</p>
+<h3 id="mo-hinh-quan-he-cach-cua-ban-c">Mô hình quan hệ — cách của bạn C<a class="headerlink" href="#mo-hinh-quan-he-cach-cua-ban-c" title="Permanent link">&para;</a></h3>
+<p>Năm 1970, Edgar F. Codd — một nhà toán học làm ở IBM — công bố bài báo <em>"A Relational Model of Data for Large Shared Data Banks"</em>, và đề xuất một ý tưởng khi ấy nghe rất kỳ quặc:</p>
+<blockquote>
+<p>Hãy vứt bỏ mọi con trỏ. Dữ liệu chỉ gồm các <strong>bảng</strong>. Muốn nối hai bảng thì nối bằng <strong>giá trị trùng nhau</strong>, không phải bằng đường dẫn.</p>
+</blockquote>
+<p>Đó là <strong>mô hình quan hệ</strong> (<em>relational model</em>). Trong bảng <code>hoc_sinh</code> có cột <code>ma_lop</code> ghi <code>'L01'</code>; trong bảng <code>lop</code> có dòng <code>ma_lop = 'L01'</code>. Không có mũi tên nào cả — chỉ có hai giá trị <strong>bằng nhau</strong>.</p>
+<p>Từ đó nảy ra hệ quả quan trọng nhất: bạn không cần chỉ đường nữa. Bạn chỉ cần <strong>mô tả thứ mình muốn</strong>, phần mềm tự tìm cách lấy. Kiểu này gọi là <strong>khai báo</strong> (<em>declarative</em>), đối lập với <strong>thủ tục</strong> (<em>procedural</em>) của mô hình mạng.</p>
+<p>Bốn lý do khiến nó thắng:</p>
+<ol>
+<li><strong>Nền tảng toán học.</strong> Bảng chính là <strong>quan hệ</strong> (<em>relation</em>) trong lý thuyết tập hợp. Nhờ vậy DBMS có thể <em>chứng minh</em> hai câu truy vấn viết khác nhau cho cùng kết quả, rồi tự chọn câu chạy nhanh hơn. Đây là việc <strong>bộ tối ưu truy vấn</strong> (<em>query optimizer</em>) làm — Bài 35 sẽ mổ xẻ.</li>
+<li><strong>Khai báo, nên độc lập dữ liệu.</strong> Bạn nói <em>cái gì</em>, không nói <em>làm thế nào</em>. Đổi cách lưu trên đĩa, thêm chỉ mục — câu SQL không đổi.</li>
+<li><strong>Ràng buộc khai báo được.</strong> Khoá chính, khoá ngoại, <code>CHECK</code> — DBMS tự canh, như bạn đã thấy ở Bài 2.</li>
+<li><strong>Chuẩn hoá có lý thuyết đàng hoàng.</strong> Có quy trình từng bước để loại bỏ dư thừa, không phải đoán mò. Cấp 2 sẽ dạy.</li>
+</ol>
+<p>Ngày nay DBMS quan hệ còn được gọi là <strong>RDBMS</strong> (<em>relational database management system</em>).</p>
+<h3 id="mo-hinh-oi-tuong-cach-cua-ban-d">Mô hình đối tượng — cách của bạn D<a class="headerlink" href="#mo-hinh-oi-tuong-cach-cua-ban-d" title="Permanent link">&para;</a></h3>
+<p>Thập niên 1990, lập trình hướng đối tượng lên ngôi, và xuất hiện một khó chịu kinh niên: trong code có <code>class HocSinh</code>, trong database có <code>TABLE hoc_sinh</code>, và lập trình viên suốt ngày phải dịch qua lại. Sự lệch pha ấy có tên: <strong>trở ngại trở kháng đối tượng–quan hệ</strong> (<em>object-relational impedance mismatch</em>).</p>
+<p><strong>Mô hình đối tượng</strong> (<em>object-oriented model</em>) đề nghị: bỏ luôn bảng, lưu thẳng đối tượng xuống đĩa, kèm kế thừa và phương thức.</p>
+<p>Nó không thắng nổi. Lý do: mất nền tảng toán học nên truy vấn tuỳ ý rất yếu, mỗi sản phẩm một kiểu nên không có chuẩn chung, và quan trọng nhất — RDBMS đã kịp học lấy phần hay nhất của nó. PostgreSQL hôm nay có kiểu dữ liệu tự định nghĩa, mảng, kiểu <code>JSONB</code>, kế thừa bảng. Người ta gọi đó là <strong>quan hệ–đối tượng</strong> (<em>object-relational</em>).</p>
+<h3 id="nosql-lan-song-2009">NoSQL — làn sóng 2009<a class="headerlink" href="#nosql-lan-song-2009" title="Permanent link">&para;</a></h3>
+<p>Khoảng năm 2009, các công ty Internet cỡ Google, Amazon, Facebook gặp bài toán mà RDBMS cổ điển đuối sức: hàng tỉ người dùng, dữ liệu trải trên hàng nghìn máy, và cấu trúc dữ liệu thay đổi mỗi tuần.</p>
+<p><strong>NoSQL</strong> ra đời từ đó. Tên gọi hay bị hiểu nhầm là "không dùng SQL"; cách hiểu được chấp nhận rộng rãi hơn là <em>"Not Only SQL"</em> — <strong>không chỉ có SQL</strong>. Đặc điểm chung: chấp nhận <strong>hy sinh một phần tính nhất quán</strong> để đổi lấy khả năng <strong>mở rộng ngang</strong> (<em>horizontal scaling</em>) — thêm máy thay vì mua máy to hơn.</p>
+<p>Có bốn họ chính:</p>
+<table>
+<thead>
+<tr>
+<th>Họ</th>
+<th>Dữ liệu trông như</th>
+<th>Hợp với</th>
+<th>Ví dụ sản phẩm</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Khoá–giá trị</strong> (<em>key-value</em>)</td>
+<td>Một cuốn từ điển: tra khoá ra giá trị</td>
+<td>Bộ nhớ đệm, phiên đăng nhập, giỏ hàng</td>
+<td>Redis, DynamoDB</td>
+</tr>
+<tr>
+<td><strong>Tài liệu</strong> (<em>document</em>)</td>
+<td>Một tệp JSON tự chứa mọi thứ</td>
+<td>Nội dung cấu trúc lỏng lẻo, hay đổi</td>
+<td>MongoDB, CouchDB</td>
+</tr>
+<tr>
+<td><strong>Cột rộng</strong> (<em>column-family</em>)</td>
+<td>Bảng khổng lồ, mỗi dòng có bộ cột riêng</td>
+<td>Ghi log cực nhiều, dữ liệu theo thời gian</td>
+<td>Cassandra, HBase</td>
+</tr>
+<tr>
+<td><strong>Đồ thị</strong> (<em>graph</em>)</td>
+<td>Các điểm nối nhau bằng cạnh có nhãn</td>
+<td>Mạng xã hội, gợi ý, phát hiện gian lận</td>
+<td>Neo4j, JanusGraph</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition info">
+<p class="admonition-title">Bài 47 sẽ đào sâu NoSQL</p>
+<p>Ở đây bạn chỉ cần <strong>nhận ra bốn cái tên và biết chúng hợp với việc gì</strong>. <strong>Bài 47</strong> sẽ dạy kỹ từng họ, kèm định lý CAP, tính nhất quán cuối cùng (<em>eventual consistency</em>), và cách chọn giữa SQL với NoSQL cho một bài toán cụ thể.</p>
+<p>Một điều cần nói ngay để tránh hiểu lầm: NoSQL <strong>không thay thế</strong> mô hình quan hệ. Hai bên tồn tại song song; rất nhiều hệ thống lớn dùng cả hai. Và như phần Thực hành sẽ cho thấy, PostgreSQL còn làm được một phần việc của họ <strong>tài liệu</strong> ngay trong chính nó.</p>
+</div>
+<h3 id="bang-thuat-ngu">Bảng thuật ngữ<a class="headerlink" href="#bang-thuat-ngu" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Tiếng Việt</th>
+<th>English</th>
+<th>Nghĩa dễ hiểu</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Mô hình dữ liệu</td>
+<td><em>data model</em></td>
+<td>Quy ước về hình dạng, ràng buộc và phép thao tác dữ liệu</td>
+</tr>
+<tr>
+<td>Mô hình phân cấp</td>
+<td><em>hierarchical model</em></td>
+<td>Dữ liệu là cây; mỗi bản ghi có đúng một cha</td>
+</tr>
+<tr>
+<td>Mô hình mạng</td>
+<td><em>network model</em></td>
+<td>Dữ liệu là đồ thị con trỏ; một bản ghi có nhiều cha</td>
+</tr>
+<tr>
+<td>Điều hướng thủ công</td>
+<td><em>navigational programming</em></td>
+<td>Lập trình viên tự viết lộ trình đi tìm dữ liệu</td>
+</tr>
+<tr>
+<td>Mô hình quan hệ</td>
+<td><em>relational model</em></td>
+<td>Dữ liệu là bảng; nối nhau bằng giá trị trùng, không con trỏ</td>
+</tr>
+<tr>
+<td>Quan hệ</td>
+<td><em>relation</em></td>
+<td>Tên toán học của "bảng"</td>
+</tr>
+<tr>
+<td>Khai báo</td>
+<td><em>declarative</em></td>
+<td>Nói cái mình muốn, không nói cách làm</td>
+</tr>
+<tr>
+<td>Thủ tục</td>
+<td><em>procedural</em></td>
+<td>Nói từng bước phải làm</td>
+</tr>
+<tr>
+<td>Bộ tối ưu truy vấn</td>
+<td><em>query optimizer</em></td>
+<td>Bộ phận tự chọn cách chạy nhanh nhất cho câu lệnh</td>
+</tr>
+<tr>
+<td>Mô hình đối tượng</td>
+<td><em>object-oriented model</em></td>
+<td>Lưu thẳng đối tượng của ngôn ngữ lập trình</td>
+</tr>
+<tr>
+<td>Trở ngại trở kháng đối tượng–quan hệ</td>
+<td><em>object-relational impedance mismatch</em></td>
+<td>Sự lệch pha giữa class trong code và table trong database</td>
+</tr>
+<tr>
+<td>NoSQL</td>
+<td><em>Not Only SQL</em></td>
+<td>Nhóm mô hình phi quan hệ, ưu tiên mở rộng ngang</td>
+</tr>
+<tr>
+<td>Khoá–giá trị</td>
+<td><em>key-value</em></td>
+<td>Tra một khoá, nhận một giá trị</td>
+</tr>
+<tr>
+<td>Tài liệu</td>
+<td><em>document</em></td>
+<td>Mỗi bản ghi là một tệp JSON tự chứa</td>
+</tr>
+<tr>
+<td>Cột rộng</td>
+<td><em>column-family</em></td>
+<td>Mỗi dòng tự quyết định mình có những cột nào</td>
+</tr>
+<tr>
+<td>Đồ thị</td>
+<td><em>graph</em></td>
+<td>Điểm và cạnh có nhãn; mạnh khi phải đi nhiều bước</td>
+</tr>
+<tr>
+<td>Mở rộng ngang</td>
+<td><em>horizontal scaling</em></td>
+<td>Thêm máy thay vì nâng cấp máy</td>
+</tr>
+</tbody>
+</table>
+<h2 id="so-o">🖼️ Sơ đồ<a class="headerlink" href="#so-o" title="Permanent link">&para;</a></h2>
+<p>Cùng một sự thật — <em>"Nguyễn Văn An là học sinh lớp 8A1"</em> — bốn mô hình biểu diễn bốn kiểu khác nhau:</p>
+<pre class="mermaid"><code>flowchart TB
+    subgraph PC["1️⃣ PHÂN CẤP — cây, một cha"]
+        direction TB
+        P1["Lớp 8A1"]
+        P2["Nguyễn Văn An"]
+        P3["Trần Thị Bình"]
+        P1 --&gt; P2
+        P1 --&gt; P3
+        PX["❌ An vào thêm đội bóng&lt;br/&gt;⇒ phải chép An ra bản thứ hai"]
+    end
+
+    subgraph MG["2️⃣ MẠNG — đồ thị con trỏ, nhiều cha"]
+        direction TB
+        N1["Lớp 8A1"]
+        N2["Đội bóng"]
+        N3["Nguyễn Văn An"]
+        N1 --&gt; N3
+        N2 --&gt; N3
+        NX["❌ Muốn lấy dữ liệu&lt;br/&gt;phải tự viết lộ trình đi"]
+    end
+
+    style PC fill:#fff3e0,stroke:#ef6c00,stroke-width:2px
+    style MG fill:#fce4ec,stroke:#ad1457,stroke-width:2px
+    style PX fill:#ffcdd2,stroke:#b71c1c
+    style NX fill:#ffcdd2,stroke:#b71c1c</code></pre>
+<pre class="mermaid"><code>flowchart TB
+    subgraph QH["3️⃣ QUAN HỆ — bảng nối nhau bằng giá trị"]
+        direction TB
+        R1["&lt;b&gt;lop&lt;/b&gt;&lt;br/&gt;L01 │ 8A1&lt;br/&gt;L02 │ 8A2"]
+        R2["&lt;b&gt;hoc_sinh&lt;/b&gt;&lt;br/&gt;HS001 │ Nguyễn Văn An │ &lt;b&gt;L01&lt;/b&gt;&lt;br/&gt;HS002 │ Trần Thị Bình │ &lt;b&gt;L01&lt;/b&gt;"]
+        R1 -.-&gt;|"giá trị L01 trùng nhau&lt;br/&gt;KHÔNG có con trỏ"| R2
+        RX["✅ Không dư thừa · có ràng buộc&lt;br/&gt;✅ Hỏi gì cũng được, không cần chỉ đường"]
+    end
+
+    subgraph DT["4️⃣ ĐỐI TƯỢNG — lưu thẳng object"]
+        direction TB
+        O1["&lt;b&gt;Lop&lt;/b&gt; 8A1&lt;br/&gt;hoc_sinh = An · Bình&lt;br/&gt;&lt;i&gt;+ phương thức siSoLop&lt;/i&gt;"]
+        OX["⚠️ Code viết dễ&lt;br/&gt;❌ Hỏi ngoài dự kiến thì rất chậm"]
+    end
+
+    style QH fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
+    style DT fill:#ede7f6,stroke:#4527a0,stroke-width:2px
+    style RX fill:#c8e6c9,stroke:#1b5e20
+    style OX fill:#fff9c4,stroke:#f57f17</code></pre>
+<p>Và đây là dòng thời gian, để thấy các mô hình <strong>chồng lên nhau</strong> chứ không thay thế nhau:</p>
+<pre class="mermaid"><code>flowchart LR
+    T1["&lt;b&gt;1966&lt;/b&gt;&lt;br/&gt;Phân cấp&lt;br/&gt;&lt;i&gt;IBM IMS&lt;/i&gt;"]
+    T2["&lt;b&gt;1969&lt;/b&gt;&lt;br/&gt;Mạng&lt;br/&gt;&lt;i&gt;chuẩn CODASYL&lt;/i&gt;"]
+    T3["&lt;b&gt;1970&lt;/b&gt;&lt;br/&gt;Quan hệ&lt;br/&gt;&lt;i&gt;bài báo của E.F. Codd&lt;/i&gt;"]
+    T4["&lt;b&gt;1979&lt;/b&gt;&lt;br/&gt;RDBMS thương mại&lt;br/&gt;đầu tiên ra đời"]
+    T5["&lt;b&gt;1990&lt;/b&gt;&lt;br/&gt;Mô hình đối tượng"]
+    T6["&lt;b&gt;2009&lt;/b&gt;&lt;br/&gt;Làn sóng NoSQL"]
+    T7["&lt;b&gt;Hôm nay&lt;/b&gt;&lt;br/&gt;Quan hệ vẫn là mặc định&lt;br/&gt;NoSQL cho bài toán chuyên biệt"]
+
+    T1 --&gt; T2 --&gt; T3 --&gt; T4 --&gt; T5 --&gt; T6 --&gt; T7
+
+    style T1 fill:#fff3e0,stroke:#ef6c00
+    style T2 fill:#fce4ec,stroke:#ad1457
+    style T3 fill:#e8f5e9,stroke:#2e7d32,stroke-width:3px
+    style T4 fill:#e8f5e9,stroke:#2e7d32
+    style T5 fill:#ede7f6,stroke:#4527a0
+    style T6 fill:#e3f2fd,stroke:#1565c0
+    style T7 fill:#f1f8e9,stroke:#33691e,stroke-width:2px</code></pre>
+<h2 id="thuc-hanh">💻 Thực hành<a class="headerlink" href="#thuc-hanh" title="Permanent link">&para;</a></h2>
+<div class="admonition note">
+<p class="admonition-title">Vẫn chưa cần cài gì</p>
+<p>Đọc hiểu là đủ. Sau <a href="../05-cai-dat-postgresql/">Bài 5</a>, quay lại chạy thử toàn bộ phần này trên <code>truong_hoc</code>.</p>
+</div>
+<h3 id="mo-hinh-quan-he-noi-bang-gia-tri">Mô hình quan hệ: nối bằng giá trị<a class="headerlink" href="#mo-hinh-quan-he-noi-bang-gia-tri" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">ma_hs</span><span class="p">,</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">ho_ten</span><span class="p">,</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">ten_lop</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span><span class="w"> </span><span class="n">h</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="k">JOIN</span><span class="w"> </span><span class="n">lop</span><span class="w"> </span><span class="n">l</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">ma_lop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">ma_lop</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">ma_hs</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="k">LIMIT</span><span class="w"> </span><span class="mi">5</span><span class="p">;</span>
+</span></code></pre></div>
+<table>
+<thead>
+<tr>
+<th>ma_hs</th>
+<th>ho_ten</th>
+<th>ten_lop</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>HS001</td>
+<td>Nguyễn Văn An</td>
+<td>8A1</td>
+</tr>
+<tr>
+<td>HS002</td>
+<td>Trần Thị Bình</td>
+<td>8A1</td>
+</tr>
+<tr>
+<td>HS003</td>
+<td>Lê Hoàng Cường</td>
+<td>8A1</td>
+</tr>
+<tr>
+<td>HS004</td>
+<td>Phạm Thị Dung</td>
+<td>8A1</td>
+</tr>
+<tr>
+<td>HS005</td>
+<td>Hoàng Minh Đức</td>
+<td>8A1</td>
+</tr>
+</tbody>
+</table>
+<p>Hãy để ý kỹ dòng <code>ON h.ma_lop = l.ma_lop</code>. Đó là toàn bộ bí mật của mô hình quan hệ: hai bảng gặp nhau <strong>chỉ vì hai giá trị bằng nhau</strong>. Không con trỏ, không địa chỉ, không đường dẫn. Bạn cũng không hề nói cho PostgreSQL biết <em>phải đọc bảng nào trước</em> — nó tự quyết.</p>
+<p>(Chưa hiểu <code>JOIN</code> cũng không sao. Bài 25 và Bài 26 sẽ dạy kỹ.)</p>
+<h3 id="cung-du-lieu-o-bieu-dien-kieu-tai-lieu">Cũng dữ liệu đó, biểu diễn kiểu tài liệu<a class="headerlink" href="#cung-du-lieu-o-bieu-dien-kieu-tai-lieu" title="Permanent link">&para;</a></h3>
+<p>PostgreSQL có kiểu <code>JSONB</code>, nên ta dựng được ngay một "tài liệu" giống hệt thứ MongoDB lưu:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">jsonb_pretty</span><span class="p">(</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">    </span><span class="n">jsonb_build_object</span><span class="p">(</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">        </span><span class="s1">'ma_lop'</span><span class="p">,</span><span class="w">   </span><span class="n">l</span><span class="p">.</span><span class="n">ma_lop</span><span class="p">,</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">        </span><span class="s1">'ten_lop'</span><span class="p">,</span><span class="w">  </span><span class="n">l</span><span class="p">.</span><span class="n">ten_lop</span><span class="p">,</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">        </span><span class="s1">'hoc_sinh'</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">jsonb_agg</span><span class="p">(</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">                                </span><span class="n">jsonb_build_object</span><span class="p">(</span><span class="s1">'ma_hs'</span><span class="p">,</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">ma_hs</span><span class="p">,</span><span class="w"> </span><span class="s1">'ho_ten'</span><span class="p">,</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">ho_ten</span><span class="p">)</span>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">                                </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">ma_hs</span><span class="p">)</span>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">                     </span><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span><span class="w"> </span><span class="n">h</span>
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">                     </span><span class="k">WHERE</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">ma_lop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">ma_lop</span><span class="p">)</span>
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">    </span><span class="p">)</span>
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">tai_lieu_lop</span>
+</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="k">FROM</span><span class="w"> </span><span class="n">lop</span><span class="w"> </span><span class="n">l</span>
+</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">ma_lop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'L01'</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Kết quả là <strong>một dòng duy nhất</strong>, chứa cả lớp lẫn toàn bộ học sinh lồng bên trong:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p">{</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">    </span><span class="nt">"ma_lop"</span><span class="p">:</span><span class="w"> </span><span class="s2">"L01"</span><span class="p">,</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span><span class="nt">"ten_lop"</span><span class="p">:</span><span class="w"> </span><span class="s2">"8A1"</span><span class="p">,</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">    </span><span class="nt">"hoc_sinh"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">        </span><span class="p">{</span><span class="w"> </span><span class="nt">"ma_hs"</span><span class="p">:</span><span class="w"> </span><span class="s2">"HS001"</span><span class="p">,</span><span class="w"> </span><span class="nt">"ho_ten"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Nguyễn Văn An"</span><span class="w"> </span><span class="p">},</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">        </span><span class="p">{</span><span class="w"> </span><span class="nt">"ma_hs"</span><span class="p">:</span><span class="w"> </span><span class="s2">"HS002"</span><span class="p">,</span><span class="w"> </span><span class="nt">"ho_ten"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Trần Thị Bình"</span><span class="w"> </span><span class="p">},</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">        </span><span class="err">...</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">    </span><span class="p">]</span>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>So sánh hai cách ngay tại đây:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Quan hệ (2 bảng)</th>
+<th>Tài liệu (1 JSON)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Lấy cả lớp kèm học sinh</td>
+<td>Phải <code>JOIN</code></td>
+<td>Đọc <strong>một</strong> bản ghi, rất nhanh</td>
+</tr>
+<tr>
+<td>Đổi tên lớp</td>
+<td>Sửa <strong>1</strong> dòng ở <code>lop</code></td>
+<td>Sửa trong tài liệu, và mọi nơi khác đã chép tên lớp vào</td>
+</tr>
+<tr>
+<td>Hỏi <em>"mọi học sinh sinh tháng 5 toàn trường"</em></td>
+<td><code>WHERE</code> bình thường</td>
+<td>Phải quét và bóc mọi tài liệu</td>
+</tr>
+<tr>
+<td>DBMS ép ràng buộc</td>
+<td>Có: khoá ngoại, <code>CHECK</code></td>
+<td>Thường là không — ứng dụng tự lo</td>
+</tr>
+</tbody>
+</table>
+<p>Không cái nào thắng tuyệt đối. Tài liệu nhanh khi <strong>truy cập theo đúng hình dạng đã lưu</strong>; quan hệ mạnh khi <strong>câu hỏi có thể là bất cứ thứ gì</strong>.</p>
+<h3 id="mo-phong-kho-khoagia-tri">Mô phỏng kho khoá–giá trị<a class="headerlink" href="#mo-phong-kho-khoagia-tri" title="Permanent link">&para;</a></h3>
+<p>Họ khoá–giá trị đơn giản tới mức dựng thử bằng một bảng hai cột:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="k">BEGIN</span><span class="p">;</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">kho_khoa_gia_tri</span><span class="p">;</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">kho_khoa_gia_tri</span><span class="w"> </span><span class="p">(</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">    </span><span class="n">khoa</span><span class="w">      </span><span class="nb">TEXT</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">    </span><span class="n">gia_tri</span><span class="w">   </span><span class="nb">TEXT</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="p">);</span>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">kho_khoa_gia_tri</span><span class="w"> </span><span class="k">VALUES</span>
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">    </span><span class="p">(</span><span class="s1">'phien:abc123'</span><span class="p">,</span><span class="w"> </span><span class="s1">'HS001'</span><span class="p">),</span>
+</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">    </span><span class="p">(</span><span class="s1">'phien:xyz789'</span><span class="p">,</span><span class="w"> </span><span class="s1">'HS007'</span><span class="p">),</span>
+</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">    </span><span class="p">(</span><span class="s1">'dem:luot_truy_cap'</span><span class="p">,</span><span class="w"> </span><span class="s1">'1042'</span><span class="p">);</span>
+</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>
+</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">gia_tri</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">kho_khoa_gia_tri</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">khoa</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'phien:abc123'</span><span class="p">;</span>
+</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>
+</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="k">ROLLBACK</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Chỉ có đúng <strong>một</strong> kiểu câu hỏi trả lời được: <em>"khoá này ứng với giá trị gì?"</em>. Không <code>WHERE</code> theo nội dung, không thống kê, không nối bảng.</p>
+<p>Đổi lại, nó nhanh kinh khủng và chia ra nghìn máy rất dễ — vì mỗi khoá độc lập hoàn toàn với mọi khoá khác. Đó là lý do Redis được dùng để giữ phiên đăng nhập, chứ không ai dùng nó để lưu bảng điểm.</p>
+<h3 id="con-o-thi-thi-trong-nhu-the-nao">Còn đồ thị thì trông như thế nào<a class="headerlink" href="#con-o-thi-thi-trong-nhu-the-nao" title="Permanent link">&para;</a></h3>
+<p>Cùng câu hỏi <em>"An học lớp nào"</em>, viết bằng Cypher — ngôn ngữ của Neo4j:</p>
+<!-- sql:khong-chay -->
+<div class="highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1">-- Đây là Cypher (Neo4j), KHÔNG phải SQL. Chỉ để bạn thấy sự khác biệt.</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="k">MATCH</span><span class="w"> </span><span class="p">(</span><span class="n">hs</span><span class="p">:</span><span class="n">HocSinh</span><span class="w"> </span><span class="err">{</span><span class="n">ho_ten</span><span class="p">:</span><span class="w"> </span><span class="s1">'Nguyễn Văn An'</span><span class="err">}</span><span class="p">)</span><span class="o">-</span><span class="p">[:</span><span class="n">HOC_TAI</span><span class="p">]</span><span class="o">-&gt;</span><span class="p">(</span><span class="n">l</span><span class="p">:</span><span class="n">Lop</span><span class="p">)</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="k">RETURN</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">ten_lop</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Quan hệ <code>HOC_TAI</code> là một <strong>đối tượng hạng nhất</strong> — nó có tên, có thuộc tính riêng. Trong mô hình quan hệ, quan hệ đó chỉ là một cột <code>ma_lop</code>.</p>
+<p>Khác biệt lộ rõ khi câu hỏi phải đi <strong>nhiều bước</strong>: <em>"tìm bạn của bạn của bạn của An"</em>. Với đồ thị là ba bước đi. Với SQL là ba lần <code>JOIN</code> bảng với chính nó — viết được, nhưng dài và chậm dần theo số bước.</p>
+<h2 id="loi-thuong-gap">⚠️ Lỗi thường gặp<a class="headerlink" href="#loi-thuong-gap" title="Permanent link">&para;</a></h2>
+<div class="admonition warning">
+<p class="admonition-title">Lỗi 1: Hiểu NoSQL là 'không dùng SQL'</p>
+<p>Cách hiểu phổ biến hơn là <strong>Not Only SQL</strong> — không chỉ có SQL. Bằng chứng: Cassandra có CQL, còn MongoDB từ bản 5 đã hỗ trợ cú pháp truy vấn kiểu SQL.</p>
+<p>Điểm khác biệt thật sự <strong>không nằm ở ngôn ngữ</strong>, mà ở <strong>mô hình dữ liệu</strong> và ở việc <strong>chấp nhận đánh đổi tính nhất quán lấy khả năng mở rộng</strong>.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Lỗi 2: Nghĩ NoSQL mới nên tốt hơn, quan hệ cũ nên lạc hậu</p>
+<p>Mô hình quan hệ ra đời năm 1970, nhưng "cũ" ở đây nghĩa là <strong>đã được chứng minh qua 50 năm</strong>, có nền toán học vững, có chuẩn quốc tế, và có bộ tối ưu truy vấn được mài giũa suốt nửa thế kỷ.</p>
+<p>Rất nhiều dự án đã chọn NoSQL vì thời thượng, rồi phải trả giá khi cần một báo cáo tổng hợp hoặc một giao dịch chuyển tiền. Nguyên tắc lành mạnh: <strong>mặc định dùng quan hệ; chỉ chuyển sang NoSQL khi có lý do cụ thể đo đếm được.</strong></p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Lỗi 3: Lẫn lộn mô hình dữ liệu với sản phẩm phần mềm</p>
+<p><em>"Mô hình quan hệ"</em> là một <strong>ý tưởng</strong>; PostgreSQL, MySQL, SQL Server là các <strong>sản phẩm</strong> hiện thực ý tưởng đó.</p>
+<p>Nhầm lẫn này khiến nhiều người tưởng học PostgreSQL xong là phải học lại từ đầu khi chuyển sang MySQL. Thực tế phần lớn kiến thức chuyển thẳng được, vì cả hai cùng một mô hình.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Lỗi 4: Tưởng mô hình phân cấp và mạng đã tuyệt chủng</p>
+<p>Chúng không chết, chỉ đổi chỗ đứng. Cây thư mục trong máy bạn là mô hình phân cấp. Tệp JSON và XML là mô hình phân cấp. Mạng xã hội là mô hình mạng.</p>
+<p>Bài học thật sự: <strong>các mô hình chồng lấn nhau</strong>. Chọn mô hình nào phụ thuộc vào <em>câu hỏi bạn sẽ hỏi nhiều nhất</em>, chứ không phụ thuộc năm ra đời.</p>
+</div>
+<h2 id="bai-tap">✍️ Bài tập<a class="headerlink" href="#bai-tap" title="Permanent link">&para;</a></h2>
+<ol>
+<li>
+<p>Ghép mỗi mô tả với đúng một mô hình (phân cấp / mạng / quan hệ / đối tượng / NoSQL đồ thị):
+   (a) mỗi bản ghi có đúng một cha; (b) dữ liệu là bảng, nối nhau bằng giá trị bằng nhau;
+   (c) lập trình viên tự đi theo con trỏ; (d) quan hệ giữa các bản ghi có tên và thuộc tính riêng;
+   (e) lưu thẳng object kèm phương thức.</p>
+</li>
+<li>
+<p>Một ứng dụng cần lưu <strong>giỏ hàng tạm</strong> của người đang mua sắm: tra theo mã người dùng, không cần thống kê, cần cực nhanh, mất cũng không sao. Nên chọn họ NoSQL nào? Vì sao không dùng đồ thị?</p>
+</li>
+<li>
+<p>Vì sao mô hình quan hệ đạt được <strong>độc lập dữ liệu</strong> tốt hơn hẳn mô hình mạng? Trả lời bằng cách nhắc tới cặp khái niệm <em>khai báo</em> và <em>thủ tục</em>.</p>
+</li>
+<li>
+<p>Trường muốn lưu hồ sơ sức khoẻ học sinh, trong đó mỗi em có số mục rất khác nhau (em thì dị ứng, em thì cận thị, em chẳng có gì) và danh mục bệnh thay đổi hằng năm. Nêu <strong>một lý do</strong> nên dùng mô hình tài liệu và <strong>một lý do</strong> vẫn nên dùng quan hệ.</p>
+</li>
+<li>
+<p>Cho câu hỏi <em>"tìm những học sinh có cùng ít nhất hai câu lạc bộ với An"</em>. Mô hình nào trả lời tự nhiên hơn: quan hệ hay đồ thị? Vì sao? Điều này có nghĩa là phải vứt bỏ database quan hệ không?</p>
+</li>
+</ol>
+<details class="success">
+<summary>Đáp án</summary>
+<p><strong>Câu 1.</strong></p>
+<ul>
+<li>(a) → <strong>Mô hình phân cấp</strong>. Ràng buộc "đúng một cha" chính là định nghĩa của cây.</li>
+<li>(b) → <strong>Mô hình quan hệ</strong>. Nối bằng <strong>giá trị trùng nhau</strong>, không phải con trỏ — đó là phát kiến của Codd.</li>
+<li>(c) → <strong>Mô hình mạng</strong>. Đây là <em>điều hướng thủ công</em> (<em>navigational programming</em>).</li>
+<li>(d) → <strong>NoSQL đồ thị</strong>. Cạnh là đối tượng hạng nhất, có nhãn và thuộc tính.</li>
+<li>(e) → <strong>Mô hình đối tượng</strong>.</li>
+</ul>
+<p><strong>Câu 2.</strong></p>
+<p>Chọn họ <strong>khoá–giá trị</strong> (<em>key-value</em>), ví dụ Redis.</p>
+<p>Lý do khớp từng yêu cầu:</p>
+<ul>
+<li><em>Tra theo mã người dùng</em> → đúng một kiểu truy cập: khoá → giá trị. Không cần gì hơn.</li>
+<li><em>Cần cực nhanh</em> → kho khoá–giá trị thường giữ dữ liệu trong RAM, trả lời dưới một mili giây.</li>
+<li><em>Mất cũng không sao</em> → cho phép hy sinh độ bền để đổi lấy tốc độ; giỏ hàng tạm mất thì người dùng chọn lại.</li>
+<li><em>Không cần thống kê</em> → đúng điểm yếu duy nhất của họ này, mà ở đây lại không cần.</li>
+</ul>
+<p>Không dùng đồ thị vì đồ thị mạnh ở việc <strong>đi nhiều bước qua các mối quan hệ</strong>. Giỏ hàng chẳng có mối quan hệ nào phải đi cả — dùng đồ thị là trả tiền cho một năng lực không xài tới, lại còn chậm hơn.</p>
+<p><strong>Câu 3.</strong></p>
+<p>Mô hình mạng là <strong>thủ tục</strong> (<em>procedural</em>): chương trình phải viết rõ <em>từng bước đi</em> — bắt đầu ở bản ghi nào, theo con trỏ nào, rẽ hướng nào. Nghĩa là lộ trình vật lý bị <strong>viết cứng vào mã nguồn</strong>. Hôm nào đổi cách nối dữ liệu, mọi chương trình đang chạy đều sai.</p>
+<p>Mô hình quan hệ là <strong>khai báo</strong> (<em>declarative</em>): câu SQL chỉ mô tả <em>kết quả mong muốn</em> (<code>SELECT ... WHERE ...</code>), tuyệt nhiên không nói cách lấy. Việc chọn đọc bảng nào trước, có dùng chỉ mục hay không, dành cho <strong>bộ tối ưu truy vấn</strong>.</p>
+<p>Vì lộ trình không nằm trong mã nguồn nữa, DBMS được tự do đổi cách lưu trữ bất cứ lúc nào mà chương trình không hay biết. Đó chính là <strong>độc lập dữ liệu vật lý</strong> ở <a href="../03-dbms-la-gi/">Bài 3</a>.</p>
+<p><strong>Câu 4.</strong></p>
+<p><em>Một lý do nên dùng mô hình tài liệu:</em> cấu trúc mỗi hồ sơ <strong>khác nhau và hay đổi</strong>. Với quan hệ, mỗi loại thông tin mới thường kéo theo một lệnh <code>ALTER TABLE</code>; với tài liệu, mỗi em cứ có gì ghi nấy, không cần khai báo trước.</p>
+<p><em>Một lý do vẫn nên dùng quan hệ:</em> đây là <strong>dữ liệu y tế của trẻ em</strong> — cần ràng buộc chặt (mỗi hồ sơ phải gắn với một học sinh có thật), cần kiểm soát quyền truy cập, cần báo cáo tổng hợp (<em>"bao nhiêu em cận thị theo từng khối"</em>), và cần sửa đúng một chỗ khi thông tin thay đổi.</p>
+<p>Đáng nói thêm: PostgreSQL cho phép chọn cả hai — cột <code>JSONB</code> cho phần biến động, cột thường cho phần bắt buộc. Bài 47 sẽ bàn kỹ cách phối hợp này.</p>
+<p><strong>Câu 5.</strong></p>
+<p><strong>Đồ thị tự nhiên hơn.</strong> Câu hỏi này bản chất là đi qua nhiều cạnh: từ An → các câu lạc bộ của An → các thành viên khác của những câu lạc bộ đó → đếm xem ai trùng từ hai câu lạc bộ trở lên. Với ngôn ngữ đồ thị, đó gần như là một câu mô tả thẳng đường đi.</p>
+<p>Trong SQL vẫn làm được — nối bảng <code>thanh_vien</code> với chính nó, <code>GROUP BY</code> rồi <code>HAVING count(*) &gt;= 2</code> — chỉ là dài hơn và khó đọc hơn. Bài 28 sẽ dạy đúng kỹ thuật này.</p>
+<p><strong>Không hề phải vứt bỏ database quan hệ.</strong> Với dữ liệu cỡ một trường học, SQL chạy thừa nhanh. Đồ thị chỉ thật sự thắng khi số bước đi lớn (bốn, năm bước trở lên) và dữ liệu cỡ hàng triệu điểm nối. Chọn công cụ theo <strong>quy mô và tần suất của câu hỏi</strong>, không theo cảm giác "cái nào hợp thời".</p>
+</details>
+<h2 id="tom-tat">🔑 Tóm tắt<a class="headerlink" href="#tom-tat" title="Permanent link">&para;</a></h2>
+<ol>
+<li><strong>Mô hình dữ liệu</strong> quy định hình dạng, ràng buộc và phép thao tác trên dữ liệu; chọn mô hình quan trọng hơn chọn sản phẩm phần mềm rất nhiều.</li>
+<li><strong>Phân cấp</strong> (cây, một cha) gọn nhưng gây dư thừa khi đời thực không phải hình cây; <strong>mạng</strong> (nhiều cha) sửa được điều đó nhưng bắt lập trình viên tự đi theo con trỏ.</li>
+<li><strong>Mô hình quan hệ</strong> của Codd (1970) vứt bỏ con trỏ, nối bảng bằng <strong>giá trị bằng nhau</strong>, và cho phép viết câu lệnh <strong>khai báo</strong> — nhờ đó có nền toán học, có tối ưu tự động và có độc lập dữ liệu.</li>
+<li><strong>Mô hình đối tượng</strong> không thắng nổi, nhưng phần hay nhất của nó đã được RDBMS hấp thụ — PostgreSQL hôm nay là một hệ <strong>quan hệ–đối tượng</strong>.</li>
+<li><strong>NoSQL</strong> gồm bốn họ — khoá–giá trị, tài liệu, cột rộng, đồ thị — đánh đổi tính nhất quán lấy khả năng mở rộng ngang; chúng bổ sung chứ không thay thế mô hình quan hệ, và <strong>Bài 47 sẽ đào sâu</strong>.</li>
+</ol>
+<hr />
+<p>⬅️ <a href="../03-dbms-la-gi/">Bài 3 — DBMS là gì</a> · ➡️ <a href="../05-cai-dat-postgresql/">Bài 5 — Cài đặt PostgreSQL</a></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Trở lại mục lục
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Chân trang" >
+        
+          
+          <a href="../03-dbms-la-gi/" class="md-footer__link md-footer__link--prev" aria-label="Trước: Bài 3 — DBMS là gì">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Trước
+              </span>
+              <div class="md-ellipsis">
+                Bài 3 — DBMS là gì
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../05-cai-dat-postgresql/" class="md-footer__link md-footer__link--next" aria-label="Sau: Bài 5 — Cài đặt PostgreSQL">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Sau
+              </span>
+              <div class="md-ellipsis">
+                Bài 5 — Cài đặt PostgreSQL
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Nội dung theo giấy phép CC BY 4.0
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/hungnguyen010518/database-tu-a-z" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.sections", "navigation.top", "navigation.footer", "navigation.indexes", "navigation.tracking", "toc.follow", "content.code.copy", "content.code.annotate", "search.highlight", "search.suggest"], "search": "../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "\u0110\u00e3 sao ch\u00e9p", "clipboard.copy": "Sao ch\u00e9p v\u00e0o b\u1ed9 nh\u1edb t\u1ea1m", "search.result.more.one": "1 t\u1eeb kh\u00e1c trong trang", "search.result.more.other": "# t\u1eeb kh\u00e1c trong trang", "search.result.none": "Kh\u00f4ng t\u00ecm th\u1ea5y t\u00e0i li\u1ec7u li\u00ean quan", "search.result.one": "1 t\u00e0i li\u1ec7u li\u00ean quan", "search.result.other": "# t\u00e0i li\u1ec7u li\u00ean quan", "search.result.placeholder": "Nh\u1eadp \u0111\u1ec3 b\u1eaft \u0111\u1ea7u t\u00ecm ki\u1ebfm", "search.result.term.missing": "Kh\u00f4ng", "select.version": "Ch\u1ecdn phi\u00ean b\u1ea3n"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.525ec568.min.js"></script>
+      
+    
+  </body>
+</html>

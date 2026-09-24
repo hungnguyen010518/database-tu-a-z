@@ -1,0 +1,1789 @@
+
+<!doctype html>
+<html lang="vi" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Khóa học cơ sở dữ liệu tiếng Việt, từ con số 0 tới mức siêu nâng cao — giải thích để học sinh cấp 2 cũng hiểu được.">
+      
+      
+      
+        <link rel="canonical" href="https://hungnguyen010518.github.io/database-tu-a-z/cap-0-nhap-mon/05-cai-dat-postgresql/">
+      
+      
+        <link rel="prev" href="../04-cac-mo-hinh-du-lieu/">
+      
+      
+        <link rel="next" href="../../dataset/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.39">
+    
+    
+      
+        <title>Bài 5 — Cài đặt PostgreSQL - Database từ A-Z</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.8c3ca2c6.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#bai-5-cai-at-postgresql-va-nap-database-mau" class="md-skip">
+          Bỏ qua
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Đầu trang">
+    <a href="../.." title="Database từ A-Z" class="md-header__button md-logo" aria-label="Database từ A-Z" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3C7.58 3 4 4.79 4 7s3.58 4 8 4 8-1.79 8-4-3.58-4-8-4M4 9v3c0 2.21 3.58 4 8 4s8-1.79 8-4V9c0 2.21-3.58 4-8 4s-8-1.79-8-4m0 5v3c0 2.21 3.58 4 8 4s8-1.79 8-4v-3c0 2.21-3.58 4-8 4s-8-1.79-8-4"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Database từ A-Z
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Bài 5 — Cài đặt PostgreSQL
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Chuyển sang chế độ tối"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Chuyển sang chế độ tối" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Chuyển sang chế độ sáng"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Chuyển sang chế độ sáng" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Tìm kiếm" placeholder="Tìm kiếm" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Tìm kiếm">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Xoá" aria-label="Xoá" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/hungnguyen010518/database-tu-a-z" title="Xem mã nguồn" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    database-tu-a-z
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Thanh điều hướng" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Database từ A-Z" class="md-nav__button md-logo" aria-label="Database từ A-Z" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3C7.58 3 4 4.79 4 7s3.58 4 8 4 8-1.79 8-4-3.58-4-8-4M4 9v3c0 2.21 3.58 4 8 4s8-1.79 8-4V9c0 2.21-3.58 4-8 4s-8-1.79-8-4m0 5v3c0 2.21 3.58 4 8 4s8-1.79 8-4v-3c0 2.21-3.58 4-8 4s-8-1.79-8-4"/></svg>
+
+    </a>
+    Database từ A-Z
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/hungnguyen010518/database-tu-a-z" title="Xem mã nguồn" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    database-tu-a-z
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Trang chủ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Cấp 0 — Nhập môn
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Cấp 0 — Nhập môn
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-du-lieu-va-thong-tin/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 1 — Dữ liệu, thông tin và tại sao phải lưu trữ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-tu-so-giay-den-excel/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 2 — Từ sổ giấy đến Excel
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-dbms-la-gi/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 3 — DBMS là gì
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-cac-mo-hinh-du-lieu/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 4 — Các mô hình dữ liệu
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Bài 5 — Cài đặt PostgreSQL
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Bài 5 — Cài đặt PostgreSQL
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Mục lục">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Mục lục
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#cau-chuyen-mo-au" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧠 Câu chuyện mở đầu
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#khai-niem-thuat-ngu" class="md-nav__link">
+    <span class="md-ellipsis">
+      📖 Khái niệm &amp; thuật ngữ
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📖 Khái niệm & thuật ngữ">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#postgresql-khong-phai-mot-ung-dung-ma-la-mot-may-chu" class="md-nav__link">
+    <span class="md-ellipsis">
+      PostgreSQL không phải một ứng dụng, mà là một máy chủ
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ba-thu-ban-phai-noi-ung-khi-go-cua" class="md-nav__link">
+    <span class="md-ellipsis">
+      Ba thứ bạn phải nói đúng khi gõ cửa
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#psql-va-cac-lenh-meta" class="md-nav__link">
+    <span class="md-ellipsis">
+      psql và các lệnh meta
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bang-thuat-ngu" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bảng thuật ngữ
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#so-o" class="md-nav__link">
+    <span class="md-ellipsis">
+      🖼️ Sơ đồ
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#thuc-hanh" class="md-nav__link">
+    <span class="md-ellipsis">
+      💻 Thực hành
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="💻 Thực hành">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#buoc-1-cai-postgresql-16" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bước 1 — Cài PostgreSQL 16
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#buoc-2-ket-noi-bang-psql" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bước 2 — Kết nối bằng psql
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#buoc-3-tao-database-truong_hoc" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bước 3 — Tạo database truong_hoc
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#buoc-4-tai-dataset" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bước 4 — Tải dataset
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#buoc-5-nap-02-chuan-hoasql" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bước 5 — Nạp 02-chuan-hoa.sql
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#buoc-6-tu-kiem-tra" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bước 6 — Tự kiểm tra
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#chay-thu-mot-cau-co-y-nghia" class="md-nav__link">
+    <span class="md-ellipsis">
+      Chạy thử một câu có ý nghĩa
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#loi-thuong-gap" class="md-nav__link">
+    <span class="md-ellipsis">
+      ⚠️ Lỗi thường gặp
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bai-tap" class="md-nav__link">
+    <span class="md-ellipsis">
+      ✍️ Bài tập
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tom-tat" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔑 Tóm tắt
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../dataset/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Database mẫu
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../glossary/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bảng thuật ngữ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Mục lục">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Mục lục
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#cau-chuyen-mo-au" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧠 Câu chuyện mở đầu
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#khai-niem-thuat-ngu" class="md-nav__link">
+    <span class="md-ellipsis">
+      📖 Khái niệm &amp; thuật ngữ
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📖 Khái niệm & thuật ngữ">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#postgresql-khong-phai-mot-ung-dung-ma-la-mot-may-chu" class="md-nav__link">
+    <span class="md-ellipsis">
+      PostgreSQL không phải một ứng dụng, mà là một máy chủ
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ba-thu-ban-phai-noi-ung-khi-go-cua" class="md-nav__link">
+    <span class="md-ellipsis">
+      Ba thứ bạn phải nói đúng khi gõ cửa
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#psql-va-cac-lenh-meta" class="md-nav__link">
+    <span class="md-ellipsis">
+      psql và các lệnh meta
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bang-thuat-ngu" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bảng thuật ngữ
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#so-o" class="md-nav__link">
+    <span class="md-ellipsis">
+      🖼️ Sơ đồ
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#thuc-hanh" class="md-nav__link">
+    <span class="md-ellipsis">
+      💻 Thực hành
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="💻 Thực hành">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#buoc-1-cai-postgresql-16" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bước 1 — Cài PostgreSQL 16
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#buoc-2-ket-noi-bang-psql" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bước 2 — Kết nối bằng psql
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#buoc-3-tao-database-truong_hoc" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bước 3 — Tạo database truong_hoc
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#buoc-4-tai-dataset" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bước 4 — Tải dataset
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#buoc-5-nap-02-chuan-hoasql" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bước 5 — Nạp 02-chuan-hoa.sql
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#buoc-6-tu-kiem-tra" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bước 6 — Tự kiểm tra
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#chay-thu-mot-cau-co-y-nghia" class="md-nav__link">
+    <span class="md-ellipsis">
+      Chạy thử một câu có ý nghĩa
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#loi-thuong-gap" class="md-nav__link">
+    <span class="md-ellipsis">
+      ⚠️ Lỗi thường gặp
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bai-tap" class="md-nav__link">
+    <span class="md-ellipsis">
+      ✍️ Bài tập
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tom-tat" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔑 Tóm tắt
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="bai-5-cai-at-postgresql-va-nap-database-mau">Bài 5 — Cài đặt PostgreSQL và nạp database mẫu<a class="headerlink" href="#bai-5-cai-at-postgresql-va-nap-database-mau" title="Permanent link">&para;</a></h1>
+<div class="admonition abstract">
+<p class="admonition-title">🎯 Học xong bài này, bạn sẽ</p>
+<ul>
+<li>Có một <strong>PostgreSQL 16 đang chạy thật</strong> trên máy của mình</li>
+<li>Hiểu mô hình <strong>máy khách – máy chủ</strong> và vì sao phải nhớ con số 5432</li>
+<li>Kết nối được bằng <code>psql</code> và dùng thành thạo các lệnh meta <code>\l</code>, <code>\dt</code>, <code>\d</code>, <code>\q</code></li>
+<li>Nạp xong database <code>truong_hoc</code> và tự kiểm tra được là đã nạp đúng</li>
+<li>Tự gỡ được ba sự cố phổ biến nhất khi cài lần đầu</li>
+</ul>
+</div>
+<div class="admonition danger">
+<p class="admonition-title">Đây là bài bản lề của cả khóa học</p>
+<p>Bốn bài trước bạn chỉ <strong>đọc</strong>. Từ <strong>Bài 6</strong> trở đi, mọi bài đều giả định rằng máy bạn đã có PostgreSQL chạy được và database <code>truong_hoc</code> đã nạp xong.</p>
+<p>Đừng đi tiếp khi phần <strong>Tự kiểm tra</strong> ở cuối mục Thực hành chưa trả về đúng kết quả.</p>
+</div>
+<h2 id="cau-chuyen-mo-au">🧠 Câu chuyện mở đầu<a class="headerlink" href="#cau-chuyen-mo-au" title="Permanent link">&para;</a></h2>
+<p>Bốn bài vừa rồi giống hệt việc học luật giao thông trong lớp: bạn biết đèn đỏ là dừng, biết vạch kẻ để làm gì. Nhưng bạn chưa từng ngồi lên xe.</p>
+<p>Hôm nay bạn ngồi lên xe.</p>
+<p>Và cũng như lần đầu tập xe, sẽ có vài cú chết máy. Ba cú phổ biến nhất là thế này:</p>
+<p>Bạn cài xong, gõ lệnh kết nối, màn hình trả về <code>could not connect to server</code>. Bạn tưởng mình cài hỏng — thật ra phần mềm chạy tốt, chỉ là bạn đang gõ cửa sai số nhà.</p>
+<p>Bạn nhập mật khẩu, máy báo <code>password authentication failed</code>. Bạn chắc chắn mình gõ đúng — nhưng bạn đang gõ mật khẩu của <strong>người dùng hệ điều hành</strong>, còn PostgreSQL có hệ thống người dùng riêng của nó.</p>
+<p>Bạn kết nối được, gõ <code>SELECT * FROM hoc_sinh;</code>, máy báo <code>relation "hoc_sinh" does not exist</code>. Bạn tưởng dữ liệu nạp hỏng — thật ra bạn đang đứng trong một database khác.</p>
+<p>Cả ba đều không phải lỗi của bạn, và cả ba đều bắt nguồn từ <strong>một</strong> hiểu lầm duy nhất về cách PostgreSQL được tổ chức.</p>
+<p>Câu hỏi của bài: hiểu lầm đó là gì?</p>
+<h2 id="khai-niem-thuat-ngu">📖 Khái niệm &amp; thuật ngữ<a class="headerlink" href="#khai-niem-thuat-ngu" title="Permanent link">&para;</a></h2>
+<h3 id="postgresql-khong-phai-mot-ung-dung-ma-la-mot-may-chu">PostgreSQL không phải một ứng dụng, mà là một máy chủ<a class="headerlink" href="#postgresql-khong-phai-mot-ung-dung-ma-la-mot-may-chu" title="Permanent link">&para;</a></h3>
+<p>Đây chính là hiểu lầm gốc rễ.</p>
+<p>Word hay Excel là <strong>ứng dụng</strong>: bạn mở nó lên, làm việc, đóng lại. PostgreSQL thì khác hẳn. Nó là một <strong>máy chủ</strong> (<em>server</em>) — một chương trình chạy <strong>âm thầm và liên tục</strong> ở nền, kể cả khi bạn không nhìn thấy cửa sổ nào. Nó nằm đó chờ, ai gõ cửa thì phục vụ.</p>
+<p>Chương trình gõ cửa gọi là <strong>máy khách</strong> (<em>client</em>). <code>psql</code> là một máy khách; pgAdmin là một máy khách; ứng dụng web bạn viết sau này cũng là một máy khách.</p>
+<p>Mô hình này gọi là <strong>máy khách – máy chủ</strong> (<em>client–server</em>), và nó giải thích luôn hình vẽ về DBMS ở <a href="../03-dbms-la-gi/">Bài 3</a>: nhiều người kết nối cùng lúc vào <strong>một</strong> kho dữ liệu duy nhất, được một phần mềm canh gác.</p>
+<h3 id="ba-thu-ban-phai-noi-ung-khi-go-cua">Ba thứ bạn phải nói đúng khi gõ cửa<a class="headerlink" href="#ba-thu-ban-phai-noi-ung-khi-go-cua" title="Permanent link">&para;</a></h3>
+<p>Vì máy chủ phục vụ nhiều người, mỗi lần kết nối bạn phải trả lời ba câu hỏi. Ba sự cố trong câu chuyện tương ứng chính xác với ba câu này:</p>
+<p><strong>1. Gõ cửa ở đâu?</strong> — máy nào, <strong>cổng</strong> (<em>port</em>) số mấy.</p>
+<p>Một máy tính có thể chạy nhiều máy chủ cùng lúc (web, mail, database…). Cổng là con số để phân biệt chúng, như số phòng trong một toà nhà. PostgreSQL mặc định nằm ở cổng <strong>5432</strong>. Gõ nhầm cổng thì đúng toà nhà nhưng sai phòng — và bạn nhận <code>could not connect to server</code>.</p>
+<p><strong>2. Bạn là ai?</strong> — tên <strong>vai trò</strong> (<em>role</em>) và mật khẩu.</p>
+<p>PostgreSQL có hệ thống người dùng <strong>hoàn toàn riêng</strong>, không liên quan gì tới tài khoản đăng nhập máy tính của bạn. Mỗi người dùng trong PostgreSQL gọi là một <strong>vai trò</strong>; vai trò quản trị mặc định tên là <code>postgres</code>. Đó là lý do mật khẩu máy tính không dùng được ở đây.</p>
+<p><strong>3. Bạn muốn vào database nào?</strong></p>
+<p>Một máy chủ PostgreSQL quản lý nhiều database cùng lúc — tập hợp đó gọi là một <strong>cụm cơ sở dữ liệu</strong> (<em>cluster</em>). Sau khi cài, cụm đã có sẵn database <code>postgres</code> dùng cho việc quản trị. Database <code>truong_hoc</code> của chúng ta là một database <strong>khác</strong>, phải tạo thêm.</p>
+<p>Quên nói tên database, bạn sẽ bị đưa vào database mặc định — và ở đó tất nhiên không có bảng <code>hoc_sinh</code> nào. Đó chính là sự cố thứ ba.</p>
+<div class="admonition tip">
+<p class="admonition-title">Câu thần chú để nhớ ba thứ</p>
+<p><strong>Ở đâu</strong> (máy + cổng 5432) · <strong>là ai</strong> (vai trò + mật khẩu) · <strong>vào đâu</strong> (tên database).</p>
+<p>Gần như mọi lỗi kết nối bạn gặp trong đời đều là thiếu hoặc sai một trong ba thứ này.</p>
+</div>
+<h3 id="psql-va-cac-lenh-meta">psql và các lệnh meta<a class="headerlink" href="#psql-va-cac-lenh-meta" title="Permanent link">&para;</a></h3>
+<p><strong><code>psql</code></strong> là máy khách dòng lệnh chính thức của PostgreSQL. Trong <code>psql</code> bạn gõ được hai loại câu, và phân biệt chúng rất dễ:</p>
+<ul>
+<li>Câu <strong>SQL</strong> — luôn kết thúc bằng dấu <strong>chấm phẩy</strong> <code>;</code>. Đây là câu gửi tới máy chủ.</li>
+<li><strong>Lệnh meta</strong> (<em>meta-command</em>) — luôn bắt đầu bằng dấu <strong>sổ chéo ngược</strong> <code>\</code>, <strong>không</strong> có dấu chấm phẩy. Đây là lệnh của riêng <code>psql</code>, máy chủ không nhìn thấy.</li>
+</ul>
+<p>Bốn lệnh meta bạn sẽ dùng hằng ngày:</p>
+<table>
+<thead>
+<tr>
+<th>Lệnh</th>
+<th>Viết tắt của</th>
+<th>Làm gì</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>\l</code></td>
+<td><em>list</em></td>
+<td>Liệt kê mọi database trong cụm</td>
+</tr>
+<tr>
+<td><code>\dt</code></td>
+<td><em>describe tables</em></td>
+<td>Liệt kê các bảng trong database hiện tại</td>
+</tr>
+<tr>
+<td><code>\d ten_bang</code></td>
+<td><em>describe</em></td>
+<td>Mô tả một bảng: cột, kiểu, khoá, ràng buộc</td>
+</tr>
+<tr>
+<td><code>\q</code></td>
+<td><em>quit</em></td>
+<td>Thoát <code>psql</code></td>
+</tr>
+</tbody>
+</table>
+<p>Hai lệnh hữu ích nữa: <code>\c ten_database</code> để <strong>chuyển</strong> sang database khác mà không cần thoát ra, và <code>\?</code> để xem toàn bộ danh sách lệnh meta.</p>
+<div class="admonition note">
+<p class="admonition-title"><code>\dt</code> và <code>\d</code> chính là từ điển dữ liệu</p>
+<p>Nhớ <a href="../03-dbms-la-gi/">Bài 3</a> chứ? <code>\dt</code> không có phép màu nào cả — nó chỉ là một câu <code>SELECT</code> dựng sẵn, chạy trên <strong>từ điển dữ liệu</strong>. Gõ <code>\dt</code> trong <code>psql</code> sau khi bật <code>\set ECHO_HIDDEN on</code> là bạn nhìn thấy câu SQL thật phía sau.</p>
+</div>
+<h3 id="bang-thuat-ngu">Bảng thuật ngữ<a class="headerlink" href="#bang-thuat-ngu" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Tiếng Việt</th>
+<th>English</th>
+<th>Nghĩa dễ hiểu</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Máy chủ</td>
+<td><em>server</em></td>
+<td>Chương trình chạy ngầm liên tục, chờ phục vụ</td>
+</tr>
+<tr>
+<td>Máy khách</td>
+<td><em>client</em></td>
+<td>Chương trình kết nối tới máy chủ để nhờ việc</td>
+</tr>
+<tr>
+<td>Máy khách – máy chủ</td>
+<td><em>client–server</em></td>
+<td>Mô hình nhiều máy khách dùng chung một máy chủ</td>
+</tr>
+<tr>
+<td>Cổng</td>
+<td><em>port</em></td>
+<td>Con số phân biệt các máy chủ trên cùng một máy; PostgreSQL là 5432</td>
+</tr>
+<tr>
+<td>Vai trò</td>
+<td><em>role</em></td>
+<td>Người dùng của PostgreSQL; mặc định có <code>postgres</code></td>
+</tr>
+<tr>
+<td>Cụm cơ sở dữ liệu</td>
+<td><em>cluster</em></td>
+<td>Tập các database do một máy chủ PostgreSQL quản lý</td>
+</tr>
+<tr>
+<td>Lệnh meta</td>
+<td><em>meta-command</em></td>
+<td>Lệnh riêng của <code>psql</code>, bắt đầu bằng <code>\</code>, không có <code>;</code></td>
+</tr>
+<tr>
+<td>Vùng chứa</td>
+<td><em>container</em></td>
+<td>Một "hộp" chạy sẵn phần mềm, độc lập với máy thật</td>
+</tr>
+<tr>
+<td>Ảnh</td>
+<td><em>image</em></td>
+<td>Khuôn mẫu để tạo ra vùng chứa</td>
+</tr>
+</tbody>
+</table>
+<h2 id="so-o">🖼️ Sơ đồ<a class="headerlink" href="#so-o" title="Permanent link">&para;</a></h2>
+<p>Đường đi của một câu lệnh, từ ngón tay bạn tới ổ đĩa và quay về:</p>
+<pre class="mermaid"><code>flowchart LR
+    subgraph MK["💻 MÁY KHÁCH"]
+        P["&lt;b&gt;psql&lt;/b&gt;&lt;br/&gt;hoặc pgAdmin&lt;br/&gt;hoặc ứng dụng web"]
+    end
+
+    subgraph MC["🖥️ MÁY CHỦ PostgreSQL — cổng 5432"]
+        direction TB
+        AUTH["&lt;b&gt;1. Xác thực&lt;/b&gt;&lt;br/&gt;vai trò + mật khẩu"]
+        PARSE["&lt;b&gt;2. Phân tích câu lệnh&lt;/b&gt;&lt;br/&gt;rồi tối ưu"]
+        EXEC["&lt;b&gt;3. Thực thi&lt;/b&gt;&lt;br/&gt;kiểm tra ràng buộc"]
+        AUTH --&gt; PARSE --&gt; EXEC
+    end
+
+    subgraph CUM["🗄️ CỤM CƠ SỞ DỮ LIỆU"]
+        direction TB
+        DB1[("postgres&lt;br/&gt;&lt;i&gt;database quản trị&lt;/i&gt;")]
+        DB2[("&lt;b&gt;truong_hoc&lt;/b&gt;&lt;br/&gt;&lt;i&gt;10 bảng của khóa học&lt;/i&gt;")]
+    end
+
+    P --&gt;|"SELECT count&amp;#42; FROM hoc_sinh;"| AUTH
+    EXEC --&gt; DB2
+    DB2 -.-&gt;|"kết quả: 40"| P
+
+    style MK fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
+    style MC fill:#fff8e1,stroke:#f9a825,stroke-width:2px
+    style CUM fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
+    style DB2 fill:#c8e6c9,stroke:#1b5e20,stroke-width:2px</code></pre>
+<p>Và đây là toàn bộ chặng đường của bài này, sáu bước:</p>
+<pre class="mermaid"><code>flowchart TB
+    B1["&lt;b&gt;Bước 1&lt;/b&gt;&lt;br/&gt;Cài PostgreSQL 16&lt;br/&gt;&lt;i&gt;Docker hoặc apt hoặc installer&lt;/i&gt;"]
+    B2["&lt;b&gt;Bước 2&lt;/b&gt;&lt;br/&gt;Kết nối bằng psql&lt;br/&gt;&lt;i&gt;ở đâu · là ai&lt;/i&gt;"]
+    B3["&lt;b&gt;Bước 3&lt;/b&gt;&lt;br/&gt;Tạo database truong_hoc"]
+    B4["&lt;b&gt;Bước 4&lt;/b&gt;&lt;br/&gt;Tải dataset từ GitHub"]
+    B5["&lt;b&gt;Bước 5&lt;/b&gt;&lt;br/&gt;Nạp 02-chuan-hoa.sql"]
+    B6["&lt;b&gt;Bước 6&lt;/b&gt;&lt;br/&gt;✅ Tự kiểm tra&lt;br/&gt;&lt;i&gt;hoc_sinh phải có 40 dòng&lt;/i&gt;"]
+
+    B1 --&gt; B2 --&gt; B3 --&gt; B4 --&gt; B5 --&gt; B6
+
+    style B1 fill:#e3f2fd,stroke:#1565c0
+    style B2 fill:#e3f2fd,stroke:#1565c0
+    style B3 fill:#fff8e1,stroke:#f9a825
+    style B4 fill:#fff8e1,stroke:#f9a825
+    style B5 fill:#fff8e1,stroke:#f9a825
+    style B6 fill:#c8e6c9,stroke:#1b5e20,stroke-width:3px</code></pre>
+<h2 id="thuc-hanh">💻 Thực hành<a class="headerlink" href="#thuc-hanh" title="Permanent link">&para;</a></h2>
+<h3 id="buoc-1-cai-postgresql-16">Bước 1 — Cài PostgreSQL 16<a class="headerlink" href="#buoc-1-cai-postgresql-16" title="Permanent link">&para;</a></h3>
+<p>Chọn <strong>một</strong> trong ba cách dưới đây. Không cần làm cả ba.</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:3"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><input id="__tabbed_1_3" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Docker (khuyến nghị)</label><label for="__tabbed_1_2">Ubuntu / Debian (apt)</label><label for="__tabbed_1_3">Windows (installer)</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p>Cách này được khuyến nghị vì một lý do rất thực tế: nếu có gì hỏng, bạn <strong>xoá đi làm lại trong 30 giây</strong> mà máy tính không hề bị bẩn thêm một tệp nào.</p>
+<p>Trước tiên cài <a href="https://www.docker.com/products/docker-desktop/">Docker Desktop</a> (Windows, macOS) hoặc Docker Engine (Linux). Kiểm tra đã cài được chưa:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>docker<span class="w"> </span>--version
+</span></code></pre></div>
+<p>Tạo và chạy một máy chủ PostgreSQL 16:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span>--name<span class="w"> </span>pg-khoahoc<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>-e<span class="w"> </span><span class="nv">POSTGRES_PASSWORD</span><span class="o">=</span>hoc<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>-e<span class="w"> </span><span class="nv">POSTGRES_DB</span><span class="o">=</span>truong_hoc<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>-p<span class="w"> </span><span class="m">5432</span>:5432<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span>-v<span class="w"> </span>pg-khoahoc-data:/var/lib/postgresql/data<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span>postgres:16
+</span></code></pre></div>
+<p>Đọc từng dòng để hiểu, đừng chép suông:</p>
+<table>
+<thead>
+<tr>
+<th>Tham số</th>
+<th>Nghĩa</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-d</code></td>
+<td>Chạy ngầm (<em>detached</em>), không chiếm cửa sổ dòng lệnh</td>
+</tr>
+<tr>
+<td><code>--name pg-khoahoc</code></td>
+<td>Đặt tên cho <strong>vùng chứa</strong>, để lát nữa gọi lại cho dễ</td>
+</tr>
+<tr>
+<td><code>-e POSTGRES_PASSWORD=hoc</code></td>
+<td>Mật khẩu của vai trò <code>postgres</code> là <code>hoc</code></td>
+</tr>
+<tr>
+<td><code>-e POSTGRES_DB=truong_hoc</code></td>
+<td>Tạo sẵn luôn database <code>truong_hoc</code> — <strong>bỏ qua được Bước 3</strong></td>
+</tr>
+<tr>
+<td><code>-p 5432:5432</code></td>
+<td>Nối cổng 5432 của máy bạn vào cổng 5432 trong vùng chứa</td>
+</tr>
+<tr>
+<td><code>-v pg-khoahoc-data:/...</code></td>
+<td>Giữ dữ liệu lại kể cả khi xoá vùng chứa</td>
+</tr>
+<tr>
+<td><code>postgres:16</code></td>
+<td><strong>Ảnh</strong> cần dùng — đúng phiên bản 16 của khóa học</td>
+</tr>
+</tbody>
+</table>
+<p>Kiểm tra đang chạy:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>docker<span class="w"> </span>ps
+</span></code></pre></div>
+<p>Cột <code>STATUS</code> phải hiện <code>Up ...</code>. Nếu không thấy dòng nào, xem nhật ký để biết vì sao:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>docker<span class="w"> </span>logs<span class="w"> </span>pg-khoahoc
+</span></code></pre></div>
+<p>Hai lệnh dùng hằng ngày về sau — tắt máy rồi bật lại thì vùng chứa không tự chạy, bạn khởi động lại bằng:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>docker<span class="w"> </span>start<span class="w"> </span>pg-khoahoc
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>docker<span class="w"> </span>stop<span class="w"> </span>pg-khoahoc
+</span></code></pre></div>
+<div class="admonition tip">
+<p class="admonition-title">Muốn làm lại từ đầu?</p>
+<p><div class="highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>docker<span class="w"> </span>rm<span class="w"> </span>-f<span class="w"> </span>pg-khoahoc
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>docker<span class="w"> </span>volume<span class="w"> </span>rm<span class="w"> </span>pg-khoahoc-data
+</span></code></pre></div>
+Rồi chạy lại lệnh <code>docker run</code> ở trên. Đây là lợi thế lớn nhất của cách này.</p>
+</div>
+</div>
+<div class="tabbed-block">
+<p>Cách này cài thẳng vào máy, phù hợp nếu bạn dùng Linux và không muốn đụng tới Docker.</p>
+<div class="highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>sudo<span class="w"> </span>apt<span class="w"> </span>update
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>postgresql-16<span class="w"> </span>postgresql-client-16
+</span></code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">Nếu apt báo không tìm thấy gói <code>postgresql-16</code></p>
+<p>Kho phần mềm mặc định của bản Ubuntu bạn đang dùng có thể chứa phiên bản khác. Thêm kho chính thức của PostgreSQL rồi cài lại:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>curl<span class="w"> </span>ca-certificates
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>sudo<span class="w"> </span>install<span class="w"> </span>-d<span class="w"> </span>/usr/share/postgresql-common/pgdg
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>sudo<span class="w"> </span>curl<span class="w"> </span>-o<span class="w"> </span>/usr/share/postgresql-common/pgdg/apt.postgresql.org.asc<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span>--fail<span class="w"> </span>https://www.postgresql.org/media/keys/ACCC4CF8.asc
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">"deb [signed-by=/usr/share/postgresql-common/pgdg/apt.postgresql.org.asc] \</span>
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="s2">  https://apt.postgresql.org/pub/repos/apt </span><span class="k">$(</span>lsb_release<span class="w"> </span>-cs<span class="k">)</span><span class="s2">-pgdg main"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>sudo<span class="w"> </span>tee<span class="w"> </span>/etc/apt/sources.list.d/pgdg.list
+</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>sudo<span class="w"> </span>apt<span class="w"> </span>update
+</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>postgresql-16
+</span></code></pre></div>
+</div>
+<p>Kiểm tra máy chủ đã chạy chưa:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>status<span class="w"> </span>postgresql
+</span></code></pre></div>
+<p>Khi cài bằng <code>apt</code>, vai trò <code>postgres</code> <strong>chưa có mật khẩu</strong>. Đặt mật khẩu cho nó:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>sudo<span class="w"> </span>-u<span class="w"> </span>postgres<span class="w"> </span>psql<span class="w"> </span>-c<span class="w"> </span><span class="s2">"ALTER ROLE postgres WITH PASSWORD 'hoc';"</span>
+</span></code></pre></div>
+<p>Giải thích: <code>sudo -u postgres</code> nghĩa là "chạy lệnh này với tư cách người dùng hệ điều hành tên <code>postgres</code>" — người dùng này được cài đặt tự động tạo ra và được phép vào thẳng, không cần mật khẩu.</p>
+<p>Bật máy chủ tự chạy mỗi lần khởi động máy:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--now<span class="w"> </span>postgresql
+</span></code></pre></div>
+</div>
+<div class="tabbed-block">
+<ol>
+<li>Tải bộ cài từ <a href="https://www.postgresql.org/download/windows/">postgresql.org/download/windows</a> — chọn <strong>PostgreSQL 16</strong>.</li>
+<li>Chạy tệp <code>.exe</code>. Ở màn hình <strong>Select Components</strong>, giữ nguyên các mục được chọn sẵn; đặc biệt <strong>phải có <code>Command Line Tools</code></strong> — đó chính là <code>psql</code>.</li>
+<li>Màn hình <strong>Password</strong>: nhập mật khẩu cho vai trò <code>postgres</code>. Khóa học này dùng <code>hoc</code>. <strong>Ghi lại mật khẩu đó</strong> — không có cách xem lại.</li>
+<li>Màn hình <strong>Port</strong>: để nguyên <code>5432</code>.</li>
+<li>Màn hình <strong>Locale</strong>: chọn <code>Vietnamese, Vietnam</code> hoặc để <code>[Default locale]</code>; cả hai đều chạy được.</li>
+<li>Bấm Next cho tới khi cài xong. Có thể bỏ qua <strong>Stack Builder</strong> ở bước cuối.</li>
+</ol>
+<p>Sau khi cài, mở <strong>SQL Shell (psql)</strong> từ Start Menu. Nó sẽ hỏi bốn thứ; cứ nhấn Enter để lấy giá trị mặc định trong ngoặc vuông, trừ mật khẩu:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Server [localhost]:
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>Database [postgres]:
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>Port [5432]:
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>Username [postgres]:
+</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>Password for user postgres: hoc
+</span></code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Muốn gõ <code>psql</code> từ PowerShell thông thường</p>
+<p>Phải thêm thư mục chứa <code>psql</code> vào biến môi trường <code>Path</code>, thường là:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>C:\Program Files\PostgreSQL\16\bin
+</span></code></pre></div>
+<p>Vào <em>Settings → System → About → Advanced system settings → Environment Variables</em>, sửa <code>Path</code>, thêm dòng trên, rồi <strong>mở lại</strong> PowerShell.</p>
+</div>
+</div>
+</div>
+</div>
+<h3 id="buoc-2-ket-noi-bang-psql">Bước 2 — Kết nối bằng psql<a class="headerlink" href="#buoc-2-ket-noi-bang-psql" title="Permanent link">&para;</a></h3>
+<div class="tabbed-set tabbed-alternate" data-tabs="2:3"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><input id="__tabbed_2_3" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">Docker (khuyến nghị)</label><label for="__tabbed_2_2">Ubuntu / Debian (apt)</label><label for="__tabbed_2_3">Windows (installer)</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>pg-khoahoc<span class="w"> </span>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-d<span class="w"> </span>truong_hoc
+</span></code></pre></div>
+<p><code>docker exec -it pg-khoahoc</code> nghĩa là "chạy lệnh sau đây <strong>bên trong</strong> vùng chứa tên <code>pg-khoahoc</code>". Nhờ vậy bạn không cần cài <code>psql</code> lên máy thật.</p>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>psql<span class="w"> </span>-h<span class="w"> </span>localhost<span class="w"> </span>-p<span class="w"> </span><span class="m">5432</span><span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-d<span class="w"> </span>postgres
+</span></code></pre></div>
+</div>
+<div class="tabbed-block">
+<p>Mở <strong>SQL Shell (psql)</strong> từ Start Menu, rồi trả lời bốn câu hỏi như ở Bước 1.</p>
+<p>Hoặc, nếu đã thêm vào <code>Path</code>:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>psql -h localhost -p 5432 -U postgres -d postgres
+</span></code></pre></div>
+</div>
+</div>
+</div>
+<p>Ba chữ cái cần nhớ, chúng chính là "câu thần chú" ở trên:</p>
+<table>
+<thead>
+<tr>
+<th>Tham số</th>
+<th>Nghĩa</th>
+<th>Ứng với</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-h</code> và <code>-p</code></td>
+<td><em>host</em>, <em>port</em></td>
+<td><strong>Ở đâu</strong></td>
+</tr>
+<tr>
+<td><code>-U</code></td>
+<td><em>user</em></td>
+<td><strong>Là ai</strong></td>
+</tr>
+<tr>
+<td><code>-d</code></td>
+<td><em>database</em></td>
+<td><strong>Vào đâu</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Kết nối thành công, dấu nhắc đổi thành tên database kèm dấu thăng:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>psql (16.x)
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>Type "help" for help.
+</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>
+</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>truong_hoc=#
+</span></code></pre></div>
+<p>Chào hỏi máy chủ một câu:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">version</span><span class="p">();</span>
+</span></code></pre></div>
+<p>Rồi hỏi xem mình đang đứng ở đâu và là ai:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">current_database</span><span class="p">()</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">dang_o_database</span><span class="p">,</span><span class="w"> </span><span class="k">current_user</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">dang_la_ai</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Hai câu này về sau sẽ cứu bạn rất nhiều lần — mỗi khi thấy "bảng không tồn tại", hãy gõ câu thứ hai trước tiên.</p>
+<h3 id="buoc-3-tao-database-truong_hoc">Bước 3 — Tạo database <code>truong_hoc</code><a class="headerlink" href="#buoc-3-tao-database-truong_hoc" title="Permanent link">&para;</a></h3>
+<div class="admonition success">
+<p class="admonition-title">Dùng Docker thì bỏ qua bước này</p>
+<p>Tham số <code>-e POSTGRES_DB=truong_hoc</code> ở Bước 1 đã tạo sẵn rồi.</p>
+</div>
+<p>Với cách cài <code>apt</code> hoặc Windows, bạn đang ở trong database <code>postgres</code>. Tạo database mới:</p>
+<!-- sql:khong-chay -->
+<div class="highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">DATABASE</span><span class="w"> </span><span class="n">truong_hoc</span>
+</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="w">    </span><span class="k">ENCODING</span><span class="w"> </span><span class="s1">'UTF8'</span>
+</span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="w">    </span><span class="k">TEMPLATE</span><span class="w"> </span><span class="n">template0</span><span class="p">;</span>
+</span></code></pre></div>
+<p><code>ENCODING 'UTF8'</code> là bắt buộc với khóa học này — dữ liệu có dấu tiếng Việt.</p>
+<p>Rồi <strong>chuyển</strong> sang database vừa tạo bằng lệnh meta:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>\c truong_hoc
+</span></code></pre></div>
+<p>Dấu nhắc phải đổi thành <code>truong_hoc=#</code>. Nếu vẫn là <code>postgres=#</code> thì bạn đang đứng sai chỗ, và mọi bước sau sẽ thất bại.</p>
+<h3 id="buoc-4-tai-dataset">Bước 4 — Tải dataset<a class="headerlink" href="#buoc-4-tai-dataset" title="Permanent link">&para;</a></h3>
+<p>Ba tệp dataset nằm trong <a href="https://github.com/hungnguyen010518/database-tu-a-z/tree/main/dataset">thư mục <code>dataset/</code> trên GitHub</a>. Xem trang <a href="../../dataset/">Database mẫu</a> để biết mỗi tệp chứa gì.</p>
+<p>Cách gọn nhất là tải cả kho về:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/hungnguyen010518/database-tu-a-z.git
+</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="nb">cd</span><span class="w"> </span>database-tu-a-z
+</span></code></pre></div>
+<p>Không có <code>git</code> thì bấm nút <strong>Code → Download ZIP</strong> trên GitHub rồi giải nén.</p>
+<h3 id="buoc-5-nap-02-chuan-hoasql">Bước 5 — Nạp <code>02-chuan-hoa.sql</code><a class="headerlink" href="#buoc-5-nap-02-chuan-hoasql" title="Permanent link">&para;</a></h3>
+<p>Bài này chỉ nạp <strong>một</strong> tệp: <code>dataset/02-chuan-hoa.sql</code>. Hai tệp còn lại để dành cho Cấp 2 và Cấp 4.</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="3:3"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio" /><input id="__tabbed_3_2" name="__tabbed_3" type="radio" /><input id="__tabbed_3_3" name="__tabbed_3" type="radio" /><div class="tabbed-labels"><label for="__tabbed_3_1">Docker (khuyến nghị)</label><label for="__tabbed_3_2">Ubuntu / Debian (apt)</label><label for="__tabbed_3_3">Windows (installer)</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-i<span class="w"> </span>pg-khoahoc<span class="w"> </span>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-d<span class="w"> </span>truong_hoc<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="w">  </span>-v<span class="w"> </span><span class="nv">ON_ERROR_STOP</span><span class="o">=</span><span class="m">1</span><span class="w"> </span>&lt;<span class="w"> </span>dataset/02-chuan-hoa.sql
+</span></code></pre></div>
+<p>Lưu ý <code>-i</code> chứ không phải <code>-it</code>: ở đây ta <strong>đẩy tệp vào</strong> qua dấu <code>&lt;</code>, không gõ tay.</p>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>psql<span class="w"> </span>-h<span class="w"> </span>localhost<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-d<span class="w"> </span>truong_hoc<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-23-2"><a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a><span class="w">  </span>-v<span class="w"> </span><span class="nv">ON_ERROR_STOP</span><span class="o">=</span><span class="m">1</span><span class="w"> </span>-f<span class="w"> </span>dataset/02-chuan-hoa.sql
+</span></code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>psql -h localhost -U postgres -d truong_hoc -v ON_ERROR_STOP=1 -f dataset\02-chuan-hoa.sql
+</span></code></pre></div>
+</div>
+</div>
+</div>
+<p><code>-v ON_ERROR_STOP=1</code> rất đáng nhớ: mặc định <code>psql</code> gặp lỗi vẫn chạy tiếp những câu sau, để lại một database nạp dở mà bạn không hay biết. Có tham số này, nó <strong>dừng ngay</strong> ở câu lỗi đầu tiên.</p>
+<p>Màn hình sẽ trôi qua hàng loạt dòng <code>DROP TABLE</code>, <code>CREATE TABLE</code>, <code>INSERT 0 40</code>… Đó là bình thường.</p>
+<h3 id="buoc-6-tu-kiem-tra">Bước 6 — Tự kiểm tra<a class="headerlink" href="#buoc-6-tu-kiem-tra" title="Permanent link">&para;</a></h3>
+<p>Đây là phần <strong>không được bỏ qua</strong>. Vào lại <code>psql</code> với database <code>truong_hoc</code> rồi làm ba việc sau.</p>
+<p><strong>Việc 1 — Đếm bảng.</strong> Gõ lệnh meta:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>\dt
+</span></code></pre></div>
+<p>Phải hiện đúng <strong>10</strong> bảng: <code>diem</code>, <code>diem_danh</code>, <code>giao_vien</code>, <code>hoc_sinh</code>, <code>lop</code>, <code>mon_hoc</code>, <code>muon_sach</code>, <code>phan_cong_day</code>, <code>phu_huynh</code>, <code>sach</code>.</p>
+<p><strong>Việc 2 — Xem cấu trúc một bảng.</strong></p>
+<div class="highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>\d hoc_sinh
+</span></code></pre></div>
+<p>Bạn sẽ thấy 6 cột, khoá chính <code>ma_hs</code>, và một khoá ngoại trỏ tới <code>lop</code>. Chính là lược đồ mà <a href="../03-dbms-la-gi/">Bài 3</a> đã nói.</p>
+<p><strong>Việc 3 — Đếm dữ liệu.</strong> Câu quan trọng nhất của cả bài:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_hoc_sinh</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span><span class="p">;</span>
+</span></code></pre></div>
+<table>
+<thead>
+<tr>
+<th>so_hoc_sinh</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>40</td>
+</tr>
+</tbody>
+</table>
+<p>Nếu ra đúng <strong>40</strong>, bạn đã xong. Chúc mừng — bạn vừa có một cơ sở dữ liệu thật đầu tiên trong đời.</p>
+<p>Muốn chắc chắn hơn nữa, kiểm tra toàn bộ mười bảng một lần:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="s1">'giao_vien'</span><span class="w">     </span><span class="k">AS</span><span class="w"> </span><span class="n">bang</span><span class="p">,</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_dong</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">giao_vien</span>
+</span><span id="__span-28-2"><a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a><span class="k">UNION</span><span class="w"> </span><span class="k">ALL</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="s1">'lop'</span><span class="p">,</span><span class="w">           </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">lop</span>
+</span><span id="__span-28-3"><a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a><span class="k">UNION</span><span class="w"> </span><span class="k">ALL</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="s1">'hoc_sinh'</span><span class="p">,</span><span class="w">      </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span>
+</span><span id="__span-28-4"><a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a><span class="k">UNION</span><span class="w"> </span><span class="k">ALL</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="s1">'phu_huynh'</span><span class="p">,</span><span class="w">     </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">phu_huynh</span>
+</span><span id="__span-28-5"><a id="__codelineno-28-5" name="__codelineno-28-5" href="#__codelineno-28-5"></a><span class="k">UNION</span><span class="w"> </span><span class="k">ALL</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="s1">'mon_hoc'</span><span class="p">,</span><span class="w">       </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">mon_hoc</span>
+</span><span id="__span-28-6"><a id="__codelineno-28-6" name="__codelineno-28-6" href="#__codelineno-28-6"></a><span class="k">UNION</span><span class="w"> </span><span class="k">ALL</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="s1">'phan_cong_day'</span><span class="p">,</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">phan_cong_day</span>
+</span><span id="__span-28-7"><a id="__codelineno-28-7" name="__codelineno-28-7" href="#__codelineno-28-7"></a><span class="k">UNION</span><span class="w"> </span><span class="k">ALL</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="s1">'diem'</span><span class="p">,</span><span class="w">          </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">diem</span>
+</span><span id="__span-28-8"><a id="__codelineno-28-8" name="__codelineno-28-8" href="#__codelineno-28-8"></a><span class="k">UNION</span><span class="w"> </span><span class="k">ALL</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="s1">'sach'</span><span class="p">,</span><span class="w">          </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">sach</span>
+</span><span id="__span-28-9"><a id="__codelineno-28-9" name="__codelineno-28-9" href="#__codelineno-28-9"></a><span class="k">UNION</span><span class="w"> </span><span class="k">ALL</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="s1">'muon_sach'</span><span class="p">,</span><span class="w">     </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">muon_sach</span>
+</span><span id="__span-28-10"><a id="__codelineno-28-10" name="__codelineno-28-10" href="#__codelineno-28-10"></a><span class="k">UNION</span><span class="w"> </span><span class="k">ALL</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="s1">'diem_danh'</span><span class="p">,</span><span class="w">     </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">diem_danh</span>
+</span><span id="__span-28-11"><a id="__codelineno-28-11" name="__codelineno-28-11" href="#__codelineno-28-11"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">bang</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Kết quả phải khớp <strong>chính xác</strong> bảng dưới đây:</p>
+<table>
+<thead>
+<tr>
+<th>bang</th>
+<th>so_dong</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>diem</td>
+<td>480</td>
+</tr>
+<tr>
+<td>diem_danh</td>
+<td>200</td>
+</tr>
+<tr>
+<td>giao_vien</td>
+<td>8</td>
+</tr>
+<tr>
+<td>hoc_sinh</td>
+<td>40</td>
+</tr>
+<tr>
+<td>lop</td>
+<td>6</td>
+</tr>
+<tr>
+<td>mon_hoc</td>
+<td>9</td>
+</tr>
+<tr>
+<td>muon_sach</td>
+<td>50</td>
+</tr>
+<tr>
+<td>phan_cong_day</td>
+<td>64</td>
+</tr>
+<tr>
+<td>phu_huynh</td>
+<td>45</td>
+</tr>
+<tr>
+<td>sach</td>
+<td>20</td>
+</tr>
+</tbody>
+</table>
+<p>Lệch một con số nghĩa là tệp nạp chưa hết. Chạy lại Bước 5 — tệp <code>02-chuan-hoa.sql</code> bắt đầu bằng <code>DROP TABLE IF EXISTS</code> nên nạp lại bao nhiêu lần cũng an toàn.</p>
+<p>Cuối cùng, thoát ra:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-29-1"><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>\q
+</span></code></pre></div>
+<h3 id="chay-thu-mot-cau-co-y-nghia">Chạy thử một câu có ý nghĩa<a class="headerlink" href="#chay-thu-mot-cau-co-y-nghia" title="Permanent link">&para;</a></h3>
+<p>Thưởng cho công sức vừa rồi — câu này trả lời một câu hỏi thật:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-30-1"><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">ten_lop</span><span class="p">,</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="n">h</span><span class="p">.</span><span class="n">ma_hs</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">si_so</span>
+</span><span id="__span-30-2"><a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a><span class="k">FROM</span><span class="w"> </span><span class="n">lop</span><span class="w"> </span><span class="n">l</span>
+</span><span id="__span-30-3"><a id="__codelineno-30-3" name="__codelineno-30-3" href="#__codelineno-30-3"></a><span class="k">JOIN</span><span class="w"> </span><span class="n">hoc_sinh</span><span class="w"> </span><span class="n">h</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">ma_lop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">ma_lop</span>
+</span><span id="__span-30-4"><a id="__codelineno-30-4" name="__codelineno-30-4" href="#__codelineno-30-4"></a><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">ten_lop</span>
+</span><span id="__span-30-5"><a id="__codelineno-30-5" name="__codelineno-30-5" href="#__codelineno-30-5"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">ten_lop</span><span class="p">;</span>
+</span></code></pre></div>
+<table>
+<thead>
+<tr>
+<th>ten_lop</th>
+<th>si_so</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>8A1</td>
+<td>6</td>
+</tr>
+<tr>
+<td>8A2</td>
+<td>6</td>
+</tr>
+<tr>
+<td>8A3</td>
+<td>8</td>
+</tr>
+<tr>
+<td>9A1</td>
+<td>6</td>
+</tr>
+<tr>
+<td>9A2</td>
+<td>7</td>
+</tr>
+<tr>
+<td>9A3</td>
+<td>7</td>
+</tr>
+</tbody>
+</table>
+<p>Chưa hiểu <code>JOIN</code> và <code>GROUP BY</code> cũng không sao — Bài 25 và Bài 27 sẽ dạy. Điều đáng nói là: câu hỏi mà lớp trưởng ở <a href="../01-du-lieu-va-thong-tin/">Bài 1</a> phải ngồi đếm cả buổi chiều, bây giờ bạn trả lời trong vài mili giây.</p>
+<h2 id="loi-thuong-gap">⚠️ Lỗi thường gặp<a class="headerlink" href="#loi-thuong-gap" title="Permanent link">&para;</a></h2>
+<div class="admonition warning">
+<p class="admonition-title">Lỗi 1: <code>could not connect to server</code> — cổng 5432 đã bị chiếm</p>
+<p>Thông báo trên Linux thường là:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-31-1"><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a>psql: error: connection to server at "localhost" (127.0.0.1), port 5432 failed:
+</span><span id="__span-31-2"><a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a>Connection refused
+</span></code></pre></div>
+<p>Còn Docker thì báo ngay khi <code>docker run</code>:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-32-1"><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a>Error response from daemon: driver failed programming external connectivity on endpoint
+</span><span id="__span-32-2"><a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a>pg-khoahoc: Bind for 0.0.0.0:5432 failed: port is already allocated
+</span></code></pre></div>
+<p><strong>Nguyên nhân</strong> thường là một trong hai: máy chủ PostgreSQL chưa chạy, hoặc đã có một PostgreSQL khác (cài từ trước) đang chiếm cổng 5432.</p>
+<p><strong>Cách kiểm tra</strong> xem ai đang giữ cổng:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-33-1"><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a>sudo<span class="w"> </span>lsof<span class="w"> </span>-i<span class="w"> </span>:5432<span class="w">          </span><span class="c1"># Linux / macOS</span>
+</span><span id="__span-33-2"><a id="__codelineno-33-2" name="__codelineno-33-2" href="#__codelineno-33-2"></a>netstat<span class="w"> </span>-ano<span class="w"> </span><span class="p">|</span><span class="w"> </span>findstr<span class="w"> </span><span class="m">5432</span><span class="w"> </span><span class="c1"># Windows</span>
+</span></code></pre></div>
+<p><strong>Cách sửa.</strong> Nếu chưa chạy thì bật lên:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-34-1"><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a>docker<span class="w"> </span>start<span class="w"> </span>pg-khoahoc<span class="w">        </span><span class="c1"># cách Docker</span>
+</span><span id="__span-34-2"><a id="__codelineno-34-2" name="__codelineno-34-2" href="#__codelineno-34-2"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>start<span class="w"> </span>postgresql<span class="w"> </span><span class="c1"># cách apt</span>
+</span></code></pre></div>
+<p>Nếu đã có cái khác chiếm cổng, đơn giản nhất là <strong>dùng cổng khác</strong> cho vùng chứa của khóa học:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-35-1"><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a>docker<span class="w"> </span>rm<span class="w"> </span>-f<span class="w"> </span>pg-khoahoc
+</span><span id="__span-35-2"><a id="__codelineno-35-2" name="__codelineno-35-2" href="#__codelineno-35-2"></a>docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </span>--name<span class="w"> </span>pg-khoahoc<span class="w"> </span>-e<span class="w"> </span><span class="nv">POSTGRES_PASSWORD</span><span class="o">=</span>hoc<span class="w"> </span>-e<span class="w"> </span><span class="nv">POSTGRES_DB</span><span class="o">=</span>truong_hoc<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-35-3"><a id="__codelineno-35-3" name="__codelineno-35-3" href="#__codelineno-35-3"></a><span class="w">  </span>-p<span class="w"> </span><span class="m">5433</span>:5432<span class="w"> </span>postgres:16
+</span></code></pre></div>
+<p>Từ đó về sau nhớ thêm <code>-p 5433</code> vào mọi lệnh <code>psql</code> chạy từ máy thật.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Lỗi 2: <code>password authentication failed</code> — sai mật khẩu, hoặc nhầm hệ người dùng</p>
+<div class="highlight"><pre><span></span><code><span id="__span-36-1"><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a>psql: error: connection to server at "localhost" (127.0.0.1), port 5432 failed:
+</span><span id="__span-36-2"><a id="__codelineno-36-2" name="__codelineno-36-2" href="#__codelineno-36-2"></a>FATAL:  password authentication failed for user "postgres"
+</span></code></pre></div>
+<p><strong>Nguyên nhân phổ biến nhất không phải gõ sai phím</strong>, mà là hiểu lầm đã nói ở phần Khái niệm: bạn đang gõ mật khẩu tài khoản <strong>máy tính</strong>, trong khi PostgreSQL có hệ thống vai trò riêng.</p>
+<p><strong>Cách sửa với Docker:</strong> mật khẩu là đúng cái bạn ghi ở <code>POSTGRES_PASSWORD</code>. Quên rồi thì xoá vùng chứa, tạo lại — chỉ mất 30 giây.</p>
+<p><strong>Cách sửa với apt:</strong> vào bằng người dùng hệ điều hành <code>postgres</code> (không cần mật khẩu) rồi đặt lại:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-37-1"><a id="__codelineno-37-1" name="__codelineno-37-1" href="#__codelineno-37-1"></a>sudo<span class="w"> </span>-u<span class="w"> </span>postgres<span class="w"> </span>psql<span class="w"> </span>-c<span class="w"> </span><span class="s2">"ALTER ROLE postgres WITH PASSWORD 'hoc';"</span>
+</span></code></pre></div>
+<p><strong>Cách sửa với Windows:</strong> không có cách xem lại mật khẩu cũ. Chạy lại bộ cài và chọn <em>Repair</em>, hoặc gỡ ra cài lại.</p>
+<p>Một mẹo nhỏ để khỏi phải gõ mật khẩu mỗi lần — đặt biến môi trường:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-38-1"><a id="__codelineno-38-1" name="__codelineno-38-1" href="#__codelineno-38-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">PGPASSWORD</span><span class="o">=</span>hoc
+</span></code></pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Lỗi 3: <code>relation ... does not exist</code> — quên <code>-d truong_hoc</code></p>
+<div class="highlight"><pre><span></span><code><span id="__span-39-1"><a id="__codelineno-39-1" name="__codelineno-39-1" href="#__codelineno-39-1"></a>ERROR:  relation "hoc_sinh" does not exist
+</span><span id="__span-39-2"><a id="__codelineno-39-2" name="__codelineno-39-2" href="#__codelineno-39-2"></a>LINE 1: SELECT count(*) FROM hoc_sinh;
+</span><span id="__span-39-3"><a id="__codelineno-39-3" name="__codelineno-39-3" href="#__codelineno-39-3"></a>                             ^
+</span></code></pre></div>
+<p>Từ <code>relation</code> ở đây chính là "bảng" — nhớ <a href="../04-cac-mo-hinh-du-lieu/">Bài 4</a>: trong mô hình quan hệ, bảng có tên toán học là <em>relation</em>.</p>
+<p><strong>Nguyên nhân:</strong> bạn đang đứng trong database <code>postgres</code> (database quản trị) chứ không phải <code>truong_hoc</code>. Quên <code>-d truong_hoc</code> là <code>psql</code> đưa bạn vào database trùng tên người dùng hoặc <code>postgres</code>.</p>
+<p><strong>Cách kiểm tra</strong> — gõ ngay câu này mỗi khi gặp lỗi trên:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-40-1"><a id="__codelineno-40-1" name="__codelineno-40-1" href="#__codelineno-40-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">current_database</span><span class="p">();</span>
+</span></code></pre></div>
+<p>Nếu nó trả về <code>postgres</code> thì bạn đã tìm ra thủ phạm.</p>
+<p><strong>Cách sửa:</strong> chuyển database ngay trong <code>psql</code>, không cần thoát ra:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-41-1"><a id="__codelineno-41-1" name="__codelineno-41-1" href="#__codelineno-41-1"></a>\c truong_hoc
+</span></code></pre></div>
+<p>Hoặc lần sau kết nối thì thêm <code>-d truong_hoc</code>.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Lỗi 4: Nạp tệp xong mà không có bảng nào</p>
+<p>Triệu chứng: <code>psql ... -f 02-chuan-hoa.sql</code> chạy trôi qua, nhưng <code>\dt</code> báo <code>Did not find any relations.</code></p>
+<p>Nguyên nhân gần như luôn là: tệp đã được nạp vào <strong>database khác</strong> với database bạn đang mở để kiểm tra. Chuyện này xảy ra khi lệnh nạp thiếu <code>-d truong_hoc</code>.</p>
+<p>Cách xác nhận: liệt kê mọi database rồi vào từng cái xem bảng nằm ở đâu.</p>
+<div class="highlight"><pre><span></span><code><span id="__span-42-1"><a id="__codelineno-42-1" name="__codelineno-42-1" href="#__codelineno-42-1"></a>\l
+</span></code></pre></div>
+<p>Và hãy luôn dùng <code>-v ON_ERROR_STOP=1</code> khi nạp tệp. Không có nó, một lỗi ở dòng 20 vẫn để <code>psql</code> chạy tiếp tới dòng 900 và báo "xong" một cách rất thuyết phục.</p>
+</div>
+<h2 id="bai-tap">✍️ Bài tập<a class="headerlink" href="#bai-tap" title="Permanent link">&para;</a></h2>
+<ol>
+<li>
+<p>Giải thích bằng lời của bạn: vì sao PostgreSQL cần một con số cổng, trong khi Word thì không cần?</p>
+</li>
+<li>
+<p>Cho lệnh sau. Hãy chỉ ra từng tham số trả lời cho câu hỏi nào trong ba câu <em>"ở đâu — là ai — vào đâu"</em>:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-43-1"><a id="__codelineno-43-1" name="__codelineno-43-1" href="#__codelineno-43-1"></a>psql<span class="w"> </span>-h<span class="w"> </span>localhost<span class="w"> </span>-p<span class="w"> </span><span class="m">5433</span><span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-d<span class="w"> </span>truong_hoc
+</span></code></pre></div>
+</li>
+<li>
+<p>Bạn gõ <code>SELECT count(*) FROM giao_vien;</code> và nhận <code>ERROR: relation "giao_vien" does not exist</code>. Hãy nêu <strong>hai</strong> nguyên nhân có thể, và với mỗi nguyên nhân, một câu lệnh để xác nhận đúng là nó.</p>
+</li>
+<li>
+<p>Trong các dòng sau, dòng nào là lệnh meta của <code>psql</code>, dòng nào là câu SQL? Dựa vào dấu hiệu gì mà bạn biết?
+   <code>\dt</code> · <code>SELECT 1;</code> · <code>\c truong_hoc</code> · <code>DROP TABLE lop;</code> · <code>\q</code></p>
+</li>
+<li>
+<p>Bạn của bạn nạp dataset xong, <code>\dt</code> hiện đủ 10 bảng, nhưng <code>SELECT count(*) FROM diem;</code> trả về <code>312</code> thay vì <code>480</code>. Chuyện gì nhiều khả năng đã xảy ra, và cách sửa an toàn nhất là gì?</p>
+</li>
+</ol>
+<details class="success">
+<summary>Đáp án</summary>
+<p><strong>Câu 1.</strong></p>
+<p>Word là một <strong>ứng dụng</strong> chạy ngay trên máy bạn: bạn mở tệp, sửa, đóng. Không ai từ máy khác cần "gõ cửa" Word của bạn cả.</p>
+<p>PostgreSQL là một <strong>máy chủ</strong>: nó chạy ngầm liên tục và chờ nhiều máy khách kết nối tới — có thể từ chính máy bạn, có thể từ máy khác trong mạng. Mà một máy tính thường chạy nhiều máy chủ cùng lúc: máy chủ web, máy chủ mail, máy chủ database…</p>
+<p>Cổng là con số để hệ điều hành biết <strong>gói tin gửi tới nên giao cho máy chủ nào</strong>. Giống như địa chỉ toà nhà (địa chỉ IP) là chưa đủ, còn cần số phòng (cổng) mới tới đúng người.</p>
+<p><strong>Câu 2.</strong></p>
+<table>
+<thead>
+<tr>
+<th>Tham số</th>
+<th>Trả lời câu hỏi</th>
+<th>Cụ thể</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-h localhost</code></td>
+<td><strong>Ở đâu</strong></td>
+<td>Máy chủ nằm trên chính máy này</td>
+</tr>
+<tr>
+<td><code>-p 5433</code></td>
+<td><strong>Ở đâu</strong></td>
+<td>Cổng 5433 — không phải mặc định, chắc là do đã đổi cổng vì 5432 bị chiếm</td>
+</tr>
+<tr>
+<td><code>-U postgres</code></td>
+<td><strong>Là ai</strong></td>
+<td>Đăng nhập bằng vai trò <code>postgres</code></td>
+</tr>
+<tr>
+<td><code>-d truong_hoc</code></td>
+<td><strong>Vào đâu</strong></td>
+<td>Vào database <code>truong_hoc</code></td>
+</tr>
+</tbody>
+</table>
+<p>Thiếu mật khẩu trong lệnh là bình thường: <code>psql</code> sẽ hỏi riêng, hoặc lấy từ biến môi trường <code>PGPASSWORD</code>. Ghi mật khẩu thẳng vào dòng lệnh là thói quen xấu vì nó bị lưu vào lịch sử shell.</p>
+<p><strong>Câu 3.</strong></p>
+<p><em>Nguyên nhân 1 — đang đứng sai database.</em> Bạn ở trong <code>postgres</code> chứ không phải <code>truong_hoc</code>.</p>
+<p>Xác nhận:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-44-1"><a id="__codelineno-44-1" name="__codelineno-44-1" href="#__codelineno-44-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">current_database</span><span class="p">();</span>
+</span></code></pre></div>
+<p>Nếu trả về <code>postgres</code> thì đúng là nó. Sửa bằng <code>\c truong_hoc</code>.</p>
+<p><em>Nguyên nhân 2 — dataset chưa được nạp (hoặc nạp dở).</em> Đúng database rồi nhưng bảng chưa tồn tại.</p>
+<p>Xác nhận bằng lệnh meta <code>\dt</code>: nếu hiện <code>Did not find any relations.</code> thì database rỗng. Sửa bằng cách chạy lại Bước 5.</p>
+<p><em>(Một nguyên nhân thứ ba ít gặp hơn: gõ sai tên bảng — ví dụ <code>giao_vien</code> thành <code>giaovien</code>. <code>\dt</code> cũng giúp phát hiện ngay.)</em></p>
+<p><strong>Câu 4.</strong></p>
+<table>
+<thead>
+<tr>
+<th>Dòng</th>
+<th>Loại</th>
+<th>Dấu hiệu</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>\dt</code></td>
+<td>Lệnh meta</td>
+<td>Bắt đầu bằng <code>\</code>, không có <code>;</code></td>
+</tr>
+<tr>
+<td><code>SELECT 1;</code></td>
+<td>SQL</td>
+<td>Kết thúc bằng <code>;</code></td>
+</tr>
+<tr>
+<td><code>\c truong_hoc</code></td>
+<td>Lệnh meta</td>
+<td>Bắt đầu bằng <code>\</code></td>
+</tr>
+<tr>
+<td><code>DROP TABLE lop;</code></td>
+<td>SQL</td>
+<td>Kết thúc bằng <code>;</code></td>
+</tr>
+<tr>
+<td><code>\q</code></td>
+<td>Lệnh meta</td>
+<td>Bắt đầu bằng <code>\</code></td>
+</tr>
+</tbody>
+</table>
+<p>Quy tắc nhận biết: <strong><code>\</code> là của <code>psql</code>, <code>;</code> là của máy chủ.</strong> Lệnh meta được <code>psql</code> xử lý tại chỗ và máy chủ không bao giờ nhìn thấy chúng — đó cũng là lý do bạn không dùng được <code>\dt</code> trong một ứng dụng web hay một công cụ khác.</p>
+<p><strong>Câu 5.</strong></p>
+<p>Nhiều khả năng tệp nạp <strong>bị dừng giữa chừng</strong> mà bạn ấy không để ý: một câu <code>INSERT</code> nào đó lỗi, nhưng vì thiếu <code>-v ON_ERROR_STOP=1</code> nên <code>psql</code> vẫn chạy tiếp và kết thúc êm ru. Các bảng đã được tạo (nên <code>\dt</code> hiện đủ 10) nhưng dữ liệu chỉ vào được một phần.</p>
+<p>Một khả năng khác: tệp đã bị nạp <strong>lồng vào một lần nạp trước đó bị lỗi</strong>, hoặc bị ngắt do mất kết nối giữa chừng.</p>
+<p>Cách sửa an toàn nhất là <strong>nạp lại từ đầu, có bật cờ dừng khi lỗi</strong>:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-45-1"><a id="__codelineno-45-1" name="__codelineno-45-1" href="#__codelineno-45-1"></a>psql<span class="w"> </span>-h<span class="w"> </span>localhost<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-d<span class="w"> </span>truong_hoc<span class="w"> </span>-v<span class="w"> </span><span class="nv">ON_ERROR_STOP</span><span class="o">=</span><span class="m">1</span><span class="w"> </span>-f<span class="w"> </span>dataset/02-chuan-hoa.sql
+</span></code></pre></div>
+<p>Nạp lại hoàn toàn an toàn vì tệp mở đầu bằng một loạt <code>DROP TABLE IF EXISTS ... CASCADE;</code> — nó tự dọn sạch trước khi dựng lại. Lần này, nếu có lỗi thật, <code>psql</code> sẽ dừng ngay và in ra đúng dòng gây lỗi.</p>
+<p>Sau đó chạy lại câu kiểm tra mười bảng ở Bước 6 để đối chiếu đủ mười con số.</p>
+</details>
+<h2 id="tom-tat">🔑 Tóm tắt<a class="headerlink" href="#tom-tat" title="Permanent link">&para;</a></h2>
+<ol>
+<li>PostgreSQL là một <strong>máy chủ</strong> chạy ngầm liên tục, không phải ứng dụng bật/tắt; <code>psql</code> chỉ là một <strong>máy khách</strong> gõ cửa nó.</li>
+<li>Mỗi lần kết nối phải nói đủ ba thứ — <strong>ở đâu</strong> (<code>-h</code>, <code>-p</code>, mặc định cổng 5432), <strong>là ai</strong> (<code>-U</code> + mật khẩu của vai trò PostgreSQL, không phải mật khẩu máy tính), <strong>vào đâu</strong> (<code>-d truong_hoc</code>).</li>
+<li>Trong <code>psql</code>, câu <strong>SQL</strong> kết thúc bằng <code>;</code> và đi tới máy chủ; <strong>lệnh meta</strong> bắt đầu bằng <code>\</code> và do <code>psql</code> tự xử lý — <code>\l</code>, <code>\dt</code>, <code>\d ten_bang</code>, <code>\c</code>, <code>\q</code>.</li>
+<li>Nạp dataset bằng <code>psql ... -v ON_ERROR_STOP=1 -f dataset/02-chuan-hoa.sql</code>; cờ <code>ON_ERROR_STOP</code> là thứ ngăn bạn nhận một database nạp dở mà không hay biết.</li>
+<li>Mốc kiểm tra bắt buộc trước khi sang Bài 6: <code>\dt</code> hiện đủ <strong>10 bảng</strong> và <code>SELECT count(*) FROM hoc_sinh;</code> trả về đúng <strong>40</strong>.</li>
+</ol>
+<hr />
+<p>⬅️ <a href="../04-cac-mo-hinh-du-lieu/">Bài 4 — Các mô hình dữ liệu</a> · ➡️ <strong>Bài 6 — Mô hình hoá dữ liệu là gì</strong> <em>(sắp có)</em></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Trở lại mục lục
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Chân trang" >
+        
+          
+          <a href="../04-cac-mo-hinh-du-lieu/" class="md-footer__link md-footer__link--prev" aria-label="Trước: Bài 4 — Các mô hình dữ liệu">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Trước
+              </span>
+              <div class="md-ellipsis">
+                Bài 4 — Các mô hình dữ liệu
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../../dataset/" class="md-footer__link md-footer__link--next" aria-label="Sau: Database mẫu">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Sau
+              </span>
+              <div class="md-ellipsis">
+                Database mẫu
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Nội dung theo giấy phép CC BY 4.0
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/hungnguyen010518/database-tu-a-z" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.sections", "navigation.top", "navigation.footer", "navigation.indexes", "navigation.tracking", "toc.follow", "content.code.copy", "content.code.annotate", "search.highlight", "search.suggest"], "search": "../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "\u0110\u00e3 sao ch\u00e9p", "clipboard.copy": "Sao ch\u00e9p v\u00e0o b\u1ed9 nh\u1edb t\u1ea1m", "search.result.more.one": "1 t\u1eeb kh\u00e1c trong trang", "search.result.more.other": "# t\u1eeb kh\u00e1c trong trang", "search.result.none": "Kh\u00f4ng t\u00ecm th\u1ea5y t\u00e0i li\u1ec7u li\u00ean quan", "search.result.one": "1 t\u00e0i li\u1ec7u li\u00ean quan", "search.result.other": "# t\u00e0i li\u1ec7u li\u00ean quan", "search.result.placeholder": "Nh\u1eadp \u0111\u1ec3 b\u1eaft \u0111\u1ea7u t\u00ecm ki\u1ebfm", "search.result.term.missing": "Kh\u00f4ng", "select.version": "Ch\u1ecdn phi\u00ean b\u1ea3n"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.525ec568.min.js"></script>
+      
+    
+  </body>
+</html>
