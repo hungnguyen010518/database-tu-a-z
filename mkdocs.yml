@@ -128,5 +128,11 @@ nav:
       - "Bài 39 — MVCC: nhiều phiên bản cho một dòng": cap-4-ben-trong-dong-co/39-mvcc.md
       - "Bài 40 — WAL, checkpoint và phục hồi sau sự cố": cap-4-ben-trong-dong-co/40-wal-va-recovery.md
       - "Bài 41 — Khoá và bế tắc": cap-4-ben-trong-dong-co/41-lock-va-deadlock.md
+  - "Cấp 5 — Siêu nâng cao":
+      - "Bài 42 — Replication: nhân bản dữ liệu ra nhiều máy": cap-5-sieu-nang-cao/42-replication.md
+      - "Bài 43 — Partitioning và Sharding: chia nhỏ một bảng khổng lồ": cap-5-sieu-nang-cao/43-partitioning-va-sharding.md
+      - "Bài 44 — CAP và BASE: khi mạng đứt thì chọn gì": cap-5-sieu-nang-cao/44-cap-va-base.md
+      - "Bài 45 — Giao dịch phân tán: 2PC và Saga": cap-5-sieu-nang-cao/45-distributed-transaction.md
+      - "Bài 46 — Consensus và Raft: nhiều máy cùng đồng ý một điều": cap-5-sieu-nang-cao/46-consensus-va-raft.md
   - "Database mẫu": dataset.md
   - "Bảng thuật ngữ": glossary.md
