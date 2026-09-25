@@ -5,7 +5,7 @@ Toàn bộ thuật ngữ chuyên ngành xuất hiện trong khóa học, đối 
 Bảng được sắp xếp theo thứ tự chữ cái của **thuật ngữ tiếng Anh**, vì đó là dạng bạn sẽ gặp khi đọc tài liệu và khi đi phỏng vấn.
 
 !!! info "Bảng này lớn dần theo khóa học"
-    Mỗi khi một cấp độ mới được xuất bản, thuật ngữ của cấp đó được bổ sung vào đây. Hiện bảng phủ trọn **Bài 1–46**: Cấp 0 (Nhập môn), Cấp 1 (Mô hình quan hệ & ER), Cấp 2 (Chuẩn hoá), Cấp 3 (SQL), Cấp 4 (Bên trong động cơ) và nửa đầu Cấp 5 (Siêu nâng cao).
+    Mỗi khi một cấp độ mới được xuất bản, thuật ngữ của cấp đó được bổ sung vào đây. Hiện bảng phủ trọn **Bài 1–47**: Cấp 0 (Nhập môn), Cấp 1 (Mô hình quan hệ & ER), Cấp 2 (Chuẩn hoá), Cấp 3 (SQL), Cấp 4 (Bên trong động cơ) và Cấp 5 (Siêu nâng cao) tới Bài 47.
 
 !!! tip "Vì sao có nhiều từ trùng nghĩa?"
     *record* / *row* / *tuple* cùng chỉ **một hàng**, còn *field* / *column* / *attribute* cùng chỉ **một cột**. Bảng giữ đủ cả ba vì bạn sẽ gặp cả ba khi đọc tài liệu; cột nghĩa có trỏ chéo sang các biến thể còn lại.
@@ -59,6 +59,7 @@ Bảng được sắp xếp theo thứ tự chữ cái của **thuật ngữ ti�
 | BASE | *Basically Available, Soft state, Eventually consistent* | Kiểu thiết kế ưu tiên luôn trả lời, chấp nhận các bản sao lệch rồi dần khớp — đối lại ACID | [Bài 44](cap-5-sieu-nang-cao/44-cap-va-base.md) |
 | Mở giao dịch | *BEGIN* | Bắt đầu một giao dịch; mọi lệnh sau đó thuộc về nó cho tới `COMMIT` hoặc `ROLLBACK` | [Bài 37](cap-4-ben-trong-dong-co/37-transaction-va-acid.md) |
 | Hai ngôi | *binary* | Mối quan hệ có đúng hai tập thực thể tham gia — loại phổ biến nhất | [Bài 8](cap-1-mo-hinh-er/08-moi-quan-he-va-cardinality.md) |
+| BSON | *Binary JSON* | JSON mã hoá sang nhị phân, kèm thêm kiểu ngày giờ, số nguyên 64 bit; dạng lưu trữ của MongoDB, cùng ý tưởng với `JSONB` | [Bài 47](cap-5-sieu-nang-cao/47-nosql-bon-ho.md) |
 | Quét heap theo bitmap | *bitmap heap scan* | Gom mọi `ctid` từ index theo số trang trước, rồi đọc mỗi trang heap đúng một lần — `Bitmap Heap Scan` | [Bài 34](cap-4-ben-trong-dong-co/34-index-va-b-tree.md) |
 | Phình | *bloat* | Bảng chiếm nhiều trang hơn hẳn lượng dữ liệu sống bên trong vì tích tụ tuple chết | [Bài 33](cap-4-ben-trong-dong-co/33-page-heap-tuple.md) |
 | Khối | *block* | Tên gọi khác của trang — miếng 8KB mà PostgreSQL đọc ghi | [Bài 33](cap-4-ben-trong-dong-co/33-page-heap-tuple.md) |
@@ -93,6 +94,8 @@ Bảng được sắp xếp theo thứ tự chữ cái của **thuật ngữ ti�
 | Bao đóng của tập phụ thuộc hàm | *closure of F* | Tập mọi phụ thuộc hàm suy ra được từ `F`, ký hiệu `F⁺` | [Bài 16](cap-2-chuan-hoa/16-phu-thuoc-ham.md) |
 | Tính khả đóng | *closure property* | Mọi phép của đại số quan hệ đều trả về một quan hệ, nên lồng phép này vào phép kia được không giới hạn | [Bài 21](cap-3-sql/21-dai-so-quan-he.md) |
 | Cụm cơ sở dữ liệu | *cluster* | Tập hợp các database do một máy chủ PostgreSQL quản lý | [Bài 5](cap-0-nhap-mon/05-cai-dat-postgresql.md) |
+| Khoá sắp xếp cụm | *clustering key* | Trong Cassandra: thứ tự các dòng được sắp sẵn trên đĩa bên trong một phân vùng | [Bài 47](cap-5-sieu-nang-cao/47-nosql-bon-ho.md) |
+| Bộ sưu tập | *collection* | Nhóm tài liệu cùng loại trong MongoDB, tương tự một bảng nhưng không ép mọi tài liệu có cùng các trường | [Bài 47](cap-5-sieu-nang-cao/47-nosql-bon-ho.md) |
 | Cột | *column* | Cách gọi khác của *field* (trường) và *attribute* (thuộc tính) | [Bài 1](cap-0-nhap-mon/01-du-lieu-va-thong-tin.md) |
 | Cột rộng | *column-family* | Họ NoSQL lưu bảng khổng lồ mà mỗi dòng có bộ cột riêng | [Bài 4](cap-0-nhap-mon/04-cac-mo-hinh-du-lieu.md) |
 | Xác nhận | *COMMIT* | Chốt giao dịch: thay đổi thành vĩnh viễn và người khác nhìn thấy | [Bài 37](cap-4-ben-trong-dong-co/37-transaction-va-acid.md) |
@@ -123,6 +126,7 @@ Bảng được sắp xếp theo thứ tự chữ cái của **thuật ngữ ti�
 | Gom theo mọi tổ hợp | *CUBE* | Mệnh đề sinh thêm dòng tổng cho mọi tổ hợp của các cột gom | [Bài 26](cap-3-sql/26-group-by-having.md) |
 | Dòng hiện tại | *CURRENT ROW* | Dòng đang được tính trong một hàm cửa sổ; trong `ROWS` nó là **một** dòng, trong `RANGE` nó gồm **mọi** dòng đồng hạng | [Bài 29](cap-3-sql/29-window-function.md) |
 | Chu trình trong dữ liệu | *cycle* | Vòng tròn cha–con trong một cây, thứ mà khoá ngoại tự tham chiếu không chặn được và gây đệ quy vô hạn | [Bài 28](cap-3-sql/28-cte-va-recursive-cte.md) |
+| Cypher | *Cypher* | Ngôn ngữ truy vấn đồ thị của Neo4j, vẽ đường đi cần tìm bằng ký tự `(nút)-[:CẠNH]->(nút)` | [Bài 47](cap-5-sieu-nang-cao/47-nosql-bon-ho.md) |
 
 ## D
 
@@ -179,8 +183,10 @@ Bảng được sắp xếp theo thứ tự chữ cái của **thuật ngữ ti�
 
 | Tiếng Việt | English | Nghĩa trong một câu | Học ở bài |
 |---|---|---|---|
+| Cạnh | *edge* | Mối nối có tên và có hướng giữa hai nút trong database đồ thị, cũng mang thuộc tính | [Bài 47](cap-5-sieu-nang-cao/47-nosql-bon-ho.md) |
 | Mô hình ER mở rộng | *EER — Enhanced ER / Extended ER* | Mô hình ER cơ bản cộng thêm lớp cha – lớp con, các ràng buộc chuyên biệt hoá, và kết tập | [Bài 13](cap-1-mo-hinh-er/13-mo-hinh-eer.md) |
 | Thời gian chờ bầu cử | *election timeout* | Không nghe lãnh đạo quá thời gian này thì ứng cử; chọn ngẫu nhiên để tránh phiếu chia đều | [Bài 46](cap-5-sieu-nang-cao/46-consensus-va-raft.md) |
+| Tài liệu lồng | *embedded document* | Đối tượng con nằm ngay trong tài liệu cha, đọc cùng một lần; hợp với dữ liệu có giới hạn và thuộc riêng tài liệu cha | [Bài 47](cap-5-sieu-nang-cao/47-nosql-bon-ho.md) |
 | Thực thể | *entity* | Một đối tượng cụ thể ngoài đời mà ta muốn lưu dữ liệu, và phân biệt được với đối tượng khác | [Bài 7](cap-1-mo-hinh-er/07-thuc-the-va-thuoc-tinh.md) |
 | Toàn vẹn thực thể | *entity integrity* | Khoá chính không bao giờ được `NULL`, và không bao giờ được trùng | [Bài 15](cap-1-mo-hinh-er/15-rang-buoc-toan-ven.md) |
 | Tập thực thể | *entity set* | Tập hợp mọi thực thể cùng loại — chính nó mới là thứ trở thành một bảng | [Bài 7](cap-1-mo-hinh-er/07-thuc-the-va-thuoc-tinh.md) |
@@ -357,6 +363,7 @@ Bảng được sắp xếp theo thứ tự chữ cái của **thuật ngữ ti�
 | Nối vòng lặp lồng | *nested loop join* | Với mỗi dòng bảng ngoài, tìm dòng khớp ở bảng trong; thắng khi bảng ngoài rất ít dòng | [Bài 36](cap-4-ben-trong-dong-co/36-explain-va-query-planner.md) |
 | Mô hình mạng | *network model* | Mô hình cho phép một bản ghi có nhiều cha, nối nhau bằng con trỏ | [Bài 4](cap-0-nhap-mon/04-cac-mo-hinh-du-lieu.md) |
 | Chia cắt mạng | *network partition* | Mạng đứt, các máy tách thành những nhóm không liên lạc được với nhau | [Bài 44](cap-5-sieu-nang-cao/44-cap-va-base.md) |
+| Nút | *node* | Một đối tượng trong database đồ thị — học sinh, lớp, giáo viên — mang nhãn và thuộc tính | [Bài 47](cap-5-sieu-nang-cao/47-nosql-bon-ho.md) |
 | Thuộc tính không khoá | *non-prime attribute* | Thuộc tính không nằm trong bất kỳ khoá dự tuyển nào | [Bài 16](cap-2-chuan-hoa/16-phu-thuoc-ham.md) |
 | Đọc không lặp lại | *non-repeatable read* | Đọc lại cùng một dòng trong một giao dịch mà được giá trị khác, vì giao dịch khác vừa sửa và xác nhận | [Bài 38](cap-4-ben-trong-dong-co/38-isolation-level-va-anomaly.md) |
 | Dạng chuẩn | *normal form* | Một điều kiện đặt lên lược đồ bảng; các dạng chuẩn lồng nhau | [Bài 17](cap-2-chuan-hoa/17-dang-chuan-1nf-2nf.md) |
@@ -410,6 +417,7 @@ Bảng được sắp xếp theo thứ tự chữ cái của **thuật ngữ ti�
 | Cây kế hoạch | *plan tree* | Hình cây của kế hoạch thực thi; đọc từ trong ra ngoài vì dữ liệu chảy từ nút sâu nhất lên nút trên cùng | [Bài 36](cap-4-ben-trong-dong-co/36-explain-va-query-planner.md) |
 | Bộ lập kế hoạch | *planner* | Bộ phận của PostgreSQL chọn cách chạy một câu truy vấn — bộ tối ưu truy vấn của PostgreSQL | [Bài 36](cap-4-ben-trong-dong-co/36-explain-va-query-planner.md) |
 | Khôi phục về một thời điểm | *Point-In-Time Recovery* (PITR) | Khôi phục bản sao lưu nền rồi làm lại WAL từ kho tới đúng thời điểm mong muốn — cách cứu một câu `DELETE` nhầm đã xác nhận | [Bài 40](cap-4-ben-trong-dong-co/40-wal-va-recovery.md) |
+| Dùng nhiều loại database | *polyglot persistence* | Một hệ thống dùng nhiều database khác họ, mỗi loại cho đúng việc của nó | [Bài 47](cap-5-sieu-nang-cao/47-nosql-bon-ho.md) |
 | Cổng | *port* | Con số phân biệt các máy chủ chạy trên cùng một máy; PostgreSQL mặc định là 5432 | [Bài 5](cap-0-nhap-mon/05-cai-dat-postgresql.md) |
 | Vị từ | *predicate* | Biểu thức trong `WHERE` trả về `TRUE`, `FALSE` hoặc `UNKNOWN` | [Bài 24](cap-3-sql/24-select-where-order-by.md) |
 | Pha chuẩn bị | *prepare phase* | Pha đầu của 2PC: mỗi bên làm xong, ghi xuống đĩa, giữ khoá, trả lời có hoặc không | [Bài 45](cap-5-sieu-nang-cao/45-distributed-transaction.md) |
@@ -423,6 +431,7 @@ Bảng được sắp xếp theo thứ tự chữ cái của **thuật ngữ ti�
 | Thủ tục | *procedure* | Đoạn mã có tên, không trả giá trị, gọi bằng `CALL`; `COMMIT` / `ROLLBACK` được bên trong | [Bài 31](cap-3-sql/31-trigger-procedure-function.md) |
 | Phép chiếu | *projection* | Phép π giữ lại những cột được nêu tên và bỏ dòng trùng — cắt dọc; trong SQL là danh sách cột sau `SELECT` kèm `DISTINCT` | [Bài 21](cap-3-sql/21-dai-so-quan-he.md) |
 | Nâng lên làm máy chính | *promote* | Máy bản sao ngừng làm lại WAL và bắt đầu nhận ghi — `pg_promote()` | [Bài 42](cap-5-sieu-nang-cao/42-replication.md) |
+| Đồ thị thuộc tính | *property graph* | Mô hình đồ thị mà cả nút lẫn cạnh đều có nhãn và thuộc tính | [Bài 47](cap-5-sieu-nang-cao/47-nosql-bon-ho.md) |
 | Luật giả bắc cầu | *pseudotransitivity* | Luật suy diễn: `X → Y` và `WY → Z` thì `WX → Z` | [Bài 16](cap-2-chuan-hoa/16-phu-thuoc-ham.md) |
 | Bản phát hành | *publication* | Danh sách bảng bên gửi chia sẻ trong nhân bản logic — `CREATE PUBLICATION` | [Bài 42](cap-5-sieu-nang-cao/42-replication.md) |
 
@@ -433,6 +442,7 @@ Bảng được sắp xếp theo thứ tự chữ cái của **thuật ngữ ti�
 | Truy vấn | *query* | Một câu hỏi đặt ra cho cơ sở dữ liệu | [Bài 1](cap-0-nhap-mon/01-du-lieu-va-thong-tin.md) |
 | Bộ tối ưu truy vấn | *query optimizer* | Bộ phận của DBMS tự chọn cách chạy nhanh nhất cho một câu truy vấn | [Bài 4](cap-0-nhap-mon/04-cac-mo-hinh-du-lieu.md) |
 | Bộ định tuyến truy vấn | *query router* | Tầng biết luật chia, gửi mỗi truy vấn tới đúng mảnh | [Bài 43](cap-5-sieu-nang-cao/43-partitioning-va-sharding.md) |
+| Thiết kế theo truy vấn | *query-first design* | Sắp dữ liệu theo câu hỏi sẽ được hỏi để mỗi câu đọc đúng một chỗ; hệ quả là phi chuẩn hoá có chủ đích, cách thiết kế mặc định của NoSQL | [Bài 47](cap-5-sieu-nang-cao/47-nosql-bon-ho.md) |
 | Túc số | *quorum* | Số máy tối thiểu phải đồng ý; quá bán là `n / 2 + 1`, và hai túc số quá bán luôn giao nhau | [Bài 46](cap-5-sieu-nang-cao/46-consensus-va-raft.md) |
 
 ## R
@@ -454,6 +464,7 @@ Bảng được sắp xếp theo thứ tự chữ cái của **thuật ngữ ti�
 | Làm lại | *redo* | Áp lại một bản ghi WAL lên trang dữ liệu khi phục hồi; giao dịch không có bản ghi `COMMIT` được coi là đã huỷ | [Bài 40](cap-4-ben-trong-dong-co/40-wal-va-recovery.md) |
 | Điểm làm lại | *redo point* | Vị trí trong WAL mà phục hồi sau sự cố bắt đầu đọc, lưu trong tệp `pg_control` | [Bài 40](cap-4-ben-trong-dong-co/40-wal-va-recovery.md) |
 | Cột nhân bản | *redundant column* | Cột chép từ bảng khác sang để khỏi phải `JOIN` | [Bài 20](cap-2-chuan-hoa/20-denormalization.md) |
+| Tham chiếu | *reference* | Lưu mã của tài liệu khác thay vì chép nội dung của nó vào; hợp với dữ liệu dùng chung hoặc lớn dần mãi | [Bài 47](cap-5-sieu-nang-cao/47-nosql-bon-ho.md) |
 | Toàn vẹn tham chiếu | *referential integrity* | Mọi giá trị trong cột khoá ngoại phải tồn tại thật ở bảng cha, hoặc phải là `NULL` | [Bài 15](cap-1-mo-hinh-er/15-rang-buoc-toan-ven.md) |
 | Phản xạ | *reflexivity* | Tiên đề Armstrong: `Y ⊆ X` thì `X → Y` | [Bài 16](cap-2-chuan-hoa/16-phu-thuoc-ham.md) |
 | Làm mới đồng thời | *REFRESH CONCURRENTLY* | Làm mới materialized view mà không chặn người đọc; **đòi** một index `UNIQUE` để ghép được dòng cũ với dòng mới | [Bài 30](cap-3-sql/30-view-va-materialized-view.md) |
@@ -494,6 +505,8 @@ Bảng được sắp xếp theo thứ tự chữ cái của **thuật ngữ ti�
 | Truy vấn con vô hướng | *scalar subquery* | Truy vấn con trả về đúng 1 dòng 1 cột, dùng được ở mọi chỗ chờ một giá trị; trả về 0 dòng thì cho `NULL` | [Bài 27](cap-3-sql/27-subquery-va-exists.md) |
 | Rải rồi gom | *scatter-gather* | Gửi truy vấn không có khoá phân mảnh tới mọi mảnh, đợi tất cả rồi gộp kết quả | [Bài 43](cap-5-sieu-nang-cao/43-partitioning-va-sharding.md) |
 | Lược đồ | *schema* | Cái khung của database — có bảng nào, cột nào, kiểu gì — thứ hầu như không đổi theo thời gian | [Bài 3](cap-0-nhap-mon/03-dbms-la-gi.md) |
+| Lược đồ khi đọc | *schema-on-read* | Dữ liệu ghi vào không bị kiểm cấu trúc; chương trình đọc tự hiểu cấu trúc | [Bài 47](cap-5-sieu-nang-cao/47-nosql-bon-ho.md) |
+| Lược đồ khi ghi | *schema-on-write* | Cấu trúc khai trước và bị kiểm ngay lúc ghi — cách của database quan hệ | [Bài 47](cap-5-sieu-nang-cao/47-nosql-bon-ho.md) |
 | Dạng chuẩn 2 | *Second Normal Form — 2NF* | Bảng đã ở 1NF và mọi thuộc tính không khoá đều phụ thuộc đầy đủ vào mọi khoá dự tuyển | [Bài 17](cap-2-chuan-hoa/17-dang-chuan-1nf-2nf.md) |
 | Khoá dòng khi đọc | *SELECT ... FOR UPDATE* | Đọc và khoá luôn các dòng, để không ai sửa chúng trước khi giao dịch mình kết thúc | [Bài 41](cap-4-ben-trong-dong-co/41-lock-va-deadlock.md) |
 | Phép chọn | *selection* | Phép σ giữ lại những dòng thoả điều kiện — cắt ngang; trong SQL là `WHERE` | [Bài 21](cap-3-sql/21-dai-so-quan-he.md) |
@@ -569,6 +582,7 @@ Bảng được sắp xếp theo thứ tự chữ cái của **thuật ngữ ti�
 | Dạng chuẩn 3 | *Third Normal Form — 3NF* | Bảng đã ở 2NF và không thuộc tính không khoá nào phụ thuộc bắc cầu vào một khoá dự tuyển | [Bài 18](cap-2-chuan-hoa/18-dang-chuan-3nf-bcnf.md) |
 | Xác nhận ba pha | *three-phase commit* (3PC) | Thêm pha "sắp xác nhận" để khỏi bị chặn, nhưng có thể sai khi mạng bị chia cắt; hầu như không dùng | [Bài 45](cap-5-sieu-nang-cao/45-distributed-transaction.md) |
 | Logic ba giá trị | *three-valued logic* | Hệ logic của SQL, có thêm giá trị thứ ba `UNKNOWN` bên cạnh `TRUE` và `FALSE` | [Bài 24](cap-3-sql/24-select-where-order-by.md) |
+| Thời gian sống | *time to live* (TTL) | Thời hạn gắn cho một khoá; hết hạn thì khoá tự biến mất — dùng cho phiên đăng nhập, mã OTP, bộ nhớ đệm | [Bài 47](cap-5-sieu-nang-cao/47-nosql-bon-ho.md) |
 | Tổng chi phí | *total cost* | Chi phí để trả hết mọi dòng, đã gồm chi phí các nút con — số thứ hai trong `cost=a..b` | [Bài 36](cap-4-ben-trong-dong-co/36-explain-va-query-planner.md) |
 | Tham gia toàn phần | *total participation* | Mọi thực thể phía này đều bắt buộc phải tham gia mối quan hệ | [Bài 9](cap-1-mo-hinh-er/09-participation-va-thuc-the-yeu.md) |
 | Chuyên biệt hoá toàn phần | *total specialization* | Mọi thực thể lớp cha phải thuộc ít nhất một lớp con | [Bài 13](cap-1-mo-hinh-er/13-mo-hinh-eer.md) |
