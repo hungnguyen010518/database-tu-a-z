@@ -896,6 +896,18 @@
       
         
       
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
     
     
       
@@ -1046,6 +1058,132 @@
   
   <span class="md-ellipsis">
     Bài 26 — GROUP BY, HAVING và các hàm tổng hợp
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cap-3-sql/27-subquery-va-exists/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 27 — Truy vấn con (Subquery) và EXISTS
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cap-3-sql/28-cte-va-recursive-cte/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 28 — CTE và CTE đệ quy
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cap-3-sql/29-window-function/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 29 — Window Function: tính toán theo cửa sổ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cap-3-sql/30-view-va-materialized-view/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 30 — View và Materialized View
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cap-3-sql/31-trigger-procedure-function/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 31 — Trigger, Stored Procedure và Function
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cap-3-sql/32-jsonb-va-full-text-search/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 32 — JSONB và Full-Text Search
   </span>
   
 
@@ -1623,7 +1761,7 @@
 <p>Bảng được sắp xếp theo thứ tự chữ cái của <strong>thuật ngữ tiếng Anh</strong>, vì đó là dạng bạn sẽ gặp khi đọc tài liệu và khi đi phỏng vấn.</p>
 <div class="admonition info">
 <p class="admonition-title">Bảng này lớn dần theo khóa học</p>
-<p>Mỗi khi một cấp độ mới được xuất bản, thuật ngữ của cấp đó được bổ sung vào đây. Hiện bảng phủ trọn <strong>Bài 1–26</strong>: Cấp 0 (Nhập môn), Cấp 1 (Mô hình quan hệ &amp; ER), Cấp 2 (Chuẩn hoá) và nửa đầu Cấp 3 (SQL).</p>
+<p>Mỗi khi một cấp độ mới được xuất bản, thuật ngữ của cấp đó được bổ sung vào đây. Hiện bảng phủ trọn <strong>Bài 1–32</strong>: Cấp 0 (Nhập môn), Cấp 1 (Mô hình quan hệ &amp; ER), Cấp 2 (Chuẩn hoá) và toàn bộ Cấp 3 (SQL).</p>
 </div>
 <div class="admonition tip">
 <p class="admonition-title">Vì sao có nhiều từ trùng nghĩa?</p>
@@ -1660,6 +1798,12 @@
 </thead>
 <tbody>
 <tr>
+<td>Danh sách kề</td>
+<td><em>adjacency list</em></td>
+<td>Cách lưu cây bằng một cột "mã cha" trên mỗi dòng — mỗi nút chỉ biết cha trực tiếp của mình</td>
+<td><a href="../cap-3-sql/28-cte-va-recursive-cte/">Bài 28</a></td>
+</tr>
+<tr>
 <td>Ràng buộc giới hạn tổng</td>
 <td><em>aggregate constraint</em></td>
 <td>Luật nghiệp vụ phải cộng hoặc đếm qua nhiều dòng mới kiểm được, nên khoá ngoại và <code>UNIQUE</code> không cưỡng chế nổi</td>
@@ -1688,6 +1832,12 @@
 <td><em>alternate key</em></td>
 <td>Khoá dự tuyển không được chọn làm khoá chính, thường giữ bằng <code>UNIQUE</code></td>
 <td><a href="../cap-1-mo-hinh-er/12-bay-loai-khoa/">Bài 12</a></td>
+</tr>
+<tr>
+<td>Phần neo</td>
+<td><em>anchor member</em></td>
+<td>Câu <code>SELECT</code> đầu tiên của CTE đệ quy, không tự tham chiếu — nó cho điểm khởi đầu của vòng lặp</td>
+<td><a href="../cap-3-sql/28-cte-va-recursive-cte/">Bài 28</a></td>
 </tr>
 <tr>
 <td>Mô hình neo</td>
@@ -1830,6 +1980,12 @@
 <td><a href="../cap-3-sql/21-dai-so-quan-he/">Bài 21</a></td>
 </tr>
 <tr>
+<td>Xoá lan</td>
+<td><em>CASCADE</em></td>
+<td>Xoá luôn mọi đối tượng phụ thuộc; mặc định của <code>DROP VIEW</code> là <code>RESTRICT</code>, tức từ chối khi còn phụ thuộc</td>
+<td><a href="../cap-3-sql/30-view-va-materialized-view/">Bài 30</a></td>
+</tr>
+<tr>
 <td>Biểu thức điều kiện</td>
 <td><em>CASE expression</em></td>
 <td>Cách viết "nếu… thì…" ngay trong biểu thức SQL; bỏ <code>ELSE</code> thì trả <code>NULL</code> khi không nhánh nào khớp</td>
@@ -1890,6 +2046,12 @@
 <td><a href="../cap-0-nhap-mon/04-cac-mo-hinh-du-lieu/">Bài 4</a></td>
 </tr>
 <tr>
+<td>Biểu thức bảng dùng chung</td>
+<td><em>Common Table Expression</em> (CTE)</td>
+<td>Bảng tạm có tên, khai bằng <code>WITH</code> ở đầu câu lệnh và chỉ sống trong đúng câu lệnh đó</td>
+<td><a href="../cap-3-sql/28-cte-va-recursive-cte/">Bài 28</a></td>
+</tr>
+<tr>
 <td>Đầy đủ (của hệ tiên đề)</td>
 <td><em>complete</em></td>
 <td>Mọi phụ thuộc hàm thật sự đúng đều suy ra được từ ba tiên đề Armstrong</td>
@@ -1926,6 +2088,12 @@
 <td><a href="../cap-0-nhap-mon/05-cai-dat-postgresql/">Bài 5</a></td>
 </tr>
 <tr>
+<td>Truy vấn con tương quan</td>
+<td><em>correlated subquery</em></td>
+<td>Truy vấn con có tham chiếu cột của truy vấn ngoài, nên về ngữ nghĩa phải chạy lại một lần cho mỗi dòng ngoài</td>
+<td><a href="../cap-3-sql/27-subquery-va-exists/">Bài 27</a></td>
+</tr>
+<tr>
 <td>Kết nối chéo</td>
 <td><em>CROSS JOIN</em></td>
 <td>Cú pháp SQL của tích Descartes: ghép mọi dòng với mọi dòng, không có điều kiện</td>
@@ -1948,6 +2116,18 @@
 <td><em>CUBE</em></td>
 <td>Mệnh đề sinh thêm dòng tổng cho mọi tổ hợp của các cột gom</td>
 <td><a href="../cap-3-sql/26-group-by-having/">Bài 26</a></td>
+</tr>
+<tr>
+<td>Dòng hiện tại</td>
+<td><em>CURRENT ROW</em></td>
+<td>Dòng đang được tính trong một hàm cửa sổ; trong <code>ROWS</code> nó là <strong>một</strong> dòng, trong <code>RANGE</code> nó gồm <strong>mọi</strong> dòng đồng hạng</td>
+<td><a href="../cap-3-sql/29-window-function/">Bài 29</a></td>
+</tr>
+<tr>
+<td>Chu trình trong dữ liệu</td>
+<td><em>cycle</em></td>
+<td>Vòng tròn cha–con trong một cây, thứ mà khoá ngoại tự tham chiếu không chặn được và gây đệ quy vô hạn</td>
+<td><a href="../cap-3-sql/28-cte-va-recursive-cte/">Bài 28</a></td>
 </tr>
 </tbody>
 </table>
@@ -2059,6 +2239,12 @@
 <td><a href="../cap-0-nhap-mon/03-dbms-la-gi/">Bài 3</a></td>
 </tr>
 <tr>
+<td>Bế tắc</td>
+<td><em>deadlock</em></td>
+<td>Hai giao dịch chờ khoá của nhau nên không ai đi tiếp được; hay xảy ra khi chúng lấy khoá theo hai thứ tự khác nhau</td>
+<td><a href="../cap-3-sql/31-trigger-procedure-function/">Bài 31</a></td>
+</tr>
+<tr>
 <td>Khai báo</td>
 <td><em>declarative</em></td>
 <td>Kiểu ngôn ngữ chỉ mô tả thứ mình muốn, để phần mềm tự tìm cách lấy</td>
@@ -2137,6 +2323,12 @@
 <td><a href="../cap-3-sql/21-dai-so-quan-he/">Bài 21</a></td>
 </tr>
 <tr>
+<td>Bảng dẫn xuất</td>
+<td><em>derived table</em></td>
+<td>Truy vấn con đặt trong <code>FROM</code> và dùng như một bảng; PostgreSQL bắt buộc phải đặt bí danh cho nó</td>
+<td><a href="../cap-3-sql/27-subquery-va-exists/">Bài 27</a></td>
+</tr>
+<tr>
 <td>Định thức</td>
 <td><em>determinant</em></td>
 <td>Vế trái của một phụ thuộc hàm — thứ mà khi biết nó thì biết được vế phải</td>
@@ -2165,6 +2357,12 @@
 <td><em>document</em></td>
 <td>Họ NoSQL lưu mỗi bản ghi thành một tệp JSON tự chứa mọi thứ</td>
 <td><a href="../cap-0-nhap-mon/04-cac-mo-hinh-du-lieu/">Bài 4</a></td>
+</tr>
+<tr>
+<td>Dấu nháy đô la</td>
+<td><em>dollar quoting</em></td>
+<td>Cách bọc thân hàm bằng <code>$$ ... $$</code> để khỏi phải nhân đôi mọi dấu nháy đơn bên trong</td>
+<td><a href="../cap-3-sql/31-trigger-procedure-function/">Bài 31</a></td>
 </tr>
 <tr>
 <td>Miền giá trị</td>
@@ -2325,6 +2523,12 @@
 <td><a href="../cap-3-sql/25-join/">Bài 25</a></td>
 </tr>
 <tr>
+<td>Tìm kiếm toàn văn</td>
+<td><em>full-text search</em></td>
+<td>Tìm theo <strong>từ</strong> trong văn bản thay vì theo chuỗi con, có xếp mức liên quan và dùng được index <code>GIN</code></td>
+<td><a href="../cap-3-sql/32-jsonb-va-full-text-search/">Bài 32</a></td>
+</tr>
+<tr>
 <td>Phụ thuộc hàm</td>
 <td><em>functional dependency</em></td>
 <td>Luật <em>biết <code>X</code> thì biết chắc <code>Y</code></em>, đúng với mọi trạng thái dữ liệu — Cấp 2 viết tắt là <strong>PTH</strong></td>
@@ -2348,6 +2552,18 @@
 <td><em>generalization</em></td>
 <td>Đi từ nhiều tập thực thể riêng lên, gom phần chung lại thành lớp cha</td>
 <td><a href="../cap-1-mo-hinh-er/13-mo-hinh-eer/">Bài 13</a></td>
+</tr>
+<tr>
+<td>Chỉ mục đảo tổng quát</td>
+<td><em>Generalized Inverted Index</em> (GIN)</td>
+<td>Loại index cho cột mà một giá trị chứa nhiều phần tử — JSONB, <code>tsvector</code>, mảng; nó lưu "phần tử này nằm ở những dòng nào"</td>
+<td><a href="../cap-3-sql/32-jsonb-va-full-text-search/">Bài 32</a></td>
+</tr>
+<tr>
+<td>Cột sinh sẵn</td>
+<td><em>generated column</em></td>
+<td>Cột có giá trị tính từ các cột khác bằng một biểu thức <code>IMMUTABLE</code>, tự cập nhật mà không cần trigger</td>
+<td><a href="../cap-3-sql/32-jsonb-va-full-text-search/">Bài 32</a></td>
 </tr>
 <tr>
 <td>Đồ thị</td>
@@ -2430,10 +2646,22 @@
 <td><a href="../cap-0-nhap-mon/05-cai-dat-postgresql/">Bài 5</a></td>
 </tr>
 <tr>
+<td>Bất biến</td>
+<td><em>IMMUTABLE</em></td>
+<td>Cam kết một hàm cùng tham số thì luôn cho cùng kết quả mãi mãi; khai sai cho hàm đọc bảng sinh kết quả sai không tái hiện được</td>
+<td><a href="../cap-3-sql/31-trigger-procedure-function/">Bài 31</a></td>
+</tr>
+<tr>
 <td>Chỉ mục</td>
 <td><em>index</em></td>
 <td>Cấu trúc ở mức trong giúp tìm dữ liệu nhanh hơn</td>
 <td><a href="../cap-0-nhap-mon/03-dbms-la-gi/">Bài 3</a></td>
+</tr>
+<tr>
+<td>Đệ quy vô hạn</td>
+<td><em>infinite recursion</em></td>
+<td>Phần đệ quy của CTE không bao giờ trả về rỗng, nên câu lệnh chạy tới khi hết dung lượng đĩa tạm</td>
+<td><a href="../cap-3-sql/28-cte-va-recursive-cte/">Bài 28</a></td>
 </tr>
 <tr>
 <td>Thông tin</td>
@@ -2446,6 +2674,12 @@
 <td><em>Information Engineering notation</em></td>
 <td>Tên gọi học thuật khác của Crow's Foot</td>
 <td><a href="../cap-1-mo-hinh-er/11-bieu-do-er-crows-foot/">Bài 11</a></td>
+</tr>
+<tr>
+<td>Nội tuyến</td>
+<td><em>inline</em></td>
+<td>Trộn định nghĩa một CTE thẳng vào truy vấn ngoài, để bộ tối ưu xử lý cả hai như một khối</td>
+<td><a href="../cap-3-sql/28-cte-va-recursive-cte/">Bài 28</a></td>
 </tr>
 <tr>
 <td>Kết nối trong</td>
@@ -2565,6 +2799,18 @@
 <td><a href="../cap-3-sql/25-join/">Bài 25</a></td>
 </tr>
 <tr>
+<td>Từ tố</td>
+<td><em>lexeme</em></td>
+<td>Một từ đã được chuẩn hoá trong <code>tsvector</code> — đơn vị mà full-text search thật sự so khớp</td>
+<td><a href="../cap-3-sql/32-jsonb-va-full-text-search/">Bài 32</a></td>
+</tr>
+<tr>
+<td>Tranh chấp khoá</td>
+<td><em>lock contention</em></td>
+<td>Nhiều giao dịch phải xếp hàng chờ khoá cùng một dòng, làm thông lượng ghi sụt hẳn</td>
+<td><a href="../cap-3-sql/31-trigger-procedure-function/">Bài 31</a></td>
+</tr>
+<tr>
 <td>Độc lập dữ liệu logic</td>
 <td><em>logical data independence</em></td>
 <td>Đổi mức khái niệm mà mức ngoài không phải đổi theo</td>
@@ -2607,6 +2853,12 @@
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>Vật chất hoá</td>
+<td><em>materialization</em></td>
+<td>Tính xong một bước rồi lưu kết quả thành bảng tạm, thay vì trộn vào truy vấn ngoài để tối ưu chung</td>
+<td><a href="../cap-3-sql/28-cte-va-recursive-cte/">Bài 28</a></td>
+</tr>
 <tr>
 <td>Khung nhìn vật chất hoá</td>
 <td><em>materialized view</em></td>
@@ -2754,10 +3006,22 @@
 <td><a href="../cap-0-nhap-mon/04-cac-mo-hinh-du-lieu/">Bài 4</a></td>
 </tr>
 <tr>
+<td>Rào vật chất hoá</td>
+<td><em>optimization fence</em></td>
+<td>Khi việc vật chất hoá bị bắt buộc, nên bộ tối ưu không được đẩy điều kiện lọc từ ngoài vào trong nữa</td>
+<td><a href="../cap-3-sql/28-cte-va-recursive-cte/">Bài 28</a></td>
+</tr>
+<tr>
 <td>Dòng mồ côi</td>
 <td><em>orphan row</em></td>
 <td>Dòng con trỏ tới một dòng cha đã biến mất</td>
 <td><a href="../cap-1-mo-hinh-er/15-rang-buoc-toan-ven/">Bài 15</a></td>
+</tr>
+<tr>
+<td>Truy vấn ngoài</td>
+<td><em>outer query</em></td>
+<td>Câu lệnh bao quanh một truy vấn con</td>
+<td><a href="../cap-3-sql/27-subquery-va-exists/">Bài 27</a></td>
 </tr>
 <tr>
 <td>Ràng buộc overlapping</td>
@@ -2821,6 +3085,18 @@
 <td><a href="../cap-1-mo-hinh-er/09-participation-va-thuc-the-yeu/">Bài 9</a></td>
 </tr>
 <tr>
+<td>Phân vùng</td>
+<td><em>partition</em></td>
+<td>Nhóm dòng do <code>PARTITION BY</code> chia ra; cửa sổ của một dòng không bao giờ vượt ra khỏi phân vùng của nó</td>
+<td><a href="../cap-3-sql/29-window-function/">Bài 29</a></td>
+</tr>
+<tr>
+<td>Dòng đồng hạng</td>
+<td><em>peer rows</em></td>
+<td>Các dòng có cùng giá trị ở mọi cột của <code>ORDER BY</code> trong <code>OVER</code> — <code>RANGE</code> gộp cả chúng vào <code>CURRENT ROW</code></td>
+<td><a href="../cap-3-sql/29-window-function/">Bài 29</a></td>
+</tr>
+<tr>
 <td>Độc lập dữ liệu vật lý</td>
 <td><em>physical data independence</em></td>
 <td>Đổi mức trong mà mức khái niệm không phải đổi theo</td>
@@ -2861,6 +3137,18 @@
 <td><em>procedural</em></td>
 <td>Kiểu ngôn ngữ bắt bạn nói rõ từng bước phải làm thế nào</td>
 <td><a href="../cap-0-nhap-mon/04-cac-mo-hinh-du-lieu/">Bài 4</a></td>
+</tr>
+<tr>
+<td>Ngôn ngữ thủ tục của PostgreSQL</td>
+<td><em>Procedural Language / PostgreSQL Structured Query Language</em> (PL/pgSQL)</td>
+<td>Ngôn ngữ thêm biến, <code>IF</code>, <code>LOOP</code> vào SQL; <code>BEGIN ... END</code> trong nó là khối mã chứ không phải giao dịch</td>
+<td><a href="../cap-3-sql/31-trigger-procedure-function/">Bài 31</a></td>
+</tr>
+<tr>
+<td>Thủ tục</td>
+<td><em>procedure</em></td>
+<td>Đoạn mã có tên, không trả giá trị, gọi bằng <code>CALL</code>; <code>COMMIT</code> / <code>ROLLBACK</code> được bên trong</td>
+<td><a href="../cap-3-sql/31-trigger-procedure-function/">Bài 31</a></td>
 </tr>
 <tr>
 <td>Phép chiếu</td>
@@ -2925,6 +3213,18 @@
 <td><a href="../cap-0-nhap-mon/01-du-lieu-va-thong-tin/">Bài 1</a></td>
 </tr>
 <tr>
+<td>CTE đệ quy</td>
+<td><em>recursive CTE</em></td>
+<td>CTE tham chiếu chính nó, khai bằng <code>WITH RECURSIVE</code> — công cụ duy nhất của SQL chuẩn để đi hết một cấu trúc sâu tuỳ ý</td>
+<td><a href="../cap-3-sql/28-cte-va-recursive-cte/">Bài 28</a></td>
+</tr>
+<tr>
+<td>Phần đệ quy</td>
+<td><em>recursive member</em></td>
+<td>Câu <code>SELECT</code> sau <code>UNION ALL</code> trong CTE đệ quy, tự tham chiếu để sinh bước tiếp theo từ các dòng của vòng trước</td>
+<td><a href="../cap-3-sql/28-cte-va-recursive-cte/">Bài 28</a></td>
+</tr>
+<tr>
 <td>Cột nhân bản</td>
 <td><em>redundant column</em></td>
 <td>Cột chép từ bảng khác sang để khỏi phải <code>JOIN</code></td>
@@ -2941,6 +3241,12 @@
 <td><em>reflexivity</em></td>
 <td>Tiên đề Armstrong: <code>Y ⊆ X</code> thì <code>X → Y</code></td>
 <td><a href="../cap-2-chuan-hoa/16-phu-thuoc-ham/">Bài 16</a></td>
+</tr>
+<tr>
+<td>Làm mới đồng thời</td>
+<td><em>REFRESH CONCURRENTLY</em></td>
+<td>Làm mới materialized view mà không chặn người đọc; <strong>đòi</strong> một index <code>UNIQUE</code> để ghép được dòng cũ với dòng mới</td>
+<td><a href="../cap-3-sql/30-view-va-materialized-view/">Bài 30</a></td>
 </tr>
 <tr>
 <td>Quan hệ</td>
@@ -3032,6 +3338,12 @@
 <td>Một hàng trong bảng — cách gọi khác của <em>record</em> và <em>tuple</em></td>
 <td><a href="../cap-0-nhap-mon/01-du-lieu-va-thong-tin/">Bài 1</a></td>
 </tr>
+<tr>
+<td>Tổng luỹ tiến</td>
+<td><em>running total</em></td>
+<td>Tổng cộng dồn từ đầu phân vùng tới dòng hiện tại — phải viết <code>ROWS</code> mới cộng từng dòng một</td>
+<td><a href="../cap-3-sql/29-window-function/">Bài 29</a></td>
+</tr>
 </tbody>
 </table>
 <h2 id="s">S<a class="headerlink" href="#s" title="Permanent link">&para;</a></h2>
@@ -3045,6 +3357,12 @@
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>Truy vấn con vô hướng</td>
+<td><em>scalar subquery</em></td>
+<td>Truy vấn con trả về đúng 1 dòng 1 cột, dùng được ở mọi chỗ chờ một giá trị; trả về 0 dòng thì cho <code>NULL</code></td>
+<td><a href="../cap-3-sql/27-subquery-va-exists/">Bài 27</a></td>
+</tr>
 <tr>
 <td>Lược đồ</td>
 <td><em>schema</em></td>
@@ -3074,6 +3392,18 @@
 <td><em>semantic constraint</em></td>
 <td>Luật nghiệp vụ riêng của từng bài toán, ngoài ba loại toàn vẹn chung</td>
 <td><a href="../cap-1-mo-hinh-er/15-rang-buoc-toan-ven/">Bài 15</a></td>
+</tr>
+<tr>
+<td>Bán kết nối</td>
+<td><em>semi join</em></td>
+<td>Phép ghép chỉ để kiểm tra tồn tại — mỗi dòng bảng trái ra tối đa một lần, không lấy cột nào của bảng phải</td>
+<td><a href="../cap-3-sql/27-subquery-va-exists/">Bài 27</a></td>
+</tr>
+<tr>
+<td>Dữ liệu bán cấu trúc</td>
+<td><em>semi-structured data</em></td>
+<td>Dữ liệu có cấu trúc nhưng cấu trúc khác nhau giữa các bản ghi và không khai trước trong lược đồ</td>
+<td><a href="../cap-3-sql/32-jsonb-va-full-text-search/">Bài 32</a></td>
 </tr>
 <tr>
 <td>Bộ đếm</td>
@@ -3142,6 +3472,12 @@
 <td><a href="../cap-0-nhap-mon/01-du-lieu-va-thong-tin/">Bài 1</a></td>
 </tr>
 <tr>
+<td>Ổn định trong một câu lệnh</td>
+<td><em>STABLE</em></td>
+<td>Cam kết một hàm cùng tham số cho cùng kết quả trong một câu lệnh; được đọc bảng nhưng không được sửa</td>
+<td><a href="../cap-3-sql/31-trigger-procedure-function/">Bài 31</a></td>
+</tr>
+<tr>
 <td>Dữ liệu cũ</td>
 <td><em>stale data</em></td>
 <td>Bản sao phi chuẩn hoá chưa được cập nhật theo nguồn</td>
@@ -3152,6 +3488,18 @@
 <td><em>star schema</em></td>
 <td>Kiểu phi chuẩn hoá có hệ thống, dành cho kho dữ liệu phân tích chỉ đọc</td>
 <td><a href="../cap-2-chuan-hoa/20-denormalization/">Bài 20</a></td>
+</tr>
+<tr>
+<td>Đưa về dạng gốc</td>
+<td><em>stemming</em></td>
+<td>Quy các biến thể của một từ về một dạng, ví dụ <em>running</em> → <em>run</em>; tiếng Việt gần như không cần</td>
+<td><a href="../cap-3-sql/32-jsonb-va-full-text-search/">Bài 32</a></td>
+</tr>
+<tr>
+<td>Từ dừng</td>
+<td><em>stop word</em></td>
+<td>Từ quá phổ biến nên bị bỏ khỏi index tìm kiếm, ví dụ <em>the</em> trong tiếng Anh</td>
+<td><a href="../cap-3-sql/32-jsonb-va-full-text-search/">Bài 32</a></td>
 </tr>
 <tr>
 <td>Thuộc tính lưu trữ</td>
@@ -3176,6 +3524,12 @@
 <td><em>sublanguage</em></td>
 <td>Một trong bốn nhóm câu lệnh ghép nên SQL: DDL, DML, DCL, TCL</td>
 <td><a href="../cap-0-nhap-mon/03-dbms-la-gi/">Bài 3</a></td>
+</tr>
+<tr>
+<td>Truy vấn con</td>
+<td><em>subquery</em></td>
+<td>Một câu <code>SELECT</code> lồng bên trong câu lệnh khác, đặt trong ngoặc đơn</td>
+<td><a href="../cap-3-sql/27-subquery-va-exists/">Bài 27</a></td>
 </tr>
 <tr>
 <td>Bảng tổng hợp</td>
@@ -3251,6 +3605,12 @@
 <td><a href="../cap-1-mo-hinh-er/08-moi-quan-he-va-cardinality/">Bài 8</a></td>
 </tr>
 <tr>
+<td>Cấu hình tìm kiếm</td>
+<td><em>text search configuration</em></td>
+<td>Bộ quy tắc tách từ, bỏ từ dừng và đưa về dạng gốc; PostgreSQL <strong>không có</strong> cấu hình tiếng Việt</td>
+<td><a href="../cap-3-sql/32-jsonb-va-full-text-search/">Bài 32</a></td>
+</tr>
+<tr>
 <td>Kết nối theta</td>
 <td><em>theta join</em></td>
 <td>Kết nối với điều kiện so sánh bất kỳ, không chỉ dấu bằng</td>
@@ -3305,16 +3665,34 @@
 <td><a href="../cap-2-chuan-hoa/16-phu-thuoc-ham/">Bài 16</a></td>
 </tr>
 <tr>
+<td>Duyệt cây</td>
+<td><em>tree traversal</em></td>
+<td>Đi qua mọi nút của một cấu trúc phân cấp theo một trật tự nhất định, bằng CTE đệ quy</td>
+<td><a href="../cap-3-sql/28-cte-va-recursive-cte/">Bài 28</a></td>
+</tr>
+<tr>
 <td>Bẫy sự kiện</td>
 <td><em>trigger</em></td>
 <td>Đoạn lệnh mà database tự chạy mỗi khi một sự kiện dữ liệu xảy ra</td>
 <td><a href="../cap-0-nhap-mon/03-dbms-la-gi/">Bài 3</a></td>
 </tr>
 <tr>
+<td>Hàm trigger</td>
+<td><em>trigger function</em></td>
+<td>Hàm khai <code>RETURNS TRIGGER</code>, không nhận tham số thường, dùng <code>NEW</code> / <code>OLD</code>; một hàm dùng được cho nhiều bảng</td>
+<td><a href="../cap-3-sql/31-trigger-procedure-function/">Bài 31</a></td>
+</tr>
+<tr>
 <td>Phụ thuộc hàm tầm thường</td>
 <td><em>trivial functional dependency</em></td>
 <td><code>X → Y</code> với <code>Y ⊆ X</code> — luôn đúng nên chẳng nói lên điều gì</td>
 <td><a href="../cap-2-chuan-hoa/16-phu-thuoc-ham/">Bài 16</a></td>
+</tr>
+<tr>
+<td>Câu hỏi tìm kiếm</td>
+<td><em>tsquery</em></td>
+<td>Câu hỏi tìm kiếm đã chuẩn hoá, ghép bằng <code>&amp;</code> và, <code>|</code> hoặc, <code>!</code> không, <code>&lt;-&gt;</code> liền kề</td>
+<td><a href="../cap-3-sql/32-jsonb-va-full-text-search/">Bài 32</a></td>
 </tr>
 <tr>
 <td>Bộ</td>
@@ -3336,10 +3714,22 @@
 </thead>
 <tbody>
 <tr>
+<td>Bỏ dấu</td>
+<td><em>unaccent</em></td>
+<td>Extension biến <code>Đất rừng</code> thành <code>Dat rung</code>, ghép với cấu hình <code>simple</code> để người gõ không dấu vẫn tìm ra</td>
+<td><a href="../cap-3-sql/32-jsonb-va-full-text-search/">Bài 32</a></td>
+</tr>
+<tr>
 <td>Một ngôi</td>
 <td><em>unary / recursive</em></td>
 <td>Mối quan hệ mà một tập thực thể tự liên kết với chính nó</td>
 <td><a href="../cap-1-mo-hinh-er/08-moi-quan-he-va-cardinality/">Bài 8</a></td>
+</tr>
+<tr>
+<td>Truy vấn con không tương quan</td>
+<td><em>uncorrelated subquery</em></td>
+<td>Truy vấn con không tham chiếu truy vấn ngoài, nên chỉ cần chạy một lần duy nhất</td>
+<td><a href="../cap-3-sql/27-subquery-va-exists/">Bài 27</a></td>
 </tr>
 <tr>
 <td>Luật hợp</td>
@@ -3364,6 +3754,12 @@
 <td><em>UNKNOWN</em></td>
 <td>Giá trị chân lý thứ ba, sinh ra mỗi khi so sánh với <code>NULL</code>; <code>WHERE</code> <strong>loại bỏ</strong> mọi dòng cho <code>UNKNOWN</code></td>
 <td><a href="../cap-3-sql/24-select-where-order-by/">Bài 24</a></td>
+</tr>
+<tr>
+<td>View cập nhật được</td>
+<td><em>updatable view</em></td>
+<td>View đủ đơn giản để <code>INSERT</code> / <code>UPDATE</code> / <code>DELETE</code> trực tiếp, thao tác tự chuyển xuống bảng gốc</td>
+<td><a href="../cap-3-sql/30-view-va-materialized-view/">Bài 30</a></td>
 </tr>
 <tr>
 <td>Cập nhật</td>
@@ -3414,6 +3810,12 @@
 <td>Một câu truy vấn được đặt tên; bản thân nó <strong>không chứa</strong> dữ liệu thật</td>
 <td><a href="../cap-0-nhap-mon/03-dbms-la-gi/">Bài 3</a></td>
 </tr>
+<tr>
+<td>Bất định</td>
+<td><em>VOLATILE</em></td>
+<td>Một hàm có thể cho kết quả khác nhau mỗi lần gọi hoặc có tác dụng phụ; là <strong>mặc định</strong> và không được tối ưu</td>
+<td><a href="../cap-3-sql/31-trigger-procedure-function/">Bài 31</a></td>
+</tr>
 </tbody>
 </table>
 <h2 id="w">W<a class="headerlink" href="#w" title="Permanent link">&para;</a></h2>
@@ -3432,6 +3834,30 @@
 <td><em>weak entity</em></td>
 <td>Thực thể không có thuộc tính khoá của riêng nó, nên phải mượn khoá của thực thể chủ</td>
 <td><a href="../cap-1-mo-hinh-er/09-participation-va-thuc-the-yeu/">Bài 9</a></td>
+</tr>
+<tr>
+<td>Cửa sổ</td>
+<td><em>window</em></td>
+<td>Tập dòng mà một hàm cửa sổ nhìn thấy khi đứng ở một dòng nhất định</td>
+<td><a href="../cap-3-sql/29-window-function/">Bài 29</a></td>
+</tr>
+<tr>
+<td>Khung cửa sổ</td>
+<td><em>window frame</em></td>
+<td>Phần của phân vùng mà hàm cửa sổ thật sự nhìn, khai bằng <code>ROWS</code>, <code>RANGE</code> hoặc <code>GROUPS</code>; mặc định là <code>RANGE ... CURRENT ROW</code></td>
+<td><a href="../cap-3-sql/29-window-function/">Bài 29</a></td>
+</tr>
+<tr>
+<td>Hàm cửa sổ</td>
+<td><em>window function</em></td>
+<td>Hàm tính trên các dòng liên quan tới dòng hiện tại mà <strong>không gom dòng</strong> — vào N dòng, ra N dòng</td>
+<td><a href="../cap-3-sql/29-window-function/">Bài 29</a></td>
+</tr>
+<tr>
+<td>Kiểm tra khi ghi qua view</td>
+<td><em>WITH CHECK OPTION</em></td>
+<td>Bắt mọi dòng ghi qua view phải thoả điều kiện <code>WHERE</code> của view, thay vì lặng lẽ lọt ra ngoài tầm nhìn của nó</td>
+<td><a href="../cap-3-sql/30-view-va-materialized-view/">Bài 30</a></td>
 </tr>
 </tbody>
 </table>

@@ -2,118 +2,142 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://hungnguyen010518.github.io/database-tu-a-z/</loc>
-         <lastmod>2026-09-24</lastmod>
+         <lastmod>2026-09-25</lastmod>
     </url>
     <url>
          <loc>https://hungnguyen010518.github.io/database-tu-a-z/dataset/</loc>
-         <lastmod>2026-09-24</lastmod>
+         <lastmod>2026-09-25</lastmod>
     </url>
     <url>
          <loc>https://hungnguyen010518.github.io/database-tu-a-z/glossary/</loc>
-         <lastmod>2026-09-24</lastmod>
+         <lastmod>2026-09-25</lastmod>
     </url>
     <url>
          <loc>https://hungnguyen010518.github.io/database-tu-a-z/cap-0-nhap-mon/01-du-lieu-va-thong-tin/</loc>
-         <lastmod>2026-09-24</lastmod>
+         <lastmod>2026-09-25</lastmod>
     </url>
     <url>
          <loc>https://hungnguyen010518.github.io/database-tu-a-z/cap-0-nhap-mon/02-tu-so-giay-den-excel/</loc>
-         <lastmod>2026-09-24</lastmod>
+         <lastmod>2026-09-25</lastmod>
     </url>
     <url>
          <loc>https://hungnguyen010518.github.io/database-tu-a-z/cap-0-nhap-mon/03-dbms-la-gi/</loc>
-         <lastmod>2026-09-24</lastmod>
+         <lastmod>2026-09-25</lastmod>
     </url>
     <url>
          <loc>https://hungnguyen010518.github.io/database-tu-a-z/cap-0-nhap-mon/04-cac-mo-hinh-du-lieu/</loc>
-         <lastmod>2026-09-24</lastmod>
+         <lastmod>2026-09-25</lastmod>
     </url>
     <url>
          <loc>https://hungnguyen010518.github.io/database-tu-a-z/cap-0-nhap-mon/05-cai-dat-postgresql/</loc>
-         <lastmod>2026-09-24</lastmod>
+         <lastmod>2026-09-25</lastmod>
     </url>
     <url>
          <loc>https://hungnguyen010518.github.io/database-tu-a-z/cap-1-mo-hinh-er/06-mo-hinh-quan-he/</loc>
-         <lastmod>2026-09-24</lastmod>
+         <lastmod>2026-09-25</lastmod>
     </url>
     <url>
          <loc>https://hungnguyen010518.github.io/database-tu-a-z/cap-1-mo-hinh-er/07-thuc-the-va-thuoc-tinh/</loc>
-         <lastmod>2026-09-24</lastmod>
+         <lastmod>2026-09-25</lastmod>
     </url>
     <url>
          <loc>https://hungnguyen010518.github.io/database-tu-a-z/cap-1-mo-hinh-er/08-moi-quan-he-va-cardinality/</loc>
-         <lastmod>2026-09-24</lastmod>
+         <lastmod>2026-09-25</lastmod>
     </url>
     <url>
          <loc>https://hungnguyen010518.github.io/database-tu-a-z/cap-1-mo-hinh-er/09-participation-va-thuc-the-yeu/</loc>
-         <lastmod>2026-09-24</lastmod>
+         <lastmod>2026-09-25</lastmod>
     </url>
     <url>
          <loc>https://hungnguyen010518.github.io/database-tu-a-z/cap-1-mo-hinh-er/10-bieu-do-er-ky-hieu-chen/</loc>
-         <lastmod>2026-09-24</lastmod>
+         <lastmod>2026-09-25</lastmod>
     </url>
     <url>
          <loc>https://hungnguyen010518.github.io/database-tu-a-z/cap-1-mo-hinh-er/11-bieu-do-er-crows-foot/</loc>
-         <lastmod>2026-09-24</lastmod>
+         <lastmod>2026-09-25</lastmod>
     </url>
     <url>
          <loc>https://hungnguyen010518.github.io/database-tu-a-z/cap-1-mo-hinh-er/12-bay-loai-khoa/</loc>
-         <lastmod>2026-09-24</lastmod>
+         <lastmod>2026-09-25</lastmod>
     </url>
     <url>
          <loc>https://hungnguyen010518.github.io/database-tu-a-z/cap-1-mo-hinh-er/13-mo-hinh-eer/</loc>
-         <lastmod>2026-09-24</lastmod>
+         <lastmod>2026-09-25</lastmod>
     </url>
     <url>
          <loc>https://hungnguyen010518.github.io/database-tu-a-z/cap-1-mo-hinh-er/14-chuyen-er-sang-bang/</loc>
-         <lastmod>2026-09-24</lastmod>
+         <lastmod>2026-09-25</lastmod>
     </url>
     <url>
          <loc>https://hungnguyen010518.github.io/database-tu-a-z/cap-1-mo-hinh-er/15-rang-buoc-toan-ven/</loc>
-         <lastmod>2026-09-24</lastmod>
+         <lastmod>2026-09-25</lastmod>
     </url>
     <url>
          <loc>https://hungnguyen010518.github.io/database-tu-a-z/cap-2-chuan-hoa/16-phu-thuoc-ham/</loc>
-         <lastmod>2026-09-24</lastmod>
+         <lastmod>2026-09-25</lastmod>
     </url>
     <url>
          <loc>https://hungnguyen010518.github.io/database-tu-a-z/cap-2-chuan-hoa/17-dang-chuan-1nf-2nf/</loc>
-         <lastmod>2026-09-24</lastmod>
+         <lastmod>2026-09-25</lastmod>
     </url>
     <url>
          <loc>https://hungnguyen010518.github.io/database-tu-a-z/cap-2-chuan-hoa/18-dang-chuan-3nf-bcnf/</loc>
-         <lastmod>2026-09-24</lastmod>
+         <lastmod>2026-09-25</lastmod>
     </url>
     <url>
          <loc>https://hungnguyen010518.github.io/database-tu-a-z/cap-2-chuan-hoa/19-dang-chuan-4nf-5nf-6nf/</loc>
-         <lastmod>2026-09-24</lastmod>
+         <lastmod>2026-09-25</lastmod>
     </url>
     <url>
          <loc>https://hungnguyen010518.github.io/database-tu-a-z/cap-2-chuan-hoa/20-denormalization/</loc>
-         <lastmod>2026-09-24</lastmod>
+         <lastmod>2026-09-25</lastmod>
     </url>
     <url>
          <loc>https://hungnguyen010518.github.io/database-tu-a-z/cap-3-sql/21-dai-so-quan-he/</loc>
-         <lastmod>2026-09-24</lastmod>
+         <lastmod>2026-09-25</lastmod>
     </url>
     <url>
          <loc>https://hungnguyen010518.github.io/database-tu-a-z/cap-3-sql/22-ddl-va-kieu-du-lieu/</loc>
-         <lastmod>2026-09-24</lastmod>
+         <lastmod>2026-09-25</lastmod>
     </url>
     <url>
          <loc>https://hungnguyen010518.github.io/database-tu-a-z/cap-3-sql/23-dml-insert-update-delete/</loc>
-         <lastmod>2026-09-24</lastmod>
+         <lastmod>2026-09-25</lastmod>
     </url>
     <url>
          <loc>https://hungnguyen010518.github.io/database-tu-a-z/cap-3-sql/24-select-where-order-by/</loc>
-         <lastmod>2026-09-24</lastmod>
+         <lastmod>2026-09-25</lastmod>
     </url>
     <url>
          <loc>https://hungnguyen010518.github.io/database-tu-a-z/cap-3-sql/25-join/</loc>
-         <lastmod>2026-09-24</lastmod>
+         <lastmod>2026-09-25</lastmod>
     </url>
     <url>
          <loc>https://hungnguyen010518.github.io/database-tu-a-z/cap-3-sql/26-group-by-having/</loc>
-         <lastmod>2026-09-24</lastmod>
+         <lastmod>2026-09-25</lastmod>
+    </url>
+    <url>
+         <loc>https://hungnguyen010518.github.io/database-tu-a-z/cap-3-sql/27-subquery-va-exists/</loc>
+         <lastmod>2026-09-25</lastmod>
+    </url>
+    <url>
+         <loc>https://hungnguyen010518.github.io/database-tu-a-z/cap-3-sql/28-cte-va-recursive-cte/</loc>
+         <lastmod>2026-09-25</lastmod>
+    </url>
+    <url>
+         <loc>https://hungnguyen010518.github.io/database-tu-a-z/cap-3-sql/29-window-function/</loc>
+         <lastmod>2026-09-25</lastmod>
+    </url>
+    <url>
+         <loc>https://hungnguyen010518.github.io/database-tu-a-z/cap-3-sql/30-view-va-materialized-view/</loc>
+         <lastmod>2026-09-25</lastmod>
+    </url>
+    <url>
+         <loc>https://hungnguyen010518.github.io/database-tu-a-z/cap-3-sql/31-trigger-procedure-function/</loc>
+         <lastmod>2026-09-25</lastmod>
+    </url>
+    <url>
+         <loc>https://hungnguyen010518.github.io/database-tu-a-z/cap-3-sql/32-jsonb-va-full-text-search/</loc>
+         <lastmod>2026-09-25</lastmod>
     </url>
 </urlset>

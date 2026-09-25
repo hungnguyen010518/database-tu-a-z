@@ -900,6 +900,18 @@
       
         
       
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
     
     
       
@@ -1291,6 +1303,132 @@
   
   <span class="md-ellipsis">
     Bài 26 — GROUP BY, HAVING và các hàm tổng hợp
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../27-subquery-va-exists/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 27 — Truy vấn con (Subquery) và EXISTS
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../28-cte-va-recursive-cte/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 28 — CTE và CTE đệ quy
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../29-window-function/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 29 — Window Function: tính toán theo cửa sổ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../30-view-va-materialized-view/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 30 — View và Materialized View
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../31-trigger-procedure-function/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 31 — Trigger, Stored Procedure và Function
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../32-jsonb-va-full-text-search/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 32 — JSONB và Full-Text Search
   </span>
   
 
@@ -1754,7 +1892,7 @@
 <div class="admonition danger">
 <p class="admonition-title"><code>TRUNCATE</code> không có <code>WHERE</code> — và đó là điểm mấu chốt</p>
 <p><code>TRUNCATE hoc_sinh;</code> xoá sạch 40 dòng, không hỏi lại, không cách nào giới hạn.</p>
-<p>Nó nhanh vì nó không đi qua từng dòng — nó vứt luôn cả tệp dữ liệu rồi tạo tệp mới. Đổi lại, nó <strong>không kích hoạt trigger <code>FOR EACH ROW</code></strong> (<strong>Bài 31</strong> <em>(sắp có)</em> sẽ dạy trigger), nên nếu bạn có trigger ghi nhật ký thì nhật ký sẽ trống trơn.</p>
+<p>Nó nhanh vì nó không đi qua từng dòng — nó vứt luôn cả tệp dữ liệu rồi tạo tệp mới. Đổi lại, nó <strong>không kích hoạt trigger <code>FOR EACH ROW</code></strong> (<a href="../31-trigger-procedure-function/">Bài 31</a> sẽ dạy trigger), nên nếu bạn có trigger ghi nhật ký thì nhật ký sẽ trống trơn.</p>
 </div>
 <h3 id="kieu-du-lieu">Kiểu dữ liệu<a class="headerlink" href="#kieu-du-lieu" title="Permanent link">&para;</a></h3>
 <p><strong>Kiểu dữ liệu</strong> (<em>data type</em>) là khai báo cho DBMS biết một cột chứa loại giá trị nào. Nó làm bốn việc cùng lúc:</p>
@@ -1923,7 +2061,7 @@
 <tr>
 <td><code>JSONB</code></td>
 <td>Tài liệu JSON đã phân tích sẵn</td>
-<td>Bài 32 <em>(sắp có)</em></td>
+<td><a href="../32-jsonb-va-full-text-search/">Bài 32</a></td>
 </tr>
 </tbody>
 </table>

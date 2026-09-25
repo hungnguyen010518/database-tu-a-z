@@ -900,6 +900,18 @@
       
         
       
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
     
     
       
@@ -1300,6 +1312,132 @@
   
   <span class="md-ellipsis">
     Bài 26 — GROUP BY, HAVING và các hàm tổng hợp
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../27-subquery-va-exists/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 27 — Truy vấn con (Subquery) và EXISTS
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../28-cte-va-recursive-cte/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 28 — CTE và CTE đệ quy
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../29-window-function/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 29 — Window Function: tính toán theo cửa sổ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../30-view-va-materialized-view/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 30 — View và Materialized View
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../31-trigger-procedure-function/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 31 — Trigger, Stored Procedure và Function
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../32-jsonb-va-full-text-search/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 32 — JSONB và Full-Text Search
   </span>
   
 
@@ -2052,7 +2190,7 @@
 <p class="admonition-title">Chi tiết đáng nhớ về <code>NULL</code> ở đây</p>
 <p>Lớp <code>L06</code> có <code>ma_gvcn</code> là <code>NULL</code>, nên vế phải của <code>EXCEPT</code> gồm <code>{GV01, GV02, GV03, GV04, GV05, NULL}</code>.</p>
 <p><code>EXCEPT</code> xử lý <code>NULL</code> như một giá trị bình thường: nó chỉ loại đi những mã <strong>trùng khớp</strong>, còn <code>NULL</code> không trùng với mã giáo viên nào nên không loại ai cả. Kết quả vẫn đúng 3 dòng.</p>
-<p>Nhưng nếu viết bằng <code>NOT IN</code> thì kết quả sẽ là <strong>0 dòng</strong> — một kết quả sai một cách bí ẩn. Đó là cái bẫy của <code>NULL</code>, và <a href="../24-select-where-order-by/">Bài 24</a> rồi <strong>Bài 27</strong> <em>(sắp có)</em> sẽ mổ xẻ nó.</p>
+<p>Nhưng nếu viết bằng <code>NOT IN</code> thì kết quả sẽ là <strong>0 dòng</strong> — một kết quả sai một cách bí ẩn. Đó là cái bẫy của <code>NULL</code>, và <a href="../24-select-where-order-by/">Bài 24</a> rồi <a href="../27-subquery-va-exists/">Bài 27</a> sẽ mổ xẻ nó.</p>
 </div>
 <h3 id="5-tich-descartes">5. × — Tích Descartes<a class="headerlink" href="#5-tich-descartes" title="Permanent link">&para;</a></h3>
 <blockquote>
@@ -2221,7 +2359,7 @@
 <td>Phép chia</td>
 <td>÷</td>
 <td><em>(không có)</em> — dựng bằng <code>GROUP BY ... HAVING count(...)</code> hoặc <code>NOT EXISTS</code> lồng đôi</td>
-<td><a href="../26-group-by-having/">Bài 26</a>, <strong>Bài 27</strong> <em>(sắp có)</em></td>
+<td><a href="../26-group-by-having/">Bài 26</a>, <a href="../27-subquery-va-exists/">Bài 27</a></td>
 </tr>
 <tr>
 <td><em>(không có trong đại số)</em></td>
