@@ -86,6 +86,29 @@ Cách nhớ bốn toán tử đầu — **một mũi tên là một tầng, hai 
 - **`jsonb_array_elements(mang)`** — bung một mảng JSON thành **nhiều dòng**, mỗi phần tử một dòng. Đây là một **hàm trả bảng**, nên nó đứng trong `FROM`. Bản `jsonb_array_elements_text` cho ra `text` thay vì `jsonb`.
 - **`jsonb_array_length`**, **`jsonb_object_keys`**, **`jsonb_pretty`** — đếm phần tử mảng, liệt kê khoá, và in ra cho người đọc.
 
+### `LATERAL` — cho bảng bên phải đọc được dòng bên trái
+
+Hàm `jsonb_array_elements` đứng trong `FROM`, nhưng nó cần **một mảng cụ thể** làm tham số. Và mảng đó lại nằm trong cột `du_lieu` của **từng dòng** bảng hồ sơ. Đây là chỗ mọi thứ bạn học ở [Bài 25](25-join.md) về `FROM` đều không giúp được.
+
+Quy tắc nền đó là: **các phần tử trong `FROM` không được nhắc tới cột của nhau.** Viết `FROM a, b` thì `b` được tính độc lập hoàn toàn với `a`; nếu bên trong `b` có một cột của `a` thì PostgreSQL báo lỗi đại ý *"tham chiếu không hợp lệ tới phần tử `FROM` của bảng `a`"*.
+
+**Kết nối ngang** (*lateral join*) là cách hợp pháp để phá đúng quy tắc đó. Từ khoá `LATERAL` nói với PostgreSQL: *"với **mỗi** dòng của phần tử bên trái, hãy tính lại phần tử bên phải một lần, và cho phép nó đọc các cột của dòng bên trái đó."*
+
+```
+SELECT ...
+FROM   bang_trai t
+CROSS JOIN LATERAL ham_tra_bang(t.mot_cot) AS b(cot_ra)
+```
+
+Bốn điều cần nhớ:
+
+- Nó là **cơ chế duy nhất** để phần bên phải nhận tham số lấy từ bảng đang quét. Nhờ nó mà một mảng JSONB trở lại được **mô hình quan hệ** của [Bài 6](../cap-1-mo-hinh-er/06-mo-hinh-quan-he.md), và `GROUP BY` của [Bài 26](26-group-by-having.md) dùng được.
+- Với một **truy vấn con** ở bên phải, `LATERAL` là **bắt buộc** — thiếu nó là lỗi.
+- Với một **lời gọi hàm** ở bên phải — đúng trường hợp của `jsonb_array_elements` — PostgreSQL coi `LATERAL` là **từ dư**: biểu thức hàm trong `FROM` vốn đã được phép tham chiếu các phần tử `FROM` đứng trước nó. Nghĩa là `FROM b32_ho_so h, jsonb_array_elements(h.du_lieu -> 'so_thich')` cũng chạy. Bài này vẫn **luôn viết `LATERAL` ra**, vì viết ra thì người đọc thấy ngay là có tham chiếu chéo, và vì bạn khỏi phải nhớ trường hợp nào cần trường hợp nào không.
+- Về ngữ nghĩa nó giống một **truy vấn con tương quan** của [Bài 27](27-subquery-va-exists.md) — chạy lại một lần cho mỗi dòng ngoài — chỉ khác là nó trả về **nhiều dòng** thay vì một giá trị.
+
+Và có một hệ quả dễ vấp: `CROSS JOIN LATERAL` với một hàm trả về **0 dòng** thì dòng bên trái **biến mất**. Muốn giữ dòng bên trái thì dùng `LEFT JOIN LATERAL ... ON TRUE`.
+
 ### Index `GIN`
 
 **`GIN`** (*Generalized Inverted Index* — chỉ mục đảo tổng quát) là loại index dành cho những cột mà **một giá trị chứa nhiều phần tử**: một tài liệu JSONB có nhiều khoá, một `tsvector` có nhiều từ, một mảng có nhiều phần tử.
@@ -141,7 +164,7 @@ Ba câu "không" thì JSONB là lựa chọn đúng. Một câu "có" thì nên 
 
 ### Full-text search
 
-**Full-text search** (*tìm kiếm toàn văn*) là tìm kiếm theo **từ** trong một đoạn văn bản, thay vì tìm theo chuỗi con.
+**Tìm kiếm toàn văn** (*full-text search*) là tìm kiếm theo **từ** trong một đoạn văn bản, thay vì tìm theo chuỗi con.
 
 Khác biệt với `LIKE '%...%'` của [Bài 24](24-select-where-order-by.md) là căn bản:
 
@@ -196,12 +219,12 @@ Cấu hình **`simple`** làm đúng một việc: đổi về chữ thường, 
 
 Còn vấn đề dấu thì giải bằng extension **`unaccent`**: nó bỏ dấu, biến `Đất rừng` thành `Dat rung`. Ghép `unaccent` với `simple` thành một cấu hình riêng, và ô tìm kiếm chịu được cả gõ có dấu lẫn không dấu.
 
-!!! warning "`unaccent` cần `CREATE EXTENSION`, và cần quyền superuser"
-    `unaccent` là một extension của nhóm `contrib`. Nó có trong bản PostgreSQL cài đầy đủ, nhưng **chưa được bật sẵn** trong database của bạn. Phải chạy `CREATE EXTENSION unaccent;` một lần, bằng một vai trò có quyền superuser.
+!!! info "`unaccent` cần một lần `CREATE EXTENSION` — nhưng **không** cần superuser"
+    `unaccent` thuộc nhóm **`contrib`**: nó đi kèm bản PostgreSQL cài đầy đủ nhưng **chưa được bật sẵn** trong từng database. Phải chạy `CREATE EXTENSION unaccent;` một lần cho mỗi database.
 
-    Vì các khối SQL của khóa học được kiểm tra tự động trên một môi trường không bảo đảm có extension này, **phần `unaccent` trong bài được đánh dấu là không chạy tự động**. Bạn hãy tự chạy nó trên máy mình — các câu lệnh đều đúng và đầy đủ.
+    Người ta hay tưởng việc này cần superuser, và điều đó **đúng với PostgreSQL 12 trở về trước**. Từ **PostgreSQL 13**, `unaccent` được đánh dấu là **extension đáng tin** (*trusted extension*), nghĩa là một vai trò thường cũng cài được — chỉ cần nó có quyền `CREATE` trên database đó. Đây là thay đổi đáng biết, vì nó là khác biệt giữa "làm được ngay" và "phải đi xin quyền admin".
 
-    Phần còn lại của bài dùng cấu hình `simple`, thứ luôn có sẵn trong mọi bản PostgreSQL.
+    Khóa học **chạy thật** phần này, nên mọi con số dưới đây đã được kiểm trên PostgreSQL 16.
 
 ### Bảng thuật ngữ
 
@@ -216,6 +239,9 @@ Còn vấn đề dấu thì giải bằng extension **`unaccent`**: nó bỏ d�
 | Từ dừng | *stop word* | Từ quá phổ biến nên bị bỏ khỏi index, ví dụ *the* trong tiếng Anh |
 | Đưa về dạng gốc | *stemming* | Quy các biến thể của một từ về một dạng, ví dụ *running* → *run*; tiếng Việt gần như không cần |
 | Bỏ dấu | *unaccent* | Extension biến `Đất rừng` thành `Dat rung`, để người gõ không dấu vẫn tìm ra |
+| Kết nối ngang | *lateral join* | Phép ghép cho bảng bên phải **đọc được cột của dòng bên trái** đang xét; cơ chế duy nhất để một hàm trả bảng nhận tham số từ bảng đang quét |
+| Từ tố | *lexeme* | Một từ đã được chuẩn hoá trong `tsvector` — đơn vị mà full-text search thật sự so khớp |
+| Cột sinh sẵn | *generated column* | Cột có giá trị tính từ các cột khác bằng một biểu thức `IMMUTABLE`, tự cập nhật mà không cần trigger |
 
 ## 🖼️ Sơ đồ
 
@@ -316,11 +342,12 @@ INSERT INTO b32_ho_so (ma_hs, du_lieu) VALUES
 ('HS004', '{"so_thich": [],
             "suc_khoe": {"chieu_cao": 145, "can_nang": 38},
             "clb": "Toan hoc"}'),
--- Phiếu của HS005 có MỘT ô nhập sai: phụ huynh điền nhầm đơn vị chiều cao.
--- Dữ liệu bẩn kiểu này là chuyện bình thường, và phần sau sẽ cho thấy nó phá báo cáo thế nào.
+-- Phiếu của HS005 có MỘT ô nhập sai: phụ huynh ghi số vào lẫn ô, nên chiều cao
+-- thành 98 trong khi cân nặng là 30. Dữ liệu bẩn kiểu này là chuyện bình thường,
+-- và phần sau sẽ cho thấy nó phá báo cáo thế nào.
 ('HS005', '{"so_thich": [],
             "suc_khoe": {"chieu_cao": 98, "can_nang": 30},
-            "ghi_chu": "phu huynh dien nham don vi chieu cao"}');
+            "ghi_chu": "phu huynh ghi nham o, chieu cao khong the la 98"}');
 
 -- KỲ VỌNG: so_ho_so = 5
 -- KỲ VỌNG: so_khoa_khac_nhau = 5
@@ -376,7 +403,7 @@ Cả hai cột đều `NULL`. Đây là hành vi tiện nhưng nguy hiểm: **g�
 
 ### So sánh cho đúng — và bẫy so chuỗi
 
-Chiều cao trong năm hồ sơ là 152, 148, 155, 145 và **98**. Con số cuối là ô nhập sai của `HS005`. Vậy số bạn cao hơn **149** cm là **2**: `HS001` và `HS003`.
+Chiều cao trong năm hồ sơ là 152, 148, 155, 145 và **98**. Con số cuối là ô nhập sai của `HS005` — 98 cm là chiều cao của một em bé ba tuổi, rõ ràng có người ghi nhầm ô. Vậy số bạn cao hơn **149** cm là **2**: `HS001` và `HS003`.
 
 Đếm bằng hai cách — một cách để nguyên `text`, một cách ép về số:
 
@@ -492,7 +519,24 @@ CROSS JOIN LATERAL jsonb_array_elements_text(h.du_lieu -> 'so_thich') AS st(so_t
 ORDER BY h.ma_hs, st.so_thich;
 ```
 
-**Năm dòng**: `2 + 1 + 2 + 0 + 0`. Hai bạn `HS004` và `HS005` có mảng rỗng nên họ **biến mất hoàn toàn** — `CROSS JOIN LATERAL` với một hàm trả 0 dòng thì dòng bên ngoài bị loại, đúng như tích Descartes của [Bài 21](21-dai-so-quan-he.md). Muốn giữ họ thì phải dùng `LEFT JOIN LATERAL ... ON TRUE`.
+**Năm dòng**: `2 + 1 + 2 + 0 + 0`.
+
+Hãy để ý chữ `LATERAL` — nó là thứ làm câu lệnh này chạy được. Hàm `jsonb_array_elements_text` cần một mảng cụ thể, và mảng đó là `h.du_lieu -> 'so_thich'` của **từng** dòng hồ sơ. Không có `LATERAL` thì bên phải của `FROM` không được nhắc tới `h`, và câu lệnh là lỗi cú pháp. Đây **không** phải tích Descartes của [Bài 21](21-dai-so-quan-he.md): tích Descartes ghép mọi dòng với mọi dòng, còn ở đây mỗi dòng bên trái sinh ra **tập dòng riêng của nó**.
+
+Và hai bạn `HS004` với `HS005` **biến mất hoàn toàn** khỏi kết quả, vì mảng `so_thich` của họ rỗng nên hàm trả về 0 dòng — mà `CROSS JOIN` thì cần bên phải có ít nhất một dòng. Muốn giữ họ lại thì đổi thành `LEFT JOIN LATERAL ... ON TRUE`, và họ sẽ hiện ra với cột sở thích là `NULL`.
+
+Kiểm chứng ngay lời hứa "muốn giữ họ lại thì dùng `LEFT JOIN LATERAL ... ON TRUE`":
+
+```sql
+-- KỲ VỌNG: 7 dòng
+-- KỲ VỌNG: ma_hs = HS001
+SELECT h.ma_hs, st.so_thich
+FROM b32_ho_so h
+LEFT JOIN LATERAL jsonb_array_elements_text(h.du_lieu -> 'so_thich') AS st(so_thich) ON TRUE
+ORDER BY h.ma_hs, st.so_thich NULLS FIRST;
+```
+
+**Bảy dòng** thay vì năm: `2 + 1 + 2 + 1 + 1`. Hai bạn có mảng rỗng nay hiện ra, mỗi bạn **một** dòng với cột sở thích là `NULL` — đúng ngữ nghĩa `LEFT JOIN` của [Bài 25](25-join.md). Mệnh đề `ON TRUE` chỉ là hình thức: `LEFT JOIN` bắt buộc phải có `ON`, mà ở đây không có điều kiện ghép nào để viết.
 
 Bây giờ đếm sở thích phổ biến — một phép `GROUP BY` bình thường trên dữ liệu vừa bung ra:
 
@@ -924,34 +968,78 @@ FROM b32_sach_tim;
 
 Gõ **có dấu** tìm ra `1` cuốn. Gõ **không dấu** tìm ra `0`. Với một ô tìm kiếm thật, nơi phần lớn người dùng gõ không dấu cho nhanh, đây là một lỗi nghiêm trọng.
 
-Cách giải: một **cấu hình tìm kiếm** riêng, ghép `unaccent` vào trước `simple`. Các câu lệnh dưới đây **cần quyền superuser** và extension `unaccent`, nên khóa học không chạy chúng tự động — hãy tự chạy trên máy mình:
+Cách giải: một **cấu hình tìm kiếm** riêng, ghép `unaccent` vào trước `simple`. Bốn bước, và cả bốn đều chạy thật.
 
-<!-- sql:khong-chay -->
+**Bước 1 — bật extension**, một lần cho mỗi database:
+
 ```sql
--- Bước 1: bật extension. Cần quyền superuser, chỉ làm một lần cho mỗi database.
 CREATE EXTENSION IF NOT EXISTS unaccent;
 
--- Bước 2: xem nó làm gì
-SELECT unaccent('Đất rừng phương Nam');
--- → Dat rung phuong Nam
+-- KỲ VỌNG: bo_dau = Dat rung phuong Nam
+SELECT unaccent('Đất rừng phương Nam') AS bo_dau;
+```
 
--- Bước 3: dựng một cấu hình tìm kiếm mới, sao từ 'simple'
-DROP TEXT SEARCH CONFIGURATION IF EXISTS vi_khong_dau;
-CREATE TEXT SEARCH CONFIGURATION vi_khong_dau ( COPY = simple );
+`Đất rừng phương Nam` thành `Dat rung phuong Nam`. Để ý cả chữ `Đ` cũng thành `D` — bộ quy tắc mặc định của `unaccent` phủ đủ các chữ tiếng Việt, kể cả `đ`, `ơ`, `ư`.
 
--- Bước 4: chèn unaccent vào TRƯỚC simple trong chuỗi xử lý từ
-ALTER TEXT SEARCH CONFIGURATION vi_khong_dau
+Dùng `IF NOT EXISTS` là có chủ đích: lệnh này **luỹ đẳng** (*idempotent*), chạy lại lần thứ hai không báo lỗi. Với một lệnh chỉ nên chạy một lần cho mỗi database thì đó là cách viết đúng.
+
+**Bước 2 — dựng một cấu hình mới, sao từ `simple`:**
+
+```sql
+DROP TEXT SEARCH CONFIGURATION IF EXISTS b32_vi_khong_dau;
+CREATE TEXT SEARCH CONFIGURATION b32_vi_khong_dau ( COPY = simple );
+
+-- KỲ VỌNG: 1 dòng
+-- KỲ VỌNG: ten_cau_hinh = b32_vi_khong_dau
+SELECT cfgname AS ten_cau_hinh
+FROM pg_ts_config
+WHERE cfgname = 'b32_vi_khong_dau';
+```
+
+(Trong dự án thật bạn sẽ đặt tên nó là `vi_khong_dau`; khóa học thêm tiền tố `b32_` chỉ để mọi đối tượng nháp của bài đều dễ tìm và dễ dọn.)
+
+**Bước 3 — chèn `unaccent` vào TRƯỚC `simple`** trong chuỗi xử lý từ:
+
+```sql
+ALTER TEXT SEARCH CONFIGURATION b32_vi_khong_dau
     ALTER MAPPING FOR asciiword, word, hword, hword_part, hword_asciipart,
                       asciihword, numword, numhword
     WITH unaccent, simple;
 
--- Bước 5: bây giờ cả hai kiểu gõ đều khớp
-SELECT to_tsvector('vi_khong_dau', 'Đất rừng phương Nam')
-       @@ websearch_to_tsquery('vi_khong_dau', 'dat rung')  AS go_khong_dau_van_ra,
-       to_tsvector('vi_khong_dau', 'Đất rừng phương Nam')
-       @@ websearch_to_tsquery('vi_khong_dau', 'đất rừng')  AS go_co_dau_cung_ra;
--- → cả hai đều true
+-- KỲ VỌNG: go_khong_dau_van_ra = true
+-- KỲ VỌNG: go_co_dau_cung_ra = true
+SELECT to_tsvector('b32_vi_khong_dau', 'Đất rừng phương Nam')
+       @@ websearch_to_tsquery('b32_vi_khong_dau', 'dat rung')  AS go_khong_dau_van_ra,
+       to_tsvector('b32_vi_khong_dau', 'Đất rừng phương Nam')
+       @@ websearch_to_tsquery('b32_vi_khong_dau', 'đất rừng')  AS go_co_dau_cung_ra;
 ```
+
+**Cả hai đều `true`.** Đây là lời giải cho vấn đề mà phép đếm `1` so với `0` ở trên đã phơi ra: gõ có dấu hay không dấu đều tìm được, vì **cả hai bên** — văn bản và câu hỏi — đều đi qua `unaccent` trước khi so khớp.
+
+**Bước 4 — áp lên bảng thật** bằng một cột sinh sẵn thứ hai và một index `GIN` riêng:
+
+```sql
+ALTER TABLE b32_sach_tim
+ADD COLUMN vec_khong_dau tsvector
+GENERATED ALWAYS AS (
+    to_tsvector('b32_vi_khong_dau',
+        coalesce(ten_sach, '') || ' ' ||
+        coalesce(tac_gia,  '') || ' ' ||
+        coalesce(tom_tat,  ''))
+) STORED;
+
+CREATE INDEX b32_idx_sach_vec_kd ON b32_sach_tim USING GIN (vec_khong_dau);
+
+-- KỲ VỌNG: go_co_dau = 1
+-- KỲ VỌNG: go_khong_dau = 1
+SELECT count(*) FILTER (WHERE vec_khong_dau @@ websearch_to_tsquery('b32_vi_khong_dau', 'đất rừng'))  AS go_co_dau,
+       count(*) FILTER (WHERE vec_khong_dau @@ websearch_to_tsquery('b32_vi_khong_dau', 'dat rung'))  AS go_khong_dau
+FROM b32_sach_tim;
+```
+
+Hãy so với phép đếm ở đầu mục này: trên cột `vec` dùng cấu hình `simple`, hai con số là **1** và **0**; trên cột `vec_khong_dau` chúng là **1** và **1**. Cùng một dữ liệu, cùng một câu hỏi — khác đúng một cấu hình tìm kiếm.
+
+Và đây là cách làm trong sản phẩm thật: giữ **một** cột `tsvector` dùng cấu hình bỏ dấu, rồi mọi truy vấn tìm kiếm đều dùng đúng cấu hình đó. Đừng giữ hai cột như bài này đang làm — bài giữ hai cột chỉ để bạn so sánh được.
 
 Bốn điều bắt buộc phải làm đúng, nếu không cấu hình sẽ im lặng không hoạt động:
 
@@ -989,7 +1077,28 @@ Bốn điều bắt buộc phải làm đúng, nếu không cấu hình sẽ im 
 
     Đây là lỗi mà một cột `INTEGER` thật **không thể** mắc — kiểu dữ liệu đã chặn từ đầu. Mỗi lần bạn viết `::INTEGER` sau một `->>`, hãy coi đó là một lời nhắc rằng bạn đang tự làm công việc mà lược đồ đáng lẽ phải làm cho bạn.
 
-    Và chú ý `->` không cứu được: `du_lieu #> '{suc_khoe,chieu_cao}' > '149'::jsonb` **chạy được** nhưng so theo thứ tự của kiểu `jsonb`, không phải thứ tự số.
+    Vậy giữ nguyên `jsonb` bằng `#>` thì sao? Câu `du_lieu #> '{suc_khoe,chieu_cao}' > '149'::jsonb` **chạy được** và ở đây nó cho ra đúng **2** — vì thứ tự của kiểu `jsonb` so **hai số JSON theo giá trị số**, y như bạn mong đợi.
+
+    Nhưng nó vỡ theo một cách khác, và cách đó tệ hơn. Thứ tự của kiểu `jsonb` xếp **các kiểu** trước rồi mới xếp giá trị trong cùng kiểu:
+
+    ```
+    Object  >  Array  >  Boolean  >  Number  >  String  >  Null
+    ```
+
+    Nghĩa là **mọi số đều lớn hơn mọi chuỗi**, bất kể giá trị. Chỉ cần một người ghi `"chieu_cao": "152cm"` — một chuỗi thay vì một số, thứ mà JSONB không hề cấm — là dòng đó rơi xuống dưới `152`, dưới `98`, dưới **tất cả** các số. Kiểm chứng:
+
+    ```sql
+    -- KỲ VỌNG: jsonb_cho_dung_ket_qua = 2
+    -- KỲ VỌNG: hai_so_so_dung_gia_tri = false
+    -- KỲ VỌNG: moi_so_lon_hon_moi_chuoi = true
+    SELECT count(*) FILTER (WHERE du_lieu #> '{suc_khoe,chieu_cao}' > '149'::jsonb)
+                                                     AS jsonb_cho_dung_ket_qua,
+           ('98'::jsonb > '149'::jsonb)              AS hai_so_so_dung_gia_tri,
+           ('1'::jsonb  > '"999"'::jsonb)            AS moi_so_lon_hon_moi_chuoi
+    FROM b32_ho_so;
+    ```
+
+    Số `1` "lớn hơn" chuỗi `"999"`. Đó là lý do câu trả lời đúng **không** phải `#>` mà là `::INTEGER`: phép ép kiểu **báo lỗi** ngay khi gặp `"152cm"`, thay vì lặng lẽ xếp nó sai chỗ. Một cột `INTEGER` thật thì còn tốt hơn nữa — nó không cho `"152cm"` vào bảng ngay từ đầu.
 
 !!! danger "Lỗi 2: Đưa chuỗi người dùng gõ vào `to_tsquery`"
     <!-- sql:co-y-loi -->
@@ -1082,7 +1191,7 @@ Bốn điều bắt buộc phải làm đúng, nếu không cấu hình sẽ im 
 
     b. `vec @@ to_tsquery('simple', 'nam & cao')`
 
-    c. `vec @@ websebsearch_to_tsquery('simple', '"nam cao"')` — lưu ý tên hàm viết sai, hãy sửa trước.
+    c. `vec @@ websearch_to_tsquery('simple', '"nam cao"')`
 
 4. Một ô tìm kiếm dùng `to_tsquery` và bị lỗi 500 khi người dùng gõ hai từ. Nêu cách sửa, và giải thích vì sao `plainto_tsquery` **cũng** là một lựa chọn nhưng kém `websearch_to_tsquery`.
 
@@ -1161,8 +1270,6 @@ Bốn điều bắt buộc phải làm đúng, nếu không cấu hình sẽ im 
     Với một cột thật `co_di_ung BOOLEAN` thì `NULL` nghĩa "chưa khai" và `false` nghĩa "không dị ứng" — hai trạng thái **khác nhau và cưỡng chế được**. Trong JSONB, bạn phải tự đặt quy ước và tự tuân thủ nó ở mọi chỗ trong mã. Đây là [Bài 24](24-select-where-order-by.md) quay lại, nhưng không có `NOT NULL` nào đứng canh.
 
     **Câu 3.**
-
-    Tên hàm đúng là `websearch_to_tsquery`, không phải `websebsearch_to_tsquery`.
 
     - a. **4 dòng** — `S002`, `S007`, `S008`, `S014`: mọi cuốn có từ `nam` ở bất kỳ đâu trong tên sách, tác giả hay tóm tắt.
     - b. **2 dòng** — `S007`, `S008`: phải có **cả** `nam` **và** `cao`. *Đất rừng phương Nam* và *Lịch sử Việt Nam bằng tranh* bị loại vì thiếu `cao`; *Toán nâng cao lớp 8* bị loại vì thiếu `nam`.
@@ -1254,13 +1361,20 @@ DROP TABLE IF EXISTS b32_ho_so CASCADE;
 DROP TABLE IF EXISTS b32_so_thich_quan_he CASCADE;
 DROP TABLE IF EXISTS b32_sach_tim CASCADE;
 
+-- Cấu hình tìm kiếm phải xoá SAU bảng, vì cột sinh sẵn `vec_khong_dau` phụ thuộc vào nó
+DROP TEXT SEARCH CONFIGURATION IF EXISTS b32_vi_khong_dau;
+
 -- KỲ VỌNG: bang_con_lai = 0
 -- KỲ VỌNG: index_con_lai = 0
+-- KỲ VỌNG: cau_hinh_con_lai = 0
 SELECT (SELECT count(*) FROM information_schema.tables WHERE table_name LIKE 'b32\_%') AS bang_con_lai,
-       (SELECT count(*) FROM pg_indexes WHERE indexname LIKE 'b32\_%')                AS index_con_lai;
+       (SELECT count(*) FROM pg_indexes WHERE indexname LIKE 'b32\_%')                AS index_con_lai,
+       (SELECT count(*) FROM pg_ts_config WHERE cfgname LIKE 'b32\_%')                AS cau_hinh_con_lai;
 ```
 
-Xoá bảng thì index trên nó mất theo, nên không cần `DROP INDEX` riêng.
+Xoá bảng thì index trên nó mất theo, nên không cần `DROP INDEX` riêng. Nhưng **thứ tự** giữa bảng và cấu hình tìm kiếm thì quan trọng: cột sinh sẵn `vec_khong_dau` phụ thuộc vào cấu hình `b32_vi_khong_dau`, nên xoá cấu hình trước sẽ bị PostgreSQL từ chối — đúng hành vi `RESTRICT` mà [Bài 30](30-view-va-materialized-view.md) đã dạy.
+
+Extension `unaccent` thì bài **không** xoá: nó không chiếm gì đáng kể, và nếu bạn đang làm một hệ thống tiếng Việt thì bạn sẽ còn cần nó.
 
 ## 🔑 Tóm tắt
 

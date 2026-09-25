@@ -506,7 +506,14 @@ Ba kỹ thuật làm nên kết quả đó:
 
 - **Cột `do_sau`** tăng 1 mỗi vòng. Nó vừa cho `repeat('    ', do_sau - 1)` để thụt lề, vừa là lá chắn chống vòng lặp.
 - **Cột `duong_dan`** nối mã của cả đường đi từ gốc. Sắp theo nó là cách để **con luôn nằm ngay dưới cha** — vì `'D01>D03'` nhỏ hơn `'D01>D03>D05'` mà lại nhỏ hơn `'D01>D04'` theo thứ tự chuỗi.
-- **`d.ma::TEXT`** trong phần neo. Kiểu dữ liệu của cả CTE do phần neo quyết định; không ép sang `TEXT` thì cột sẽ mang kiểu `CHAR(3)` và phép nối chuỗi ở phần đệ quy sẽ bị cắt mất.
+- **`d.ma::TEXT`** trong phần neo. Kiểu dữ liệu của cả CTE do phần neo quyết định; không ép sang `TEXT` thì cột sẽ mang kiểu `CHAR(3)` và PostgreSQL sẽ báo lỗi không khớp kiểu ở phần đệ quy.
+
+!!! danger "CTE đệ quy **không** hứa hẹn thứ tự dòng — `ORDER BY` ở ngoài mới hứa"
+    Đọc mô tả vòng lặp thì rất dễ tin rằng kết quả sẽ ra theo thứ tự "vòng 1 trước, vòng 2 sau". Nhưng đó là **cách máy sinh dòng**, không phải **thứ tự máy trả dòng về** — và SQL chưa bao giờ hứa hai thứ đó trùng nhau.
+
+    Đây đúng là quy tắc mà [Bài 24](24-select-where-order-by.md) đã phát biểu cho `LIMIT` và [Bài 29](29-window-function.md) sẽ phát biểu lại cho `OVER`: **không có `ORDER BY` ở tầng ngoài cùng thì không có thứ tự nào được bảo đảm.** Nó đúng cho mọi truy vấn, và CTE đệ quy không phải ngoại lệ dù nó "có vẻ" tuần tự.
+
+    Hậu quả cụ thể: nếu bạn bỏ `ORDER BY duong_dan` đi, cái cây thụt lề ở trên có thể in ra lộn xộn — hôm nay đúng, sau một lần bộ tối ưu đổi kế hoạch thì sai, mà không có thông báo gì. Cột `duong_dan` **không** tự làm nên thứ tự; nó chỉ cho bạn một cột **để mà** `ORDER BY`.
 
 Trả lời đúng câu hỏi của cô — *chỉ* những đơn vị dưới Khối Chuyên môn — chỉ cần đổi **phần neo**:
 
@@ -761,7 +768,17 @@ Còn lại đúng hai bảng — `b28_don_vi` và `b28_vong_tron` — vì phần
 
     Phần neo cho cột `duong_dan` kiểu `CHAR(3)` — vì `ma` là `CHAR(3)`. Phần đệ quy lại muốn nhồi vào đó một chuỗi dài hơn.
 
-    PostgreSQL có thể báo lỗi không khớp kiểu, hoặc — tệ hơn — **âm thầm cắt** chuỗi cho vừa 3 ký tự, và bạn nhận về một cây có đường dẫn sai mà không biết.
+    PostgreSQL **báo lỗi**, và thông báo lỗi của nó đáng đọc kỹ vì nó nói đúng cơ chế:
+
+    ```
+    ERROR:  recursive query "cay" column 2 has type character(3)
+            in non-recursive term but type text overall
+    HINT:  Cast the output of the non-recursive term to the correct type.
+    ```
+
+    Dịch ra: *"cột thứ 2 của truy vấn đệ quy `cay` mang kiểu `character(3)` ở **phần không đệ quy**, nhưng trên toàn bộ truy vấn thì nó là `text`"* — và gợi ý đi kèm nói thẳng phải làm gì: **ép kiểu đầu ra của phần không đệ quy**.
+
+    Đây là một trong những thông báo lỗi tử tế nhất của PostgreSQL: nó chỉ đúng chỗ sai, đúng cột, và đúng cách sửa. Tin tốt là nó **không** lặng lẽ cắt chuỗi cho vừa 3 ký tự — hai kiểu không khớp thì nó từ chối chạy, chứ không đoán hộ bạn.
 
     Sửa: **luôn ép kiểu tường minh ở phần neo** cho những cột sẽ lớn lên qua các vòng: `ma::TEXT AS duong_dan`. Quy tắc chung: kiểu của CTE đệ quy do phần neo quyết định, nên phần neo phải khai kiểu **rộng nhất** mà cột đó có thể cần.
 

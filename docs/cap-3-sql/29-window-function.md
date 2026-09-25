@@ -23,7 +23,7 @@ SQL có một công cụ riêng cho đúng nhu cầu này, và nó không đánh
 
 ### Window function là gì
 
-**Window function** (*hàm cửa sổ*) là hàm tính trên một **tập dòng liên quan tới dòng hiện tại**, nhưng **không gom các dòng đó lại**. Kết quả là: vào 40 dòng, ra 40 dòng — kèm thêm một cột mới chứa con số tính từ cả nhóm.
+**Hàm cửa sổ** (*window function*) là hàm tính trên một **tập dòng liên quan tới dòng hiện tại**, nhưng **không gom các dòng đó lại**. Kết quả là: vào 40 dòng, ra 40 dòng — kèm thêm một cột mới chứa con số tính từ cả nhóm.
 
 Tập dòng liên quan đó gọi là **cửa sổ** (*window*) của dòng hiện tại. Cái tên rất đúng: từ mỗi dòng, bạn nhìn qua một cái cửa sổ ra các dòng xung quanh, tính ra một con số, rồi ghi con số đó vào chính dòng mình đang đứng.
 
@@ -396,51 +396,55 @@ Hạng của lớp `L01` xếp theo điểm giảm dần (9, 8, 8, 7, 7, 5):
 - `dense_rank` đi liền 1, 2, **3**, 4 — nó đếm **mức điểm**, không đếm người.
 - `row_number` bất chấp ngang bằng, và **chính vì thế** nó không tất định: hai bạn cùng 8.00 nhận số 2 và 3, nhưng ai nhận số nào thì SQL không hứa.
 
-Khẳng định toàn bộ ba dãy số đó bằng một câu lệnh — và để ý `row_number` phải có cột phá thế ngang bằng mới kiểm được:
+Bảng trên là một tuyên bố gồm 24 con số, nên khóa học **kiểm cả 24 con số đó** bằng một câu lệnh. Câu lệnh ấy là một **phép đo**, không phải một mẫu để bạn học viết — nó gộp cả sáu dòng thành một chuỗi để CI so sánh được:
 
-```sql
--- KỲ VỌNG: day_diem = 9.00|8.00|8.00|7.00|7.00|5.00
--- KỲ VỌNG: day_row_number = 1|2|3|4|5|6
--- KỲ VỌNG: day_rank = 1|2|2|4|4|6
--- KỲ VỌNG: day_dense_rank = 1|2|2|3|3|4
--- KỲ VỌNG: day_ntile = 1|1|2|2|3|3
-SELECT string_agg(diem_so::text,  '|' ORDER BY thu_tu) AS day_diem,
-       string_agg(stt::text,      '|' ORDER BY thu_tu) AS day_row_number,
-       string_agg(hang::text,     '|' ORDER BY thu_tu) AS day_rank,
-       string_agg(hang_dac::text, '|' ORDER BY thu_tu) AS day_dense_rank,
-       string_agg(nhom::text,     '|' ORDER BY thu_tu) AS day_ntile
-FROM (
-    SELECT diem_so,
-           row_number() OVER (ORDER BY diem_so DESC, ma_hs) AS thu_tu,
-           row_number() OVER (ORDER BY diem_so DESC, ma_hs) AS stt,
-           rank()       OVER (ORDER BY diem_so DESC)        AS hang,
-           dense_rank() OVER (ORDER BY diem_so DESC)        AS hang_dac,
-           ntile(3)     OVER (ORDER BY diem_so DESC, ma_hs) AS nhom
-    FROM b29_diem_thi
-    WHERE ma_lop = 'L01'
-) AS t;
-```
+??? note "Cách khoá học tự kiểm cả 24 con số — bạn không cần viết được câu lệnh này"
+    ```sql
+    -- KỲ VỌNG: day_diem = 9.00|8.00|8.00|7.00|7.00|5.00
+    -- KỲ VỌNG: day_row_number = 1|2|3|4|5|6
+    -- KỲ VỌNG: day_rank = 1|2|2|4|4|6
+    -- KỲ VỌNG: day_dense_rank = 1|2|2|3|3|4
+    -- KỲ VỌNG: day_ntile = 1|1|2|2|3|3
+    SELECT string_agg(diem_so::text,  '|' ORDER BY thu_tu) AS day_diem,
+           string_agg(stt::text,      '|' ORDER BY thu_tu) AS day_row_number,
+           string_agg(hang::text,     '|' ORDER BY thu_tu) AS day_rank,
+           string_agg(hang_dac::text, '|' ORDER BY thu_tu) AS day_dense_rank,
+           string_agg(nhom::text,     '|' ORDER BY thu_tu) AS day_ntile
+    FROM (
+        SELECT diem_so,
+               -- thu_tu dùng để SẮP kết quả, stt là con số ĐEM RA so sánh.
+               -- Hai cột cùng một biểu thức, tách tên chỉ để đọc rõ vai trò.
+               row_number() OVER (ORDER BY diem_so DESC, ma_hs) AS thu_tu,
+               row_number() OVER (ORDER BY diem_so DESC, ma_hs) AS stt,
+               rank()       OVER (ORDER BY diem_so DESC)        AS hang,
+               dense_rank() OVER (ORDER BY diem_so DESC)        AS hang_dac,
+               ntile(3)     OVER (ORDER BY diem_so DESC, ma_hs) AS nhom
+        FROM b29_diem_thi
+        WHERE ma_lop = 'L01'
+    ) AS t;
+    ```
 
 Chú ý ba cửa sổ **khác nhau** trong cùng một câu lệnh: `row_number` và `ntile` thêm `ma_hs` để tất định, còn `rank` và `dense_rank` **không** được thêm — thêm vào là hết ngang bằng và cả hai biến thành `row_number`.
 
-Với lớp `L02` có **ba** bạn cùng 6.00, `rank` nhảy xa hơn nữa:
+Với lớp `L02` có **ba** bạn cùng 6.00, `rank` nhảy xa hơn nữa — dãy điểm là 10, 6, 6, 6, 4, 3 và `rank` cho `1 · 2 · 2 · 2 · 5 · 6`, còn `dense_rank` cho `1 · 2 · 2 · 2 · 3 · 4`:
 
-```sql
--- KỲ VỌNG: day_diem = 10.00|6.00|6.00|6.00|4.00|3.00
--- KỲ VỌNG: day_rank = 1|2|2|2|5|6
--- KỲ VỌNG: day_dense_rank = 1|2|2|2|3|4
-SELECT string_agg(diem_so::text,  '|' ORDER BY thu_tu) AS day_diem,
-       string_agg(hang::text,     '|' ORDER BY thu_tu) AS day_rank,
-       string_agg(hang_dac::text, '|' ORDER BY thu_tu) AS day_dense_rank
-FROM (
-    SELECT diem_so,
-           row_number() OVER (ORDER BY diem_so DESC, ma_hs) AS thu_tu,
-           rank()       OVER (ORDER BY diem_so DESC)        AS hang,
-           dense_rank() OVER (ORDER BY diem_so DESC)        AS hang_dac
-    FROM b29_diem_thi
-    WHERE ma_lop = 'L02'
-) AS t;
-```
+??? note "Cách khoá học tự kiểm ba dãy số này"
+    ```sql
+    -- KỲ VỌNG: day_diem = 10.00|6.00|6.00|6.00|4.00|3.00
+    -- KỲ VỌNG: day_rank = 1|2|2|2|5|6
+    -- KỲ VỌNG: day_dense_rank = 1|2|2|2|3|4
+    SELECT string_agg(diem_so::text,  '|' ORDER BY thu_tu) AS day_diem,
+           string_agg(hang::text,     '|' ORDER BY thu_tu) AS day_rank,
+           string_agg(hang_dac::text, '|' ORDER BY thu_tu) AS day_dense_rank
+    FROM (
+        SELECT diem_so,
+               row_number() OVER (ORDER BY diem_so DESC, ma_hs) AS thu_tu,
+               rank()       OVER (ORDER BY diem_so DESC)        AS hang,
+               dense_rank() OVER (ORDER BY diem_so DESC)        AS hang_dac
+        FROM b29_diem_thi
+        WHERE ma_lop = 'L02'
+    ) AS t;
+    ```
 
 `rank` đi 1, 2, 2, 2, **5** — nhảy hẳn hai số. `dense_rank` vẫn 1, 2, **3**, 4. Với câu hỏi *"bạn ấy thuộc mức điểm thứ mấy từ trên xuống"*, chỉ `dense_rank` trả lời đúng.
 
@@ -473,21 +477,22 @@ Kết quả đầy đủ — và hai cột **không** giống nhau:
 | HS003 | 8.00 | **35.00** | 35.00 |
 | HS001 | 9.00 | 44.00 | 44.00 |
 
-Khẳng định cả hai dãy số bằng một câu lệnh:
+Mười hai con số trong bảng trên cũng được CI kiểm hết, lại bằng một phép đo chứ không phải một mẫu để học:
 
-```sql
--- KỲ VỌNG: day_range = 5.00|19.00|19.00|35.00|35.00|44.00
--- KỲ VỌNG: day_rows = 5.00|12.00|19.00|27.00|35.00|44.00
-SELECT string_agg(luy_tien_mac_dinh::text, '|' ORDER BY thu_tu) AS day_range,
-       string_agg(luy_tien_rows::text,     '|' ORDER BY thu_tu) AS day_rows
-FROM (
-    SELECT row_number() OVER (ORDER BY diem_so, ma_hs)                          AS thu_tu,
-           sum(diem_so) OVER (ORDER BY diem_so)                                 AS luy_tien_mac_dinh,
-           sum(diem_so) OVER (ORDER BY diem_so, ma_hs ROWS UNBOUNDED PRECEDING) AS luy_tien_rows
-    FROM b29_diem_thi
-    WHERE ma_lop = 'L01'
-) AS t;
-```
+??? note "Cách khoá học tự kiểm hai dãy số này — bạn không cần viết được câu lệnh này"
+    ```sql
+    -- KỲ VỌNG: day_range = 5.00|19.00|19.00|35.00|35.00|44.00
+    -- KỲ VỌNG: day_rows = 5.00|12.00|19.00|27.00|35.00|44.00
+    SELECT string_agg(luy_tien_mac_dinh::text, '|' ORDER BY thu_tu) AS day_range,
+           string_agg(luy_tien_rows::text,     '|' ORDER BY thu_tu) AS day_rows
+    FROM (
+        SELECT row_number() OVER (ORDER BY diem_so, ma_hs)                          AS thu_tu,
+               sum(diem_so) OVER (ORDER BY diem_so)                                 AS luy_tien_mac_dinh,
+               sum(diem_so) OVER (ORDER BY diem_so, ma_hs ROWS UNBOUNDED PRECEDING) AS luy_tien_rows
+        FROM b29_diem_thi
+        WHERE ma_lop = 'L01'
+    ) AS t;
+    ```
 
 Vì sao cột `RANGE` nhảy bậc? Vì khung mặc định là `RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW`, và **`CURRENT ROW` trong `RANGE` gồm cả mọi dòng đồng hạng**.
 
@@ -904,17 +909,18 @@ Bảng nháp `b29_diem_thi` được giữ lại tới cuối bài, vì phần *
     - b. **4 dòng.** `rank` là 1, 2, 2, 2, 5, 6 — điều kiện `<= 3` lấy hạng 1 và cả ba hạng 2.
     - c. **5 dòng.** `dense_rank` là 1, 2, 2, 2, 3, 4 — điều kiện `<= 3` lấy thêm cả bạn 4 điểm ở hạng 3.
 
-    ```sql
-    -- KỲ VỌNG: a_row_number = 3
-    -- KỲ VỌNG: b_rank = 4
-    -- KỲ VỌNG: c_dense_rank = 5
-    SELECT (SELECT count(*) FROM (SELECT row_number() OVER (ORDER BY diem_so DESC, ma_hs) AS n
-                                  FROM b29_diem_thi WHERE ma_lop = 'L02') AS x WHERE x.n <= 3) AS a_row_number,
-           (SELECT count(*) FROM (SELECT rank()       OVER (ORDER BY diem_so DESC) AS n
-                                  FROM b29_diem_thi WHERE ma_lop = 'L02') AS y WHERE y.n <= 3) AS b_rank,
-           (SELECT count(*) FROM (SELECT dense_rank() OVER (ORDER BY diem_so DESC) AS n
-                                  FROM b29_diem_thi WHERE ma_lop = 'L02') AS z WHERE z.n <= 3) AS c_dense_rank;
-    ```
+    ??? note "Cách khoá học tự kiểm ba con số này"
+        ```sql
+        -- KỲ VỌNG: a_row_number = 3
+        -- KỲ VỌNG: b_rank = 4
+        -- KỲ VỌNG: c_dense_rank = 5
+        SELECT (SELECT count(*) FROM (SELECT row_number() OVER (ORDER BY diem_so DESC, ma_hs) AS n
+                                      FROM b29_diem_thi WHERE ma_lop = 'L02') AS x WHERE x.n <= 3) AS a_row_number,
+               (SELECT count(*) FROM (SELECT rank()       OVER (ORDER BY diem_so DESC) AS n
+                                      FROM b29_diem_thi WHERE ma_lop = 'L02') AS y WHERE y.n <= 3) AS b_rank,
+               (SELECT count(*) FROM (SELECT dense_rank() OVER (ORDER BY diem_so DESC) AS n
+                                      FROM b29_diem_thi WHERE ma_lop = 'L02') AS z WHERE z.n <= 3) AS c_dense_rank;
+        ```
 
     Bài học: *"lấy top 3"* là một câu **chưa rõ nghĩa**. Ba hàm trả lời ba câu hỏi khác nhau — "ba dòng đầu", "những ai trong ba vị trí đầu", "những ai trong ba mức điểm cao nhất" — và bạn phải hỏi lại người đặt yêu cầu xem họ muốn cái nào.
 

@@ -102,7 +102,7 @@ Bảng được sắp xếp theo thứ tự chữ cái của **thuật ngữ ti�
 | Lược đồ cơ sở dữ liệu | *database schema* | Toàn bộ lược đồ quan hệ của một database ghép lại | [Bài 6](cap-1-mo-hinh-er/06-mo-hinh-quan-he.md) |
 | Hệ cơ sở dữ liệu | *database system* | DBMS cộng các database nó quản lý, cộng người dùng và ứng dụng dùng chúng | [Bài 3](cap-0-nhap-mon/03-dbms-la-gi.md) |
 | Hệ quản trị cơ sở dữ liệu | *DBMS — database management system* | Phần mềm quản lý cơ sở dữ liệu, ví dụ PostgreSQL, MySQL, Oracle | [Bài 3](cap-0-nhap-mon/03-dbms-la-gi.md) |
-| Bế tắc | *deadlock* | Hai giao dịch chờ khoá của nhau nên không ai đi tiếp được; hay xảy ra khi chúng lấy khoá theo hai thứ tự khác nhau | [Bài 31](cap-3-sql/31-trigger-procedure-function.md) |
+| Bế tắc | *deadlock* | Hai giao dịch chờ khoá của nhau nên không ai đi tiếp được; hay xảy ra khi chúng lấy khoá theo hai thứ tự khác nhau | **Bài 41** *(sắp có)* |
 | Khai báo | *declarative* | Kiểu ngôn ngữ chỉ mô tả thứ mình muốn, để phần mềm tự tìm cách lấy | [Bài 4](cap-0-nhap-mon/04-cac-mo-hinh-du-lieu.md) |
 | Luật tách | *decomposition* | Luật suy diễn: `X → YZ` thì `X → Y` và `X → Z` | [Bài 16](cap-2-chuan-hoa/16-phu-thuoc-ham.md) |
 | Giá trị mặc định | *default value* | Giá trị DBMS tự điền khi câu `INSERT` không nhắc tới cột; nó **không** thay được cho `NOT NULL` | [Bài 22](cap-3-sql/22-ddl-va-kieu-du-lieu.md) |
@@ -181,6 +181,7 @@ Bảng được sắp xếp theo thứ tự chữ cái của **thuật ngữ ti�
 
 | Tiếng Việt | English | Nghĩa trong một câu | Học ở bài |
 |---|---|---|---|
+| Luỹ đẳng | *idempotent* | Thao tác chạy lại lần thứ hai cho cùng kết quả và không báo lỗi, ví dụ `CREATE EXTENSION IF NOT EXISTS` | [Bài 32](cap-3-sql/32-jsonb-va-full-text-search.md) |
 | Định danh | *identifier* | Giá trị dùng để phân biệt bản ghi này với bản ghi khác | [Bài 1](cap-0-nhap-mon/01-du-lieu-va-thong-tin.md) |
 | Quan hệ nhận diện | *identifying relationship* | Mối quan hệ nối thực thể yếu với thực thể chủ cho nó mượn khoá | [Bài 9](cap-1-mo-hinh-er/09-participation-va-thuc-the-yeu.md) |
 | Ảnh | *image* | Khuôn mẫu dùng để tạo ra một vùng chứa | [Bài 5](cap-0-nhap-mon/05-cai-dat-postgresql.md) |
@@ -217,9 +218,10 @@ Bảng được sắp xếp theo thứ tự chữ cái của **thuật ngữ ti�
 
 | Tiếng Việt | English | Nghĩa trong một câu | Học ở bài |
 |---|---|---|---|
+| Kết nối ngang | *lateral join* | Phép ghép cho bảng bên phải **đọc được cột của dòng bên trái** đang xét; cơ chế duy nhất để một hàm trả bảng nhận tham số từ bảng đang quét | [Bài 32](cap-3-sql/32-jsonb-va-full-text-search.md) |
 | Kết nối ngoài bên trái | *LEFT OUTER JOIN* | Giữ mọi dòng bảng trái; các cột bên phải được điền `NULL` khi không tìm được dòng khớp | [Bài 25](cap-3-sql/25-join.md) |
 | Từ tố | *lexeme* | Một từ đã được chuẩn hoá trong `tsvector` — đơn vị mà full-text search thật sự so khớp | [Bài 32](cap-3-sql/32-jsonb-va-full-text-search.md) |
-| Tranh chấp khoá | *lock contention* | Nhiều giao dịch phải xếp hàng chờ khoá cùng một dòng, làm thông lượng ghi sụt hẳn | [Bài 31](cap-3-sql/31-trigger-procedure-function.md) |
+| Tranh chấp khoá | *lock contention* | Nhiều giao dịch phải xếp hàng chờ khoá cùng một dòng, làm thông lượng ghi sụt hẳn | **Bài 41** *(sắp có)* |
 | Độc lập dữ liệu logic | *logical data independence* | Đổi mức khái niệm mà mức ngoài không phải đổi theo | [Bài 3](cap-0-nhap-mon/03-dbms-la-gi.md) |
 | Mức logic | *logical level* | Mức đã biết sẽ có bảng nào, cột nào, nhưng chưa chọn hệ quản trị và chưa nói tới lưu trữ vật lý | [Bài 11](cap-1-mo-hinh-er/11-bieu-do-er-crows-foot.md) |
 | Thứ tự thực thi logic | *logical query processing order* | Trình tự ngữ nghĩa `FROM` → `WHERE` → `GROUP BY` → `HAVING` → `SELECT` → `DISTINCT` → `ORDER BY` → `LIMIT`, khác thứ tự viết | [Bài 26](cap-3-sql/26-group-by-having.md) |
@@ -389,6 +391,7 @@ Bảng được sắp xếp theo thứ tự chữ cái của **thuật ngữ ti�
 | Bẫy sự kiện | *trigger* | Đoạn lệnh mà database tự chạy mỗi khi một sự kiện dữ liệu xảy ra | [Bài 3](cap-0-nhap-mon/03-dbms-la-gi.md) |
 | Hàm trigger | *trigger function* | Hàm khai `RETURNS TRIGGER`, không nhận tham số thường, dùng `NEW` / `OLD`; một hàm dùng được cho nhiều bảng | [Bài 31](cap-3-sql/31-trigger-procedure-function.md) |
 | Phụ thuộc hàm tầm thường | *trivial functional dependency* | `X → Y` với `Y ⊆ X` — luôn đúng nên chẳng nói lên điều gì | [Bài 16](cap-2-chuan-hoa/16-phu-thuoc-ham.md) |
+| Extension đáng tin | *trusted extension* | Extension mà từ PostgreSQL 13 một vai trò thường cũng cài được, chỉ cần quyền `CREATE` trên database — `unaccent` là một trong số đó | [Bài 32](cap-3-sql/32-jsonb-va-full-text-search.md) |
 | Câu hỏi tìm kiếm | *tsquery* | Câu hỏi tìm kiếm đã chuẩn hoá, ghép bằng `&` và, `|` hoặc, `!` không, `<->` liền kề | [Bài 32](cap-3-sql/32-jsonb-va-full-text-search.md) |
 | Bộ | *tuple* | Tên học thuật của một hàng trong bảng — cùng nghĩa với *record* và *row* | [Bài 1](cap-0-nhap-mon/01-du-lieu-va-thong-tin.md) |
 

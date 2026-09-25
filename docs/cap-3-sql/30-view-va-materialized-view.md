@@ -27,7 +27,7 @@ Hai ý tưởng, hai công cụ, hai cái giá. Chọn cái nào và dựa vào 
 
 ### View
 
-**View** (*khung nhìn*) là một **truy vấn được đặt tên**, lưu trong lược đồ của database. Nó **không lưu dữ liệu**. Mỗi lần bạn đọc view, PostgreSQL chạy lại câu truy vấn gốc.
+**Khung nhìn** (*view*) là một **truy vấn được đặt tên**, lưu trong lược đồ của database. Nó **không lưu dữ liệu**. Mỗi lần bạn đọc view, PostgreSQL chạy lại câu truy vấn gốc.
 
 ```
 CREATE VIEW ten_view AS
@@ -54,7 +54,7 @@ Bốn lý do dùng view, theo thứ tự quan trọng:
 
 ### Materialized view
 
-**Materialized view** (*khung nhìn vật chất hoá*) là một view **có lưu kết quả lên đĩa**. Đọc nó là đọc dữ liệu đã tính sẵn, nhanh như đọc một bảng thường.
+**Khung nhìn vật chất hoá** (*materialized view*) là một view **có lưu kết quả lên đĩa**. Đọc nó là đọc dữ liệu đã tính sẵn, nhanh như đọc một bảng thường.
 
 ```
 CREATE MATERIALIZED VIEW ten_mv AS
@@ -660,7 +660,12 @@ DROP VIEW b30_v_lop_l01;
 
 PostgreSQL từ chối, và thông báo lỗi nói rõ có view `b30_v_lop_l01_nu` đang phụ thuộc vào nó. Đây là hành vi `RESTRICT` — mặc định, và là mặc định đúng.
 
-Xem danh sách phụ thuộc trước khi quyết định:
+Xem danh sách phụ thuộc trước khi quyết định. Câu lệnh dưới đây đọc hai **bảng hệ thống** của PostgreSQL, thứ mà [Bài 3](../cap-0-nhap-mon/03-dbms-la-gi.md) gọi là **từ điển dữ liệu**:
+
+- **`pg_rewrite`** giữ định nghĩa của mọi view — với PostgreSQL, một view thực chất là một **quy tắc viết lại** câu truy vấn.
+- **`pg_depend`** giữ mọi quan hệ "cái này phụ thuộc cái kia" trong database, và chính nó là thứ làm `DROP ... RESTRICT` biết phải từ chối.
+
+Bạn **không cần đọc hiểu** bốn phép `JOIN` dưới đây, và Cấp 4 sẽ dạy các bảng hệ thống một cách có hệ thống. Ở đây hãy coi nó là một **công cụ chép vào sổ tay** — thay tên view ở dòng `source.relname` là dùng được cho mọi trường hợp:
 
 ```sql
 -- KỲ VỌNG: 1 dòng
@@ -719,7 +724,7 @@ Vẫn đủ 43 dòng — 40 học sinh sao chép từ bảng thật, cộng `HS9
 Dòng cuối là toàn bộ lý do materialized view được gọi là cách phi chuẩn hoá **an toàn nhất**: nguy cơ lệch thu gọn lại thành đúng một biến số mà bạn **điều khiển được** — tần suất `REFRESH`.
 
 !!! warning "PostgreSQL **không** ghi lại thời điểm `REFRESH` gần nhất"
-    Không có cột hệ thống nào cho bạn biết một materialized view được làm mới lần cuối lúc nào. Câu lệnh trên chỉ minh hoạ cách truy vấn `pg_class`; nó không đo được độ cũ thật.
+    Nếu bạn định đi tìm một cột hệ thống cho biết materialized view được làm mới lần cuối lúc nào — **không có cột nào như vậy**. `pg_class` có `relispopulated` để nói "đã nạp dữ liệu hay chưa", nhưng không có gì nói "nạp lúc nào". Đây là một thiếu sót thật của PostgreSQL và bạn phải tự bù.
 
     Cách làm trong thực tế: **tự thêm một cột thời gian vào chính materialized view**.
 
