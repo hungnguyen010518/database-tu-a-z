@@ -1475,6 +1475,8 @@
       
         
       
+        
+      
     
     
       
@@ -1604,6 +1606,27 @@
   
   <span class="md-ellipsis">
     Bài 46 — Consensus và Raft: nhiều máy cùng đồng ý một điều
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cap-5-sieu-nang-cao/47-nosql-bon-ho/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 47 — NoSQL: bốn họ và cách chọn
   </span>
   
 
@@ -2199,7 +2222,7 @@
 <p>Bảng được sắp xếp theo thứ tự chữ cái của <strong>thuật ngữ tiếng Anh</strong>, vì đó là dạng bạn sẽ gặp khi đọc tài liệu và khi đi phỏng vấn.</p>
 <div class="admonition info">
 <p class="admonition-title">Bảng này lớn dần theo khóa học</p>
-<p>Mỗi khi một cấp độ mới được xuất bản, thuật ngữ của cấp đó được bổ sung vào đây. Hiện bảng phủ trọn <strong>Bài 1–46</strong>: Cấp 0 (Nhập môn), Cấp 1 (Mô hình quan hệ &amp; ER), Cấp 2 (Chuẩn hoá), Cấp 3 (SQL), Cấp 4 (Bên trong động cơ) và nửa đầu Cấp 5 (Siêu nâng cao).</p>
+<p>Mỗi khi một cấp độ mới được xuất bản, thuật ngữ của cấp đó được bổ sung vào đây. Hiện bảng phủ trọn <strong>Bài 1–47</strong>: Cấp 0 (Nhập môn), Cấp 1 (Mô hình quan hệ &amp; ER), Cấp 2 (Chuẩn hoá), Cấp 3 (SQL), Cấp 4 (Bên trong động cơ) và Cấp 5 (Siêu nâng cao) tới Bài 47.</p>
 </div>
 <div class="admonition tip">
 <p class="admonition-title">Vì sao có nhiều từ trùng nghĩa?</p>
@@ -2453,6 +2476,12 @@
 <td><a href="../cap-1-mo-hinh-er/08-moi-quan-he-va-cardinality/">Bài 8</a></td>
 </tr>
 <tr>
+<td>BSON</td>
+<td><em>Binary JSON</em></td>
+<td>JSON mã hoá sang nhị phân, kèm thêm kiểu ngày giờ, số nguyên 64 bit; dạng lưu trữ của MongoDB, cùng ý tưởng với <code>JSONB</code></td>
+<td><a href="../cap-5-sieu-nang-cao/47-nosql-bon-ho/">Bài 47</a></td>
+</tr>
+<tr>
 <td>Quét heap theo bitmap</td>
 <td><em>bitmap heap scan</em></td>
 <td>Gom mọi <code>ctid</code> từ index theo số trang trước, rồi đọc mỗi trang heap đúng một lần — <code>Bitmap Heap Scan</code></td>
@@ -2640,6 +2669,18 @@
 <td><a href="../cap-0-nhap-mon/05-cai-dat-postgresql/">Bài 5</a></td>
 </tr>
 <tr>
+<td>Khoá sắp xếp cụm</td>
+<td><em>clustering key</em></td>
+<td>Trong Cassandra: thứ tự các dòng được sắp sẵn trên đĩa bên trong một phân vùng</td>
+<td><a href="../cap-5-sieu-nang-cao/47-nosql-bon-ho/">Bài 47</a></td>
+</tr>
+<tr>
+<td>Bộ sưu tập</td>
+<td><em>collection</em></td>
+<td>Nhóm tài liệu cùng loại trong MongoDB, tương tự một bảng nhưng không ép mọi tài liệu có cùng các trường</td>
+<td><a href="../cap-5-sieu-nang-cao/47-nosql-bon-ho/">Bài 47</a></td>
+</tr>
+<tr>
 <td>Cột</td>
 <td><em>column</em></td>
 <td>Cách gọi khác của <em>field</em> (trường) và <em>attribute</em> (thuộc tính)</td>
@@ -2818,6 +2859,12 @@
 <td><em>cycle</em></td>
 <td>Vòng tròn cha–con trong một cây, thứ mà khoá ngoại tự tham chiếu không chặn được và gây đệ quy vô hạn</td>
 <td><a href="../cap-3-sql/28-cte-va-recursive-cte/">Bài 28</a></td>
+</tr>
+<tr>
+<td>Cypher</td>
+<td><em>Cypher</em></td>
+<td>Ngôn ngữ truy vấn đồ thị của Neo4j, vẽ đường đi cần tìm bằng ký tự <code>(nút)-[:CẠNH]-&gt;(nút)</code></td>
+<td><a href="../cap-5-sieu-nang-cao/47-nosql-bon-ho/">Bài 47</a></td>
 </tr>
 </tbody>
 </table>
@@ -3122,6 +3169,12 @@
 </thead>
 <tbody>
 <tr>
+<td>Cạnh</td>
+<td><em>edge</em></td>
+<td>Mối nối có tên và có hướng giữa hai nút trong database đồ thị, cũng mang thuộc tính</td>
+<td><a href="../cap-5-sieu-nang-cao/47-nosql-bon-ho/">Bài 47</a></td>
+</tr>
+<tr>
 <td>Mô hình ER mở rộng</td>
 <td><em>EER — Enhanced ER / Extended ER</em></td>
 <td>Mô hình ER cơ bản cộng thêm lớp cha – lớp con, các ràng buộc chuyên biệt hoá, và kết tập</td>
@@ -3132,6 +3185,12 @@
 <td><em>election timeout</em></td>
 <td>Không nghe lãnh đạo quá thời gian này thì ứng cử; chọn ngẫu nhiên để tránh phiếu chia đều</td>
 <td><a href="../cap-5-sieu-nang-cao/46-consensus-va-raft/">Bài 46</a></td>
+</tr>
+<tr>
+<td>Tài liệu lồng</td>
+<td><em>embedded document</em></td>
+<td>Đối tượng con nằm ngay trong tài liệu cha, đọc cùng một lần; hợp với dữ liệu có giới hạn và thuộc riêng tài liệu cha</td>
+<td><a href="../cap-5-sieu-nang-cao/47-nosql-bon-ho/">Bài 47</a></td>
 </tr>
 <tr>
 <td>Thực thể</td>
@@ -4037,6 +4096,12 @@
 <td><a href="../cap-5-sieu-nang-cao/44-cap-va-base/">Bài 44</a></td>
 </tr>
 <tr>
+<td>Nút</td>
+<td><em>node</em></td>
+<td>Một đối tượng trong database đồ thị — học sinh, lớp, giáo viên — mang nhãn và thuộc tính</td>
+<td><a href="../cap-5-sieu-nang-cao/47-nosql-bon-ho/">Bài 47</a></td>
+</tr>
+<tr>
 <td>Thuộc tính không khoá</td>
 <td><em>non-prime attribute</em></td>
 <td>Thuộc tính không nằm trong bất kỳ khoá dự tuyển nào</td>
@@ -4321,6 +4386,12 @@
 <td><a href="../cap-4-ben-trong-dong-co/40-wal-va-recovery/">Bài 40</a></td>
 </tr>
 <tr>
+<td>Dùng nhiều loại database</td>
+<td><em>polyglot persistence</em></td>
+<td>Một hệ thống dùng nhiều database khác họ, mỗi loại cho đúng việc của nó</td>
+<td><a href="../cap-5-sieu-nang-cao/47-nosql-bon-ho/">Bài 47</a></td>
+</tr>
+<tr>
 <td>Cổng</td>
 <td><em>port</em></td>
 <td>Con số phân biệt các máy chủ chạy trên cùng một máy; PostgreSQL mặc định là 5432</td>
@@ -4399,6 +4470,12 @@
 <td><a href="../cap-5-sieu-nang-cao/42-replication/">Bài 42</a></td>
 </tr>
 <tr>
+<td>Đồ thị thuộc tính</td>
+<td><em>property graph</em></td>
+<td>Mô hình đồ thị mà cả nút lẫn cạnh đều có nhãn và thuộc tính</td>
+<td><a href="../cap-5-sieu-nang-cao/47-nosql-bon-ho/">Bài 47</a></td>
+</tr>
+<tr>
 <td>Luật giả bắc cầu</td>
 <td><em>pseudotransitivity</em></td>
 <td>Luật suy diễn: <code>X → Y</code> và <code>WY → Z</code> thì <code>WX → Z</code></td>
@@ -4440,6 +4517,12 @@
 <td><em>query router</em></td>
 <td>Tầng biết luật chia, gửi mỗi truy vấn tới đúng mảnh</td>
 <td><a href="../cap-5-sieu-nang-cao/43-partitioning-va-sharding/">Bài 43</a></td>
+</tr>
+<tr>
+<td>Thiết kế theo truy vấn</td>
+<td><em>query-first design</em></td>
+<td>Sắp dữ liệu theo câu hỏi sẽ được hỏi để mỗi câu đọc đúng một chỗ; hệ quả là phi chuẩn hoá có chủ đích, cách thiết kế mặc định của NoSQL</td>
+<td><a href="../cap-5-sieu-nang-cao/47-nosql-bon-ho/">Bài 47</a></td>
 </tr>
 <tr>
 <td>Túc số</td>
@@ -4549,6 +4632,12 @@
 <td><em>redundant column</em></td>
 <td>Cột chép từ bảng khác sang để khỏi phải <code>JOIN</code></td>
 <td><a href="../cap-2-chuan-hoa/20-denormalization/">Bài 20</a></td>
+</tr>
+<tr>
+<td>Tham chiếu</td>
+<td><em>reference</em></td>
+<td>Lưu mã của tài liệu khác thay vì chép nội dung của nó vào; hợp với dữ liệu dùng chung hoặc lớn dần mãi</td>
+<td><a href="../cap-5-sieu-nang-cao/47-nosql-bon-ho/">Bài 47</a></td>
 </tr>
 <tr>
 <td>Toàn vẹn tham chiếu</td>
@@ -4772,6 +4861,18 @@
 <td><em>schema</em></td>
 <td>Cái khung của database — có bảng nào, cột nào, kiểu gì — thứ hầu như không đổi theo thời gian</td>
 <td><a href="../cap-0-nhap-mon/03-dbms-la-gi/">Bài 3</a></td>
+</tr>
+<tr>
+<td>Lược đồ khi đọc</td>
+<td><em>schema-on-read</em></td>
+<td>Dữ liệu ghi vào không bị kiểm cấu trúc; chương trình đọc tự hiểu cấu trúc</td>
+<td><a href="../cap-5-sieu-nang-cao/47-nosql-bon-ho/">Bài 47</a></td>
+</tr>
+<tr>
+<td>Lược đồ khi ghi</td>
+<td><em>schema-on-write</em></td>
+<td>Cấu trúc khai trước và bị kiểm ngay lúc ghi — cách của database quan hệ</td>
+<td><a href="../cap-5-sieu-nang-cao/47-nosql-bon-ho/">Bài 47</a></td>
 </tr>
 <tr>
 <td>Dạng chuẩn 2</td>
@@ -5205,6 +5306,12 @@
 <td><em>three-valued logic</em></td>
 <td>Hệ logic của SQL, có thêm giá trị thứ ba <code>UNKNOWN</code> bên cạnh <code>TRUE</code> và <code>FALSE</code></td>
 <td><a href="../cap-3-sql/24-select-where-order-by/">Bài 24</a></td>
+</tr>
+<tr>
+<td>Thời gian sống</td>
+<td><em>time to live</em> (TTL)</td>
+<td>Thời hạn gắn cho một khoá; hết hạn thì khoá tự biến mất — dùng cho phiên đăng nhập, mã OTP, bộ nhớ đệm</td>
+<td><a href="../cap-5-sieu-nang-cao/47-nosql-bon-ho/">Bài 47</a></td>
 </tr>
 <tr>
 <td>Tổng chi phí</td>

@@ -1,0 +1,2905 @@
+
+<!doctype html>
+<html lang="vi" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Khóa học cơ sở dữ liệu tiếng Việt, từ con số 0 tới mức siêu nâng cao — giải thích để học sinh cấp 2 cũng hiểu được.">
+      
+      
+      
+        <link rel="canonical" href="https://hungnguyen010518.github.io/database-tu-a-z/cap-5-sieu-nang-cao/47-nosql-bon-ho/">
+      
+      
+        <link rel="prev" href="../46-consensus-va-raft/">
+      
+      
+        <link rel="next" href="../../dataset/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.39">
+    
+    
+      
+        <title>Bài 47 — NoSQL: bốn họ và cách chọn - Database từ A-Z</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.8c3ca2c6.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#bai-47-nosql-bon-ho-va-cach-chon" class="md-skip">
+          Bỏ qua
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Đầu trang">
+    <a href="../.." title="Database từ A-Z" class="md-header__button md-logo" aria-label="Database từ A-Z" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3C7.58 3 4 4.79 4 7s3.58 4 8 4 8-1.79 8-4-3.58-4-8-4M4 9v3c0 2.21 3.58 4 8 4s8-1.79 8-4V9c0 2.21-3.58 4-8 4s-8-1.79-8-4m0 5v3c0 2.21 3.58 4 8 4s8-1.79 8-4v-3c0 2.21-3.58 4-8 4s-8-1.79-8-4"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Database từ A-Z
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Bài 47 — NoSQL: bốn họ và cách chọn
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Chuyển sang chế độ tối"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Chuyển sang chế độ tối" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Chuyển sang chế độ sáng"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Chuyển sang chế độ sáng" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Tìm kiếm" placeholder="Tìm kiếm" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Tìm kiếm">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Xoá" aria-label="Xoá" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/hungnguyen010518/database-tu-a-z" title="Xem mã nguồn" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    database-tu-a-z
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Thanh điều hướng" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Database từ A-Z" class="md-nav__button md-logo" aria-label="Database từ A-Z" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3C7.58 3 4 4.79 4 7s3.58 4 8 4 8-1.79 8-4-3.58-4-8-4M4 9v3c0 2.21 3.58 4 8 4s8-1.79 8-4V9c0 2.21-3.58 4-8 4s-8-1.79-8-4m0 5v3c0 2.21 3.58 4 8 4s8-1.79 8-4v-3c0 2.21-3.58 4-8 4s-8-1.79-8-4"/></svg>
+
+    </a>
+    Database từ A-Z
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/hungnguyen010518/database-tu-a-z" title="Xem mã nguồn" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    database-tu-a-z
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Trang chủ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Cấp 0 — Nhập môn
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Cấp 0 — Nhập môn
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-0-nhap-mon/01-du-lieu-va-thong-tin/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 1 — Dữ liệu, thông tin và tại sao phải lưu trữ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-0-nhap-mon/02-tu-so-giay-den-excel/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 2 — Từ sổ giấy đến Excel
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-0-nhap-mon/03-dbms-la-gi/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 3 — DBMS là gì
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-0-nhap-mon/04-cac-mo-hinh-du-lieu/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 4 — Các mô hình dữ liệu
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-0-nhap-mon/05-cai-dat-postgresql/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 5 — Cài đặt PostgreSQL
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Cấp 1 — Mô hình quan hệ & Biểu đồ ER
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Cấp 1 — Mô hình quan hệ & Biểu đồ ER
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/06-mo-hinh-quan-he/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 6 — Mô hình quan hệ: bảng, dòng, cột, miền giá trị, lược đồ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/07-thuc-the-va-thuoc-tinh/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 7 — Thực thể và các loại thuộc tính
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/08-moi-quan-he-va-cardinality/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 8 — Mối quan hệ, bậc và bản số (Cardinality)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/09-participation-va-thuc-the-yeu/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 9 — Ràng buộc tham gia và Thực thể yếu
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/10-bieu-do-er-ky-hieu-chen/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 10 — Biểu đồ ER — ký hiệu Chen
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/11-bieu-do-er-crows-foot/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 11 — Biểu đồ ER — ký hiệu Crow's Foot và vẽ bằng Mermaid
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/12-bay-loai-khoa/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 12 — Bảy loại khoá trong cơ sở dữ liệu
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/13-mo-hinh-eer/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 13 — Mô hình EER: Generalization, Specialization, Aggregation
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/14-chuyen-er-sang-bang/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 14 — Chuyển biểu đồ ER thành lược đồ quan hệ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/15-rang-buoc-toan-ven/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 15 — Ràng buộc toàn vẹn (Integrity Constraints)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Cấp 2 — Chuẩn hoá
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Cấp 2 — Chuẩn hoá
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-2-chuan-hoa/16-phu-thuoc-ham/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 16 — Phụ thuộc hàm và bao đóng
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-2-chuan-hoa/17-dang-chuan-1nf-2nf/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 17 — Dạng chuẩn 1 (1NF) và Dạng chuẩn 2 (2NF)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-2-chuan-hoa/18-dang-chuan-3nf-bcnf/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 18 — Dạng chuẩn 3 (3NF) và BCNF
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-2-chuan-hoa/19-dang-chuan-4nf-5nf-6nf/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 19 — 4NF, 5NF và 6NF
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-2-chuan-hoa/20-denormalization/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 20 — Phi chuẩn hoá — khi nào nên phá luật
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Cấp 3 — SQL từ 0 tới cao thủ
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Cấp 3 — SQL từ 0 tới cao thủ
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-3-sql/21-dai-so-quan-he/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 21 — Đại số quan hệ: nền toán học phía sau SQL
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-3-sql/22-ddl-va-kieu-du-lieu/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 22 — DDL: CREATE, ALTER, DROP và các kiểu dữ liệu
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-3-sql/23-dml-insert-update-delete/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 23 — DML: INSERT, UPDATE, DELETE
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-3-sql/24-select-where-order-by/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 24 — SELECT, WHERE, ORDER BY, LIMIT
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-3-sql/25-join/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 25 — JOIN: sáu cách ghép bảng
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-3-sql/26-group-by-having/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 26 — GROUP BY, HAVING và các hàm tổng hợp
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-3-sql/27-subquery-va-exists/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 27 — Truy vấn con (Subquery) và EXISTS
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-3-sql/28-cte-va-recursive-cte/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 28 — CTE và CTE đệ quy
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-3-sql/29-window-function/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 29 — Window Function: tính toán theo cửa sổ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-3-sql/30-view-va-materialized-view/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 30 — View và Materialized View
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-3-sql/31-trigger-procedure-function/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 31 — Trigger, Stored Procedure và Function
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-3-sql/32-jsonb-va-full-text-search/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 32 — JSONB và Full-Text Search
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Cấp 4 — Bên trong động cơ
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            Cấp 4 — Bên trong động cơ
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-4-ben-trong-dong-co/33-page-heap-tuple/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 33 — Trang, heap và tuple: PostgreSQL lưu dữ liệu thế nào
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-4-ben-trong-dong-co/34-index-va-b-tree/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 34 — Index và B+Tree
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-4-ben-trong-dong-co/35-cac-loai-index-khac/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 35 — Các loại index khác: Hash, GiST, GIN, BRIN
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-4-ben-trong-dong-co/36-explain-va-query-planner/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 36 — EXPLAIN và bộ tối ưu truy vấn
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-4-ben-trong-dong-co/37-transaction-va-acid/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 37 — Transaction và ACID
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-4-ben-trong-dong-co/38-isolation-level-va-anomaly/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 38 — Mức cô lập và các hiện tượng bất thường
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-4-ben-trong-dong-co/39-mvcc/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 39 — MVCC: nhiều phiên bản cho một dòng
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-4-ben-trong-dong-co/40-wal-va-recovery/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 40 — WAL, checkpoint và phục hồi sau sự cố
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-4-ben-trong-dong-co/41-lock-va-deadlock/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 41 — Khoá và bế tắc
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Cấp 5 — Siêu nâng cao
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            Cấp 5 — Siêu nâng cao
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../42-replication/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 42 — Replication: nhân bản dữ liệu ra nhiều máy
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../43-partitioning-va-sharding/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 43 — Partitioning và Sharding: chia nhỏ một bảng khổng lồ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../44-cap-va-base/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 44 — CAP và BASE: khi mạng đứt thì chọn gì
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../45-distributed-transaction/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 45 — Giao dịch phân tán: 2PC và Saga
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../46-consensus-va-raft/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 46 — Consensus và Raft: nhiều máy cùng đồng ý một điều
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Bài 47 — NoSQL: bốn họ và cách chọn
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Bài 47 — NoSQL: bốn họ và cách chọn
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Mục lục">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Mục lục
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#cau-chuyen-mo-au" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧠 Câu chuyện mở đầu
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#khai-niem-thuat-ngu" class="md-nav__link">
+    <span class="md-ellipsis">
+      📖 Khái niệm &amp; thuật ngữ
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📖 Khái niệm & thuật ngữ">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#nosql-la-gi-nhac-lai-va-noi-ky-hon" class="md-nav__link">
+    <span class="md-ellipsis">
+      NoSQL là gì — nhắc lại và nói kỹ hơn
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#thiet-ke-theo-truy-van-phi-chuan-hoa-co-chu-ich" class="md-nav__link">
+    <span class="md-ellipsis">
+      Thiết kế theo truy vấn — phi chuẩn hoá có chủ đích
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ho-1-khoagia-tri" class="md-nav__link">
+    <span class="md-ellipsis">
+      Họ 1 — Khoá–giá trị
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ho-2-tai-lieu" class="md-nav__link">
+    <span class="md-ellipsis">
+      Họ 2 — Tài liệu
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ho-3-cot-rong" class="md-nav__link">
+    <span class="md-ellipsis">
+      Họ 3 — Cột rộng
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ho-4-o-thi" class="md-nav__link">
+    <span class="md-ellipsis">
+      Họ 4 — Đồ thị
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#khong-phai-thay-the-ma-la-dung-ung-cho" class="md-nav__link">
+    <span class="md-ellipsis">
+      Không phải "thay thế" — mà là dùng đúng chỗ
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sau-cau-hoi-e-chon-database" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sáu câu hỏi để chọn database
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bang-thuat-ngu" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bảng thuật ngữ
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#so-o" class="md-nav__link">
+    <span class="md-ellipsis">
+      🖼️ Sơ đồ
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#thuc-hanh" class="md-nav__link">
+    <span class="md-ellipsis">
+      💻 Thực hành
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="💻 Thực hành">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dung-bo-suu-tap-ho-so-hoc-sinh" class="md-nav__link">
+    <span class="md-ellipsis">
+      Dựng bộ sưu tập hồ sơ học sinh
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cai-uoc-mot-lan-oc-va-moi-tai-lieu-mot-hinh-dang" class="md-nav__link">
+    <span class="md-ellipsis">
+      Cái được: một lần đọc, và mỗi tài liệu một hình dạng
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cai-mat-1-du-lieu-dung-chung-bi-chep-nhieu-lan" class="md-nav__link">
+    <span class="md-ellipsis">
+      Cái mất 1: dữ liệu dùng chung bị chép nhiều lần
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cai-mat-2-cau-hoi-cat-ngang-moi-tai-lieu" class="md-nav__link">
+    <span class="md-ellipsis">
+      Cái mất 2: câu hỏi cắt ngang mọi tài liệu
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#loi-thuong-gap" class="md-nav__link">
+    <span class="md-ellipsis">
+      ⚠️ Lỗi thường gặp
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bai-tap" class="md-nav__link">
+    <span class="md-ellipsis">
+      ✍️ Bài tập
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="✍️ Bài tập">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#don-dep-cuoi-bai" class="md-nav__link">
+    <span class="md-ellipsis">
+      Dọn dẹp cuối bài
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tom-tat" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔑 Tóm tắt
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../dataset/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Database mẫu
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../glossary/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bảng thuật ngữ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Mục lục">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Mục lục
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#cau-chuyen-mo-au" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧠 Câu chuyện mở đầu
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#khai-niem-thuat-ngu" class="md-nav__link">
+    <span class="md-ellipsis">
+      📖 Khái niệm &amp; thuật ngữ
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📖 Khái niệm & thuật ngữ">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#nosql-la-gi-nhac-lai-va-noi-ky-hon" class="md-nav__link">
+    <span class="md-ellipsis">
+      NoSQL là gì — nhắc lại và nói kỹ hơn
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#thiet-ke-theo-truy-van-phi-chuan-hoa-co-chu-ich" class="md-nav__link">
+    <span class="md-ellipsis">
+      Thiết kế theo truy vấn — phi chuẩn hoá có chủ đích
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ho-1-khoagia-tri" class="md-nav__link">
+    <span class="md-ellipsis">
+      Họ 1 — Khoá–giá trị
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ho-2-tai-lieu" class="md-nav__link">
+    <span class="md-ellipsis">
+      Họ 2 — Tài liệu
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ho-3-cot-rong" class="md-nav__link">
+    <span class="md-ellipsis">
+      Họ 3 — Cột rộng
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ho-4-o-thi" class="md-nav__link">
+    <span class="md-ellipsis">
+      Họ 4 — Đồ thị
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#khong-phai-thay-the-ma-la-dung-ung-cho" class="md-nav__link">
+    <span class="md-ellipsis">
+      Không phải "thay thế" — mà là dùng đúng chỗ
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sau-cau-hoi-e-chon-database" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sáu câu hỏi để chọn database
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bang-thuat-ngu" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bảng thuật ngữ
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#so-o" class="md-nav__link">
+    <span class="md-ellipsis">
+      🖼️ Sơ đồ
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#thuc-hanh" class="md-nav__link">
+    <span class="md-ellipsis">
+      💻 Thực hành
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="💻 Thực hành">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dung-bo-suu-tap-ho-so-hoc-sinh" class="md-nav__link">
+    <span class="md-ellipsis">
+      Dựng bộ sưu tập hồ sơ học sinh
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cai-uoc-mot-lan-oc-va-moi-tai-lieu-mot-hinh-dang" class="md-nav__link">
+    <span class="md-ellipsis">
+      Cái được: một lần đọc, và mỗi tài liệu một hình dạng
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cai-mat-1-du-lieu-dung-chung-bi-chep-nhieu-lan" class="md-nav__link">
+    <span class="md-ellipsis">
+      Cái mất 1: dữ liệu dùng chung bị chép nhiều lần
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cai-mat-2-cau-hoi-cat-ngang-moi-tai-lieu" class="md-nav__link">
+    <span class="md-ellipsis">
+      Cái mất 2: câu hỏi cắt ngang mọi tài liệu
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#loi-thuong-gap" class="md-nav__link">
+    <span class="md-ellipsis">
+      ⚠️ Lỗi thường gặp
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bai-tap" class="md-nav__link">
+    <span class="md-ellipsis">
+      ✍️ Bài tập
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="✍️ Bài tập">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#don-dep-cuoi-bai" class="md-nav__link">
+    <span class="md-ellipsis">
+      Dọn dẹp cuối bài
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tom-tat" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔑 Tóm tắt
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="bai-47-nosql-bon-ho-va-cach-chon">Bài 47 — NoSQL: bốn họ và cách chọn<a class="headerlink" href="#bai-47-nosql-bon-ho-va-cach-chon" title="Permanent link">&para;</a></h1>
+<div class="admonition abstract">
+<p class="admonition-title">🎯 Học xong bài này, bạn sẽ</p>
+<ul>
+<li>Mô tả được mô hình dữ liệu, cách truy vấn tiêu biểu và sản phẩm đại diện của bốn họ NoSQL: <strong>khoá–giá trị</strong> (Redis), <strong>tài liệu</strong> (MongoDB), <strong>cột rộng</strong> (Cassandra, HBase), <strong>đồ thị</strong> (Neo4j)</li>
+<li>Mô hình lại chính database <code>truong_hoc</code> theo từng họ, và chỉ ra điều gì <strong>dễ hơn</strong>, điều gì <strong>khó hơn</strong> so với bản quan hệ</li>
+<li>Hiểu vì sao NoSQL <strong>cố ý phi chuẩn hoá</strong>: thiết kế bắt đầu từ <strong>câu hỏi sẽ được hỏi</strong>, không bắt đầu từ thực thể</li>
+<li>Tự dựng một "document store" bằng <code>JSONB</code> ngay trong PostgreSQL, và đo tận mắt cái giá của việc chép dữ liệu vào nhiều tài liệu</li>
+<li>Trả lời được 6 câu hỏi để chọn loại database cho một bài toán — và biết rằng NoSQL là một <strong>đánh đổi khác</strong>, không phải bản "nâng cấp" của SQL</li>
+</ul>
+</div>
+<h2 id="cau-chuyen-mo-au">🧠 Câu chuyện mở đầu<a class="headerlink" href="#cau-chuyen-mo-au" title="Permanent link">&para;</a></h2>
+<p>Phòng giáo vụ đã quen với <strong>sổ bảng</strong>: mỗi cuốn sổ kẻ cột sẵn — sổ học sinh, sổ lớp, sổ điểm — và mỗi thông tin chỉ ghi <strong>ở một chỗ</strong>. Muốn biết điểm Toán của bạn An kèm tên cô chủ nhiệm, cô giáo vụ mở ba cuốn sổ, dò mã học sinh, dò mã lớp. Chậm một chút, nhưng không bao giờ sai: cô chủ nhiệm đổi tên thì chỉ sửa một dòng.</p>
+<p>Rồi trường có thêm bốn việc mà sổ bảng làm không thuận tay:</p>
+<ol>
+<li><strong>Bảo vệ cổng trường</strong> cần tra thật nhanh: <em>"thẻ số 1234 là của bạn nào?"</em>. Bác không cần biết gì thêm. Bác dán một tờ giấy lên tường: số thẻ → tên. Tra một cái là ra.</li>
+<li><strong>Cô y tế</strong> muốn mỗi học sinh có <strong>một bìa hồ sơ</strong> nhét đủ mọi thứ: thông tin cá nhân, phụ huynh, tiêm chủng, dị ứng. Bạn thì có ba tờ tiêm chủng, bạn thì có giấy khám mắt, bạn thì không có gì. Mở bìa là đủ, không phải chạy sang phòng khác.</li>
+<li><strong>Máy chấm công ở cổng</strong> ghi hàng chục nghìn lượt quẹt thẻ mỗi ngày, của nhiều trường trong quận. Người ta chỉ hỏi đúng một kiểu câu: <em>"bạn X quẹt thẻ những lúc nào trong tháng này?"</em>. Họ xếp giấy theo <strong>từng học sinh</strong>, trong mỗi xấp xếp theo <strong>thời gian</strong> — ghi vào cuối xấp là xong, không phải chèn giữa.</li>
+<li><strong>Thầy tổng phụ trách</strong> vẽ <strong>sơ đồ bạn bè</strong> lên bảng: mỗi bạn là một chấm, ai chơi thân với ai thì nối một đường. Thầy hỏi: <em>"bạn của bạn của An, mà chưa phải bạn của An, là những ai?"</em> — nhìn sơ đồ, lần theo đường nối, thấy ngay.</li>
+</ol>
+<p>Cả bốn cách ghi chép đều <strong>tốt hơn sổ bảng</strong> ở đúng việc của nó — và <strong>tệ hơn</strong> ở những việc khác. Tờ giấy của bác bảo vệ không trả lời được <em>"lớp 8A1 có những ai?"</em>. Bìa hồ sơ y tế mà ghi cả tên cô chủ nhiệm thì cô đổi lớp, phải sửa bốn mươi bìa. Xấp giấy chấm công không trả lời được <em>"hôm qua những ai đi muộn?"</em> nếu không lật từng xấp.</p>
+<p>Bốn cách ghi chép đó là bốn họ <strong>NoSQL</strong>.</p>
+<h2 id="khai-niem-thuat-ngu">📖 Khái niệm &amp; thuật ngữ<a class="headerlink" href="#khai-niem-thuat-ngu" title="Permanent link">&para;</a></h2>
+<h3 id="nosql-la-gi-nhac-lai-va-noi-ky-hon">NoSQL là gì — nhắc lại và nói kỹ hơn<a class="headerlink" href="#nosql-la-gi-nhac-lai-va-noi-ky-hon" title="Permanent link">&para;</a></h3>
+<p>Bài 4 đã giới thiệu <strong>NoSQL</strong> — <em>"không chỉ có SQL"</em> — và bốn họ của nó: <strong>khoá–giá trị</strong>, <strong>tài liệu</strong>, <strong>cột rộng</strong>, <strong>đồ thị</strong>. Bài này đi sâu vào từng họ.</p>
+<p>Điểm chung thật sự của bốn họ <strong>không</strong> phải là "không dùng SQL" — Cassandra có ngôn ngữ CQL trông rất giống SQL. Điểm chung là chúng <strong>bỏ bớt</strong> một số thứ mà database quan hệ coi là mặc định, để đổi lấy một thứ khác:</p>
+<table>
+<thead>
+<tr>
+<th>Bỏ bớt</th>
+<th>Để đổi lấy</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Lược đồ cố định khai trước</td>
+<td>Mỗi bản ghi có hình dạng riêng, đổi cấu trúc không cần <code>ALTER TABLE</code></td>
+</tr>
+<tr>
+<td><code>JOIN</code> giữa các bảng</td>
+<td>Một lần đọc lấy được đủ dữ liệu, không phải ghép</td>
+</tr>
+<tr>
+<td>Giao dịch ACID trải nhiều bản ghi (thường là vậy — một số sản phẩm đã thêm lại)</td>
+<td>Chia dữ liệu ra hàng trăm máy dễ dàng — <strong>mở rộng ngang</strong></td>
+</tr>
+<tr>
+<td>Nhất quán mạnh</td>
+<td><strong>Nhất quán cuối cùng</strong> và tính sẵn sàng khi mạng đứt — định lý CAP ở Bài 44</td>
+</tr>
+<tr>
+<td>Truy vấn tuỳ ý</td>
+<td>Truy vấn <strong>cực nhanh</strong> — nhưng chỉ cho những câu hỏi đã biết trước</td>
+</tr>
+</tbody>
+</table>
+<p>Dòng cuối là quan trọng nhất. Database quan hệ được thiết kế để trả lời <strong>bất kỳ</strong> câu hỏi nào bạn nghĩ ra sau này. Phần lớn NoSQL được thiết kế để trả lời <strong>thật nhanh một số câu hỏi</strong> bạn đã biết từ lúc thiết kế.</p>
+<h3 id="thiet-ke-theo-truy-van-phi-chuan-hoa-co-chu-ich">Thiết kế theo truy vấn — phi chuẩn hoá có chủ đích<a class="headerlink" href="#thiet-ke-theo-truy-van-phi-chuan-hoa-co-chu-ich" title="Permanent link">&para;</a></h3>
+<p>Với database quan hệ, bạn bắt đầu từ <strong>thực thể</strong>: có học sinh, có lớp, có điểm — chuẩn hoá tới 3NF, rồi câu hỏi nào cũng trả lời được bằng <code>JOIN</code>.</p>
+<p>Với phần lớn NoSQL, bạn bắt đầu từ <strong>câu hỏi</strong>: màn hình này cần hiện gì, API kia trả về gì. Rồi bạn sắp dữ liệu sao cho <strong>mỗi câu hỏi đọc đúng một chỗ</strong>. Cách làm này gọi là <strong>thiết kế theo truy vấn</strong> (<em>query-first design</em>). Hệ quả tất yếu là <strong>phi chuẩn hoá</strong> — Bài 20: cùng một thông tin được chép vào nhiều nơi, vì mỗi câu hỏi cần nó ở một chỗ khác.</p>
+<p>Bài 20 coi phi chuẩn hoá là một <strong>ngoại lệ</strong> có lý do, trên nền một lược đồ đã chuẩn hoá. Trong NoSQL, nó là <strong>mặc định</strong>. Cái giá vẫn y hệt Bài 20: ghi nhiều chỗ hơn, và nguy cơ các bản chép lệch nhau. Chỉ khác là <strong>không có ràng buộc toàn vẹn nào</strong> giữ hộ bạn — ứng dụng phải tự lo.</p>
+<h3 id="ho-1-khoagia-tri">Họ 1 — Khoá–giá trị<a class="headerlink" href="#ho-1-khoagia-tri" title="Permanent link">&para;</a></h3>
+<p><strong>Mô hình dữ liệu.</strong> Một cuốn từ điển khổng lồ: mỗi <strong>khoá</strong> là một chuỗi duy nhất, trỏ tới một <strong>giá trị</strong>. Database không hiểu, không cần hiểu bên trong giá trị có gì. Tờ giấy của bác bảo vệ.</p>
+<p><strong>Truy vấn tiêu biểu.</strong> Chỉ có ba việc: đặt giá trị cho một khoá, đọc giá trị của một khoá, xoá một khoá. <strong>Không</strong> có "tìm mọi khoá có giá trị bằng X".</p>
+<p><strong>Sản phẩm đại diện.</strong> <strong>Redis</strong> — giữ toàn bộ dữ liệu trong RAM nên đọc ghi rất nhanh, có tuỳ chọn ghi xuống đĩa định kỳ. Redis không chỉ lưu chuỗi: giá trị có thể là danh sách, tập hợp, bảng băm, hay <strong>tập có thứ tự</strong> (mỗi phần tử kèm một điểm số, luôn được sắp theo điểm). Amazon DynamoDB cũng thường được xếp vào họ này.</p>
+<p>Một tính năng đặc trưng: <strong>thời gian sống</strong> (<em>time to live</em>, viết tắt <strong>TTL</strong>) — gắn cho một khoá một thời hạn, hết hạn thì khoá tự biến mất. Rất hợp cho phiên đăng nhập, mã OTP, bộ nhớ đệm.</p>
+<p><strong><code>truong_hoc</code> theo kiểu khoá–giá trị.</strong> Không ai đem <strong>cả</strong> database trường học vào Redis. Người ta đặt Redis <strong>cạnh</strong> PostgreSQL, cho những việc nhỏ cần nhanh:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>SET phien:7f3a9c "HS001" EX 1800          # phiên đăng nhập, tự hết hạn sau 30 phút
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>GET phien:7f3a9c                          # → "HS001"
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>HSET hs:HS001 ho_ten "Nguyễn Văn An" lop "8A1"   # bảng băm: vài trường của một học sinh
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>HGET hs:HS001 lop                         # → "8A1"
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>ZADD bxh:toan:8A1 8.5 HS001 9.2 HS002 7.8 HS003   # bảng xếp hạng Toán lớp 8A1
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>ZRANGE bxh:toan:8A1 0 2 REV WITHSCORES    # → ba bạn điểm cao nhất, đã sắp sẵn
+</span></code></pre></div>
+<p>So với bản quan hệ: đọc phiên đăng nhập là <strong>một</strong> lần tra khoá trong RAM, không có bộ tối ưu truy vấn, không có đĩa. Nhưng câu <em>"lớp 8A1 có những ai?"</em> không có cách nào hỏi — trừ khi bạn <strong>tự</strong> duy trì thêm một khoá <code>lop:8A1</code> chứa danh sách mã học sinh, và nhớ sửa nó mỗi khi có bạn chuyển lớp.</p>
+<p><strong>Dùng khi:</strong> bộ nhớ đệm, phiên đăng nhập, đếm lượt truy cập, bảng xếp hạng, hàng đợi đơn giản, giới hạn số lần gọi API.</p>
+<p><strong>Không dùng khi:</strong> dữ liệu có quan hệ với nhau và cần hỏi theo nhiều chiều; dữ liệu là nguồn chân lý duy nhất mà không chịu được mất vài giây cuối khi máy sập (tuỳ cấu hình ghi đĩa).</p>
+<h3 id="ho-2-tai-lieu">Họ 2 — Tài liệu<a class="headerlink" href="#ho-2-tai-lieu" title="Permanent link">&para;</a></h3>
+<p><strong>Mô hình dữ liệu.</strong> Mỗi bản ghi là một <strong>tài liệu</strong> tự chứa — giống một tệp JSON — gồm các trường, trường có thể chứa đối tượng con hoặc mảng. Các tài liệu cùng loại gom vào một <strong>bộ sưu tập</strong> (<em>collection</em>), tương tự một bảng nhưng <strong>không</strong> bắt mọi tài liệu có cùng các trường. Bìa hồ sơ của cô y tế.</p>
+<p>Lược đồ vẫn tồn tại — chương trình đọc dữ liệu vẫn phải biết trường nào tên gì — nhưng nó được áp <strong>lúc đọc</strong>, không phải lúc ghi. Người ta gọi đây là <strong>lược đồ khi đọc</strong> (<em>schema-on-read</em>), ngược với <strong>lược đồ khi ghi</strong> (<em>schema-on-write</em>) của database quan hệ: sai kiểu là bị từ chối ngay từ <code>INSERT</code>.</p>
+<p><strong>Sản phẩm đại diện.</strong> <strong>MongoDB</strong>. Nó lưu tài liệu dưới dạng <strong>BSON</strong> (<em>Binary JSON</em>) — JSON được mã hoá sang nhị phân, có thêm kiểu ngày giờ, số nguyên 64 bit, dữ liệu nhị phân. Ý tưởng giống hệt <code>JSONB</code> của Bài 32: lưu dạng nhị phân đã phân tích sẵn, đọc một trường không phải phân tích lại cả chuỗi. Một tài liệu BSON tối đa 16 MB.</p>
+<p><strong>Nhúng hay tham chiếu.</strong> Câu hỏi thiết kế lớn nhất của họ tài liệu: điểm của học sinh nằm <strong>trong</strong> tài liệu học sinh — <strong>tài liệu lồng</strong> (<em>embedded document</em>) — hay nằm ở bộ sưu tập riêng, trỏ về bằng mã — <strong>tham chiếu</strong> (<em>reference</em>)?</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Lồng vào</th>
+<th>Tham chiếu</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Đọc cả hồ sơ một học sinh</td>
+<td><strong>Một</strong> lần đọc</td>
+<td>Nhiều lần đọc, hoặc <code>$lookup</code> — thứ giống <code>JOIN</code> nhưng chậm hơn</td>
+</tr>
+<tr>
+<td>Dữ liệu lớn dần không giới hạn (nhật ký, bình luận)</td>
+<td>Nguy hiểm — tài liệu phình tới giới hạn 16 MB</td>
+<td>An toàn</td>
+</tr>
+<tr>
+<td>Dữ liệu dùng chung bởi nhiều tài liệu (tên cô chủ nhiệm)</td>
+<td>Chép vào <strong>mỗi</strong> tài liệu — đổi một lần phải sửa nhiều chỗ</td>
+<td>Một chỗ duy nhất</td>
+</tr>
+</tbody>
+</table>
+<p>Quy tắc kinh nghiệm: <strong>lồng</strong> những gì luôn được đọc <strong>cùng</strong> tài liệu cha và <strong>thuộc riêng</strong> về nó; <strong>tham chiếu</strong> những gì dùng chung hoặc lớn dần mãi.</p>
+<p><strong><code>truong_hoc</code> theo kiểu tài liệu.</strong> Một tài liệu cho mỗi học sinh:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">{</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="s2">"_id"</span><span class="o">:</span><span class="w"> </span><span class="s2">"HS001"</span><span class="p">,</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="s2">"ho_ten"</span><span class="o">:</span><span class="w"> </span><span class="s2">"Nguyễn Văn An"</span><span class="p">,</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="s2">"lop"</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s2">"ma_lop"</span><span class="o">:</span><span class="w"> </span><span class="s2">"L01"</span><span class="p">,</span><span class="w"> </span><span class="s2">"ten_lop"</span><span class="o">:</span><span class="w"> </span><span class="s2">"8A1"</span><span class="p">,</span><span class="w"> </span><span class="s2">"gvcn"</span><span class="o">:</span><span class="w"> </span><span class="s2">"Nguyễn Thị Lan"</span><span class="w"> </span><span class="p">},</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span><span class="s2">"phu_huynh"</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="s2">"ho_ten"</span><span class="o">:</span><span class="w"> </span><span class="s2">"Nguyễn Văn Thành"</span><span class="p">,</span><span class="w"> </span><span class="s2">"quan_he"</span><span class="o">:</span><span class="w"> </span><span class="s2">"Bố"</span><span class="p">,</span><span class="w"> </span><span class="s2">"sdt"</span><span class="o">:</span><span class="w"> </span><span class="s2">"0912345001"</span><span class="w"> </span><span class="p">},</span>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="s2">"ho_ten"</span><span class="o">:</span><span class="w"> </span><span class="s2">"Lê Thị Hạnh"</span><span class="p">,</span><span class="w">      </span><span class="s2">"quan_he"</span><span class="o">:</span><span class="w"> </span><span class="s2">"Mẹ"</span><span class="p">,</span><span class="w"> </span><span class="s2">"sdt"</span><span class="o">:</span><span class="w"> </span><span class="s2">"0912345002"</span><span class="w"> </span><span class="p">}</span>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">  </span><span class="p">],</span>
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">  </span><span class="s2">"diem"</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="s2">"mon"</span><span class="o">:</span><span class="w"> </span><span class="s2">"Toán"</span><span class="p">,</span><span class="w"> </span><span class="s2">"loai"</span><span class="o">:</span><span class="w"> </span><span class="s2">"Học kỳ"</span><span class="p">,</span><span class="w"> </span><span class="s2">"hoc_ky"</span><span class="o">:</span><span class="w"> </span><span class="mf">1</span><span class="p">,</span><span class="w"> </span><span class="s2">"diem"</span><span class="o">:</span><span class="w"> </span><span class="mf">8.5</span><span class="w"> </span><span class="p">},</span>
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">    </span><span class="p">...</span>
+</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">  </span><span class="p">]</span>
+</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="p">}</span>
+</span></code></pre></div>
+<div class="highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nx">db</span><span class="p">.</span><span class="nx">hoc_sinh</span><span class="p">.</span><span class="nx">find</span><span class="p">({</span><span class="w"> </span><span class="s2">"lop.ten_lop"</span><span class="o">:</span><span class="w"> </span><span class="s2">"8A1"</span><span class="w"> </span><span class="p">})</span><span class="w">                   </span><span class="c1">// học sinh lớp 8A1</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nx">db</span><span class="p">.</span><span class="nx">hoc_sinh</span><span class="p">.</span><span class="nx">find</span><span class="p">({</span><span class="w"> </span><span class="s2">"_id"</span><span class="o">:</span><span class="w"> </span><span class="s2">"HS001"</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s2">"phu_huynh"</span><span class="o">:</span><span class="w"> </span><span class="mf">1</span><span class="w"> </span><span class="p">})</span><span class="w">      </span><span class="c1">// chỉ lấy phụ huynh của HS001</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nx">db</span><span class="p">.</span><span class="nx">hoc_sinh</span><span class="p">.</span><span class="nx">updateMany</span><span class="p">({</span><span class="w"> </span><span class="s2">"lop.ma_lop"</span><span class="o">:</span><span class="w"> </span><span class="s2">"L01"</span><span class="w"> </span><span class="p">},</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">                       </span><span class="p">{</span><span class="w"> </span><span class="nx">$set</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s2">"lop.gvcn"</span><span class="o">:</span><span class="w"> </span><span class="s2">"Vũ Minh Tuấn"</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">})</span><span class="w"> </span><span class="c1">// đổi GVCN: sửa NHIỀU tài liệu</span>
+</span></code></pre></div>
+<p>So với bản quan hệ: 4 bảng (<code>hoc_sinh</code>, <code>lop</code>, <code>phu_huynh</code>, <code>diem</code>) gộp thành <strong>một</strong> tài liệu; màn hình "hồ sơ học sinh" đọc đúng một lần. Nhưng tên cô chủ nhiệm giờ nằm trong <strong>mỗi</strong> tài liệu của lớp — phần thực hành sẽ đếm xem là bao nhiêu chỗ.</p>
+<p><strong>Dùng khi:</strong> mỗi bản ghi có cấu trúc riêng và hay đổi — danh mục sản phẩm, hồ sơ người dùng, nội dung bài viết; ứng dụng đọc ghi <strong>nguyên cả</strong> một đối tượng.</p>
+<p><strong>Không dùng khi:</strong> dữ liệu có nhiều quan hệ nhiều–nhiều; cần báo cáo tổng hợp cắt ngang mọi tài liệu thường xuyên; cần ràng buộc toàn vẹn giữa các đối tượng.</p>
+<h3 id="ho-3-cot-rong">Họ 3 — Cột rộng<a class="headerlink" href="#ho-3-cot-rong" title="Permanent link">&para;</a></h3>
+<p><strong>Mô hình dữ liệu.</strong> Tên gọi dễ gây hiểu lầm: đây <strong>không</strong> phải là "lưu theo cột" để phân tích — thứ Bài 48 sẽ gặp. Mô hình của Cassandra là một <strong>bảng được chia mảnh sẵn</strong>: mỗi dòng thuộc về một <strong>phân vùng</strong>, xác định bởi <strong>khoá phân vùng</strong> — đúng khái niệm khoá phân mảnh ở Bài 43, băm ra để chọn máy. Trong một phân vùng, các dòng được <strong>sắp sẵn</strong> trên đĩa theo <strong>khoá sắp xếp cụm</strong> (<em>clustering key</em>). Xấp giấy chấm công: mỗi học sinh một xấp — phân vùng — trong xấp xếp theo thời gian — khoá sắp xếp cụm.</p>
+<p><strong>Truy vấn tiêu biểu.</strong> Câu hỏi <strong>phải</strong> chỉ ra khoá phân vùng. <em>"Mọi lượt quẹt thẻ của HS001 trong tháng 9"</em> thì cực nhanh: băm <code>HS001</code> ra đúng một máy, đọc một đoạn liên tục đã sắp sẵn. <em>"Mọi lượt quẹt thẻ lúc 7:15 sáng nay, của bất kỳ ai"</em> thì Cassandra <strong>từ chối</strong>, trừ khi bạn thêm <code>ALLOW FILTERING</code> — tức chấp nhận quét mọi máy.</p>
+<p><strong>Sản phẩm đại diện.</strong> <strong>Apache Cassandra</strong> — không có máy chính, mọi máy ngang hàng, nhận ghi ở bất kỳ máy nào, cho chọn mức nhất quán <strong>cho từng câu lệnh</strong> (<code>ONE</code>, <code>QUORUM</code>, <code>ALL</code>) — định lý CAP của Bài 44 thành một nút vặn. <strong>HBase</strong> chạy trên hệ thống tệp phân tán của Hadoop. Cả hai học từ bài báo Bigtable của Google năm 2006.</p>
+<p>Họ này ghi rất nhanh vì ghi chỉ là <strong>nối thêm</strong> — vào nhật ký và một bảng trong RAM, định kỳ đổ xuống đĩa thành tệp đã sắp xếp — không bao giờ tìm chỗ để sửa tại chỗ.</p>
+<p><strong><code>truong_hoc</code> theo kiểu cột rộng.</strong> Không có <code>JOIN</code>, nên <strong>mỗi câu hỏi một bảng</strong>. Cùng dữ liệu điểm, hai câu hỏi khác nhau, thành hai bảng — dữ liệu được chép hai lần:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>-- CQL của Cassandra. Câu hỏi 1: "điểm của một học sinh"
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>CREATE TABLE diem_theo_hoc_sinh (
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    ma_hs   text,
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    hoc_ky  int,
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    ma_mon  text,
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    loai    text,
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>    diem    decimal,
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>    PRIMARY KEY ((ma_hs), hoc_ky, ma_mon, loai)    -- (khoá phân vùng), khoá sắp xếp cụm
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>);
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
+</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>-- Câu hỏi 2: "bảng điểm một môn của một lớp trong một học kỳ"
+</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>CREATE TABLE diem_theo_lop_mon (
+</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>    ma_lop  text,
+</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>    ma_mon  text,
+</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>    hoc_ky  int,
+</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>    ma_hs   text,
+</span><span id="__span-3-17"><a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>    loai    text,
+</span><span id="__span-3-18"><a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>    diem    decimal,
+</span><span id="__span-3-19"><a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>    PRIMARY KEY ((ma_lop, ma_mon, hoc_ky), ma_hs, loai)
+</span><span id="__span-3-20"><a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>);
+</span><span id="__span-3-21"><a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>
+</span><span id="__span-3-22"><a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>SELECT * FROM diem_theo_hoc_sinh WHERE ma_hs = 'HS001';                            -- một phân vùng
+</span><span id="__span-3-23"><a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>SELECT * FROM diem_theo_lop_mon WHERE ma_lop = 'L01' AND ma_mon = 'MH01' AND hoc_ky = 1;
+</span></code></pre></div>
+<p>Mỗi lần giáo viên nhập một điểm, ứng dụng phải ghi vào <strong>cả hai</strong> bảng. Một câu hỏi thứ ba — <em>"điểm trung bình Toán của cả trường"</em> — không có bảng nào phục vụ: phải thêm bảng thứ ba, hoặc chạy một công cụ phân tích riêng quét hết dữ liệu.</p>
+<p><strong>Dùng khi:</strong> ghi cực nhiều, liên tục — nhật ký thiết bị, chấm công, cảm biến, lịch sử tin nhắn; dữ liệu trải trên nhiều trung tâm dữ liệu; câu hỏi ít và biết trước.</p>
+<p><strong>Không dùng khi:</strong> câu hỏi đa dạng, hay thay đổi; cần <code>JOIN</code> hoặc tổng hợp tuỳ ý; dữ liệu nhỏ vừa một máy PostgreSQL — khi đó mọi phức tạp của Cassandra chỉ là chi phí.</p>
+<h3 id="ho-4-o-thi">Họ 4 — Đồ thị<a class="headerlink" href="#ho-4-o-thi" title="Permanent link">&para;</a></h3>
+<p><strong>Mô hình dữ liệu.</strong> Dữ liệu là các <strong>nút</strong> (<em>node</em>) — học sinh, lớp, giáo viên — nối nhau bằng các <strong>cạnh</strong> (<em>edge</em>) có tên và có hướng — <em>HỌC_LỚP</em>, <em>CHƠI_THÂN</em>, <em>DẠY</em>. Cả nút và cạnh đều mang thuộc tính. Đây là <strong>đồ thị thuộc tính</strong> (<em>property graph</em>) — sơ đồ bạn bè của thầy tổng phụ trách.</p>
+<p>Điểm khác biệt cốt lõi: trong database đồ thị, mỗi nút <strong>giữ sẵn</strong> danh sách cạnh của nó. Đi từ một nút sang hàng xóm là <strong>đi theo con trỏ</strong>, không phải tra index như <code>JOIN</code>. Một <code>JOIN</code> trên bảng lớn tốn chi phí tra B+Tree cỡ log(n); đi một cạnh thì không phụ thuộc bảng lớn bao nhiêu. Khi câu hỏi phải đi <strong>nhiều bước</strong>, khác biệt này cộng dồn.</p>
+<p><strong>Truy vấn tiêu biểu.</strong> Mô tả <strong>hình dạng đường đi</strong> cần tìm. Ngôn ngữ phổ biến nhất là <strong>Cypher</strong> (<em>Cypher</em>) của Neo4j — vẽ đường đi bằng ký tự: <code>(nút)-[:CẠNH]-&gt;(nút)</code>.</p>
+<p><strong>Sản phẩm đại diện.</strong> <strong>Neo4j</strong>. Ngoài ra có Amazon Neptune, JanusGraph; và chuẩn SQL:2023 đã thêm phần truy vấn đồ thị thuộc tính vào chính SQL.</p>
+<p><strong><code>truong_hoc</code> theo kiểu đồ thị.</strong></p>
+<div class="highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>// Cypher của Neo4j
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>// Tạo: học sinh thuộc lớp, giáo viên dạy lớp, học sinh chơi thân với nhau
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>CREATE (an:HocSinh {ma_hs: 'HS001', ho_ten: 'Nguyễn Văn An'})
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>CREATE (l:Lop {ma_lop: 'L01', ten_lop: '8A1'})
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>CREATE (an)-[:HOC_LOP]-&gt;(l)
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>...
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>// Giáo viên nào dạy lớp của An?
+</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>MATCH (:HocSinh {ma_hs: 'HS001'})-[:HOC_LOP]-&gt;(:Lop)&lt;-[:DAY]-(g:GiaoVien)
+</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>RETURN g.ho_ten;
+</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>
+</span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>// Bạn của bạn của An, mà chưa phải bạn của An — gợi ý kết bạn
+</span><span id="__span-4-13"><a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>MATCH (an:HocSinh {ma_hs: 'HS001'})-[:CHOI_THAN]-(ban)-[:CHOI_THAN]-(goi_y)
+</span><span id="__span-4-14"><a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>WHERE goi_y &lt;&gt; an AND NOT (an)-[:CHOI_THAN]-(goi_y)
+</span><span id="__span-4-15"><a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>RETURN DISTINCT goi_y.ho_ten;
+</span><span id="__span-4-16"><a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>
+</span><span id="__span-4-17"><a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>// Mọi bạn nối được với An qua tối đa 4 bước
+</span><span id="__span-4-18"><a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>MATCH (:HocSinh {ma_hs: 'HS001'})-[:CHOI_THAN*1..4]-(x) RETURN DISTINCT x.ho_ten;
+</span></code></pre></div>
+<p>So với bản quan hệ: <em>"bạn của bạn"</em> trong SQL là hai lần <code>JOIN</code> một bảng <code>choi_than</code> với chính nó; <em>"tối đa 4 bước"</em> là một CTE đệ quy ở Bài 28 — viết được, nhưng dài và mỗi bước lại tra index. Ngược lại, <em>"điểm trung bình Toán của từng lớp"</em> — thứ SQL làm trong một dòng <code>GROUP BY</code> — không phải thế mạnh của database đồ thị.</p>
+<p><strong>Dùng khi:</strong> câu hỏi xoay quanh <strong>mối nối</strong> và đi nhiều bước — mạng xã hội, gợi ý, phát hiện gian lận (chuỗi tài khoản chuyển tiền vòng vòng), sơ đồ phụ thuộc, bản đồ đường đi.</p>
+<p><strong>Không dùng khi:</strong> câu hỏi chủ yếu là lọc và tổng hợp trên nhiều bản ghi; dữ liệu cực lớn cần chia mảnh — chia một đồ thị ra nhiều máy mà không cắt ngang quá nhiều cạnh là bài toán rất khó.</p>
+<h3 id="khong-phai-thay-the-ma-la-dung-ung-cho">Không phải "thay thế" — mà là dùng đúng chỗ<a class="headerlink" href="#khong-phai-thay-the-ma-la-dung-ung-cho" title="Permanent link">&para;</a></h3>
+<p>Một hệ thống thật hiếm khi chọn <strong>một</strong>. Cổng thông tin của một sở giáo dục có thể dùng PostgreSQL làm nguồn chân lý cho học sinh và điểm, Redis cho phiên đăng nhập, Cassandra cho dữ liệu chấm công của hàng trăm trường, và một database đồ thị cho gợi ý. Cách làm này gọi là <strong>dùng nhiều loại database</strong> (<em>polyglot persistence</em>). Cái giá: nhiều hệ thống phải vận hành, sao lưu, giám sát; và dữ liệu chảy giữa chúng — chủ đề của Bài 49.</p>
+<p>Ranh giới cũng đang mờ đi. PostgreSQL có <code>JSONB</code> và index GIN — Bài 32 — nên làm được phần lớn việc của một document store. MongoDB đã có giao dịch nhiều tài liệu. Nhiều database quan hệ phân tán mới chia mảnh tự động như Cassandra mà vẫn giữ SQL và ACID. Câu hỏi đúng không phải là <em>"SQL hay NoSQL"</em> mà là: <strong>bài toán này cần bảo đảm gì, và sẵn sàng đánh đổi gì?</strong></p>
+<h3 id="sau-cau-hoi-e-chon-database">Sáu câu hỏi để chọn database<a class="headerlink" href="#sau-cau-hoi-e-chon-database" title="Permanent link">&para;</a></h3>
+<p>Trước khi chọn, trả lời lần lượt sáu câu. Câu nào trả lời "có" ở cột giữa thì nghiêng hẳn về lựa chọn ở cột phải:</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Câu hỏi</th>
+<th>Nếu "có" thì nghiêng về</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Có cần giao dịch ACID trải trên <strong>nhiều</strong> bản ghi không — tiền, tồn kho, chỗ ngồi?</td>
+<td>Database quan hệ</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Câu hỏi có <strong>đa dạng</strong>, hay thay đổi, chưa biết hết lúc thiết kế không — báo cáo, thống kê?</td>
+<td>Database quan hệ</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Có phải chỉ <strong>tra theo một khoá</strong>, cần trả lời trong phần nghìn giây, dữ liệu mất được hoặc dựng lại được?</td>
+<td>Khoá–giá trị</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Câu hỏi có xoay quanh <strong>mối nối</strong> và phải đi <strong>nhiều bước</strong> không — bạn của bạn, chuỗi chuyển tiền?</td>
+<td>Đồ thị</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Có ghi <strong>cực nhiều</strong>, liên tục, vượt xa sức một máy, với vài kiểu câu hỏi cố định không?</td>
+<td>Cột rộng</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Mỗi bản ghi có <strong>hình dạng riêng</strong>, hay đổi cấu trúc, và thường được đọc ghi nguyên cả khối không?</td>
+<td>Tài liệu — hoặc cột <code>JSONB</code> trong PostgreSQL</td>
+</tr>
+</tbody>
+</table>
+<p>Không câu nào trả lời "có" rõ ràng, hoặc nhiều câu mâu thuẫn nhau? Bắt đầu bằng database quan hệ. Nó hiếm khi là lựa chọn <strong>tốt nhất</strong> cho một câu hỏi, nhưng rất hiếm khi là lựa chọn <strong>tệ</strong> cho cả hệ thống — và chuyển từ quan hệ sang NoSQL khi đã đo được giới hạn thật dễ hơn nhiều so với chiều ngược lại.</p>
+<h3 id="bang-thuat-ngu">Bảng thuật ngữ<a class="headerlink" href="#bang-thuat-ngu" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Tiếng Việt</th>
+<th>English</th>
+<th>Nghĩa dễ hiểu</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Thiết kế theo truy vấn</td>
+<td><em>query-first design</em></td>
+<td>Sắp dữ liệu theo câu hỏi sẽ được hỏi, mỗi câu đọc một chỗ; hệ quả là phi chuẩn hoá có chủ đích</td>
+</tr>
+<tr>
+<td>Thời gian sống</td>
+<td><em>time to live</em> (TTL)</td>
+<td>Thời hạn gắn cho một khoá; hết hạn thì tự biến mất</td>
+</tr>
+<tr>
+<td>Bộ sưu tập</td>
+<td><em>collection</em></td>
+<td>Nhóm tài liệu cùng loại trong MongoDB, tương tự một bảng nhưng không ép cùng các trường</td>
+</tr>
+<tr>
+<td>Lược đồ khi đọc</td>
+<td><em>schema-on-read</em></td>
+<td>Dữ liệu ghi vào không bị kiểm cấu trúc; chương trình đọc tự hiểu cấu trúc</td>
+</tr>
+<tr>
+<td>Lược đồ khi ghi</td>
+<td><em>schema-on-write</em></td>
+<td>Cấu trúc khai trước và bị kiểm ngay lúc ghi — cách của database quan hệ</td>
+</tr>
+<tr>
+<td>BSON</td>
+<td><em>Binary JSON</em></td>
+<td>JSON mã hoá nhị phân kèm thêm kiểu dữ liệu, dạng lưu trữ của MongoDB</td>
+</tr>
+<tr>
+<td>Tài liệu lồng</td>
+<td><em>embedded document</em></td>
+<td>Đối tượng con nằm ngay trong tài liệu cha, đọc cùng một lần</td>
+</tr>
+<tr>
+<td>Tham chiếu</td>
+<td><em>reference</em></td>
+<td>Lưu mã của tài liệu khác thay vì chép nội dung của nó</td>
+</tr>
+<tr>
+<td>Khoá sắp xếp cụm</td>
+<td><em>clustering key</em></td>
+<td>Trong Cassandra: thứ tự các dòng được sắp sẵn trên đĩa bên trong một phân vùng</td>
+</tr>
+<tr>
+<td>Nút</td>
+<td><em>node</em></td>
+<td>Một đối tượng trong database đồ thị — học sinh, lớp — mang thuộc tính</td>
+</tr>
+<tr>
+<td>Cạnh</td>
+<td><em>edge</em></td>
+<td>Mối nối có tên và hướng giữa hai nút, cũng mang thuộc tính</td>
+</tr>
+<tr>
+<td>Đồ thị thuộc tính</td>
+<td><em>property graph</em></td>
+<td>Mô hình đồ thị mà cả nút lẫn cạnh đều có nhãn và thuộc tính</td>
+</tr>
+<tr>
+<td>Cypher</td>
+<td><em>Cypher</em></td>
+<td>Ngôn ngữ truy vấn đồ thị của Neo4j, vẽ đường đi bằng ký tự <code>()-[]-&gt;()</code></td>
+</tr>
+<tr>
+<td>Dùng nhiều loại database</td>
+<td><em>polyglot persistence</em></td>
+<td>Một hệ thống dùng nhiều database khác họ, mỗi loại cho đúng việc của nó</td>
+</tr>
+</tbody>
+</table>
+<h2 id="so-o">🖼️ Sơ đồ<a class="headerlink" href="#so-o" title="Permanent link">&para;</a></h2>
+<p>Cùng một học sinh <code>HS001</code>, bốn cách sắp dữ liệu:</p>
+<pre class="mermaid"><code>flowchart TB
+    subgraph KV["Khoá–giá trị · Redis"]
+        K1["phien:7f3a9c"] --&gt; V1["&amp;quot;HS001&amp;quot;"]
+        K2["hs:HS001"] --&gt; V2["{ho_ten, lop}"]
+    end
+    subgraph DOC["Tài liệu · MongoDB"]
+        D1["&lt;b&gt;HS001&lt;/b&gt;&lt;br/&gt;ho_ten&lt;br/&gt;lop: {ten_lop, gvcn}&lt;br/&gt;phu_huynh: [ ... ]&lt;br/&gt;diem: [ ... ]"]
+    end
+    subgraph CF["Cột rộng · Cassandra"]
+        P1["&lt;b&gt;phân vùng HS001&lt;/b&gt;&lt;br/&gt;HK1 · MH01 · Học kỳ · 8.5&lt;br/&gt;HK1 · MH02 · Học kỳ · 9.0&lt;br/&gt;... sắp theo khoá cụm"]
+        P2["&lt;b&gt;phân vùng L01·MH01·HK1&lt;/b&gt;&lt;br/&gt;HS001 · 8.5&lt;br/&gt;HS002 · ...&lt;br/&gt;dữ liệu chép lần hai"]
+    end
+    subgraph GR["Đồ thị · Neo4j"]
+        N1(("An")) -- CHOI_THAN --&gt; N2(("Bình"))
+        N1 -- HOC_LOP --&gt; N3(("8A1"))
+        N4(("Cô Lan")) -- DAY --&gt; N3
+    end</code></pre>
+<p>Cách chọn database — đi từ câu hỏi quan trọng nhất:</p>
+<pre class="mermaid"><code>flowchart TD
+    Q1{"Cần giao dịch ACID&lt;br/&gt;trải nhiều bản ghi?"}
+    Q2{"Câu hỏi đa dạng,&lt;br/&gt;chưa biết hết trước?"}
+    Q3{"Chỉ tra theo một khoá,&lt;br/&gt;cần cực nhanh?"}
+    Q4{"Câu hỏi chủ yếu là&lt;br/&gt;đi theo mối nối nhiều bước?"}
+    Q5{"Ghi cực nhiều, dữ liệu&lt;br/&gt;vượt xa một máy?"}
+    SQL["&lt;b&gt;Database quan hệ&lt;/b&gt;&lt;br/&gt;PostgreSQL"]
+    KVs["&lt;b&gt;Khoá–giá trị&lt;/b&gt;&lt;br/&gt;Redis"]
+    GRs["&lt;b&gt;Đồ thị&lt;/b&gt;&lt;br/&gt;Neo4j"]
+    CFs["&lt;b&gt;Cột rộng&lt;/b&gt;&lt;br/&gt;Cassandra"]
+    DOCs["&lt;b&gt;Tài liệu&lt;/b&gt; — hoặc &lt;code&gt;JSONB&lt;/code&gt;&lt;br/&gt;trong PostgreSQL"]
+    Q1 -- có --&gt; SQL
+    Q1 -- không --&gt; Q2
+    Q2 -- có --&gt; SQL
+    Q2 -- không --&gt; Q3
+    Q3 -- có --&gt; KVs
+    Q3 -- không --&gt; Q4
+    Q4 -- có --&gt; GRs
+    Q4 -- không --&gt; Q5
+    Q5 -- có --&gt; CFs
+    Q5 -- không --&gt; DOCs
+
+    style SQL fill:#e3f2fd,stroke:#1e88e5,stroke-width:3px</code></pre>
+<p>Sơ đồ chỉ là điểm xuất phát: khi không chắc, mũi tên đầu tiên đã dẫn về database quan hệ — và đó là cố ý.</p>
+<h2 id="thuc-hanh">💻 Thực hành<a class="headerlink" href="#thuc-hanh" title="Permanent link">&para;</a></h2>
+<p>Không có Redis, MongoDB, Cassandra hay Neo4j trên máy khoá học. Nhưng Bài 32 đã cho thấy PostgreSQL có <code>JSONB</code>. Phần này dựng một <strong>document store</strong> thu nhỏ ngay trong PostgreSQL: mỗi học sinh một tài liệu, gồm lớp, phụ huynh và mọi điểm — rồi đo cái được và cái mất.</p>
+<h3 id="dung-bo-suu-tap-ho-so-hoc-sinh">Dựng bộ sưu tập hồ sơ học sinh<a class="headerlink" href="#dung-bo-suu-tap-ho-so-hoc-sinh" title="Permanent link">&para;</a></h3>
+<p>Mỗi tài liệu được ghép từ bốn bảng quan hệ. <code>jsonb_agg</code> gom nhiều dòng thành một mảng JSON; học sinh không có phụ huynh nhận mảng rỗng <code>[]</code> thay vì <code>NULL</code>:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">b47_ho_so</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">;</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">b47_ho_so</span><span class="w"> </span><span class="p">(</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">    </span><span class="n">ma_hs</span><span class="w">    </span><span class="nb">CHAR</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">    </span><span class="n">tai_lieu</span><span class="w"> </span><span class="n">JSONB</span><span class="w">   </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="p">);</span>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">b47_ho_so</span><span class="w"> </span><span class="p">(</span><span class="n">ma_hs</span><span class="p">,</span><span class="w"> </span><span class="n">tai_lieu</span><span class="p">)</span>
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">ma_hs</span><span class="p">,</span>
+</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">       </span><span class="n">jsonb_build_object</span><span class="p">(</span>
+</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">           </span><span class="s1">'ma_hs'</span><span class="p">,</span><span class="w">  </span><span class="n">h</span><span class="p">.</span><span class="n">ma_hs</span><span class="p">,</span>
+</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">           </span><span class="s1">'ho_ten'</span><span class="p">,</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">ho_ten</span><span class="p">,</span>
+</span><span id="__span-5-12"><a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">           </span><span class="s1">'lop'</span><span class="p">,</span><span class="w">    </span><span class="n">jsonb_build_object</span><span class="p">(</span><span class="s1">'ma_lop'</span><span class="p">,</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">ma_lop</span><span class="p">,</span><span class="w"> </span><span class="s1">'ten_lop'</span><span class="p">,</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">ten_lop</span><span class="p">,</span><span class="w"> </span><span class="s1">'gvcn'</span><span class="p">,</span><span class="w"> </span><span class="k">g</span><span class="p">.</span><span class="n">ho_ten</span><span class="p">),</span>
+</span><span id="__span-5-13"><a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="w">           </span><span class="s1">'phu_huynh'</span><span class="p">,</span><span class="w"> </span><span class="k">COALESCE</span><span class="p">(</span>
+</span><span id="__span-5-14"><a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="w">               </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">jsonb_agg</span><span class="p">(</span><span class="n">jsonb_build_object</span><span class="p">(</span><span class="s1">'ho_ten'</span><span class="p">,</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="n">ho_ten</span><span class="p">,</span><span class="w"> </span><span class="s1">'quan_he'</span><span class="p">,</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="n">quan_he</span><span class="p">,</span>
+</span><span id="__span-5-15"><a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="w">                                                    </span><span class="s1">'sdt'</span><span class="p">,</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="n">so_dien_thoai</span><span class="p">)</span><span class="w"> </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="n">ma_ph</span><span class="p">)</span>
+</span><span id="__span-5-16"><a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="w">                </span><span class="k">FROM</span><span class="w"> </span><span class="n">phu_huynh</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="n">ma_hs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">ma_hs</span><span class="p">),</span>
+</span><span id="__span-5-17"><a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="w">               </span><span class="s1">'[]'</span><span class="p">::</span><span class="n">jsonb</span><span class="p">),</span>
+</span><span id="__span-5-18"><a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="w">           </span><span class="s1">'diem'</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">jsonb_agg</span><span class="p">(</span><span class="n">jsonb_build_object</span><span class="p">(</span><span class="s1">'mon'</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="p">.</span><span class="n">ten_mon</span><span class="p">,</span><span class="w"> </span><span class="s1">'loai'</span><span class="p">,</span><span class="w"> </span><span class="n">d</span><span class="p">.</span><span class="n">loai_diem</span><span class="p">,</span>
+</span><span id="__span-5-19"><a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="w">                                                        </span><span class="s1">'hoc_ky'</span><span class="p">,</span><span class="w"> </span><span class="n">d</span><span class="p">.</span><span class="n">hoc_ky</span><span class="p">,</span><span class="w"> </span><span class="s1">'diem'</span><span class="p">,</span><span class="w"> </span><span class="n">d</span><span class="p">.</span><span class="n">diem_so</span><span class="p">)</span>
+</span><span id="__span-5-20"><a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a><span class="w">                                     </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">d</span><span class="p">.</span><span class="n">ma_diem</span><span class="p">)</span>
+</span><span id="__span-5-21"><a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a><span class="w">                    </span><span class="k">FROM</span><span class="w"> </span><span class="n">diem</span><span class="w"> </span><span class="n">d</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">mon_hoc</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">m</span><span class="p">.</span><span class="n">ma_mon</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">d</span><span class="p">.</span><span class="n">ma_mon</span>
+</span><span id="__span-5-22"><a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a><span class="w">                    </span><span class="k">WHERE</span><span class="w"> </span><span class="n">d</span><span class="p">.</span><span class="n">ma_hs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">ma_hs</span><span class="p">)</span>
+</span><span id="__span-5-23"><a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a><span class="w">       </span><span class="p">)</span>
+</span><span id="__span-5-24"><a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span><span class="w"> </span><span class="n">h</span>
+</span><span id="__span-5-25"><a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a><span class="k">JOIN</span><span class="w"> </span><span class="n">lop</span><span class="w"> </span><span class="n">l</span><span class="w">            </span><span class="k">ON</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">ma_lop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">ma_lop</span>
+</span><span id="__span-5-26"><a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a><span class="k">LEFT</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">giao_vien</span><span class="w"> </span><span class="k">g</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">g</span><span class="p">.</span><span class="n">ma_gv</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">ma_gvcn</span><span class="p">;</span>
+</span><span id="__span-5-27"><a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a>
+</span><span id="__span-5-28"><a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a><span class="c1">-- KỲ VỌNG: so_tai_lieu = 40</span>
+</span><span id="__span-5-29"><a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_tai_lieu</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">b47_ho_so</span><span class="p">;</span>
+</span></code></pre></div>
+<p><strong>40</strong> tài liệu, mỗi học sinh một. Xem thử tài liệu của <code>HS001</code>:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1">-- KỲ VỌNG: 1 dòng</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">jsonb_pretty</span><span class="p">(</span><span class="n">tai_lieu</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">ho_so</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">b47_ho_so</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">ma_hs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'HS001'</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Kết quả dài — đây là phần đầu và phần cuối (điểm được sinh ngẫu nhiên có hạt giống cố định, nên trên máy bạn cũng ra đúng những con số này nếu nạp dataset chuẩn):</p>
+<div class="highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>{
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>    "lop": {
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>        "gvcn": "Nguyễn Thị Lan",
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>        "ma_lop": "L01",
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>        "ten_lop": "8A1"
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>    },
+</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>    "diem": [
+</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>        {
+</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>            "mon": "Toán",
+</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>            "diem": 8.50,
+</span><span id="__span-7-11"><a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>            "loai": "Học kỳ",
+</span><span id="__span-7-12"><a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>            "hoc_ky": 1
+</span><span id="__span-7-13"><a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>        },
+</span><span id="__span-7-14"><a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>        ... 11 phần tử nữa ...
+</span><span id="__span-7-15"><a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>    ],
+</span><span id="__span-7-16"><a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>    "ma_hs": "HS001",
+</span><span id="__span-7-17"><a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>    "ho_ten": "Nguyễn Văn An",
+</span><span id="__span-7-18"><a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>    "phu_huynh": [
+</span><span id="__span-7-19"><a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>        { "sdt": "0912345001", "ho_ten": "Nguyễn Văn Thành", "quan_he": "Bố" },
+</span><span id="__span-7-20"><a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>        { "sdt": "0912345002", "ho_ten": "Lê Thị Hạnh", "quan_he": "Mẹ" }
+</span><span id="__span-7-21"><a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>    ]
+</span><span id="__span-7-22"><a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>}
+</span></code></pre></div>
+<p>Để ý: thứ tự các trường <strong>không</strong> giữ như lúc ghi — <code>JSONB</code> sắp lại khoá khi lưu dạng nhị phân, Bài 32 đã nói.</p>
+<h3 id="cai-uoc-mot-lan-oc-va-moi-tai-lieu-mot-hinh-dang">Cái được: một lần đọc, và mỗi tài liệu một hình dạng<a class="headerlink" href="#cai-uoc-mot-lan-oc-va-moi-tai-lieu-mot-hinh-dang" title="Permanent link">&para;</a></h3>
+<p>Màn hình "hồ sơ học sinh" của <code>HS040</code> — tên, lớp, số phụ huynh, số đầu điểm — là <strong>một</strong> lần đọc theo khoá chính, không có <code>JOIN</code> nào:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1">-- KỲ VỌNG: ho_ten = Đinh Thị Vân</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="c1">-- KỲ VỌNG: lop = 9A3</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="c1">-- KỲ VỌNG: so_phu_huynh = 0</span>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1">-- KỲ VỌNG: so_diem = 12</span>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">tai_lieu</span><span class="w"> </span><span class="o">-&gt;&gt;</span><span class="w"> </span><span class="s1">'ho_ten'</span><span class="w">                      </span><span class="k">AS</span><span class="w"> </span><span class="n">ho_ten</span><span class="p">,</span>
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">       </span><span class="n">tai_lieu</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="s1">'lop'</span><span class="w"> </span><span class="o">-&gt;&gt;</span><span class="w"> </span><span class="s1">'ten_lop'</span><span class="w">             </span><span class="k">AS</span><span class="w"> </span><span class="n">lop</span><span class="p">,</span>
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">       </span><span class="n">jsonb_array_length</span><span class="p">(</span><span class="n">tai_lieu</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="s1">'phu_huynh'</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_phu_huynh</span><span class="p">,</span>
+</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">       </span><span class="n">jsonb_array_length</span><span class="p">(</span><span class="n">tai_lieu</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="s1">'diem'</span><span class="p">)</span><span class="w">      </span><span class="k">AS</span><span class="w"> </span><span class="n">so_diem</span>
+</span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="k">FROM</span><span class="w"> </span><span class="n">b47_ho_so</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">ma_hs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'HS040'</span><span class="p">;</span>
+</span></code></pre></div>
+<p><code>HS040</code> — học sinh cố ý không có phụ huynh của dataset — có mảng phụ huynh <strong>rỗng</strong>; các bạn khác có một hoặc hai phần tử. Không cần cột nào <code>NULL</code>, không cần bảng nào riêng.</p>
+<p>Thêm một trường chỉ <strong>một</strong> học sinh có — giấy khám mắt, như bìa hồ sơ của cô y tế — cũng không cần <code>ALTER TABLE</code>:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="k">UPDATE</span><span class="w"> </span><span class="n">b47_ho_so</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="k">SET</span><span class="w"> </span><span class="n">tai_lieu</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tai_lieu</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="s1">'{"kham_mat": {"ngay": "2026-09-20", "can_thi": true}}'</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">ma_hs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'HS001'</span><span class="p">;</span>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="c1">-- KỲ VỌNG: co_kham_mat = 1</span>
+</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="c1">-- KỲ VỌNG: khong_co = 39</span>
+</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="n">FILTER</span><span class="w"> </span><span class="p">(</span><span class="k">WHERE</span><span class="w"> </span><span class="n">tai_lieu</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="s1">'kham_mat'</span><span class="p">)</span><span class="w">     </span><span class="k">AS</span><span class="w"> </span><span class="n">co_kham_mat</span><span class="p">,</span>
+</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="w">       </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="n">FILTER</span><span class="w"> </span><span class="p">(</span><span class="k">WHERE</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="n">tai_lieu</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="s1">'kham_mat'</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">khong_co</span>
+</span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="k">FROM</span><span class="w"> </span><span class="n">b47_ho_so</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Toán tử <code>?</code> — Bài 32 — hỏi tài liệu có khoá đó không. Đây chính là <strong>lược đồ khi đọc</strong>: database nhận mọi hình dạng; chương trình đọc phải tự biết rằng <code>kham_mat</code> có thể có hoặc không.</p>
+<h3 id="cai-mat-1-du-lieu-dung-chung-bi-chep-nhieu-lan">Cái mất 1: dữ liệu dùng chung bị chép nhiều lần<a class="headerlink" href="#cai-mat-1-du-lieu-dung-chung-bi-chep-nhieu-lan" title="Permanent link">&para;</a></h3>
+<p>Tên cô chủ nhiệm lớp 8A1 nằm trong bao nhiêu tài liệu? Toán tử <code>@&gt;</code> — "chứa" — tìm các tài liệu có đoạn con khớp:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1">-- KỲ VỌNG: so_tai_lieu_chua_ten_co = 6</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="c1">-- KỲ VỌNG: so_dong_quan_he_can_sua = 1</span>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="k">SELECT</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">b47_ho_so</span>
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">        </span><span class="k">WHERE</span><span class="w"> </span><span class="n">tai_lieu</span><span class="w"> </span><span class="o">@&gt;</span><span class="w"> </span><span class="s1">'{"lop": {"gvcn": "Nguyễn Thị Lan"}}'</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_tai_lieu_chua_ten_co</span><span class="p">,</span>
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">       </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">lop</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">ma_gvcn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'GV01'</span><span class="p">)</span><span class="w">          </span><span class="k">AS</span><span class="w"> </span><span class="n">so_dong_quan_he_can_sua</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Trong bản quan hệ, tên cô Lan nằm ở <strong>một</strong> dòng của <code>giao_vien</code>, và lớp 8A1 trỏ tới cô bằng <strong>một</strong> dòng của <code>lop</code>. Trong bản tài liệu, tên cô được chép vào <strong>6</strong> tài liệu — mỗi học sinh 8A1 một bản. Năm sau lớp 8A1 đổi chủ nhiệm thành thầy Tuấn; bản quan hệ sửa 1 dòng, bản tài liệu phải sửa cả 6:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="k">UPDATE</span><span class="w"> </span><span class="n">b47_ho_so</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="k">SET</span><span class="w"> </span><span class="n">tai_lieu</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">jsonb_set</span><span class="p">(</span><span class="n">tai_lieu</span><span class="p">,</span><span class="w"> </span><span class="s1">'{lop,gvcn}'</span><span class="p">,</span><span class="w"> </span><span class="s1">'"Vũ Minh Tuấn"'</span><span class="p">)</span>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">tai_lieu</span><span class="w"> </span><span class="o">@&gt;</span><span class="w"> </span><span class="s1">'{"lop": {"ma_lop": "L01"}}'</span><span class="p">;</span>
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>
+</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="c1">-- KỲ VỌNG: da_doi = 6</span>
+</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="c1">-- KỲ VỌNG: con_ten_cu = 0</span>
+</span><span id="__span-11-7"><a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="n">FILTER</span><span class="w"> </span><span class="p">(</span><span class="k">WHERE</span><span class="w"> </span><span class="n">tai_lieu</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="s1">'lop'</span><span class="w"> </span><span class="o">-&gt;&gt;</span><span class="w"> </span><span class="s1">'gvcn'</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'Vũ Minh Tuấn'</span><span class="p">)</span><span class="w">   </span><span class="k">AS</span><span class="w"> </span><span class="n">da_doi</span><span class="p">,</span>
+</span><span id="__span-11-8"><a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="w">       </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="n">FILTER</span><span class="w"> </span><span class="p">(</span><span class="k">WHERE</span><span class="w"> </span><span class="n">tai_lieu</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="s1">'lop'</span><span class="w"> </span><span class="o">-&gt;&gt;</span><span class="w"> </span><span class="s1">'gvcn'</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'Nguyễn Thị Lan'</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">con_ten_cu</span>
+</span><span id="__span-11-9"><a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="k">FROM</span><span class="w"> </span><span class="n">b47_ho_so</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Ở đây một câu <code>UPDATE</code> sửa được cả 6 vì chúng nằm chung một bảng, trong một giao dịch. Trong một document store thật chia trên nhiều máy, 6 tài liệu đó có thể nằm ở 6 máy khác nhau — và nếu tiến trình sửa sập giữa chừng, 3 bạn thấy thầy Tuấn, 3 bạn vẫn thấy cô Lan. Không có khoá ngoại nào báo lỗi. Đây là <strong>bất thường cập nhật</strong> của Bài 2, quay lại đúng như cũ.</p>
+<h3 id="cai-mat-2-cau-hoi-cat-ngang-moi-tai-lieu">Cái mất 2: câu hỏi cắt ngang mọi tài liệu<a class="headerlink" href="#cai-mat-2-cau-hoi-cat-ngang-moi-tai-lieu" title="Permanent link">&para;</a></h3>
+<p>Câu hỏi <em>"trường có bao nhiêu đầu điểm Toán?"</em> không nằm gọn trong một tài liệu nào. Phải <strong>mở tung</strong> mảng <code>diem</code> của từng tài liệu ra thành dòng — <code>jsonb_array_elements</code>, kết nối ngang của Bài 32 — rồi mới lọc và đếm. So với bảng quan hệ:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1">-- KỲ VỌNG: tu_tai_lieu = 80</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="c1">-- KỲ VỌNG: tu_bang_quan_he = 80</span>
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="k">SELECT</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span>
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">        </span><span class="k">FROM</span><span class="w"> </span><span class="n">b47_ho_so</span><span class="w"> </span><span class="n">hs</span>
+</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="w">        </span><span class="k">CROSS</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="k">LATERAL</span><span class="w"> </span><span class="n">jsonb_array_elements</span><span class="p">(</span><span class="n">hs</span><span class="p">.</span><span class="n">tai_lieu</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="s1">'diem'</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">d</span><span class="p">(</span><span class="n">phan_tu</span><span class="p">)</span>
+</span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="w">        </span><span class="k">WHERE</span><span class="w"> </span><span class="n">d</span><span class="p">.</span><span class="n">phan_tu</span><span class="w"> </span><span class="o">-&gt;&gt;</span><span class="w"> </span><span class="s1">'mon'</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'Toán'</span><span class="p">)</span><span class="w">                         </span><span class="k">AS</span><span class="w"> </span><span class="n">tu_tai_lieu</span><span class="p">,</span>
+</span><span id="__span-12-7"><a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="w">       </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">diem</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">ma_mon</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'MH01'</span><span class="p">)</span><span class="w">            </span><span class="k">AS</span><span class="w"> </span><span class="n">tu_bang_quan_he</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Cùng đáp số <strong>80</strong> — 40 điểm học kỳ và 40 điểm một tiết. PostgreSQL vẫn trả lời được vì nó là database quan hệ, có <code>LATERAL</code> và bộ tối ưu truy vấn. Nhưng để ý: câu hỏi trên tài liệu phải <strong>đọc toàn bộ 40 tài liệu</strong>, kể cả phụ huynh, tên lớp — mọi thứ không liên quan tới điểm Toán. Với 40 tài liệu thì không sao; với 40 triệu thì đây là lý do người ta chép dữ liệu sang một hệ thống khác để phân tích — Bài 48.</p>
+<h2 id="loi-thuong-gap">⚠️ Lỗi thường gặp<a class="headerlink" href="#loi-thuong-gap" title="Permanent link">&para;</a></h2>
+<div class="admonition danger">
+<p class="admonition-title">Lỗi 1: Chọn NoSQL vì \"nó scale tốt hơn\" khi dữ liệu vừa một máy</p>
+<p>Một ứng dụng quản lý điểm cho một trường — vài chục nghìn dòng — được dựng trên Cassandra vì <em>"sau này có thể lớn"</em>. Ba tháng sau, mỗi báo cáo mới đòi một bảng mới, mỗi lần nhập điểm ghi vào bốn bảng, và không ai trả lời được <em>"lớp nào có điểm trung bình thấp nhất?"</em> mà không viết chương trình quét toàn bộ.</p>
+<p>Sửa: một máy PostgreSQL xử lý thoải mái hàng trăm triệu dòng, cộng bản sao chỉ đọc ở Bài 42 và phân vùng ở Bài 43. Chỉ chuyển sang NoSQL khi đo được một giới hạn thật sự, hoặc khi mô hình dữ liệu của bài toán <strong>vốn dĩ</strong> là khoá–giá trị, tài liệu hay đồ thị.</p>
+</div>
+<div class="admonition danger">
+<p class="admonition-title">Lỗi 2: Thiết kế NoSQL theo thực thể như thiết kế SQL</p>
+<p>Chuyển từ PostgreSQL sang MongoDB bằng cách biến <strong>mỗi bảng thành một bộ sưu tập</strong>, giữ nguyên các mã tham chiếu. Kết quả: mỗi màn hình phải đọc bốn bộ sưu tập rồi tự ghép trong code ứng dụng — chậm hơn <code>JOIN</code> của PostgreSQL, và mất luôn khoá ngoại.</p>
+<p>Sửa: NoSQL bắt đầu từ <strong>câu hỏi</strong>. Liệt kê các màn hình và API trước, rồi quyết định lồng hay tham chiếu cho từng mảnh dữ liệu theo cách nó được đọc.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Lỗi 3: Lồng dữ liệu lớn dần mãi vào một tài liệu</p>
+<p>Tài liệu học sinh lồng <strong>mọi</strong> lượt điểm danh — mỗi ngày thêm một phần tử. Sau vài năm, tài liệu phình lên, mỗi lần đọc hồ sơ phải kéo theo hàng nghìn lượt điểm danh không ai cần xem, và cuối cùng chạm giới hạn 16 MB của một tài liệu BSON.</p>
+<p>Sửa: chỉ lồng những gì có <strong>giới hạn</strong> và luôn được đọc cùng tài liệu cha. Dữ liệu tăng không giới hạn — điểm danh, nhật ký, bình luận — tách ra bộ sưu tập riêng, tham chiếu về bằng mã.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Lỗi 4: Tin rằng NoSQL \"không có lược đồ\"</p>
+<p>Mỗi lập trình viên ghi tài liệu theo ý mình: người viết <code>"ho_ten"</code>, người viết <code>"hoTen"</code>, người lưu điểm là chuỗi <code>"8.5"</code>, người lưu là số. Database nhận hết. Một năm sau, câu lọc <code>diem &gt; 8</code> bỏ sót một nửa số điểm mà không báo lỗi gì.</p>
+<p>Sửa: lược đồ <strong>luôn</strong> tồn tại — nếu không ở database thì ở trong code, và ở trong code thì mỗi người một bản. Dùng tính năng kiểm tra lược đồ mà sản phẩm có (MongoDB có kiểm tra theo JSON Schema; với <code>JSONB</code> trong PostgreSQL thì dùng ràng buộc <code>CHECK</code> như Bài 32), và ghi tài liệu qua một lớp code dùng chung.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Lỗi 5: Hỏi Cassandra một câu không có khoá phân vùng</p>
+<p>Bảng <code>diem_theo_hoc_sinh</code> phân vùng theo <code>ma_hs</code>. Ai đó cần <em>"mọi điểm dưới 5"</em>, thêm <code>ALLOW FILTERING</code> cho câu lệnh chạy được. Trên máy thử có ít dữ liệu, nó nhanh. Trên cụm thật, nó quét <strong>mọi</strong> phân vùng trên <strong>mọi</strong> máy và làm chậm cả cụm.</p>
+<p>Sửa: câu hỏi mới trong họ cột rộng nghĩa là <strong>bảng mới</strong> được thiết kế cho nó, hoặc chép dữ liệu sang một hệ thống phân tích. <code>ALLOW FILTERING</code> trên bảng lớn gần như luôn là dấu hiệu thiết kế sai.</p>
+</div>
+<h2 id="bai-tap">✍️ Bài tập<a class="headerlink" href="#bai-tap" title="Permanent link">&para;</a></h2>
+<ol>
+<li>
+<p>Với mỗi nhu cầu sau, chọn họ database phù hợp nhất — hoặc PostgreSQL — và giải thích bằng một câu: (a) lưu mã OTP gửi qua tin nhắn, hết hạn sau 5 phút; (b) lịch sử vị trí GPS của 2.000 xe đưa đón học sinh, mỗi xe gửi một điểm mỗi 5 giây; (c) phát hiện nhóm tài khoản nộp học phí hộ nhau theo vòng tròn; (d) học phí và công nợ của từng học sinh; (e) kho đề thi, mỗi đề có cấu trúc khác nhau — trắc nghiệm, tự luận, ghép cặp, kèm hình ảnh.</p>
+</li>
+<li>
+<p>Thiết kế tài liệu MongoDB cho <strong>sách thư viện</strong> và <strong>lượt mượn</strong>: lồng lượt mượn vào tài liệu sách, lồng vào tài liệu học sinh, hay tách riêng? Cân nhắc hai câu hỏi hay gặp nhất: <em>"sách này đang ở tay ai?"</em> và <em>"em này đang mượn những sách gì?"</em>.</p>
+</li>
+<li>
+<p>Thiết kế bảng Cassandra (viết <code>PRIMARY KEY</code>) cho câu hỏi: <em>"danh sách học sinh đi muộn của một lớp trong một ngày, sắp theo giờ đến"</em>. Chỉ ra khoá phân vùng và khoá sắp xếp cụm. Câu hỏi <em>"học sinh X đi muộn những ngày nào?"</em> có dùng được bảng đó không?</p>
+</li>
+<li>
+<p>Viết câu SQL trên <code>b47_ho_so</code> liệt kê <strong>tên</strong> các học sinh có ít nhất một điểm <strong>dưới 5</strong>, không trùng tên, sắp theo mã học sinh. Rồi viết câu tương đương trên các bảng quan hệ <code>hoc_sinh</code> và <code>diem</code>, và chứng minh hai câu cho <strong>cùng</strong> tập học sinh.</p>
+</li>
+<li>
+<p>Bạn của bạn lớp trưởng đề xuất: <em>"Bỏ PostgreSQL, chuyển toàn bộ <code>truong_hoc</code> sang MongoDB, vì NoSQL nhanh hơn."</em> Dùng sáu câu hỏi chọn database ở phần Khái niệm để phản biện: phần nào của <code>truong_hoc</code> hợp với tài liệu, phần nào nhất định nên ở lại database quan hệ?</p>
+</li>
+</ol>
+<details class="success">
+<summary>Đáp án</summary>
+<p><strong>Câu 1.</strong></p>
+<ul>
+<li>(a) <strong>Khoá–giá trị</strong> — Redis với <code>SET otp:&lt;số điện thoại&gt; &lt;mã&gt; EX 300</code>. Tra đúng một khoá, tự hết hạn nhờ TTL, không cần giữ lâu.</li>
+<li>(b) <strong>Cột rộng</strong> — Cassandra, khoá phân vùng là mã xe (kèm ngày để phân vùng không phình mãi), khoá sắp xếp cụm là thời gian. 2.000 xe × 12 điểm mỗi phút là 24.000 lượt ghi mỗi phút, chỉ nối thêm; câu hỏi gần như luôn là <em>"hành trình của xe X hôm nay"</em>.</li>
+<li>(c) <strong>Đồ thị</strong> — tìm chu trình trong đồ thị <em>"tài khoản A nộp hộ tài khoản B"</em> là truy vấn đường đi nhiều bước, đúng sở trường của Cypher.</li>
+<li>(d) <strong>PostgreSQL</strong> — tiền bạc cần giao dịch ACID, ràng buộc, và báo cáo tuỳ ý cho kế toán.</li>
+<li>(e) <strong>Tài liệu</strong> — mỗi đề một hình dạng. Nhưng <code>JSONB</code> trong PostgreSQL cũng làm tốt việc này nếu phần còn lại của hệ thống đã ở PostgreSQL.</li>
+</ul>
+<p><strong>Câu 2.</strong> Tách lượt mượn thành <strong>bộ sưu tập riêng</strong>, mỗi tài liệu một lượt mượn, tham chiếu <code>ma_sach</code> và <code>ma_hs</code>. Lý do: lượt mượn <strong>tăng mãi</strong> — lồng vào sách hay vào học sinh đều làm tài liệu phình không giới hạn. Để trả lời hai câu hỏi nhanh, có thể phi chuẩn hoá có kiểm soát: trong tài liệu sách thêm trường <code>dang_muon_boi: {ma_hs, ho_ten}</code> — chỉ <strong>lượt đang mượn</strong>, có giới hạn — và trong tài liệu học sinh thêm mảng <code>dang_muon</code> chứa các sách chưa trả, thường chỉ vài cuốn. Cái giá: mỗi lần mượn hoặc trả phải sửa <strong>ba</strong> tài liệu, và phải nghĩ tới trường hợp sửa được một nửa thì sập.</p>
+<p><strong>Câu 3.</strong></p>
+<div class="highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>CREATE TABLE di_muon_theo_lop_ngay (
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>    ma_lop  text,
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>    ngay    date,
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>    gio_den time,
+</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>    ma_hs   text,
+</span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>    ho_ten  text,
+</span><span id="__span-13-7"><a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>    PRIMARY KEY ((ma_lop, ngay), gio_den, ma_hs)
+</span><span id="__span-13-8"><a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>);
+</span></code></pre></div>
+<p>Khoá phân vùng <code>(ma_lop, ngay)</code>: mỗi lớp mỗi ngày một phân vùng nhỏ. Khoá sắp xếp cụm <code>gio_den, ma_hs</code>: sắp sẵn theo giờ đến; thêm <code>ma_hs</code> để hai bạn đến cùng giây không đè lên nhau — khoá chính trong Cassandra trùng nhau thì bản ghi sau <strong>ghi đè</strong> bản trước, không báo lỗi. Câu hỏi <em>"học sinh X đi muộn những ngày nào?"</em> <strong>không</strong> dùng được bảng này: nó không chỉ ra khoá phân vùng. Phải có bảng thứ hai, phân vùng theo <code>ma_hs</code>, và ứng dụng ghi vào cả hai.</p>
+<p><strong>Câu 4.</strong></p>
+<div class="highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1">-- KỲ VỌNG: khop = true</span>
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="c1">-- KỲ VỌNG: so_hoc_sinh_tu_tai_lieu = 34</span>
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="k">WITH</span><span class="w"> </span><span class="n">tu_tai_lieu</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="p">(</span>
+</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="w">    </span><span class="k">SELECT</span><span class="w"> </span><span class="k">DISTINCT</span><span class="w"> </span><span class="n">hs</span><span class="p">.</span><span class="n">ma_hs</span><span class="p">,</span><span class="w"> </span><span class="n">hs</span><span class="p">.</span><span class="n">tai_lieu</span><span class="w"> </span><span class="o">-&gt;&gt;</span><span class="w"> </span><span class="s1">'ho_ten'</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">ho_ten</span>
+</span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="w">    </span><span class="k">FROM</span><span class="w"> </span><span class="n">b47_ho_so</span><span class="w"> </span><span class="n">hs</span>
+</span><span id="__span-14-6"><a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="w">    </span><span class="k">CROSS</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="k">LATERAL</span><span class="w"> </span><span class="n">jsonb_array_elements</span><span class="p">(</span><span class="n">hs</span><span class="p">.</span><span class="n">tai_lieu</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="s1">'diem'</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">d</span><span class="p">(</span><span class="n">phan_tu</span><span class="p">)</span>
+</span><span id="__span-14-7"><a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="w">    </span><span class="k">WHERE</span><span class="w"> </span><span class="p">(</span><span class="n">d</span><span class="p">.</span><span class="n">phan_tu</span><span class="w"> </span><span class="o">-&gt;&gt;</span><span class="w"> </span><span class="s1">'diem'</span><span class="p">)::</span><span class="nb">numeric</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">5</span>
+</span><span id="__span-14-8"><a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="p">),</span>
+</span><span id="__span-14-9"><a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a><span class="n">tu_quan_he</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="p">(</span>
+</span><span id="__span-14-10"><a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="w">    </span><span class="k">SELECT</span><span class="w"> </span><span class="k">DISTINCT</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">ma_hs</span><span class="p">,</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">ho_ten</span>
+</span><span id="__span-14-11"><a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a><span class="w">    </span><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span><span class="w"> </span><span class="n">h</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">diem</span><span class="w"> </span><span class="n">d</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">d</span><span class="p">.</span><span class="n">ma_hs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">ma_hs</span>
+</span><span id="__span-14-12"><a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a><span class="w">    </span><span class="k">WHERE</span><span class="w"> </span><span class="n">d</span><span class="p">.</span><span class="n">diem_so</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">5</span>
+</span><span id="__span-14-13"><a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a><span class="p">)</span>
+</span><span id="__span-14-14"><a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a><span class="k">SELECT</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">tu_tai_lieu</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_hoc_sinh_tu_tai_lieu</span><span class="p">,</span>
+</span><span id="__span-14-15"><a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a><span class="w">       </span><span class="k">NOT</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">tu_tai_lieu</span><span class="w"> </span><span class="k">EXCEPT</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">tu_quan_he</span><span class="p">)</span>
+</span><span id="__span-14-16"><a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a><span class="w">       </span><span class="k">AND</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">tu_quan_he</span><span class="w"> </span><span class="k">EXCEPT</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">tu_tai_lieu</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">khop</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Hai <code>EXCEPT</code> theo hai chiều đều rỗng nghĩa là hai tập <strong>bằng nhau</strong>. Để ý phép ép kiểu <code>::numeric</code>: trong tài liệu, <code>-&gt;&gt;</code> trả về <strong>chuỗi</strong>; so sánh chuỗi <code>'10.00' &lt; '5'</code> cho kết quả <strong>đúng</strong> theo thứ tự chữ cái — một lỗi rất dễ mắc khi dữ liệu không có lược đồ ép kiểu. Muốn in danh sách tên thì chạy riêng <code>SELECT ho_ten FROM tu_tai_lieu ORDER BY ma_hs</code>.</p>
+<p><strong>Câu 5.</strong> Đi qua 6 câu hỏi:</p>
+<ul>
+<li><em>Cần giao dịch ACID nhiều bản ghi?</em> Có — mượn sách trừ <code>so_luong</code> và thêm lượt mượn cùng lúc; nhập điểm cả lớp một lần. Nghiêng về PostgreSQL.</li>
+<li><em>Câu hỏi đa dạng, chưa biết trước?</em> Rất đa dạng — thống kê theo lớp, theo môn, theo học kỳ, theo giáo viên, ai chưa trả sách... Đây là thế mạnh của SQL.</li>
+<li><em>Tra theo một khoá, cần cực nhanh?</em> Chỉ phiên đăng nhập — đặt Redis bên cạnh.</li>
+<li><em>Đi theo mối nối nhiều bước?</em> Không có.</li>
+<li><em>Ghi cực nhiều, vượt một máy?</em> Không — một trường vài trăm học sinh.</li>
+<li><em>Cấu trúc bản ghi khác nhau, hay đổi?</em> Chỉ vài phần: hồ sơ y tế, kho đề thi — dùng cột <code>JSONB</code> ngay trong PostgreSQL.</li>
+</ul>
+<p>Kết luận: giữ PostgreSQL làm nguồn chân lý. "NoSQL nhanh hơn" chỉ đúng với <strong>đúng loại câu hỏi</strong> nó được thiết kế cho — và <code>truong_hoc</code> phần lớn không phải loại đó.</p>
+</details>
+<h3 id="don-dep-cuoi-bai">Dọn dẹp cuối bài<a class="headerlink" href="#don-dep-cuoi-bai" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">b47_ho_so</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">;</span>
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="c1">-- KỲ VỌNG: bang_con_lai = 0</span>
+</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">bang_con_lai</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">information_schema</span><span class="p">.</span><span class="n">tables</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="k">table_name</span><span class="w"> </span><span class="k">LIKE</span><span class="w"> </span><span class="s1">'b47\_%'</span><span class="p">;</span>
+</span></code></pre></div>
+<h2 id="tom-tat">🔑 Tóm tắt<a class="headerlink" href="#tom-tat" title="Permanent link">&para;</a></h2>
+<ol>
+<li><strong>NoSQL</strong> bỏ bớt lược đồ cố định, <code>JOIN</code>, giao dịch nhiều bản ghi hoặc nhất quán mạnh để đổi lấy mở rộng ngang và tốc độ cho <strong>những câu hỏi biết trước</strong>; thiết kế đi từ câu hỏi — <strong>thiết kế theo truy vấn</strong> — nên phi chuẩn hoá là mặc định.</li>
+<li><strong>Khoá–giá trị</strong> (Redis): tra một khoá cực nhanh, có <strong>TTL</strong> — bộ nhớ đệm, phiên đăng nhập. <strong>Tài liệu</strong> (MongoDB, lưu <strong>BSON</strong>): mỗi bản ghi tự chứa, <strong>lược đồ khi đọc</strong>, cân nhắc <strong>lồng</strong> hay <strong>tham chiếu</strong>.</li>
+<li><strong>Cột rộng</strong> (Cassandra, HBase): khoá phân vùng chọn máy, <strong>khoá sắp xếp cụm</strong> sắp sẵn dữ liệu — ghi cực nhiều, mỗi câu hỏi một bảng. <strong>Đồ thị</strong> (Neo4j, <strong>Cypher</strong>): <strong>nút</strong> và <strong>cạnh</strong> giữ sẵn con trỏ — mạnh khi đi nhiều bước.</li>
+<li>Thực hành với <code>JSONB</code>: hồ sơ <code>HS040</code> đọc một lần không cần <code>JOIN</code>, nhưng tên cô chủ nhiệm 8A1 bị chép vào <strong>6</strong> tài liệu thay vì <strong>1</strong> dòng, và câu hỏi cắt ngang phải mở tung cả 40 tài liệu.</li>
+<li>Sáu câu hỏi chọn database: cần ACID nhiều bản ghi? câu hỏi đa dạng chưa biết trước? chỉ tra theo khoá? đi theo mối nối? ghi vượt một máy? cấu trúc bản ghi khác nhau? — không chắc thì bắt đầu bằng database quan hệ; NoSQL là <strong>đánh đổi khác</strong>, và hệ thống thật thường <strong>dùng nhiều loại database</strong>.</li>
+</ol>
+<hr />
+<p>⬅️ <a href="../46-consensus-va-raft/">Bài 46 — Consensus và Raft</a> · ➡️ <strong>Bài 48</strong> <em>(sắp có)</em></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Trở lại mục lục
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Chân trang" >
+        
+          
+          <a href="../46-consensus-va-raft/" class="md-footer__link md-footer__link--prev" aria-label="Trước: Bài 46 — Consensus và Raft: nhiều máy cùng đồng ý một điều">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Trước
+              </span>
+              <div class="md-ellipsis">
+                Bài 46 — Consensus và Raft: nhiều máy cùng đồng ý một điều
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../../dataset/" class="md-footer__link md-footer__link--next" aria-label="Sau: Database mẫu">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Sau
+              </span>
+              <div class="md-ellipsis">
+                Database mẫu
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Nội dung theo giấy phép CC BY 4.0
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/hungnguyen010518/database-tu-a-z" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.sections", "navigation.top", "navigation.footer", "navigation.indexes", "navigation.tracking", "toc.follow", "content.code.copy", "content.code.annotate", "search.highlight", "search.suggest"], "search": "../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "\u0110\u00e3 sao ch\u00e9p", "clipboard.copy": "Sao ch\u00e9p v\u00e0o b\u1ed9 nh\u1edb t\u1ea1m", "search.result.more.one": "1 t\u1eeb kh\u00e1c trong trang", "search.result.more.other": "# t\u1eeb kh\u00e1c trong trang", "search.result.none": "Kh\u00f4ng t\u00ecm th\u1ea5y t\u00e0i li\u1ec7u li\u00ean quan", "search.result.one": "1 t\u00e0i li\u1ec7u li\u00ean quan", "search.result.other": "# t\u00e0i li\u1ec7u li\u00ean quan", "search.result.placeholder": "Nh\u1eadp \u0111\u1ec3 b\u1eaft \u0111\u1ea7u t\u00ecm ki\u1ebfm", "search.result.term.missing": "Kh\u00f4ng", "select.version": "Ch\u1ecdn phi\u00ean b\u1ea3n"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.525ec568.min.js"></script>
+      
+    
+  </body>
+</html>
