@@ -475,7 +475,7 @@ Năm dòng: `bang_bet 30`, `diem 480`, `giao_vien 8`, `hoc_sinh 40`, `lop 6`. Đ
     Một cột tính sẵn kéo theo:
 
     - Mỗi lần ghi vào bảng nguồn phải cập nhật theo — tức là thêm một lượt ghi.
-    - Trigger giữ khoá lâu hơn, làm giao dịch dễ đụng nhau hơn (Bài 38 sẽ nói về chuyện này).
+    - Trigger giữ khoá lâu hơn, làm giao dịch dễ đụng nhau hơn (Bài 41 sẽ nói về chuyện này).
     - Dòng to hơn, mỗi trang dữ liệu chứa được ít dòng hơn, quét toàn bảng chậm đi (Bài 33).
     - Thêm một đoạn mã phải viết đúng, phải kiểm thử, phải bảo trì mãi mãi.
 
