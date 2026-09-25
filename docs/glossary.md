@@ -5,7 +5,7 @@ Toàn bộ thuật ngữ chuyên ngành xuất hiện trong khóa học, đối 
 Bảng được sắp xếp theo thứ tự chữ cái của **thuật ngữ tiếng Anh**, vì đó là dạng bạn sẽ gặp khi đọc tài liệu và khi đi phỏng vấn.
 
 !!! info "Bảng này lớn dần theo khóa học"
-    Mỗi khi một cấp độ mới được xuất bản, thuật ngữ của cấp đó được bổ sung vào đây. Hiện bảng phủ trọn **Bài 1–37**: Cấp 0 (Nhập môn), Cấp 1 (Mô hình quan hệ & ER), Cấp 2 (Chuẩn hoá), toàn bộ Cấp 3 (SQL) và nửa đầu Cấp 4 (Bên trong động cơ).
+    Mỗi khi một cấp độ mới được xuất bản, thuật ngữ của cấp đó được bổ sung vào đây. Hiện bảng phủ trọn **Bài 1–41**: Cấp 0 (Nhập môn), Cấp 1 (Mô hình quan hệ & ER), Cấp 2 (Chuẩn hoá), Cấp 3 (SQL) và Cấp 4 (Bên trong động cơ).
 
 !!! tip "Vì sao có nhiều từ trùng nghĩa?"
     *record* / *row* / *tuple* cùng chỉ **một hàng**, còn *field* / *column* / *attribute* cùng chỉ **một cột**. Bảng giữ đủ cả ba vì bạn sẽ gặp cả ba khi đọc tài liệu; cột nghĩa có trỏ chéo sang các biến thể còn lại.
@@ -51,6 +51,7 @@ Bảng được sắp xếp theo thứ tự chữ cái của **thuật ngữ ti�
 |---|---|---|---|
 | Cây B+ | *B+Tree* | Biến thể B-Tree chỉ lưu `ctid` ở tầng lá và nối các lá thành chuỗi để quét khoảng; là index mặc định `btree` của PostgreSQL | [Bài 34](cap-4-ben-trong-dong-co/34-index-va-b-tree.md) |
 | Cây B | *B-Tree* | Cây cân bằng, mỗi nút là một trang chứa nhiều khoá; mọi đường từ gốc xuống đáy dài bằng nhau | [Bài 34](cap-4-ben-trong-dong-co/34-index-va-b-tree.md) |
+| Bản sao lưu nền | *base backup* | Bản chụp thư mục dữ liệu lấy khi máy chủ đang chạy, bằng `pg_basebackup`; điểm xuất phát của PITR | [Bài 40](cap-4-ben-trong-dong-co/40-wal-va-recovery.md) |
 | Mở giao dịch | *BEGIN* | Bắt đầu một giao dịch; mọi lệnh sau đó thuộc về nó cho tới `COMMIT` hoặc `ROLLBACK` | [Bài 37](cap-4-ben-trong-dong-co/37-transaction-va-acid.md) |
 | Hai ngôi | *binary* | Mối quan hệ có đúng hai tập thực thể tham gia — loại phổ biến nhất | [Bài 8](cap-1-mo-hinh-er/08-moi-quan-he-va-cardinality.md) |
 | Quét heap theo bitmap | *bitmap heap scan* | Gom mọi `ctid` từ index theo số trang trước, rồi đọc mỗi trang heap đúng một lần — `Bitmap Heap Scan` | [Bài 34](cap-4-ben-trong-dong-co/34-index-va-b-tree.md) |
@@ -74,6 +75,7 @@ Bảng được sắp xếp theo thứ tự chữ cái của **thuật ngữ ti�
 | Xoá lan | *CASCADE* | Xoá luôn mọi đối tượng phụ thuộc; mặc định của `DROP VIEW` là `RESTRICT`, tức từ chối khi còn phụ thuộc | [Bài 30](cap-3-sql/30-view-va-materialized-view.md) |
 | Biểu thức điều kiện | *CASE expression* | Cách viết "nếu… thì…" ngay trong biểu thức SQL; bỏ `ELSE` thì trả `NULL` khi không nhánh nào khớp | [Bài 26](cap-3-sql/26-group-by-having.md) |
 | Danh mục hệ thống | *catalog* | Tên gọi khác của từ điển dữ liệu | [Bài 3](cap-0-nhap-mon/03-dbms-la-gi.md) |
+| Điểm kiểm tra | *checkpoint* | Lúc ghi mọi trang đã sửa xuống tệp dữ liệu và dời điểm làm lại; WAL trước đó không còn cần để phục hồi | [Bài 40](cap-4-ben-trong-dong-co/40-wal-va-recovery.md) |
 | Ký hiệu Chen | *Chen notation* | Bộ ký hiệu ER gốc năm 1976: mỗi loại phần tử một hình riêng, mỗi thuộc tính một elip treo ra ngoài | [Bài 10](cap-1-mo-hinh-er/10-bieu-do-er-ky-hieu-chen.md) |
 | Máy khách | *client* | Chương trình gõ cửa máy chủ để gửi câu lệnh, ví dụ `psql` | [Bài 5](cap-0-nhap-mon/05-cai-dat-postgresql.md) |
 | Máy khách – máy chủ | *client–server* | Mô hình nhiều máy khách cùng kết nối tới một máy chủ giữ kho dữ liệu duy nhất | [Bài 5](cap-0-nhap-mon/05-cai-dat-postgresql.md) |
@@ -96,6 +98,7 @@ Bảng được sắp xếp theo thứ tự chữ cái của **thuật ngữ ti�
 | Tính tương quan | *correlation* | Thứ tự giá trị trong cột khớp tới đâu với thứ tự vật lý trên heap, từ −1 tới 1; lưu trong `pg_stats` | [Bài 34](cap-4-ben-trong-dong-co/34-index-va-b-tree.md) |
 | Bộ tối ưu dựa trên chi phí | *cost-based optimizer* | Planner liệt kê nhiều cách chạy, ước lượng chi phí từng cách và chọn cách rẻ nhất theo ước lượng | [Bài 36](cap-4-ben-trong-dong-co/36-explain-va-query-planner.md) |
 | Index phủ | *covering index* | Index chứa đủ mọi cột truy vấn cần, thường nhờ `INCLUDE`, để chạy được `Index Only Scan` | [Bài 34](cap-4-ben-trong-dong-co/34-index-va-b-tree.md) |
+| Phục hồi sau sự cố | *crash recovery* | Khởi động sau khi tắt đột ngột: làm lại WAL từ điểm làm lại của checkpoint cuối | [Bài 40](cap-4-ben-trong-dong-co/40-wal-va-recovery.md) |
 | Kết nối chéo | *CROSS JOIN* | Cú pháp SQL của tích Descartes: ghép mọi dòng với mọi dòng, không có điều kiện | [Bài 25](cap-3-sql/25-join.md) |
 | Chân quạ | *crow's foot* | Ba nhánh toẽ ra sát hình chữ nhật, nghĩa là phía nhiều | [Bài 11](cap-1-mo-hinh-er/11-bieu-do-er-crows-foot.md) |
 | Ký hiệu Crow's Foot | *Crow's Foot notation* | Bộ ký hiệu ER gọn: cột liệt kê bên trong hình chữ nhật, bản số ghi bằng ký hiệu ở đầu đường | [Bài 11](cap-1-mo-hinh-er/11-bieu-do-er-crows-foot.md) |
@@ -125,7 +128,7 @@ Bảng được sắp xếp theo thứ tự chữ cái của **thuật ngữ ti�
 | Hệ cơ sở dữ liệu | *database system* | DBMS cộng các database nó quản lý, cộng người dùng và ứng dụng dùng chúng | [Bài 3](cap-0-nhap-mon/03-dbms-la-gi.md) |
 | Hệ quản trị cơ sở dữ liệu | *DBMS — database management system* | Phần mềm quản lý cơ sở dữ liệu, ví dụ PostgreSQL, MySQL, Oracle | [Bài 3](cap-0-nhap-mon/03-dbms-la-gi.md) |
 | Tuple chết | *dead tuple* | Phiên bản cũ của một dòng sau `UPDATE`/`DELETE`, không ai còn thấy nhưng vẫn chiếm chỗ tới khi `VACUUM` dọn | [Bài 33](cap-4-ben-trong-dong-co/33-page-heap-tuple.md) |
-| Bế tắc | *deadlock* | Hai giao dịch chờ khoá của nhau nên không ai đi tiếp được; hay xảy ra khi chúng lấy khoá theo hai thứ tự khác nhau | **Bài 41** *(sắp có)* |
+| Bế tắc | *deadlock* | Hai giao dịch chờ khoá của nhau nên không ai đi tiếp được; hay xảy ra khi chúng lấy khoá theo hai thứ tự khác nhau | [Bài 41](cap-4-ben-trong-dong-co/41-lock-va-deadlock.md) |
 | Khai báo | *declarative* | Kiểu ngôn ngữ chỉ mô tả thứ mình muốn, để phần mềm tự tìm cách lấy | [Bài 4](cap-0-nhap-mon/04-cac-mo-hinh-du-lieu.md) |
 | Luật tách | *decomposition* | Luật suy diễn: `X → YZ` thì `X → Y` và `X → Z` | [Bài 16](cap-2-chuan-hoa/16-phu-thuoc-ham.md) |
 | Khử trùng lặp | *deduplication* | Index B-Tree ghi một khoá lặp nhiều lần đúng một lần kèm danh sách `ctid`, nên index trên cột nhiều giá trị trùng gọn hơn tỉ lệ | [Bài 34](cap-4-ben-trong-dong-co/34-index-va-b-tree.md) |
@@ -143,6 +146,7 @@ Bảng được sắp xếp theo thứ tự chữ cái của **thuật ngữ ti�
 | Bảng dẫn xuất | *derived table* | Truy vấn con đặt trong `FROM` và dùng như một bảng; PostgreSQL bắt buộc phải đặt bí danh cho nó | [Bài 27](cap-3-sql/27-subquery-va-exists.md) |
 | Định thức | *determinant* | Vế trái của một phụ thuộc hàm — thứ mà khi biết nó thì biết được vế phải | [Bài 16](cap-2-chuan-hoa/16-phu-thuoc-ham.md) |
 | Phép hiệu | *difference* | Phép − lấy những dòng có ở quan hệ trái mà không có ở quan hệ phải; trong SQL là `EXCEPT` | [Bài 21](cap-3-sql/21-dai-so-quan-he.md) |
+| Đọc bẩn | *dirty read* | Đọc được dữ liệu một giao dịch khác đã ghi mà chưa xác nhận; PostgreSQL không bao giờ để xảy ra | [Bài 38](cap-4-ben-trong-dong-co/38-isolation-level-va-anomaly.md) |
 | Ràng buộc disjoint | *disjoint* | Mỗi thực thể lớp cha thuộc tối đa một lớp con | [Bài 13](cap-1-mo-hinh-er/13-mo-hinh-eer.md) |
 | Phép chia | *division* | Phép ÷ trả lời câu hỏi "giá trị nào đi kèm với **toàn bộ** một tập cho trước"; SQL không có từ khoá riêng cho nó | [Bài 21](cap-3-sql/21-dai-so-quan-he.md) |
 | Tài liệu | *document* | Họ NoSQL lưu mỗi bản ghi thành một tệp JSON tự chứa mọi thứ | [Bài 4](cap-0-nhap-mon/04-cac-mo-hinh-du-lieu.md) |
@@ -165,6 +169,7 @@ Bảng được sắp xếp theo thứ tự chữ cái của **thuật ngữ ti�
 | Chi phí ước lượng | *estimated cost* | Con số planner dùng để so các kế hoạch, đo bằng đơn vị tuỳ ý với mốc đọc một trang tuần tự = 1 — không phải mili giây | [Bài 36](cap-4-ben-trong-dong-co/36-explain-va-query-planner.md) |
 | Bảng ảo dòng bị từ chối | *EXCLUDED* | Bảng ảo trong `ON CONFLICT DO UPDATE`, chứa đúng dòng **mới** vừa định thêm nhưng bị đụng độ | [Bài 23](cap-3-sql/23-dml-insert-update-delete.md) |
 | Ràng buộc loại trừ | *exclusion constraint* | Cấm hai dòng cùng thoả một bộ toán tử, ví dụ cùng phòng và giờ chồng nhau; cưỡng chế bằng index GiST | [Bài 35](cap-4-ben-trong-dong-co/35-cac-loai-index-khac.md) |
+| Khoá độc quyền | *exclusive lock* | Khoá chỉ một giao dịch giữ; xung đột với mọi khoá khác trên cùng đối tượng | [Bài 41](cap-4-ben-trong-dong-co/41-lock-va-deadlock.md) |
 | Kế hoạch thực thi | *execution plan* | Cách chạy cụ thể mà planner đã chọn cho một câu truy vấn | [Bài 36](cap-4-ben-trong-dong-co/36-explain-va-query-planner.md) |
 | Ràng buộc tồn tại | *existence dependency* | Tên gọi khác của tham gia toàn phần: thực thể không được phép tồn tại nếu thiếu liên kết đó | [Bài 9](cap-1-mo-hinh-er/09-participation-va-thuc-the-yeu.md) |
 | Lệnh xem kế hoạch | *EXPLAIN* | In kế hoạch thực thi mà không chạy; thêm `ANALYZE` để chạy thật và đo, thêm `BUFFERS` để đếm trang | [Bài 36](cap-4-ben-trong-dong-co/36-explain-va-query-planner.md) |
@@ -186,8 +191,11 @@ Bảng được sắp xếp theo thứ tự chữ cái của **thuật ngữ ti�
 | Khoá ngoại | *foreign key* | Cột mang giá trị khoá chính của bảng khác, và chỉ được chứa giá trị có thật ở bảng đó | [Bài 2](cap-0-nhap-mon/02-tu-so-giay-den-excel.md) |
 | Dạng chuẩn 4 | *Fourth Normal Form — 4NF* | Bảng đã ở BCNF và mọi định thức đa trị đều là siêu khoá | [Bài 19](cap-2-chuan-hoa/19-dang-chuan-4nf-5nf-6nf.md) |
 | Bản đồ chỗ trống | *free space map* | Tệp phụ ghi mỗi trang còn trống bao nhiêu, để lần ghi sau biết chỗ mà nhét | [Bài 33](cap-4-ben-trong-dong-co/33-page-heap-tuple.md) |
+| Đóng băng | *freeze* | `VACUUM` đánh dấu tuple đủ cũ là thấy được với mọi người, để khỏi bị cuộn vòng mã giao dịch | [Bài 39](cap-4-ben-trong-dong-co/39-mvcc.md) |
+| Đẩy xuống đĩa | *fsync* | Lời gọi hệ thống bắt hệ điều hành ghi dữ liệu từ bộ nhớ đệm ra thiết bị lưu trữ thật; tắt nó có thể làm hỏng dữ liệu | [Bài 40](cap-4-ben-trong-dong-co/40-wal-va-recovery.md) |
 | Phụ thuộc đầy đủ | *full functional dependency* | `X → Y` mà bỏ bất kỳ thuộc tính nào khỏi `X` là luật không còn đúng | [Bài 16](cap-2-chuan-hoa/16-phu-thuoc-ham.md) |
 | Kết nối ngoài đầy đủ | *FULL OUTER JOIN* | Giữ mọi dòng của cả hai bảng — dùng để đối chiếu hai danh sách và thấy phần lệch ở hai phía | [Bài 25](cap-3-sql/25-join.md) |
+| Ghi trọn trang | *full-page writes* | Lần sửa đầu tiên của mỗi trang sau checkpoint chép nguyên trang vào WAL, chống trang rách khi mất điện | [Bài 40](cap-4-ben-trong-dong-co/40-wal-va-recovery.md) |
 | Tìm kiếm toàn văn | *full-text search* | Tìm theo **từ** trong văn bản thay vì theo chuỗi con, có xếp mức liên quan và dùng được index `GIN` | [Bài 32](cap-3-sql/32-jsonb-va-full-text-search.md) |
 | Phụ thuộc hàm | *functional dependency* | Luật *biết `X` thì biết chắc `Y`*, đúng với mọi trạng thái dữ liệu — Cấp 2 viết tắt là **PTH** | [Bài 16](cap-2-chuan-hoa/16-phu-thuoc-ham.md) |
 
@@ -243,6 +251,7 @@ Bảng được sắp xếp theo thứ tự chữ cái của **thuật ngữ ti�
 | Phép giao | *intersection* | Phép ∩ lấy những dòng có mặt ở cả hai quan hệ; trong SQL là `INTERSECT` | [Bài 21](cap-3-sql/21-dai-so-quan-he.md) |
 | Quan hệ IS-A | *IS-A relationship* | Quan hệ *một A là một B* giữa lớp con và lớp cha | [Bài 13](cap-1-mo-hinh-er/13-mo-hinh-eer.md) |
 | Tính cô lập | *isolation* | Chữ **I** của ACID: các giao dịch chạy đồng thời không thấy trạng thái dở dang của nhau | [Bài 37](cap-4-ben-trong-dong-co/37-transaction-va-acid.md) |
+| Mức cô lập | *isolation level* | Mức độ database cam kết các giao dịch đồng thời cư xử như chạy lần lượt; mức càng cao càng ít hiện tượng lạ | [Bài 38](cap-4-ben-trong-dong-co/38-isolation-level-va-anomaly.md) |
 
 ## J
 
@@ -268,7 +277,10 @@ Bảng được sắp xếp theo thứ tự chữ cái của **thuật ngữ ti�
 | Quy tắc cột trái nhất | *leftmost prefix rule* | Index phức hợp chỉ dùng được khi điều kiện chứa một đoạn đầu liên tục của danh sách cột | [Bài 34](cap-4-ben-trong-dong-co/34-index-va-b-tree.md) |
 | Từ tố | *lexeme* | Một từ đã được chuẩn hoá trong `tsvector` — đơn vị mà full-text search thật sự so khớp | [Bài 32](cap-3-sql/32-jsonb-va-full-text-search.md) |
 | Con trỏ dòng | *line pointer* | Ô 4 byte ở đầu trang ghi vị trí của một tuple; cho phép dời tuple trong trang mà không đổi địa chỉ | [Bài 33](cap-4-ben-trong-dong-co/33-page-heap-tuple.md) |
-| Tranh chấp khoá | *lock contention* | Nhiều giao dịch phải xếp hàng chờ khoá cùng một dòng, làm thông lượng ghi sụt hẳn | **Bài 41** *(sắp có)* |
+| Khoá (đồng thời) | *lock* | Quyền tạm thời một giao dịch giữ trên bảng hoặc dòng để chặn việc xung đột, giữ tới hết giao dịch; khác với khoá chính/khoá ngoại (*key*) | [Bài 41](cap-4-ben-trong-dong-co/41-lock-va-deadlock.md) |
+| Tranh chấp khoá | *lock contention* | Nhiều giao dịch phải xếp hàng chờ khoá cùng một dòng, làm thông lượng ghi sụt hẳn | [Bài 41](cap-4-ben-trong-dong-co/41-lock-va-deadlock.md) |
+| Hàng đợi khoá | *lock queue* | Người chờ khoá xếp theo thứ tự đến; xin khoá tương thích vẫn phải chờ sau người đang chờ mà xung đột | [Bài 41](cap-4-ben-trong-dong-co/41-lock-va-deadlock.md) |
+| Số thứ tự nhật ký | *Log Sequence Number* (LSN) | Vị trí byte của một bản ghi trong WAL, dạng `0/1AB50910`; chỉ tăng | [Bài 40](cap-4-ben-trong-dong-co/40-wal-va-recovery.md) |
 | Độc lập dữ liệu logic | *logical data independence* | Đổi mức khái niệm mà mức ngoài không phải đổi theo | [Bài 3](cap-0-nhap-mon/03-dbms-la-gi.md) |
 | Mức logic | *logical level* | Mức đã biết sẽ có bảng nào, cột nào, nhưng chưa chọn hệ quản trị và chưa nói tới lưu trữ vật lý | [Bài 11](cap-1-mo-hinh-er/11-bieu-do-er-crows-foot.md) |
 | Thứ tự thực thi logic | *logical query processing order* | Trình tự ngữ nghĩa `FROM` → `WHERE` → `GROUP BY` → `HAVING` → `SELECT` → `DISTINCT` → `ORDER BY` → `LIMIT`, khác thứ tự viết | [Bài 26](cap-3-sql/26-group-by-having.md) |
@@ -290,6 +302,7 @@ Bảng được sắp xếp theo thứ tự chữ cái của **thuật ngữ ti�
 | Thuộc tính đa trị | *multi-valued attribute* | Thuộc tính mà một thực thể có thể có nhiều giá trị cùng lúc | [Bài 7](cap-1-mo-hinh-er/07-thuc-the-va-thuoc-tinh.md) |
 | Ô đa trị | *multi-valued cell* | Một ô bị nhồi nhiều giá trị — vi phạm 1NF | [Bài 17](cap-2-chuan-hoa/17-dang-chuan-1nf-2nf.md) |
 | Phụ thuộc đa trị | *multi-valued dependency — MVD* | Với mỗi giá trị của `X`, tập giá trị `Y` đi kèm là cố định và độc lập hẳn với phần còn lại của bảng | [Bài 19](cap-2-chuan-hoa/19-dang-chuan-4nf-5nf-6nf.md) |
+| Kiểm soát đồng thời đa phiên bản | *Multi-Version Concurrency Control* (MVCC) | Giữ nhiều phiên bản của một dòng để mỗi giao dịch thấy đúng một phiên bản; người đọc không chặn người ghi và ngược lại | [Bài 39](cap-4-ben-trong-dong-co/39-mvcc.md) |
 | Đa tập | *multiset* | Tập hợp có cho phép phần tử trùng nhau — đây là thứ SQL thật sự làm việc trên, khác tập hợp của toán học | [Bài 21](cap-3-sql/21-dai-so-quan-he.md) |
 
 ## N
@@ -304,10 +317,12 @@ Bảng được sắp xếp theo thứ tự chữ cái của **thuật ngữ ti�
 | Nối vòng lặp lồng | *nested loop join* | Với mỗi dòng bảng ngoài, tìm dòng khớp ở bảng trong; thắng khi bảng ngoài rất ít dòng | [Bài 36](cap-4-ben-trong-dong-co/36-explain-va-query-planner.md) |
 | Mô hình mạng | *network model* | Mô hình cho phép một bản ghi có nhiều cha, nối nhau bằng con trỏ | [Bài 4](cap-0-nhap-mon/04-cac-mo-hinh-du-lieu.md) |
 | Thuộc tính không khoá | *non-prime attribute* | Thuộc tính không nằm trong bất kỳ khoá dự tuyển nào | [Bài 16](cap-2-chuan-hoa/16-phu-thuoc-ham.md) |
+| Đọc không lặp lại | *non-repeatable read* | Đọc lại cùng một dòng trong một giao dịch mà được giá trị khác, vì giao dịch khác vừa sửa và xác nhận | [Bài 38](cap-4-ben-trong-dong-co/38-isolation-level-va-anomaly.md) |
 | Dạng chuẩn | *normal form* | Một điều kiện đặt lên lược đồ bảng; các dạng chuẩn lồng nhau | [Bài 17](cap-2-chuan-hoa/17-dang-chuan-1nf-2nf.md) |
 | Chuẩn hoá | *normalization* | Tách một bảng thành nhiều bảng nhỏ hơn cho tới khi mọi bảng đều đạt dạng chuẩn mong muốn | [Bài 2](cap-0-nhap-mon/02-tu-so-giay-den-excel.md) |
 | Không phân biệt được | *not distinct* | Quan hệ mà `DISTINCT`, `GROUP BY` và các phép tập hợp dùng thay cho `=` — hai `NULL` là không phân biệt được nên bị gộp thành một | [Bài 24](cap-3-sql/24-select-where-order-by.md) |
 | NoSQL | *Not Only SQL* | Nhóm mô hình dữ liệu chấp nhận hy sinh một phần tính nhất quán để đổi lấy khả năng mở rộng ngang | [Bài 4](cap-0-nhap-mon/04-cac-mo-hinh-du-lieu.md) |
+| Không chờ | *NOWAIT* | Gặp khoá xung đột thì báo lỗi ngay thay vì đứng chờ | [Bài 41](cap-4-ben-trong-dong-co/41-lock-va-deadlock.md) |
 
 ## O
 
@@ -337,10 +352,12 @@ Bảng được sắp xếp theo thứ tự chữ cái của **thuật ngữ ti�
 | Ràng buộc tham gia | *participation constraint* | Quy định một thực thể phía này có bắt buộc tham gia mối quan hệ hay không | [Bài 9](cap-1-mo-hinh-er/09-participation-va-thuc-the-yeu.md) |
 | Phân vùng | *partition* | Nhóm dòng do `PARTITION BY` chia ra; cửa sổ của một dòng không bao giờ vượt ra khỏi phân vùng của nó | [Bài 29](cap-3-sql/29-window-function.md) |
 | Dòng đồng hạng | *peer rows* | Các dòng có cùng giá trị ở mọi cột của `ORDER BY` trong `OVER` — `RANGE` gộp cả chúng vào `CURRENT ROW` | [Bài 29](cap-3-sql/29-window-function.md) |
+| Đọc bóng ma | *phantom read* | Chạy lại cùng một điều kiện trong một giao dịch mà được tập dòng khác | [Bài 38](cap-4-ben-trong-dong-co/38-isolation-level-va-anomaly.md) |
 | Độc lập dữ liệu vật lý | *physical data independence* | Đổi mức trong mà mức khái niệm không phải đổi theo | [Bài 3](cap-0-nhap-mon/03-dbms-la-gi.md) |
 | Nút kế hoạch | *plan node* | Một bước trong cây kế hoạch — `Seq Scan`, `Hash Join`, `Sort`… | [Bài 36](cap-4-ben-trong-dong-co/36-explain-va-query-planner.md) |
 | Cây kế hoạch | *plan tree* | Hình cây của kế hoạch thực thi; đọc từ trong ra ngoài vì dữ liệu chảy từ nút sâu nhất lên nút trên cùng | [Bài 36](cap-4-ben-trong-dong-co/36-explain-va-query-planner.md) |
 | Bộ lập kế hoạch | *planner* | Bộ phận của PostgreSQL chọn cách chạy một câu truy vấn — bộ tối ưu truy vấn của PostgreSQL | [Bài 36](cap-4-ben-trong-dong-co/36-explain-va-query-planner.md) |
+| Khôi phục về một thời điểm | *Point-In-Time Recovery* (PITR) | Khôi phục bản sao lưu nền rồi làm lại WAL từ kho tới đúng thời điểm mong muốn — cách cứu một câu `DELETE` nhầm đã xác nhận | [Bài 40](cap-4-ben-trong-dong-co/40-wal-va-recovery.md) |
 | Cổng | *port* | Con số phân biệt các máy chủ chạy trên cùng một máy; PostgreSQL mặc định là 5432 | [Bài 5](cap-0-nhap-mon/05-cai-dat-postgresql.md) |
 | Vị từ | *predicate* | Biểu thức trong `WHERE` trả về `TRUE`, `FALSE` hoặc `UNKNOWN` | [Bài 24](cap-3-sql/24-select-where-order-by.md) |
 | Khoá chính | *primary key* | Khoá dự tuyển được người thiết kế chọn làm định danh chính thức của bảng | [Bài 12](cap-1-mo-hinh-er/12-bay-loai-khoa.md) |
@@ -365,9 +382,13 @@ Bảng được sắp xếp theo thứ tự chữ cái của **thuật ngữ ti�
 |---|---|---|---|
 | Chi phí trang ngẫu nhiên | *random_page_cost* | Chi phí đọc một trang nhảy cóc, mặc định 4; ổ SSD thường chỉnh xuống khoảng 1.1 | [Bài 36](cap-4-ben-trong-dong-co/36-explain-va-query-planner.md) |
 | Hệ quản trị cơ sở dữ liệu quan hệ | *RDBMS — relational database management system* | DBMS xây trên mô hình quan hệ | [Bài 4](cap-0-nhap-mon/04-cac-mo-hinh-du-lieu.md) |
+| Đọc đã xác nhận | *Read Committed* | Mức mặc định của PostgreSQL: mỗi câu lệnh thấy dữ liệu đã xác nhận tính tới lúc câu lệnh bắt đầu | [Bài 38](cap-4-ben-trong-dong-co/38-isolation-level-va-anomaly.md) |
+| Đọc chưa xác nhận | *Read Uncommitted* | Mức thấp nhất của chuẩn SQL, cho phép đọc bẩn; trong PostgreSQL hành xử y hệt Read Committed | [Bài 38](cap-4-ben-trong-dong-co/38-isolation-level-va-anomaly.md) |
 | Bản ghi | *record* | Một hàng trong bảng — cách gọi khác của *row* và *tuple* | [Bài 1](cap-0-nhap-mon/01-du-lieu-va-thong-tin.md) |
 | CTE đệ quy | *recursive CTE* | CTE tham chiếu chính nó, khai bằng `WITH RECURSIVE` — công cụ duy nhất của SQL chuẩn để đi hết một cấu trúc sâu tuỳ ý | [Bài 28](cap-3-sql/28-cte-va-recursive-cte.md) |
 | Phần đệ quy | *recursive member* | Câu `SELECT` sau `UNION ALL` trong CTE đệ quy, tự tham chiếu để sinh bước tiếp theo từ các dòng của vòng trước | [Bài 28](cap-3-sql/28-cte-va-recursive-cte.md) |
+| Làm lại | *redo* | Áp lại một bản ghi WAL lên trang dữ liệu khi phục hồi; giao dịch không có bản ghi `COMMIT` được coi là đã huỷ | [Bài 40](cap-4-ben-trong-dong-co/40-wal-va-recovery.md) |
+| Điểm làm lại | *redo point* | Vị trí trong WAL mà phục hồi sau sự cố bắt đầu đọc, lưu trong tệp `pg_control` | [Bài 40](cap-4-ben-trong-dong-co/40-wal-va-recovery.md) |
 | Cột nhân bản | *redundant column* | Cột chép từ bảng khác sang để khỏi phải `JOIN` | [Bài 20](cap-2-chuan-hoa/20-denormalization.md) |
 | Toàn vẹn tham chiếu | *referential integrity* | Mọi giá trị trong cột khoá ngoại phải tồn tại thật ở bảng cha, hoặc phải là `NULL` | [Bài 15](cap-1-mo-hinh-er/15-rang-buoc-toan-ven.md) |
 | Phản xạ | *reflexivity* | Tiên đề Armstrong: `Y ⊆ X` thì `X → Y` | [Bài 16](cap-2-chuan-hoa/16-phu-thuoc-ham.md) |
@@ -381,6 +402,7 @@ Bảng được sắp xếp theo thứ tự chữ cái của **thuật ngữ ti�
 | Mối quan hệ | *relationship* | Một sự liên kết cụ thể giữa các thực thể — khác hẳn *relation* (một cái bảng) | [Bài 6](cap-1-mo-hinh-er/06-mo-hinh-quan-he.md) |
 | Tập mối quan hệ | *relationship set* | Tập hợp mọi mối quan hệ cùng loại giữa cùng các tập thực thể | [Bài 8](cap-1-mo-hinh-er/08-moi-quan-he-va-cardinality.md) |
 | Phép đổi tên | *rename* | Phép ρ đặt tên mới cho quan hệ hoặc cột; trong SQL là `AS`, và là điều kiện để ghép một bảng với chính nó | [Bài 21](cap-3-sql/21-dai-so-quan-he.md) |
+| Đọc lặp lại được | *Repeatable Read* | Cả giao dịch nhìn một ảnh chụp lúc câu lệnh đầu tiên chạy; trong PostgreSQL chặn cả đọc bóng ma | [Bài 38](cap-4-ben-trong-dong-co/38-isolation-level-va-anomaly.md) |
 | Nhóm lặp | *repeating group* | Cùng một nhóm thuộc tính bị lặp lại thành nhiều cột đánh số — vi phạm 1NF | [Bài 17](cap-2-chuan-hoa/17-dang-chuan-1nf-2nf.md) |
 | Trả về sau khi ghi | *RETURNING* | Mệnh đề của PostgreSQL cho `INSERT`/`UPDATE`/`DELETE` trả về chính các dòng vừa bị tác động | [Bài 23](cap-3-sql/23-dml-insert-update-delete.md) |
 | Kết nối ngoài bên phải | *RIGHT OUTER JOIN* | Đối xứng với `LEFT JOIN`; ít dùng vì đổi chỗ hai bảng rồi viết `LEFT JOIN` thì dễ đọc hơn | [Bài 25](cap-3-sql/25-join.md) |
@@ -389,6 +411,7 @@ Bảng được sắp xếp theo thứ tự chữ cái của **thuật ngữ ti�
 | Gom theo thứ bậc | *ROLLUP* | Mệnh đề sinh thêm dòng tổng theo thứ bậc cha–con, ví dụ lớp → khối → toàn trường | [Bài 26](cap-3-sql/26-group-by-having.md) |
 | Nút gốc | *root node* | Trang duy nhất trên cùng của cây index, nơi mọi lần tìm bắt đầu | [Bài 34](cap-4-ben-trong-dong-co/34-index-va-b-tree.md) |
 | Dòng | *row* | Một hàng trong bảng — cách gọi khác của *record* và *tuple* | [Bài 1](cap-0-nhap-mon/01-du-lieu-va-thong-tin.md) |
+| Khoá mức dòng | *row-level lock* | Khoá trên từng dòng, ghi ngay trong tuple; 4 mức từ `FOR KEY SHARE` tới `FOR UPDATE` | [Bài 41](cap-4-ben-trong-dong-co/41-lock-va-deadlock.md) |
 | Tổng luỹ tiến | *running total* | Tổng cộng dồn từ đầu phân vùng tới dòng hiện tại — phải viết `ROWS` mới cộng từng dòng một | [Bài 29](cap-3-sql/29-window-function.md) |
 
 ## S
@@ -399,6 +422,7 @@ Bảng được sắp xếp theo thứ tự chữ cái của **thuật ngữ ti�
 | Truy vấn con vô hướng | *scalar subquery* | Truy vấn con trả về đúng 1 dòng 1 cột, dùng được ở mọi chỗ chờ một giá trị; trả về 0 dòng thì cho `NULL` | [Bài 27](cap-3-sql/27-subquery-va-exists.md) |
 | Lược đồ | *schema* | Cái khung của database — có bảng nào, cột nào, kiểu gì — thứ hầu như không đổi theo thời gian | [Bài 3](cap-0-nhap-mon/03-dbms-la-gi.md) |
 | Dạng chuẩn 2 | *Second Normal Form — 2NF* | Bảng đã ở 1NF và mọi thuộc tính không khoá đều phụ thuộc đầy đủ vào mọi khoá dự tuyển | [Bài 17](cap-2-chuan-hoa/17-dang-chuan-1nf-2nf.md) |
+| Khoá dòng khi đọc | *SELECT ... FOR UPDATE* | Đọc và khoá luôn các dòng, để không ai sửa chúng trước khi giao dịch mình kết thúc | [Bài 41](cap-4-ben-trong-dong-co/41-lock-va-deadlock.md) |
 | Phép chọn | *selection* | Phép σ giữ lại những dòng thoả điều kiện — cắt ngang; trong SQL là `WHERE` | [Bài 21](cap-3-sql/21-dai-so-quan-he.md) |
 | Tính chọn lọc | *selectivity* | Tỉ lệ dòng mà điều kiện giữ lại; tỉ lệ càng nhỏ, điều kiện càng chọn lọc mạnh | [Bài 34](cap-4-ben-trong-dong-co/34-index-va-b-tree.md) |
 | Tự kết nối | *SELF JOIN* | Ghép một bảng với chính nó; bắt buộc dùng bí danh, và nên thêm `a.khoa < b.khoa` để mỗi cặp chỉ hiện một lần | [Bài 25](cap-3-sql/25-join.md) |
@@ -408,12 +432,18 @@ Bảng được sắp xếp theo thứ tự chữ cái của **thuật ngữ ti�
 | Chi phí trang tuần tự | *seq_page_cost* | Chi phí đọc một trang theo thứ tự, mặc định 1 — mốc chuẩn của mọi chi phí ước lượng | [Bài 36](cap-4-ben-trong-dong-co/36-explain-va-query-planner.md) |
 | Bộ đếm | *sequence* | Đối tượng sinh số tăng dần — là thứ nằm sau từ viết tắt `SERIAL` | [Bài 22](cap-3-sql/22-ddl-va-kieu-du-lieu.md) |
 | Quét toàn bảng | *sequential scan* | Đọc mọi trang heap theo thứ tự — `Seq Scan` | [Bài 34](cap-4-ben-trong-dong-co/34-index-va-b-tree.md) |
+| Tuần tự hoá được | *Serializable* | Mức cô lập cao nhất: kết quả y như chạy lần lượt; giao dịch nào phá vỡ điều đó bị huỷ để làm lại | [Bài 38](cap-4-ben-trong-dong-co/38-isolation-level-va-anomaly.md) |
+| Bất thường tuần tự hoá | *serialization anomaly* | Kết quả chạy song song mà không thứ tự chạy lần lượt nào cho ra được; lệch ghi là một ví dụ | [Bài 38](cap-4-ben-trong-dong-co/38-isolation-level-va-anomaly.md) |
+| Lỗi tuần tự hoá | *serialization failure* | Lỗi `40001` — database huỷ giao dịch để giữ lời hứa của mức cô lập; ứng dụng phải làm lại cả giao dịch | [Bài 38](cap-4-ben-trong-dong-co/38-isolation-level-va-anomaly.md) |
 | Máy chủ | *server* | Chương trình chạy âm thầm và liên tục ở nền, nằm chờ máy khách gõ cửa | [Bài 5](cap-0-nhap-mon/05-cai-dat-postgresql.md) |
 | Bộ đệm dùng chung | *shared buffers* | Vùng nhớ PostgreSQL giữ các trang vừa dùng; `shared hit` là trang lấy được từ đây | [Bài 36](cap-4-ben-trong-dong-co/36-explain-va-query-planner.md) |
+| Khoá chia sẻ | *shared lock* | Khoá nhiều giao dịch giữ cùng lúc được; chỉ xung đột với khoá độc quyền | [Bài 41](cap-4-ben-trong-dong-co/41-lock-va-deadlock.md) |
 | Thuộc tính đơn | *simple attribute* | Thuộc tính không tách nhỏ thêm được mà vẫn giữ nghĩa | [Bài 7](cap-1-mo-hinh-er/07-thuc-the-va-thuoc-tinh.md) |
 | Gộp một bảng | *single table / single table inheritance* | Cách hiện thực kế thừa: một bảng duy nhất chứa mọi cột của cha lẫn con, thêm một cột cho biết dòng đó là loại gì | [Bài 13](cap-1-mo-hinh-er/13-mo-hinh-eer.md) |
 | Thuộc tính đơn trị | *single-valued attribute* | Với mỗi thực thể, thuộc tính chỉ có đúng một giá trị | [Bài 7](cap-1-mo-hinh-er/07-thuc-the-va-thuoc-tinh.md) |
 | Dạng chuẩn 6 | *Sixth Normal Form — 6NF* | Mọi phụ thuộc kết nối của bảng đều tầm thường — bảng chỉ còn khoá cộng tối đa một thuộc tính không khoá | [Bài 19](cap-2-chuan-hoa/19-dang-chuan-4nf-5nf-6nf.md) |
+| Bỏ qua dòng đang khoá | *SKIP LOCKED* | Gặp dòng đang bị khoá thì bỏ qua, lấy các dòng khác — nền của hàng đợi công việc | [Bài 41](cap-4-ben-trong-dong-co/41-lock-va-deadlock.md) |
+| Ảnh chụp dữ liệu | *snapshot* | Bản ghi những giao dịch đã kết thúc tại một thời điểm, dạng `xmin:xmax:danh_sách_đang_chạy` | [Bài 39](cap-4-ben-trong-dong-co/39-mvcc.md) |
 | Xoá mềm | *soft delete* | Đánh dấu một dòng là đã bỏ bằng cột trạng thái, thay vì `DELETE` thật | [Bài 15](cap-1-mo-hinh-er/15-rang-buoc-toan-ven.md) |
 | Đúng đắn (của hệ tiên đề) | *sound* | Mọi phụ thuộc hàm suy ra được từ ba tiên đề Armstrong đều thật sự đúng | [Bài 16](cap-2-chuan-hoa/16-phu-thuoc-ham.md) |
 | GiST phân hoạch không gian | *Space-Partitioned GiST* (SP-GiST) | Cây không cân bằng chia không gian thành các phần không chồng nhau; hợp dữ liệu phân bố rất lệch | [Bài 35](cap-4-ben-trong-dong-co/35-cac-loai-index-khac.md) |
@@ -436,6 +466,7 @@ Bảng được sắp xếp theo thứ tự chữ cái của **thuật ngữ ti�
 | Siêu khoá | *super key* | Tập cột mà không có hai dòng nào trùng nhau trên toàn bộ tập đó — được phép thừa cột | [Bài 12](cap-1-mo-hinh-er/12-bay-loai-khoa.md) |
 | Lớp cha | *superclass* | Tập thực thể tổng quát mà các lớp con đều thuộc về | [Bài 13](cap-1-mo-hinh-er/13-mo-hinh-eer.md) |
 | Khoá nhân tạo | *surrogate key* | Khoá không mang ý nghĩa nghiệp vụ nào, chỉ tồn tại để định danh dòng | [Bài 9](cap-1-mo-hinh-er/09-participation-va-thuc-the-yeu.md) |
+| Xác nhận đồng bộ | *synchronous commit* | `COMMIT` chờ WAL xuống đĩa mới báo xong; tắt đi thì có thể mất giao dịch cuối nhưng không hỏng dữ liệu | [Bài 40](cap-4-ben-trong-dong-co/40-wal-va-recovery.md) |
 
 ## T
 
@@ -445,6 +476,7 @@ Bảng được sắp xếp theo thứ tự chữ cái của **thuật ngữ ti�
 | Gộp bảng 1:1 | *table merging* | Nhập hai bảng quan hệ 1:1 luôn được đọc cùng nhau làm một | [Bài 20](cap-2-chuan-hoa/20-denormalization.md) |
 | Bảng cho mỗi lớp con cụ thể | *table per concrete class* | Cách hiện thực kế thừa: không có bảng cha, mỗi lớp con một bảng đầy đủ tự lặp lại các cột chung | [Bài 13](cap-1-mo-hinh-er/13-mo-hinh-eer.md) |
 | Bảng cho mỗi lớp con | *table per subclass / class table inheritance* | Cách hiện thực kế thừa: một bảng cho lớp cha, mỗi lớp con thêm một bảng chứa phần riêng và trỏ về cha bằng khoá ngoại | [Bài 13](cap-1-mo-hinh-er/13-mo-hinh-eer.md) |
+| Khoá mức bảng | *table-level lock* | Khoá trên cả bảng; PostgreSQL có 8 mức, từ `ACCESS SHARE` của `SELECT` tới `ACCESS EXCLUSIVE` của `DROP`/`ALTER` | [Bài 41](cap-4-ben-trong-dong-co/41-lock-va-deadlock.md) |
 | Dữ liệu theo thời gian | *temporal data* | Dữ liệu ghi kèm khoảng thời gian mà giá trị đó có hiệu lực | [Bài 19](cap-2-chuan-hoa/19-dang-chuan-4nf-5nf-6nf.md) |
 | Mối quan hệ bậc ba | *ternary relationship* | Mối quan hệ có ba tập thực thể tham gia cùng lúc; tách ra là mất thông tin | [Bài 8](cap-1-mo-hinh-er/08-moi-quan-he-va-cardinality.md) |
 | Cấu hình tìm kiếm | *text search configuration* | Bộ quy tắc tách từ, bỏ từ dừng và đưa về dạng gốc; PostgreSQL **không có** cấu hình tiếng Việt | [Bài 32](cap-3-sql/32-jsonb-va-full-text-search.md) |
@@ -457,6 +489,7 @@ Bảng được sắp xếp theo thứ tự chữ cái của **thuật ngữ ti�
 | Chuyên biệt hoá toàn phần | *total specialization* | Mọi thực thể lớp cha phải thuộc ít nhất một lớp con | [Bài 13](cap-1-mo-hinh-er/13-mo-hinh-eer.md) |
 | Giao dịch | *transaction* | Một nhóm thao tác được bọc lại thành một đơn vị: `COMMIT` để giữ, `ROLLBACK` để trả lại nguyên trạng | [Bài 2](cap-0-nhap-mon/02-tu-so-giay-den-excel.md) |
 | Ngôn ngữ điều khiển giao tác | *Transaction Control Language* (TCL) | Nhóm lệnh SQL gom nhiều câu thành một khối: `BEGIN`, `COMMIT`, `ROLLBACK`, `SAVEPOINT` | [Bài 22](cap-3-sql/22-ddl-va-kieu-du-lieu.md) |
+| Cuộn vòng mã giao dịch | *transaction ID wraparound* | Mã giao dịch 32 bit dùng xoay vòng; tuple cũ không được đóng băng sẽ có ngày biến mất | [Bài 39](cap-4-ben-trong-dong-co/39-mvcc.md) |
 | DDL trong giao dịch | *transactional DDL* | `CREATE`, `ALTER`, `DROP` nằm được trong giao dịch và bị `ROLLBACK` huỷ được | [Bài 37](cap-4-ben-trong-dong-co/37-transaction-va-acid.md) |
 | Phụ thuộc bắc cầu | *transitive functional dependency* | `X → Z` đi vòng qua một tập `Y` trung gian, trong khi `Y` không xác định ngược lại `X` | [Bài 16](cap-2-chuan-hoa/16-phu-thuoc-ham.md) |
 | Bắc cầu | *transitivity* | Tiên đề Armstrong: `X → Y` và `Y → Z` thì `X → Z` | [Bài 16](cap-2-chuan-hoa/16-phu-thuoc-ham.md) |
@@ -469,6 +502,7 @@ Bảng được sắp xếp theo thứ tự chữ cái của **thuật ngữ ti�
 | Câu hỏi tìm kiếm | *tsquery* | Câu hỏi tìm kiếm đã chuẩn hoá, ghép bằng `&` và, `|` hoặc, `!` không, `<->` liền kề | [Bài 32](cap-3-sql/32-jsonb-va-full-text-search.md) |
 | Bộ | *tuple* | Tên học thuật của một hàng trong bảng — cùng nghĩa với *record* và *row* | [Bài 1](cap-0-nhap-mon/01-du-lieu-va-thong-tin.md) |
 | Đầu tuple | *tuple header* | Phần 23 byte trước dữ liệu của mỗi tuple, chứa `xmin`, `xmax`, `t_ctid`… | [Bài 33](cap-4-ben-trong-dong-co/33-page-heap-tuple.md) |
+| Khoá hai pha | *two-phase locking* (2PL) | Pha chỉ lấy khoá rồi pha chỉ trả khoá; bảo đảm kết quả như chạy lần lượt | [Bài 41](cap-4-ben-trong-dong-co/41-lock-va-deadlock.md) |
 
 ## U
 
@@ -481,6 +515,7 @@ Bảng được sắp xếp theo thứ tự chữ cái của **thuật ngữ ti�
 | Phép hợp | *union* — phép toán | Phép ∪ gộp hai quan hệ khả hợp và bỏ dòng trùng; trong SQL là `UNION`, còn `UNION ALL` thì giữ trùng — đừng nhầm với *Luật hợp* ở Bài 16 | [Bài 21](cap-3-sql/21-dai-so-quan-he.md) |
 | Khả hợp | *union-compatible* | Hai quan hệ cùng số cột và các cột tương ứng cùng miền giá trị — điều kiện để dùng ∪ và − | [Bài 21](cap-3-sql/21-dai-so-quan-he.md) |
 | Chưa biết | *UNKNOWN* | Giá trị chân lý thứ ba, sinh ra mỗi khi so sánh với `NULL`; `WHERE` **loại bỏ** mọi dòng cho `UNKNOWN` | [Bài 24](cap-3-sql/24-select-where-order-by.md) |
+| Bảng không ghi nhật ký | *unlogged table* | Bảng không ghi WAL: ghi nhanh, nhưng bị làm rỗng sau mất điện và không được nhân bản | [Bài 40](cap-4-ben-trong-dong-co/40-wal-va-recovery.md) |
 | View cập nhật được | *updatable view* | View đủ đơn giản để `INSERT` / `UPDATE` / `DELETE` trực tiếp, thao tác tự chuyển xuống bảng gốc | [Bài 30](cap-3-sql/30-view-va-materialized-view.md) |
 | Cập nhật | *update* | Lệnh DML sửa giá trị của các dòng đã có; không có `WHERE` thì sửa toàn bộ bảng | [Bài 23](cap-3-sql/23-dml-insert-update-delete.md) |
 | Bất thường khi cập nhật | *update anomaly* | Muốn sửa một sự thật phải sửa nhiều dòng; sót một dòng là dữ liệu tự mâu thuẫn | [Bài 2](cap-0-nhap-mon/02-tu-so-giay-den-excel.md) |
@@ -496,14 +531,27 @@ Bảng được sắp xếp theo thứ tự chữ cái của **thuật ngữ ti�
 | Giá trị | *value* | Nội dung của một ô trong bảng | [Bài 1](cap-0-nhap-mon/01-du-lieu-va-thong-tin.md) |
 | Khung nhìn | *view* | Một câu truy vấn được đặt tên; bản thân nó **không chứa** dữ liệu thật | [Bài 3](cap-0-nhap-mon/03-dbms-la-gi.md) |
 | Bản đồ hiển thị | *visibility map* | Tệp phụ đánh dấu những trang mà mọi tuple đều sống và ai cũng thấy; điều kiện của `Index Only Scan` | [Bài 33](cap-4-ben-trong-dong-co/33-page-heap-tuple.md) |
+| Quy tắc thấy được | *visibility rules* | Tuple thấy được khi `xmin` đã xác nhận trước lúc chụp ảnh, và `xmax` bằng 0, đã huỷ, hoặc chưa xác nhận lúc chụp | [Bài 39](cap-4-ben-trong-dong-co/39-mvcc.md) |
 | Bất định | *VOLATILE* | Một hàm có thể cho kết quả khác nhau mỗi lần gọi hoặc có tác dụng phụ; là **mặc định** và không được tối ưu | [Bài 31](cap-3-sql/31-trigger-procedure-function.md) |
 
 ## W
 
 | Tiếng Việt | English | Nghĩa trong một câu | Học ở bài |
 |---|---|---|---|
+| Đồ thị chờ | *wait-for graph* | Đồ thị có mũi tên A → B khi A chờ khoá B đang giữ; có chu trình là có bế tắc | [Bài 41](cap-4-ben-trong-dong-co/41-lock-va-deadlock.md) |
+| Lưu trữ WAL | *WAL archiving* | Giữ lại mọi tệp WAL ở một kho riêng thay vì xoá sau checkpoint; cần cho PITR | [Bài 40](cap-4-ben-trong-dong-co/40-wal-va-recovery.md) |
 | Thực thể yếu | *weak entity* | Thực thể không có thuộc tính khoá của riêng nó, nên phải mượn khoá của thực thể chủ | [Bài 9](cap-1-mo-hinh-er/09-participation-va-thuc-the-yeu.md) |
 | Cửa sổ | *window* | Tập dòng mà một hàm cửa sổ nhìn thấy khi đứng ở một dòng nhất định | [Bài 29](cap-3-sql/29-window-function.md) |
 | Khung cửa sổ | *window frame* | Phần của phân vùng mà hàm cửa sổ thật sự nhìn, khai bằng `ROWS`, `RANGE` hoặc `GROUPS`; mặc định là `RANGE ... CURRENT ROW` | [Bài 29](cap-3-sql/29-window-function.md) |
 | Hàm cửa sổ | *window function* | Hàm tính trên các dòng liên quan tới dòng hiện tại mà **không gom dòng** — vào N dòng, ra N dòng | [Bài 29](cap-3-sql/29-window-function.md) |
 | Kiểm tra khi ghi qua view | *WITH CHECK OPTION* | Bắt mọi dòng ghi qua view phải thoả điều kiện `WHERE` của view, thay vì lặng lẽ lọt ra ngoài tầm nhìn của nó | [Bài 30](cap-3-sql/30-view-va-materialized-view.md) |
+| Lệch ghi | *write skew* | Hai giao dịch cùng đọc, mỗi bên sửa một dòng khác nhau dựa trên cái đã đọc; từng bên đúng mà gộp lại sai | [Bài 38](cap-4-ben-trong-dong-co/38-isolation-level-va-anomaly.md) |
+| Nhật ký ghi trước | *write-ahead logging* (WAL) | Nhật ký ghi nối tiếp mô tả mọi thay đổi; phải xuống đĩa trước trang dữ liệu, và `COMMIT` chỉ xong khi bản ghi `COMMIT` đã xuống đĩa | [Bài 40](cap-4-ben-trong-dong-co/40-wal-va-recovery.md) |
+
+## X
+
+| Tiếng Việt | English | Nghĩa trong một câu | Học ở bài |
+|---|---|---|---|
+| Mã giao dịch xoá | *xmax* | Cột hệ thống: mã giao dịch đã xoá, thay thế — hoặc đang khoá — phiên bản dòng này; `0` nếu chưa ai đụng tới | [Bài 39](cap-4-ben-trong-dong-co/39-mvcc.md) |
+| Mã giao dịch tạo | *xmin* | Cột hệ thống: mã giao dịch đã tạo ra phiên bản dòng này | [Bài 39](cap-4-ben-trong-dong-co/39-mvcc.md) |
+| Mốc dọn rác | *xmin horizon* | `xmin` nhỏ nhất trong mọi ảnh chụp đang dùng; `VACUUM` chỉ dọn tuple bị xoá trước mốc này | [Bài 39](cap-4-ben-trong-dong-co/39-mvcc.md) |
