@@ -52,6 +52,63 @@ KY_VONG_BAT_KY = re.compile(r"^[ \t]*--[ \t]*KỲ VỌNG:.*$", re.M)
 CUA_SO_TRUOC = 120
 
 
+_TEN_TONG_HOP = ("count", "sum", "avg", "min", "max", "string_agg", "array_agg",
+                 "bool_and", "bool_or")
+
+
+def _tong_hop_tang_ngoai(truy_van: str) -> bool:
+    """Có hàm tổng hợp ở TẦNG NGOẶC 0 của danh sách chọn ngoài cùng không?
+
+    Phải xét độ sâu ngoặc, vì `count(` nằm trong một truy vấn con vô hướng
+    (`SELECT (SELECT count(*) FROM x) AS a FROM y`) KHÔNG làm kết quả ngoài cùng
+    co về một dòng — bản heuristic đầu tiên tách tại `FROM` đầu tiên nên sinh ra
+    13 dương tính giả ở Cấp 3.
+    """
+    sau = 0
+    trong_nhay = False
+    thap = truy_van.lower()
+    i = 0
+    while i < len(truy_van):
+        c = truy_van[i]
+        if trong_nhay:
+            if c == "'":
+                trong_nhay = False
+            i += 1
+            continue
+        if c == "'":
+            trong_nhay = True
+        elif c == "(":
+            sau += 1
+        elif c == ")":
+            sau -= 1
+        elif sau == 0:
+            # Hết danh sách chọn ngoài cùng thì dừng
+            if re.match(r"from\b", thap[i:]):
+                return False
+            for ten in _TEN_TONG_HOP:
+                if thap.startswith(ten, i) and re.match(rf"{ten}\s*\(", thap[i:]):
+                    truoc = truy_van[i - 1] if i else " "
+                    if truoc.isalnum() or truoc == "_":
+                        continue
+                    # `sum(x) OVER (...)` là window function: nó KHÔNG gom dòng lại,
+                    # nên không áp dụng lập luận "chỉ trả về một dòng".
+                    ngoac = 0
+                    j = i
+                    while j < len(truy_van):
+                        if truy_van[j] == "(":
+                            ngoac += 1
+                        elif truy_van[j] == ")":
+                            ngoac -= 1
+                            if ngoac == 0:
+                                break
+                        j += 1
+                    if re.match(r"(?is)\s*(filter\s*\([^)]*\)\s*)?over\b", truy_van[j + 1:]):
+                        continue
+                    return True
+        i += 1
+    return False
+
+
 def _co_order_by_tang_ngoai(truy_van: str) -> bool:
     """Có ORDER BY ở tầng ngoài cùng không (ngoài mọi ngoặc, ngoài mọi chuỗi nháy)."""
     sau = 0
@@ -143,10 +200,7 @@ def main() -> int:
                 # nên heuristic dưới đây không áp dụng được cho chúng.
                 co_hop = re.search(r"(?is)\b(union|intersect|except)\b", truy_van)
                 if any(n > 1 for n in so_dong) and not co_hop:
-                    ngoai = re.split(r"(?is)\bfrom\b", truy_van, maxsplit=1)[0]
-                    co_tong_hop = re.search(
-                        r"(?is)\b(count|sum|avg|min|max|string_agg|array_agg|bool_and|bool_or)\s*\(",
-                        ngoai)
+                    co_tong_hop = _tong_hop_tang_ngoai(truy_van)
                     co_group_by = re.search(r"(?is)\bgroup\s+by\b", truy_van)
                     if co_tong_hop and not co_group_by:
                         dau = " ".join(truy_van.split())[:90]
@@ -158,13 +212,13 @@ def main() -> int:
                 so_kv += len(so_dong) + len(gia_tri)
                 print(f"-- kiểm tra kết quả cho {ten}")
                 print("DO $kiemtra$")
-                print("DECLARE n bigint; v text;")
+                print("DECLARE _kt_so_dong bigint; _kt_gia_tri text;")
                 print("BEGIN")
                 for mong_doi in so_dong:
-                    print(f"  SELECT count(*) INTO n FROM ({truy_van}) AS t_kiem_tra;")
-                    print(f"  IF n <> {mong_doi} THEN")
+                    print(f"  SELECT count(*) INTO _kt_so_dong FROM ({truy_van}) AS t_kiem_tra;")
+                    print(f"  IF _kt_so_dong <> {mong_doi} THEN")
                     print(f"    RAISE EXCEPTION 'SAI SO DONG: {ten} ky vong {mong_doi} dong, "
-                          f"thuc te %', n;")
+                          f"thuc te %', _kt_so_dong;")
                     print("  END IF;")
                 # Khẳng định giá trị đọc MỘT dòng. Nếu truy vấn không có ORDER BY ở tầng
                 # ngoài cùng thì "dòng đầu tiên" là khái niệm không xác định — hôm nay xanh,
@@ -172,21 +226,22 @@ def main() -> int:
                 # ngay nếu kết quả không phải đúng một dòng, nên không còn chỗ cho nhập nhằng.
                 # Có ORDER BY tầng ngoài thì tác giả đã chủ động chọn dòng đầu -> giữ LIMIT 1.
                 co_order_by_tang_ngoai = _co_order_by_tang_ngoai(truy_van)
-                doc = "INTO v" if co_order_by_tang_ngoai else "INTO STRICT v"
+                doc = ("INTO _kt_gia_tri" if co_order_by_tang_ngoai
+                       else "INTO STRICT _kt_gia_tri")
                 hau = " LIMIT 1" if co_order_by_tang_ngoai else ""
                 for cot, gt in gia_tri:
                     if gt.upper() == "NULL":
                         print(f"  SELECT ({cot})::text {doc} FROM ({truy_van}) AS t_kiem_tra{hau};")
-                        print("  IF v IS NOT NULL THEN")
+                        print("  IF _kt_gia_tri IS NOT NULL THEN")
                         print(f"    RAISE EXCEPTION 'SAI GIA TRI: {ten} cot {cot} ky vong NULL, "
-                              f"thuc te %', v;")
+                              f"thuc te %', _kt_gia_tri;")
                         print("  END IF;")
                     else:
                         gt_sql = gt.replace("'", "''")
                         print(f"  SELECT ({cot})::text {doc} FROM ({truy_van}) AS t_kiem_tra{hau};")
-                        print(f"  IF v IS DISTINCT FROM '{gt_sql}' THEN")
+                        print(f"  IF _kt_gia_tri IS DISTINCT FROM '{gt_sql}' THEN")
                         print(f"    RAISE EXCEPTION 'SAI GIA TRI: {ten} cot {cot} ky vong {gt_sql}, "
-                              f"thuc te %', coalesce(v, 'NULL');")
+                              f"thuc te %', coalesce(_kt_gia_tri, 'NULL');")
                         print("  END IF;")
                 print("END $kiemtra$;")
                 print()
