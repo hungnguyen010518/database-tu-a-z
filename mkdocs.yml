@@ -112,5 +112,11 @@ nav:
       - "Bài 24 — SELECT, WHERE, ORDER BY, LIMIT": cap-3-sql/24-select-where-order-by.md
       - "Bài 25 — JOIN: sáu cách ghép bảng": cap-3-sql/25-join.md
       - "Bài 26 — GROUP BY, HAVING và các hàm tổng hợp": cap-3-sql/26-group-by-having.md
+      - "Bài 27 — Truy vấn con (Subquery) và EXISTS": cap-3-sql/27-subquery-va-exists.md
+      - "Bài 28 — CTE và CTE đệ quy": cap-3-sql/28-cte-va-recursive-cte.md
+      - "Bài 29 — Window Function: tính toán theo cửa sổ": cap-3-sql/29-window-function.md
+      - "Bài 30 — View và Materialized View": cap-3-sql/30-view-va-materialized-view.md
+      - "Bài 31 — Trigger, Stored Procedure và Function": cap-3-sql/31-trigger-procedure-function.md
+      - "Bài 32 — JSONB và Full-Text Search": cap-3-sql/32-jsonb-va-full-text-search.md
   - "Database mẫu": dataset.md
   - "Bảng thuật ngữ": glossary.md
