@@ -307,7 +307,7 @@ Ba người đó là `GV06`, `GV07`, `GV08`. Từ khoá tương ứng là **`EXC
 
     `EXCEPT` xử lý `NULL` như một giá trị bình thường: nó chỉ loại đi những mã **trùng khớp**, còn `NULL` không trùng với mã giáo viên nào nên không loại ai cả. Kết quả vẫn đúng 3 dòng.
 
-    Nhưng nếu viết bằng `NOT IN` thì kết quả sẽ là **0 dòng** — một kết quả sai một cách bí ẩn. Đó là cái bẫy của `NULL`, và [Bài 24](24-select-where-order-by.md) rồi **Bài 27** *(sắp có)* sẽ mổ xẻ nó.
+    Nhưng nếu viết bằng `NOT IN` thì kết quả sẽ là **0 dòng** — một kết quả sai một cách bí ẩn. Đó là cái bẫy của `NULL`, và [Bài 24](24-select-where-order-by.md) rồi [Bài 27](27-subquery-va-exists.md) sẽ mổ xẻ nó.
 
 ### 5. × — Tích Descartes
 
@@ -441,7 +441,7 @@ ORDER BY pc.ma_gv;
 | Kết nối theta | ⋈_θ | `JOIN ... ON <điều kiện bất kỳ>` | [Bài 25](25-join.md) |
 | Kết nối bằng | ⋈ | `JOIN ... ON a.x = b.x`, hoặc lối viết gọn `USING (x)` khi hai bảng **cùng tên cột** — [Bài 25](25-join.md) dạy kỹ | [Bài 25](25-join.md) |
 | Kết nối tự nhiên | ⋈ | `NATURAL JOIN` | [Bài 25](25-join.md) |
-| Phép chia | ÷ | *(không có)* — dựng bằng `GROUP BY ... HAVING count(...)` hoặc `NOT EXISTS` lồng đôi | [Bài 26](26-group-by-having.md), **Bài 27** *(sắp có)* |
+| Phép chia | ÷ | *(không có)* — dựng bằng `GROUP BY ... HAVING count(...)` hoặc `NOT EXISTS` lồng đôi | [Bài 26](26-group-by-having.md), [Bài 27](27-subquery-va-exists.md) |
 | *(không có trong đại số)* | — | `ORDER BY` — vì tập hợp không có thứ tự | [Bài 24](24-select-where-order-by.md) |
 | *(không có trong đại số)* | — | Hàm tổng hợp `COUNT`, `SUM`, `AVG` | [Bài 26](26-group-by-having.md) |
 

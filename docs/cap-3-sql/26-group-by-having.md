@@ -905,4 +905,4 @@ WHERE table_name LIKE 'b26\_%';
 
 ---
 
-⬅️ [Bài 25 — JOIN: sáu cách ghép bảng](25-join.md) · ➡️ **Bài 27 — Subquery và EXISTS** *(sắp có)*
+⬅️ [Bài 25 — JOIN: sáu cách ghép bảng](25-join.md) · ➡️ [Bài 27 — Truy vấn con và EXISTS](27-subquery-va-exists.md)

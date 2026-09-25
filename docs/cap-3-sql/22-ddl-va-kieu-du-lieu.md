@@ -67,7 +67,7 @@ Người ta quen gọi "SQL" như một khối, nhưng chuẩn SQL chia câu l�
 !!! danger "`TRUNCATE` không có `WHERE` — và đó là điểm mấu chốt"
     `TRUNCATE hoc_sinh;` xoá sạch 40 dòng, không hỏi lại, không cách nào giới hạn.
 
-    Nó nhanh vì nó không đi qua từng dòng — nó vứt luôn cả tệp dữ liệu rồi tạo tệp mới. Đổi lại, nó **không kích hoạt trigger `FOR EACH ROW`** (**Bài 31** *(sắp có)* sẽ dạy trigger), nên nếu bạn có trigger ghi nhật ký thì nhật ký sẽ trống trơn.
+    Nó nhanh vì nó không đi qua từng dòng — nó vứt luôn cả tệp dữ liệu rồi tạo tệp mới. Đổi lại, nó **không kích hoạt trigger `FOR EACH ROW`** ([Bài 31](31-trigger-procedure-function.md) sẽ dạy trigger), nên nếu bạn có trigger ghi nhật ký thì nhật ký sẽ trống trơn.
 
 ### Kiểu dữ liệu
 
@@ -123,7 +123,7 @@ Trong PostgreSQL, ba kiểu này **tốc độ như nhau** — không có chuy�
 | `UUID` | Định danh 128 bit, sinh ngẫu nhiên gần như không bao giờ trùng | `a0ee-…-9f3b` |
 | `ARRAY` | Mảng nhiều giá trị cùng kiểu trong **một ô** | `ARRAY['Bóng đá', 'Vẽ']` |
 | `ENUM` | Tập giá trị cố định do bạn tự định nghĩa, **có thứ tự** | `'Giỏi'`, `'Khá'` |
-| `JSONB` | Tài liệu JSON đã phân tích sẵn | Bài 32 *(sắp có)* |
+| `JSONB` | Tài liệu JSON đã phân tích sẵn | [Bài 32](32-jsonb-va-full-text-search.md) |
 
 !!! warning "`ARRAY` và chuẩn hoá — hai thứ đối đầu nhau"
     Ở [Bài 17](../cap-2-chuan-hoa/17-dang-chuan-1nf-2nf.md) bạn học rằng 1NF đòi mỗi ô chỉ chứa **một** giá trị nguyên tử. Kiểu `ARRAY` cho phép nhét cả danh sách vào một ô — tức là **phá 1NF một cách có chủ đích**.
