@@ -677,4 +677,4 @@ SELECT (SELECT count(*) FROM information_schema.tables WHERE table_name LIKE 'b3
 
 ---
 
-⬅️ [Bài 36 — EXPLAIN và bộ tối ưu truy vấn](36-explain-va-query-planner.md) · ➡️ **Bài 38 — Mức cô lập và các hiện tượng bất thường** *(sắp có)*
+⬅️ [Bài 36 — EXPLAIN và bộ tối ưu truy vấn](36-explain-va-query-planner.md) · ➡️ [Bài 38 — Mức cô lập và các hiện tượng bất thường](38-isolation-level-va-anomaly.md)
