@@ -140,4 +140,24 @@
          <loc>https://hungnguyen010518.github.io/database-tu-a-z/cap-3-sql/32-jsonb-va-full-text-search/</loc>
          <lastmod>2026-09-25</lastmod>
     </url>
+    <url>
+         <loc>https://hungnguyen010518.github.io/database-tu-a-z/cap-4-ben-trong-dong-co/33-page-heap-tuple/</loc>
+         <lastmod>2026-09-25</lastmod>
+    </url>
+    <url>
+         <loc>https://hungnguyen010518.github.io/database-tu-a-z/cap-4-ben-trong-dong-co/34-index-va-b-tree/</loc>
+         <lastmod>2026-09-25</lastmod>
+    </url>
+    <url>
+         <loc>https://hungnguyen010518.github.io/database-tu-a-z/cap-4-ben-trong-dong-co/35-cac-loai-index-khac/</loc>
+         <lastmod>2026-09-25</lastmod>
+    </url>
+    <url>
+         <loc>https://hungnguyen010518.github.io/database-tu-a-z/cap-4-ben-trong-dong-co/36-explain-va-query-planner/</loc>
+         <lastmod>2026-09-25</lastmod>
+    </url>
+    <url>
+         <loc>https://hungnguyen010518.github.io/database-tu-a-z/cap-4-ben-trong-dong-co/37-transaction-va-acid/</loc>
+         <lastmod>2026-09-25</lastmod>
+    </url>
 </urlset>

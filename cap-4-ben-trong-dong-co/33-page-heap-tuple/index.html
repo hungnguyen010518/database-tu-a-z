@@ -1,0 +1,2877 @@
+
+<!doctype html>
+<html lang="vi" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Khóa học cơ sở dữ liệu tiếng Việt, từ con số 0 tới mức siêu nâng cao — giải thích để học sinh cấp 2 cũng hiểu được.">
+      
+      
+      
+        <link rel="canonical" href="https://hungnguyen010518.github.io/database-tu-a-z/cap-4-ben-trong-dong-co/33-page-heap-tuple/">
+      
+      
+        <link rel="prev" href="../../cap-3-sql/32-jsonb-va-full-text-search/">
+      
+      
+        <link rel="next" href="../34-index-va-b-tree/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.39">
+    
+    
+      
+        <title>Bài 33 — Trang, heap và tuple: PostgreSQL lưu dữ liệu thế nào - Database từ A-Z</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.8c3ca2c6.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#bai-33-trang-heap-va-tuple-postgresql-luu-du-lieu-the-nao" class="md-skip">
+          Bỏ qua
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Đầu trang">
+    <a href="../.." title="Database từ A-Z" class="md-header__button md-logo" aria-label="Database từ A-Z" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3C7.58 3 4 4.79 4 7s3.58 4 8 4 8-1.79 8-4-3.58-4-8-4M4 9v3c0 2.21 3.58 4 8 4s8-1.79 8-4V9c0 2.21-3.58 4-8 4s-8-1.79-8-4m0 5v3c0 2.21 3.58 4 8 4s8-1.79 8-4v-3c0 2.21-3.58 4-8 4s-8-1.79-8-4"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Database từ A-Z
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Bài 33 — Trang, heap và tuple: PostgreSQL lưu dữ liệu thế nào
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Chuyển sang chế độ tối"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Chuyển sang chế độ tối" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Chuyển sang chế độ sáng"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Chuyển sang chế độ sáng" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Tìm kiếm" placeholder="Tìm kiếm" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Tìm kiếm">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Xoá" aria-label="Xoá" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/hungnguyen010518/database-tu-a-z" title="Xem mã nguồn" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    database-tu-a-z
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Thanh điều hướng" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Database từ A-Z" class="md-nav__button md-logo" aria-label="Database từ A-Z" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3C7.58 3 4 4.79 4 7s3.58 4 8 4 8-1.79 8-4-3.58-4-8-4M4 9v3c0 2.21 3.58 4 8 4s8-1.79 8-4V9c0 2.21-3.58 4-8 4s-8-1.79-8-4m0 5v3c0 2.21 3.58 4 8 4s8-1.79 8-4v-3c0 2.21-3.58 4-8 4s-8-1.79-8-4"/></svg>
+
+    </a>
+    Database từ A-Z
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/hungnguyen010518/database-tu-a-z" title="Xem mã nguồn" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    database-tu-a-z
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Trang chủ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Cấp 0 — Nhập môn
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Cấp 0 — Nhập môn
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-0-nhap-mon/01-du-lieu-va-thong-tin/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 1 — Dữ liệu, thông tin và tại sao phải lưu trữ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-0-nhap-mon/02-tu-so-giay-den-excel/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 2 — Từ sổ giấy đến Excel
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-0-nhap-mon/03-dbms-la-gi/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 3 — DBMS là gì
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-0-nhap-mon/04-cac-mo-hinh-du-lieu/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 4 — Các mô hình dữ liệu
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-0-nhap-mon/05-cai-dat-postgresql/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 5 — Cài đặt PostgreSQL
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Cấp 1 — Mô hình quan hệ & Biểu đồ ER
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Cấp 1 — Mô hình quan hệ & Biểu đồ ER
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/06-mo-hinh-quan-he/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 6 — Mô hình quan hệ: bảng, dòng, cột, miền giá trị, lược đồ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/07-thuc-the-va-thuoc-tinh/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 7 — Thực thể và các loại thuộc tính
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/08-moi-quan-he-va-cardinality/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 8 — Mối quan hệ, bậc và bản số (Cardinality)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/09-participation-va-thuc-the-yeu/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 9 — Ràng buộc tham gia và Thực thể yếu
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/10-bieu-do-er-ky-hieu-chen/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 10 — Biểu đồ ER — ký hiệu Chen
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/11-bieu-do-er-crows-foot/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 11 — Biểu đồ ER — ký hiệu Crow's Foot và vẽ bằng Mermaid
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/12-bay-loai-khoa/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 12 — Bảy loại khoá trong cơ sở dữ liệu
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/13-mo-hinh-eer/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 13 — Mô hình EER: Generalization, Specialization, Aggregation
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/14-chuyen-er-sang-bang/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 14 — Chuyển biểu đồ ER thành lược đồ quan hệ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/15-rang-buoc-toan-ven/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 15 — Ràng buộc toàn vẹn (Integrity Constraints)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Cấp 2 — Chuẩn hoá
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Cấp 2 — Chuẩn hoá
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-2-chuan-hoa/16-phu-thuoc-ham/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 16 — Phụ thuộc hàm và bao đóng
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-2-chuan-hoa/17-dang-chuan-1nf-2nf/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 17 — Dạng chuẩn 1 (1NF) và Dạng chuẩn 2 (2NF)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-2-chuan-hoa/18-dang-chuan-3nf-bcnf/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 18 — Dạng chuẩn 3 (3NF) và BCNF
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-2-chuan-hoa/19-dang-chuan-4nf-5nf-6nf/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 19 — 4NF, 5NF và 6NF
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-2-chuan-hoa/20-denormalization/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 20 — Phi chuẩn hoá — khi nào nên phá luật
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Cấp 3 — SQL từ 0 tới cao thủ
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Cấp 3 — SQL từ 0 tới cao thủ
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-3-sql/21-dai-so-quan-he/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 21 — Đại số quan hệ: nền toán học phía sau SQL
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-3-sql/22-ddl-va-kieu-du-lieu/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 22 — DDL: CREATE, ALTER, DROP và các kiểu dữ liệu
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-3-sql/23-dml-insert-update-delete/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 23 — DML: INSERT, UPDATE, DELETE
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-3-sql/24-select-where-order-by/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 24 — SELECT, WHERE, ORDER BY, LIMIT
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-3-sql/25-join/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 25 — JOIN: sáu cách ghép bảng
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-3-sql/26-group-by-having/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 26 — GROUP BY, HAVING và các hàm tổng hợp
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-3-sql/27-subquery-va-exists/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 27 — Truy vấn con (Subquery) và EXISTS
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-3-sql/28-cte-va-recursive-cte/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 28 — CTE và CTE đệ quy
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-3-sql/29-window-function/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 29 — Window Function: tính toán theo cửa sổ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-3-sql/30-view-va-materialized-view/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 30 — View và Materialized View
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-3-sql/31-trigger-procedure-function/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 31 — Trigger, Stored Procedure và Function
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-3-sql/32-jsonb-va-full-text-search/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 32 — JSONB và Full-Text Search
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Cấp 4 — Bên trong động cơ
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            Cấp 4 — Bên trong động cơ
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Bài 33 — Trang, heap và tuple: PostgreSQL lưu dữ liệu thế nào
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Bài 33 — Trang, heap và tuple: PostgreSQL lưu dữ liệu thế nào
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Mục lục">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Mục lục
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#cau-chuyen-mo-au" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧠 Câu chuyện mở đầu
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#khai-niem-thuat-ngu" class="md-nav__link">
+    <span class="md-ellipsis">
+      📖 Khái niệm &amp; thuật ngữ
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📖 Khái niệm & thuật ngữ">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tu-bang-toi-tep-tren-ia" class="md-nav__link">
+    <span class="md-ellipsis">
+      Từ bảng tới tệp trên đĩa
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#trang-on-vi-oc-ghi-nho-nhat" class="md-nav__link">
+    <span class="md-ellipsis">
+      Trang — đơn vị đọc ghi nhỏ nhất
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ben-trong-mot-trang" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bên trong một trang
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tuple-va-au-tuple" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tuple và đầu tuple
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ctid-ia-chi-vat-ly-cua-mot-dong" class="md-nav__link">
+    <span class="md-ellipsis">
+      ctid — địa chỉ vật lý của một dòng
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#update-khong-sua-tai-cho-tuple-chet" class="md-nav__link">
+    <span class="md-ellipsis">
+      UPDATE không sửa tại chỗ — tuple chết
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bloat-vacuum-va-autovacuum" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bloat, VACUUM và autovacuum
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#toast-kho-phu-cho-o-qua-kho" class="md-nav__link">
+    <span class="md-ellipsis">
+      TOAST — kho phụ cho ô quá khổ
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fill-factor" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fill factor
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bang-thuat-ngu" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bảng thuật ngữ
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#so-o" class="md-nav__link">
+    <span class="md-ellipsis">
+      🖼️ Sơ đồ
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#thuc-hanh" class="md-nav__link">
+    <span class="md-ellipsis">
+      💻 Thực hành
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="💻 Thực hành">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tep-va-co-trang" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tệp và cỡ trang
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#oc-ctid" class="md-nav__link">
+    <span class="md-ellipsis">
+      Đọc ctid
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nhin-vao-ben-trong-mot-trang-voi-pageinspect" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nhìn vào bên trong một trang với pageinspect
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mot-tuple-thay-oi-the-nao-khi-bi-update" class="md-nav__link">
+    <span class="md-ellipsis">
+      Một tuple thay đổi thế nào khi bị UPDATE
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vacuum-don-rac" class="md-nav__link">
+    <span class="md-ellipsis">
+      VACUUM dọn rác
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#toast-mot-bai-van-265000-byte-trong-trang-8kb" class="md-nav__link">
+    <span class="md-ellipsis">
+      TOAST — một bài văn 265.000 byte trong trang 8KB
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bloat-o-tan-mat" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bloat — đo tận mắt
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fill-factor-chua-cho-tren-moi-trang" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fill factor — chừa chỗ trên mỗi trang
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#don-diem_lon-cho-cac-bai-sau" class="md-nav__link">
+    <span class="md-ellipsis">
+      Dọn diem_lon cho các bài sau
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#loi-thuong-gap" class="md-nav__link">
+    <span class="md-ellipsis">
+      ⚠️ Lỗi thường gặp
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bai-tap" class="md-nav__link">
+    <span class="md-ellipsis">
+      ✍️ Bài tập
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="✍️ Bài tập">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#don-dep-cuoi-bai" class="md-nav__link">
+    <span class="md-ellipsis">
+      Dọn dẹp cuối bài
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tom-tat" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔑 Tóm tắt
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../34-index-va-b-tree/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 34 — Index và B+Tree
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../35-cac-loai-index-khac/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 35 — Các loại index khác: Hash, GiST, GIN, BRIN
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../36-explain-va-query-planner/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 36 — EXPLAIN và bộ tối ưu truy vấn
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../37-transaction-va-acid/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 37 — Transaction và ACID
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../dataset/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Database mẫu
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../glossary/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bảng thuật ngữ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Mục lục">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Mục lục
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#cau-chuyen-mo-au" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧠 Câu chuyện mở đầu
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#khai-niem-thuat-ngu" class="md-nav__link">
+    <span class="md-ellipsis">
+      📖 Khái niệm &amp; thuật ngữ
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📖 Khái niệm & thuật ngữ">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tu-bang-toi-tep-tren-ia" class="md-nav__link">
+    <span class="md-ellipsis">
+      Từ bảng tới tệp trên đĩa
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#trang-on-vi-oc-ghi-nho-nhat" class="md-nav__link">
+    <span class="md-ellipsis">
+      Trang — đơn vị đọc ghi nhỏ nhất
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ben-trong-mot-trang" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bên trong một trang
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tuple-va-au-tuple" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tuple và đầu tuple
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ctid-ia-chi-vat-ly-cua-mot-dong" class="md-nav__link">
+    <span class="md-ellipsis">
+      ctid — địa chỉ vật lý của một dòng
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#update-khong-sua-tai-cho-tuple-chet" class="md-nav__link">
+    <span class="md-ellipsis">
+      UPDATE không sửa tại chỗ — tuple chết
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bloat-vacuum-va-autovacuum" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bloat, VACUUM và autovacuum
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#toast-kho-phu-cho-o-qua-kho" class="md-nav__link">
+    <span class="md-ellipsis">
+      TOAST — kho phụ cho ô quá khổ
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fill-factor" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fill factor
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bang-thuat-ngu" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bảng thuật ngữ
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#so-o" class="md-nav__link">
+    <span class="md-ellipsis">
+      🖼️ Sơ đồ
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#thuc-hanh" class="md-nav__link">
+    <span class="md-ellipsis">
+      💻 Thực hành
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="💻 Thực hành">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tep-va-co-trang" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tệp và cỡ trang
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#oc-ctid" class="md-nav__link">
+    <span class="md-ellipsis">
+      Đọc ctid
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nhin-vao-ben-trong-mot-trang-voi-pageinspect" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nhìn vào bên trong một trang với pageinspect
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mot-tuple-thay-oi-the-nao-khi-bi-update" class="md-nav__link">
+    <span class="md-ellipsis">
+      Một tuple thay đổi thế nào khi bị UPDATE
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vacuum-don-rac" class="md-nav__link">
+    <span class="md-ellipsis">
+      VACUUM dọn rác
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#toast-mot-bai-van-265000-byte-trong-trang-8kb" class="md-nav__link">
+    <span class="md-ellipsis">
+      TOAST — một bài văn 265.000 byte trong trang 8KB
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bloat-o-tan-mat" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bloat — đo tận mắt
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fill-factor-chua-cho-tren-moi-trang" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fill factor — chừa chỗ trên mỗi trang
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#don-diem_lon-cho-cac-bai-sau" class="md-nav__link">
+    <span class="md-ellipsis">
+      Dọn diem_lon cho các bài sau
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#loi-thuong-gap" class="md-nav__link">
+    <span class="md-ellipsis">
+      ⚠️ Lỗi thường gặp
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bai-tap" class="md-nav__link">
+    <span class="md-ellipsis">
+      ✍️ Bài tập
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="✍️ Bài tập">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#don-dep-cuoi-bai" class="md-nav__link">
+    <span class="md-ellipsis">
+      Dọn dẹp cuối bài
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tom-tat" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔑 Tóm tắt
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="bai-33-trang-heap-va-tuple-postgresql-luu-du-lieu-the-nao">Bài 33 — Trang, heap và tuple: PostgreSQL lưu dữ liệu thế nào<a class="headerlink" href="#bai-33-trang-heap-va-tuple-postgresql-luu-du-lieu-the-nao" title="Permanent link">&para;</a></h1>
+<div class="admonition abstract">
+<p class="admonition-title">🎯 Học xong bài này, bạn sẽ</p>
+<ul>
+<li>Mô tả được đường đi từ một <strong>bảng</strong> xuống <strong>tệp trên đĩa</strong>, rồi xuống từng <strong>trang 8KB</strong>, rồi xuống từng <strong>tuple</strong></li>
+<li>Đọc được địa chỉ vật lý <code>ctid</code> của một dòng, và giải thích vì sao <strong>không bao giờ</strong> được dùng nó làm khoá</li>
+<li>Giải thích được <strong>TOAST</strong>: vì sao một ô chứa 265.000 byte mà dòng vẫn nằm vừa trong trang 8KB</li>
+<li>Chứng minh bằng số liệu rằng <code>UPDATE</code> <strong>không sửa tại chỗ</strong>, sinh ra <strong>tuple chết</strong>, làm bảng <strong>phình</strong> — và <code>VACUUM</code> dọn nó thế nào</li>
+<li>Chọn được <strong>fill factor</strong> hợp lý cho một bảng, và biết khi nào <strong>không</strong> nên đụng tới nó</li>
+</ul>
+</div>
+<h2 id="cau-chuyen-mo-au">🧠 Câu chuyện mở đầu<a class="headerlink" href="#cau-chuyen-mo-au" title="Permanent link">&para;</a></h2>
+<p>Thư viện trường vừa được cấp một dãy giá sách mới. Thầy thủ thư đặt ra một luật rất lạ: <strong>mọi cuốn sách phải được xếp vào những chiếc khay cùng một cỡ</strong>. Khay nào cũng rộng đúng bằng nhau, đánh số 0, 1, 2, 3… Muốn lấy sách thì không lấy lẻ từng cuốn — thầy bưng <strong>cả khay</strong> ra bàn rồi mới tìm trong khay.</p>
+<p>Nghe thì phiền, nhưng nhờ vậy mọi thứ trở nên cực kỳ dễ quản lý. Vị trí của một cuốn sách luôn viết được bằng hai con số: <em>"khay 3, ô thứ 7"</em>. Thầy không cần biết sách nặng bao nhiêu, dày bao nhiêu — chỉ cần hai con số đó.</p>
+<p>Rồi có ba chuyện xảy ra.</p>
+<p><strong>Chuyện thứ nhất:</strong> một bạn mang tới bộ <em>Từ điển Bách khoa</em> dày gấp mười lần cái khay. Không khay nào chứa nổi. Thầy thủ thư không đổi cỡ khay; thầy <strong>tách bộ sách thành nhiều tập mỏng, gửi xuống kho riêng</strong>, và trên khay chỉ để lại một tấm phiếu: <em>"Bộ Bách khoa — xem kho phụ, các ngăn 1 tới 40"</em>.</p>
+<p><strong>Chuyện thứ hai:</strong> một cuốn sổ ghi chép cần sửa một trang. Thầy <strong>không tẩy xoá</strong> — thầy chép một cuốn mới đã sửa, đặt vào chỗ trống gần nhất, và dán lên cuốn cũ một mảnh giấy <em>"hết hiệu lực"</em>. Lý do: lỡ có bạn đang đọc dở cuốn cũ thì bạn ấy vẫn đọc tiếp được, không bị giật sách khỏi tay.</p>
+<p><strong>Chuyện thứ ba</strong> là hệ quả của chuyện thứ hai: sau một học kỳ, giá sách <strong>đầy ắp những cuốn hết hiệu lực</strong>. Sách còn dùng thì ít, mà khay thì chật. Cuối tuần thầy phải đi một vòng, dọn các cuốn hết hiệu lực ra, để khay có chỗ cho sách mới.</p>
+<p>Ba chuyện đó — khay cố định, kho phụ cho sách quá khổ, và dọn sách hết hiệu lực — chính xác là cách PostgreSQL lưu <strong>mọi</strong> bảng bạn đã tạo từ Bài 22 tới giờ. Bài này mở chiếc hộp đen ấy ra.</p>
+<h2 id="khai-niem-thuat-ngu">📖 Khái niệm &amp; thuật ngữ<a class="headerlink" href="#khai-niem-thuat-ngu" title="Permanent link">&para;</a></h2>
+<p>Suốt Cấp 3, bạn nhìn bảng như một tờ giấy kẻ ô: có dòng, có cột, thế thôi. Đó là <strong>mức logic</strong>. Cấp 4 đi xuống <strong>mức trong</strong> mà <a href="../../cap-0-nhap-mon/03-dbms-la-gi/">Bài 3</a> đã hứa — chỗ dữ liệu thật sự nằm trên đĩa. Hiểu tầng này là điều kiện để hiểu index (Bài 34), <code>EXPLAIN</code> (Bài 36) và cả giao dịch (Bài 37).</p>
+<h3 id="tu-bang-toi-tep-tren-ia">Từ bảng tới tệp trên đĩa<a class="headerlink" href="#tu-bang-toi-tep-tren-ia" title="Permanent link">&para;</a></h3>
+<p>Mỗi bảng của PostgreSQL là <strong>một tệp</strong> (hoặc vài tệp, nếu bảng lớn hơn 1GB thì được cắt thành từng đoạn 1GB) nằm trong thư mục dữ liệu của máy chủ. Hàm <code>pg_relation_filepath</code> cho bạn biết đường dẫn của tệp đó.</p>
+<p>Tệp này chứa <strong>toàn bộ dòng</strong> của bảng, xếp liền nhau mà <strong>không theo bất kỳ thứ tự nào</strong> — không theo khoá chính, không theo thời gian thêm vào (dù ban đầu thường trông giống vậy). Vì dòng được "đổ" vào bất cứ chỗ nào còn trống, PostgreSQL gọi tệp này là <strong>tệp đống</strong> (<em>heap</em>). Từ đây bài viết gọi tắt là <strong>heap</strong>.</p>
+<div class="admonition note">
+<p class="admonition-title">Heap ở đây không phải heap trong môn cấu trúc dữ liệu</p>
+<p>Nếu bạn đã học lập trình, bạn có thể biết "heap" là một cấu trúc cây dùng cho hàng đợi ưu tiên. <strong>Không liên quan.</strong> Heap trong database chỉ có nghĩa đen: một đống, không sắp xếp.</p>
+</div>
+<h3 id="trang-on-vi-oc-ghi-nho-nhat">Trang — đơn vị đọc ghi nhỏ nhất<a class="headerlink" href="#trang-on-vi-oc-ghi-nho-nhat" title="Permanent link">&para;</a></h3>
+<p>PostgreSQL <strong>không bao giờ</strong> đọc một dòng lẻ từ đĩa. Tệp heap được chia thành những miếng đều nhau, mỗi miếng <strong>8KB</strong> (8192 byte), và mọi lần đọc ghi đều đi theo <strong>nguyên một miếng</strong>. Miếng đó gọi là <strong>trang</strong> (<em>page</em>); trong mã nguồn và nhiều tài liệu, nó còn được gọi là <strong>khối</strong> (<em>block</em>). Hai từ này chỉ cùng một thứ.</p>
+<p>Đây chính là "cái khay" của thầy thủ thư. Muốn đọc một dòng 60 byte, PostgreSQL vẫn phải mang <strong>cả trang 8192 byte</strong> vào bộ nhớ. Hệ quả rất quan trọng, và cả Cấp 4 sẽ xoay quanh nó:</p>
+<div class="admonition tip">
+<p class="admonition-title">Đơn vị chi phí thật của database là <strong>số trang</strong>, không phải số dòng</p>
+<p>Một truy vấn đọc 10 dòng nằm trên 10 trang khác nhau <strong>tốn gấp 10 lần</strong> một truy vấn đọc 10 dòng nằm chung một trang. Index (Bài 34), <code>EXPLAIN</code> (Bài 36) và cả chuyện "vì sao planner không dùng index của tôi" đều quy về việc <strong>đếm trang</strong>.</p>
+</div>
+<p>Cỡ trang được chốt lúc biên dịch PostgreSQL và gần như không ai đổi. Bạn đọc được nó bằng <code>SHOW block_size</code>.</p>
+<h3 id="ben-trong-mot-trang">Bên trong một trang<a class="headerlink" href="#ben-trong-mot-trang" title="Permanent link">&para;</a></h3>
+<p>Một trang có bố cục cố định gồm bốn phần, và cách bố trí của nó rất khéo:</p>
+<table>
+<thead>
+<tr>
+<th>Phần</th>
+<th>Nằm ở</th>
+<th>Kích thước</th>
+<th>Nội dung</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Đầu trang</strong></td>
+<td>Đầu trang</td>
+<td>24 byte</td>
+<td>Thông tin quản lý, trong đó có hai con trỏ <code>pd_lower</code> và <code>pd_upper</code></td>
+</tr>
+<tr>
+<td><strong>Mảng con trỏ dòng</strong></td>
+<td>Ngay sau đầu trang, <strong>mọc xuống dưới</strong></td>
+<td>4 byte mỗi dòng</td>
+<td>Mỗi ô ghi "dòng số <em>k</em> nằm ở byte thứ bao nhiêu, dài bao nhiêu"</td>
+</tr>
+<tr>
+<td><strong>Khoảng trống</strong></td>
+<td>Ở giữa</td>
+<td>Co dần</td>
+<td>Chỗ còn lại cho dòng mới</td>
+</tr>
+<tr>
+<td><strong>Các tuple</strong></td>
+<td>Cuối trang, <strong>mọc ngược lên trên</strong></td>
+<td>Tuỳ dòng</td>
+<td>Dữ liệu thật</td>
+</tr>
+</tbody>
+</table>
+<p>Mỗi ô trong mảng thứ hai gọi là một <strong>con trỏ dòng</strong> (<em>line pointer</em>). Mảng con trỏ mọc từ trên xuống, dữ liệu mọc từ dưới lên, hai bên tiến về phía nhau. Khi chúng gặp nhau, trang đầy. <code>pd_lower</code> đánh dấu nơi mảng con trỏ kết thúc, <code>pd_upper</code> đánh dấu nơi dữ liệu bắt đầu; <strong>khoảng trống còn lại đúng bằng <code>pd_upper - pd_lower</code></strong>.</p>
+<p>Vì sao phải có lớp con trỏ trung gian? Vì nhờ nó, PostgreSQL có thể <strong>dời</strong> dữ liệu bên trong trang (ví dụ để dồn chỗ trống sau khi dọn dẹp) mà <strong>không làm đổi số thứ tự</strong> của dòng. Ai đang giữ địa chỉ "dòng số 7 của trang này" vẫn tìm đúng, vì con trỏ số 7 được cập nhật theo.</p>
+<h3 id="tuple-va-au-tuple">Tuple và đầu tuple<a class="headerlink" href="#tuple-va-au-tuple" title="Permanent link">&para;</a></h3>
+<p>Mỗi dòng dữ liệu nằm trên trang được gọi là một <strong>bộ</strong> (<em>tuple</em>) — đúng cái tên học thuật mà <a href="../../cap-0-nhap-mon/01-du-lieu-va-thong-tin/">Bài 1</a> đã giới thiệu. Giới làm PostgreSQL gọi luôn bằng tiếng Anh là <em>tuple</em>, và từ đây bài này cũng vậy.</p>
+<p>Nhưng tuple trên đĩa <strong>không chỉ</strong> là các giá trị cột. Trước phần dữ liệu luôn có một <strong>đầu tuple</strong> (<em>tuple header</em>) dài 23 byte (làm tròn thành 24), chứa các thông tin mà bạn không bao giờ thấy trong <code>SELECT *</code>. Ba trường quan trọng nhất:</p>
+<table>
+<thead>
+<tr>
+<th>Trường</th>
+<th>Ý nghĩa</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>xmin</code></td>
+<td>Mã số của <strong>giao dịch đã tạo ra</strong> tuple này</td>
+</tr>
+<tr>
+<td><code>xmax</code></td>
+<td>Mã số của <strong>giao dịch đã xoá hoặc thay thế</strong> tuple này; bằng <code>0</code> nếu tuple còn sống</td>
+</tr>
+<tr>
+<td><code>t_ctid</code></td>
+<td>Địa chỉ của <strong>phiên bản mới hơn</strong> của chính dòng này, nếu có; nếu không thì trỏ về chính nó</td>
+</tr>
+</tbody>
+</table>
+<p>Bài này chỉ cần bạn biết hai trường <code>xmin</code>, <code>xmax</code> tồn tại và dùng để đánh dấu tuple "hết hiệu lực". Cơ chế dùng chúng để quyết định <strong>ai nhìn thấy phiên bản nào</strong> là nội dung của Bài 39.</p>
+<p>Hệ quả thực tế: một dòng <code>diem_lon</code> có bảy cột nhỏ xíu, dữ liệu thật chỉ khoảng 36–40 byte, nhưng <strong>cộng đầu tuple và con trỏ dòng</strong> thì mỗi dòng chiếm khoảng 68 byte trên trang. Cái "thuế" gần 32 byte mỗi dòng này là lý do bảng có hàng trăm triệu dòng nhỏ tốn đĩa hơn nhiều so với tính nhẩm.</p>
+<h3 id="ctid-ia-chi-vat-ly-cua-mot-dong"><code>ctid</code> — địa chỉ vật lý của một dòng<a class="headerlink" href="#ctid-ia-chi-vat-ly-cua-mot-dong" title="Permanent link">&para;</a></h3>
+<p>Ghép số trang với số con trỏ dòng, bạn được địa chỉ vật lý của một tuple: cặp <strong>(số trang, số thứ tự trong trang)</strong>. PostgreSQL gọi địa chỉ này là <strong>địa chỉ tuple</strong> (<em>ctid</em>) và cho bạn đọc nó như một cột ẩn: <code>SELECT ctid, * FROM ...</code>. Địa chỉ <code>(0,1)</code> nghĩa là <em>"trang số 0, con trỏ dòng số 1"</em> — đúng kiểu <em>"khay 0, ô 1"</em> của thư viện.</p>
+<p>Trang đếm từ <strong>0</strong>, con trỏ dòng đếm từ <strong>1</strong>.</p>
+<div class="admonition danger">
+<p class="admonition-title"><code>ctid</code> <strong>không phải</strong> khoá — nó đổi sau mỗi lần sửa dòng</p>
+<p>Vì <code>UPDATE</code> ghi ra một tuple <strong>mới</strong> ở chỗ khác (mục kế tiếp), <code>ctid</code> của dòng <strong>thay đổi</strong>. <code>VACUUM FULL</code> viết lại cả bảng nên đổi <code>ctid</code> của <strong>mọi</strong> dòng. Dùng <code>ctid</code> để trỏ tới một dòng "lâu dài" là một lỗi — phần <strong>Lỗi thường gặp</strong> sẽ cho bạn thấy tận mắt.</p>
+<p><code>ctid</code> chỉ đáng tin <strong>bên trong một câu lệnh</strong> — ví dụ để xoá những dòng trùng lặp không có khoá, như mẹo bạn sẽ gặp ở phần bài tập.</p>
+</div>
+<h3 id="update-khong-sua-tai-cho-tuple-chet"><code>UPDATE</code> không sửa tại chỗ — tuple chết<a class="headerlink" href="#update-khong-sua-tai-cho-tuple-chet" title="Permanent link">&para;</a></h3>
+<p>Đây là điều bất ngờ nhất của bài. Khi bạn chạy:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>UPDATE hoc_sinh SET ho_ten = '...' WHERE ma_hs = 'HS001';
+</span></code></pre></div>
+<p>PostgreSQL <strong>không</strong> ghi đè lên tuple cũ. Nó làm hai việc:</p>
+<ol>
+<li>Ghi một tuple <strong>mới</strong> chứa giá trị mới, ở bất cứ chỗ trống nào — tốt nhất là cùng trang.</li>
+<li>Điền vào trường <code>xmax</code> của tuple <strong>cũ</strong> mã số giao dịch vừa sửa, nghĩa là <em>"hết hiệu lực kể từ giao dịch này"</em>.</li>
+</ol>
+<p>Đúng như thầy thủ thư chép cuốn sổ mới rồi dán nhãn lên cuốn cũ. <code>DELETE</code> cũng vậy: nó <strong>không xoá</strong> gì cả, chỉ điền <code>xmax</code> cho tuple.</p>
+<p>Lý do là để người khác <strong>đang đọc</strong> dòng đó vẫn đọc được phiên bản cũ mà không phải chờ — cơ chế ấy có tên riêng và được dành trọn Bài 39. Ở đây chỉ cần hệ quả: sau khi giao dịch sửa đã xong và không còn ai cần tới phiên bản cũ, tuple cũ trở thành rác. Nó vẫn nằm trên trang, vẫn chiếm chỗ, nhưng không ai còn thấy nó. Tuple như vậy gọi là <strong>tuple chết</strong> (<em>dead tuple</em>).</p>
+<h3 id="bloat-vacuum-va-autovacuum">Bloat, <code>VACUUM</code> và autovacuum<a class="headerlink" href="#bloat-vacuum-va-autovacuum" title="Permanent link">&para;</a></h3>
+<p>Nếu cứ sửa mà không dọn, tuple chết tích tụ dần. Bảng có 10.000 dòng "sống" có thể chiếm chỗ của 20.000, 50.000 dòng. Hiện tượng bảng chiếm dung lượng lớn hơn nhiều so với lượng dữ liệu sống bên trong gọi là <strong>phình</strong> (<em>bloat</em>). Bảng phình thì quét chậm hơn — vì phải đọc nhiều trang hơn cho cùng một lượng dữ liệu, và bạn đã biết chi phí thật là <strong>số trang</strong>.</p>
+<p>Người đi dọn là lệnh <strong>dọn rác</strong> (<em>VACUUM</em>). Nó đi qua từng trang và:</p>
+<ul>
+<li>Đánh dấu chỗ của các tuple chết là <strong>trống, dùng lại được</strong>.</li>
+<li>Ghi lượng chỗ trống của mỗi trang vào <strong>bản đồ chỗ trống</strong> (<em>free space map</em>), để lần <code>INSERT</code>/<code>UPDATE</code> sau biết trang nào còn chỗ mà nhét vào.</li>
+<li>Đánh dấu những trang mà <strong>mọi</strong> tuple trên đó đều sống và ai cũng thấy được vào <strong>bản đồ hiển thị</strong> (<em>visibility map</em>). Bài 34 sẽ cho bạn thấy tấm bản đồ này là điều kiện để index chạy được kiểu nhanh nhất.</li>
+</ul>
+<p>Điểm mấu chốt thường bị hiểu sai: <strong><code>VACUUM</code> thường không trả dung lượng lại cho hệ điều hành.</strong> Tệp vẫn to như cũ; chỉ là chỗ trống bên trong giờ <strong>dùng lại được</strong>. (Ngoại lệ duy nhất: nếu các trang <strong>ở cuối tệp</strong> trống hoàn toàn thì nó cắt bớt phần đuôi ấy.)</p>
+<p>Muốn tệp thật sự co lại, phải dùng <strong><code>VACUUM FULL</code></strong>: nó chép mọi tuple sống sang một tệp mới gọn gàng rồi bỏ tệp cũ. Cái giá rất đắt — trong suốt thời gian chép, bảng bị <strong>khoá hoàn toàn</strong>, không ai đọc cũng không ai ghi được. Trên bảng lớn của hệ thống đang chạy, đó có thể là hàng chục phút ngừng hoạt động.</p>
+<p>May là bạn gần như không bao giờ phải tự chạy <code>VACUUM</code>. PostgreSQL có một tiến trình nền gọi là <strong>dọn rác tự động</strong> (<em>autovacuum</em>), cứ mỗi phút thức dậy một lần, xem bảng nào có số tuple chết vượt ngưỡng thì tự <code>VACUUM</code> nó. Ngưỡng mặc định là <strong>50 dòng cộng 20% số dòng của bảng</strong>. Autovacuum cũng tự chạy <code>ANALYZE</code> để cập nhật thống kê — chuyện của Bài 36.</p>
+<div class="admonition warning">
+<p class="admonition-title">Autovacuum là bạn, đừng tắt nó</p>
+<p>Một "mẹo tối ưu" lan truyền trên mạng là tắt autovacuum để máy đỡ bận. Kết quả luôn giống nhau: vài tuần sau bảng phình gấp mấy lần, truy vấn chậm dần mà không ai hiểu vì sao, và cuối cùng phải <code>VACUUM FULL</code> — tức là khoá bảng — để cứu. Autovacuum còn một nhiệm vụ sống còn nữa liên quan tới mã số giao dịch, sẽ gặp ở Bài 39: tắt nó lâu ngày có thể làm database <strong>tự dừng nhận ghi</strong> để bảo vệ dữ liệu.</p>
+</div>
+<h3 id="toast-kho-phu-cho-o-qua-kho">TOAST — kho phụ cho ô quá khổ<a class="headerlink" href="#toast-kho-phu-cho-o-qua-kho" title="Permanent link">&para;</a></h3>
+<p>Một tuple phải nằm trọn trong một trang 8KB. Vậy cột <code>TEXT</code> chứa cả một bài văn 265.000 byte thì sao?</p>
+<p>PostgreSQL dùng một cơ chế tên là <strong>kỹ thuật lưu thuộc tính quá khổ</strong> (<em>The Oversized-Attribute Storage Technique</em>, viết tắt <strong>TOAST</strong>). Khi một tuple sắp vượt khoảng <strong>2KB</strong> (một phần tư trang), PostgreSQL xử lý các ô lớn theo thứ tự:</p>
+<ol>
+<li><strong>Nén</strong> ô đó trước. Văn bản lặp nhiều thì có thể nén rất mạnh.</li>
+<li>Nếu nén rồi mà tuple vẫn quá lớn, <strong>chuyển ô đó ra một bảng phụ</strong> — gọi là bảng TOAST — cắt thành từng mẩu khoảng 2KB. Trên tuple chính chỉ còn lại một <strong>con trỏ</strong> nhỏ chừng 18 byte: <em>"nội dung thật nằm ở bảng TOAST số X, mẩu 1 tới N"</em>.</li>
+</ol>
+<p>Đó chính là tấm phiếu <em>"xem kho phụ"</em> của thầy thủ thư. Mọi bảng có cột kiểu dài được (<code>TEXT</code>, <code>VARCHAR</code>, <code>JSONB</code>, <code>BYTEA</code>…) đều có sẵn một bảng TOAST đi kèm, tên dạng <code>pg_toast.pg_toast_&lt;số&gt;</code>.</p>
+<p>Hai hệ quả thực tế:</p>
+<ul>
+<li>Cột lớn <strong>không làm chậm</strong> những truy vấn không đụng tới nó. <code>SELECT ma_hs, ho_ten</code> trên một bảng có cột bài văn khổng lồ vẫn chỉ đọc trang chính, vì trên đó bài văn chỉ là một con trỏ.</li>
+<li>Ngược lại, <code>SELECT *</code> sẽ phải <strong>lần theo con trỏ</strong>, đọc thêm các trang TOAST, rồi giải nén. Đây là một lý do nữa — ngoài lý do ở <a href="../../cap-3-sql/24-select-where-order-by/">Bài 24</a> — để chỉ lấy đúng những cột bạn cần.</li>
+</ul>
+<h3 id="fill-factor">Fill factor<a class="headerlink" href="#fill-factor" title="Permanent link">&para;</a></h3>
+<p>Mặc định, PostgreSQL xếp dòng vào một trang cho tới khi <strong>đầy 100%</strong> mới chuyển sang trang mới. Bạn có thể bảo nó dừng sớm hơn — ví dụ ở 70% — để chừa lại 30% mỗi trang. Tỉ lệ đó gọi là <strong>hệ số lấp đầy</strong> (<em>fill factor</em>), khai bằng <code>WITH (fillfactor = 70)</code> lúc tạo bảng.</p>
+<p>Chừa chỗ để làm gì? Để khi <code>UPDATE</code>, tuple mới <strong>nằm được ngay trên cùng trang</strong> với tuple cũ. Khi điều đó xảy ra, và cột bị sửa không có index nào, PostgreSQL dùng được một đường tắt tên là <strong>cập nhật chỉ trên heap</strong> (<em>Heap-Only Tuple</em>, viết tắt <strong>HOT</strong>): không phải sửa gì trong index cả, và chỗ của tuple cũ được dọn ngay lúc trang được đọc lần sau, không cần đợi <code>VACUUM</code>. Bạn sẽ thấy dấu vết của HOT trong phần thực hành.</p>
+<p>Cái giá: bảng cần <strong>nhiều trang hơn</strong> cho cùng số dòng, nên quét toàn bảng chậm hơn. Vì thế:</p>
+<table>
+<thead>
+<tr>
+<th>Kiểu bảng</th>
+<th>Fill factor nên dùng</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Chỉ thêm, hầu như không sửa — nhật ký, điểm đã chốt, lịch sử</td>
+<td><strong>100</strong> (mặc định)</td>
+</tr>
+<tr>
+<td>Sửa thường xuyên, mỗi lần sửa vài cột không có index — điểm danh trong ngày, số lượng sách còn</td>
+<td><strong>70–90</strong></td>
+</tr>
+<tr>
+<td>Mọi trường hợp bạn chưa đo</td>
+<td><strong>100</strong> — đừng đổi khi chưa có số liệu</td>
+</tr>
+</tbody>
+</table>
+<h3 id="bang-thuat-ngu">Bảng thuật ngữ<a class="headerlink" href="#bang-thuat-ngu" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Tiếng Việt</th>
+<th>English</th>
+<th>Nghĩa dễ hiểu</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Tệp đống</td>
+<td><em>heap</em></td>
+<td>Tệp chứa các dòng của một bảng, xếp không theo thứ tự nào</td>
+</tr>
+<tr>
+<td>Trang</td>
+<td><em>page</em></td>
+<td>Miếng 8KB — đơn vị nhỏ nhất PostgreSQL đọc ghi; chi phí thật tính bằng số trang</td>
+</tr>
+<tr>
+<td>Khối</td>
+<td><em>block</em></td>
+<td>Tên gọi khác của trang</td>
+</tr>
+<tr>
+<td>Con trỏ dòng</td>
+<td><em>line pointer</em></td>
+<td>Ô 4 byte ở đầu trang ghi vị trí của một tuple; giúp dời tuple trong trang mà không đổi địa chỉ</td>
+</tr>
+<tr>
+<td>Bộ</td>
+<td><em>tuple</em></td>
+<td>Một dòng vật lý nằm trên trang, gồm đầu tuple và dữ liệu</td>
+</tr>
+<tr>
+<td>Đầu tuple</td>
+<td><em>tuple header</em></td>
+<td>Phần 23 byte trước dữ liệu của mỗi tuple, chứa <code>xmin</code>, <code>xmax</code>, <code>t_ctid</code>…</td>
+</tr>
+<tr>
+<td>Địa chỉ tuple</td>
+<td><em>ctid</em></td>
+<td>Cặp (số trang, số con trỏ dòng); đổi sau mỗi <code>UPDATE</code> nên không bao giờ dùng làm khoá</td>
+</tr>
+<tr>
+<td>Tuple chết</td>
+<td><em>dead tuple</em></td>
+<td>Phiên bản cũ của một dòng sau <code>UPDATE</code>/<code>DELETE</code>, không ai còn thấy nhưng vẫn chiếm chỗ</td>
+</tr>
+<tr>
+<td>Phình</td>
+<td><em>bloat</em></td>
+<td>Bảng chiếm nhiều trang hơn hẳn lượng dữ liệu sống bên trong vì tích tụ tuple chết</td>
+</tr>
+<tr>
+<td>Dọn rác</td>
+<td><em>VACUUM</em></td>
+<td>Lệnh đánh dấu chỗ của tuple chết là dùng lại được; không trả dung lượng cho hệ điều hành</td>
+</tr>
+<tr>
+<td>Dọn rác toàn phần</td>
+<td><em>VACUUM FULL</em></td>
+<td>Viết lại cả bảng cho gọn, trả dung lượng lại — nhưng khoá bảng hoàn toàn khi chạy</td>
+</tr>
+<tr>
+<td>Dọn rác tự động</td>
+<td><em>autovacuum</em></td>
+<td>Tiến trình nền tự <code>VACUUM</code> và <code>ANALYZE</code> các bảng khi số tuple chết vượt ngưỡng</td>
+</tr>
+<tr>
+<td>Bản đồ chỗ trống</td>
+<td><em>free space map</em></td>
+<td>Tệp phụ ghi mỗi trang còn trống bao nhiêu, để lần ghi sau biết chỗ mà nhét</td>
+</tr>
+<tr>
+<td>Bản đồ hiển thị</td>
+<td><em>visibility map</em></td>
+<td>Tệp phụ đánh dấu những trang mà mọi tuple đều sống và ai cũng thấy</td>
+</tr>
+<tr>
+<td>Kỹ thuật lưu thuộc tính quá khổ</td>
+<td><em>The Oversized-Attribute Storage Technique</em> (TOAST)</td>
+<td>Nén ô lớn, nếu vẫn lớn thì cắt ra bảng phụ, trên dòng chính chỉ để lại con trỏ</td>
+</tr>
+<tr>
+<td>Hệ số lấp đầy</td>
+<td><em>fill factor</em></td>
+<td>Tỉ lệ phần trăm một trang được lấp khi thêm dòng, chừa phần còn lại cho <code>UPDATE</code></td>
+</tr>
+<tr>
+<td>Cập nhật chỉ trên heap</td>
+<td><em>Heap-Only Tuple</em> (HOT)</td>
+<td><code>UPDATE</code> mà tuple mới nằm cùng trang và không cột nào có index bị sửa — khỏi phải sửa index</td>
+</tr>
+</tbody>
+</table>
+<h2 id="so-o">🖼️ Sơ đồ<a class="headerlink" href="#so-o" title="Permanent link">&para;</a></h2>
+<p>Từ bảng xuống tới từng byte — bốn tầng, mỗi tầng nằm gọn trong tầng trên:</p>
+<pre class="mermaid"><code>flowchart TB
+    B["&lt;b&gt;Bảng diem_lon&lt;/b&gt;&lt;br/&gt;500.000 dòng · mức logic"]
+    F["&lt;b&gt;Tệp heap trên đĩa&lt;/b&gt;&lt;br/&gt;base/…/số hiệu tệp · 33 MB"]
+    P["&lt;b&gt;4167 trang × 8KB&lt;/b&gt;&lt;br/&gt;trang 0 · trang 1 · … · trang 4166"]
+
+    subgraph TRANG["Bên trong MỘT trang 8192 byte"]
+        direction TB
+        H["Đầu trang · 24 byte&lt;br/&gt;pd_lower · pd_upper"]
+        LP["Mảng con trỏ dòng · 4 byte/dòng&lt;br/&gt;⬇️ mọc xuống"]
+        FREE["Khoảng trống&lt;br/&gt;= pd_upper − pd_lower"]
+        T["Các tuple · mỗi tuple = đầu tuple + dữ liệu&lt;br/&gt;⬆️ mọc lên"]
+        H --&gt; LP --&gt; FREE --&gt; T
+    end
+
+    B --&gt; F --&gt; P --&gt; TRANG
+
+    style B fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
+    style F fill:#f3e5f5,stroke:#6a1b9a,stroke-width:2px
+    style P fill:#fff8e1,stroke:#f9a825,stroke-width:2px
+    style FREE fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
+    style T fill:#ffebee,stroke:#c62828,stroke-width:2px</code></pre>
+<p>Vòng đời của một tuple — từ lúc sinh ra, qua <code>UPDATE</code>, tới lúc chỗ của nó được dùng lại:</p>
+<pre class="mermaid"><code>flowchart LR
+    I["&lt;b&gt;INSERT&lt;/b&gt;&lt;br/&gt;tuple A sống&lt;br/&gt;xmax = 0"]
+    U["&lt;b&gt;UPDATE&lt;/b&gt;&lt;br/&gt;ghi tuple A' mới&lt;br/&gt;A được điền xmax"]
+    D["&lt;b&gt;A thành tuple chết&lt;/b&gt;&lt;br/&gt;không ai thấy&lt;br/&gt;vẫn chiếm chỗ"]
+    V["&lt;b&gt;VACUUM&lt;/b&gt;&lt;br/&gt;chỗ của A được&lt;br/&gt;ghi vào bản đồ chỗ trống"]
+    R["&lt;b&gt;INSERT / UPDATE sau&lt;/b&gt;&lt;br/&gt;dùng lại chỗ của A&lt;br/&gt;bảng không to thêm"]
+    X["&lt;b&gt;Không ai VACUUM&lt;/b&gt;&lt;br/&gt;tuple chết tích tụ&lt;br/&gt;= BLOAT"]
+
+    I --&gt; U --&gt; D
+    D --&gt; V --&gt; R
+    D -.-&gt; X
+
+    style D fill:#ffebee,stroke:#c62828,stroke-width:2px
+    style V fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
+    style X fill:#ffebee,stroke:#c62828,stroke-width:3px</code></pre>
+<h2 id="thuc-hanh">💻 Thực hành<a class="headerlink" href="#thuc-hanh" title="Permanent link">&para;</a></h2>
+<h3 id="tep-va-co-trang">Tệp và cỡ trang<a class="headerlink" href="#tep-va-co-trang" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1">-- KỲ VỌNG: co_trang = 8192</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">current_setting</span><span class="p">(</span><span class="s1">'block_size'</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">co_trang</span><span class="p">,</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">       </span><span class="n">pg_relation_filepath</span><span class="p">(</span><span class="s1">'hoc_sinh'</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">tep_cua_hoc_sinh</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Cỡ trang là <strong>8192</strong> byte. Cột thứ hai cho đường dẫn tương đối của tệp heap chứa bảng <code>hoc_sinh</code>, dạng <code>base/&lt;số hiệu database&gt;/&lt;số hiệu tệp&gt;</code> — hai con số này khác nhau trên mỗi máy, nên khoá học không khẳng định chúng.</p>
+<p>Bảng lớn <code>diem_lon</code> nặng bao nhiêu, và gồm bao nhiêu trang?</p>
+<div class="highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1">-- KỲ VỌNG: dung_luong = 33 MB</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1">-- KỲ VỌNG: so_trang = 4167</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">pg_size_pretty</span><span class="p">(</span><span class="n">pg_relation_size</span><span class="p">(</span><span class="s1">'diem_lon'</span><span class="p">))</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">dung_luong</span><span class="p">,</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">       </span><span class="n">pg_relation_size</span><span class="p">(</span><span class="s1">'diem_lon'</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">8192</span><span class="w">           </span><span class="k">AS</span><span class="w"> </span><span class="n">so_trang</span><span class="p">;</span>
+</span></code></pre></div>
+<p><strong>4167 trang</strong>, tức 33 MB. Chú ý <code>pg_relation_size</code> chỉ đo <strong>tệp heap</strong>. Tệp nạp dữ liệu in ra con số 43 MB vì nó dùng <code>pg_total_relation_size</code> — hàm này cộng thêm index khoá chính và bảng TOAST.</p>
+<h3 id="oc-ctid">Đọc <code>ctid</code><a class="headerlink" href="#oc-ctid" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1">-- KỲ VỌNG: 5 dòng</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">ctid</span><span class="p">,</span><span class="w"> </span><span class="n">ma_hs</span><span class="p">,</span><span class="w"> </span><span class="n">ho_ten</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="k">LIMIT</span><span class="w"> </span><span class="mi">5</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Bạn sẽ thấy <code>(0,1)</code>, <code>(0,2)</code>, <code>(0,3)</code>… — năm dòng đầu tiên của <strong>trang 0</strong>. Chú ý câu lệnh <strong>không có <code>ORDER BY</code></strong>: như <a href="../../cap-3-sql/24-select-where-order-by/">Bài 24</a> cảnh báo, thứ tự kết quả là không xác định. Hôm nay nó ra theo thứ tự vật lý vì PostgreSQL quét tuần tự từ đầu tệp; đừng bao giờ dựa vào điều đó.</p>
+<p>Muốn khẳng định chắc chắn, hỏi thẳng một dòng:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1">-- KỲ VỌNG: dia_chi = (0,1)</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">ctid</span><span class="p">::</span><span class="nb">text</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">dia_chi</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">ma_hs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'HS001'</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Bốn mươi học sinh chiếm bao nhiêu trang? Mẹo ở đây: ép <code>ctid</code> sang chuỗi rồi sang kiểu <code>point</code>, phần tử <code>[0]</code> chính là số trang.</p>
+<div class="highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1">-- KỲ VỌNG: so_trang_dung = 1</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1">-- KỲ VỌNG: so_dong = 40</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="k">DISTINCT</span><span class="w"> </span><span class="p">(</span><span class="n">ctid</span><span class="p">::</span><span class="nb">text</span><span class="p">::</span><span class="n">point</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_trang_dung</span><span class="p">,</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">       </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w">                               </span><span class="k">AS</span><span class="w"> </span><span class="n">so_dong</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Cả bảng <code>hoc_sinh</code> nằm gọn trong <strong>một</strong> trang. Với <code>diem_lon</code> thì sao — mỗi trang chứa bao nhiêu dòng?</p>
+<div class="highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1">-- KỲ VỌNG: so_trang_day = 4166</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1">-- KỲ VỌNG: dong_moi_trang_day = 120</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1">-- KỲ VỌNG: dong_trang_cuoi = 80</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="n">FILTER</span><span class="w"> </span><span class="p">(</span><span class="k">WHERE</span><span class="w"> </span><span class="n">so_dong</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">120</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_trang_day</span><span class="p">,</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">       </span><span class="k">max</span><span class="p">(</span><span class="n">so_dong</span><span class="p">)</span><span class="w">                          </span><span class="k">AS</span><span class="w"> </span><span class="n">dong_moi_trang_day</span><span class="p">,</span>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">       </span><span class="k">min</span><span class="p">(</span><span class="n">so_dong</span><span class="p">)</span><span class="w">                          </span><span class="k">AS</span><span class="w"> </span><span class="n">dong_trang_cuoi</span>
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="k">FROM</span><span class="w"> </span><span class="p">(</span>
+</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">    </span><span class="k">SELECT</span><span class="w"> </span><span class="p">(</span><span class="n">ctid</span><span class="p">::</span><span class="nb">text</span><span class="p">::</span><span class="n">point</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">trang</span><span class="p">,</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_dong</span>
+</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">    </span><span class="k">FROM</span><span class="w"> </span><span class="n">diem_lon</span>
+</span><span id="__span-6-10"><a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="w">    </span><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="mi">1</span>
+</span><span id="__span-6-11"><a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">t</span><span class="p">;</span>
+</span></code></pre></div>
+<p><strong>4166 trang đầy, mỗi trang 120 dòng</strong>, và trang cuối cùng còn 80 dòng: <code>4166 × 120 + 80 = 500.000</code>. Chia <code>8192 / 120 ≈ 68</code> byte mỗi dòng — gần gấp đôi 36–40 byte dữ liệu thật, đúng như phần khái niệm nói về "thuế" đầu tuple và con trỏ dòng.</p>
+<h3 id="nhin-vao-ben-trong-mot-trang-voi-pageinspect">Nhìn vào bên trong một trang với <code>pageinspect</code><a class="headerlink" href="#nhin-vao-ben-trong-mot-trang-voi-pageinspect" title="Permanent link">&para;</a></h3>
+<p>PostgreSQL có sẵn một extension tên <code>pageinspect</code> để đọc thẳng các byte của một trang. Extension này <strong>cần quyền superuser</strong> — trong Docker của khóa học bạn đăng nhập bằng <code>postgres</code> nên có sẵn quyền đó. Trên máy chủ thật, đừng cài nó cho người dùng thường.</p>
+<div class="highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="k">CREATE</span><span class="w"> </span><span class="n">EXTENSION</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">pageinspect</span><span class="p">;</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="c1">-- KỲ VỌNG: pd_lower = 184</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1">-- KỲ VỌNG: pd_upper = 4536</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1">-- KỲ VỌNG: khoang_trong = 4352</span>
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">lower</span><span class="w">          </span><span class="k">AS</span><span class="w"> </span><span class="n">pd_lower</span><span class="p">,</span>
+</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">       </span><span class="k">upper</span><span class="w">          </span><span class="k">AS</span><span class="w"> </span><span class="n">pd_upper</span><span class="p">,</span>
+</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="w">       </span><span class="k">upper</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="k">lower</span><span class="w">  </span><span class="k">AS</span><span class="w"> </span><span class="n">khoang_trong</span><span class="p">,</span>
+</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="w">       </span><span class="n">pagesize</span>
+</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="k">FROM</span><span class="w"> </span><span class="n">page_header</span><span class="p">(</span><span class="n">get_raw_page</span><span class="p">(</span><span class="s1">'hoc_sinh'</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">));</span>
+</span></code></pre></div>
+<p>Đọc từng con số:</p>
+<ul>
+<li><code>pd_lower = 184</code> = 24 byte đầu trang + <strong>40 con trỏ dòng × 4 byte</strong>. Đúng 40 học sinh.</li>
+<li><code>pd_upper = 4536</code>: dữ liệu bắt đầu từ byte 4536 và kéo tới cuối trang, tức 40 tuple chiếm <code>8192 − 4536 = 3656</code> byte.</li>
+<li><strong>Khoảng trống còn 4352 byte</strong> — hơn một nửa trang vẫn còn trống, nên nếu trường nhận thêm vài chục học sinh thì bảng vẫn nằm gọn trong một trang.</li>
+</ul>
+<h3 id="mot-tuple-thay-oi-the-nao-khi-bi-update">Một tuple thay đổi thế nào khi bị <code>UPDATE</code><a class="headerlink" href="#mot-tuple-thay-oi-the-nao-khi-bi-update" title="Permanent link">&para;</a></h3>
+<p>Dựng một bảng nháp năm dòng. Tuỳ chọn <code>autovacuum_enabled = off</code> <strong>tắt autovacuum cho riêng bảng này</strong> — không phải vì đó là thói quen tốt (nó <strong>không</strong> phải), mà để autovacuum không tình cờ dọn rác giữa chừng trong lúc bạn đang quan sát.</p>
+<div class="highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">b33_hoc_sinh</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">;</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">b33_hoc_sinh</span><span class="w"> </span><span class="p">(</span>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">    </span><span class="n">ma_hs</span><span class="w">  </span><span class="nb">INTEGER</span><span class="p">,</span>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">    </span><span class="n">ho_ten</span><span class="w"> </span><span class="nb">TEXT</span>
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="p">)</span><span class="w"> </span><span class="k">WITH</span><span class="w"> </span><span class="p">(</span><span class="n">autovacuum_enabled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">off</span><span class="p">);</span>
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
+</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">b33_hoc_sinh</span><span class="w"> </span><span class="k">VALUES</span>
+</span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="s1">'An'</span><span class="p">),</span><span class="w"> </span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="s1">'Bình'</span><span class="p">),</span><span class="w"> </span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="s1">'Cường'</span><span class="p">),</span><span class="w"> </span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="s1">'Dung'</span><span class="p">),</span><span class="w"> </span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="w"> </span><span class="s1">'Đức'</span><span class="p">);</span>
+</span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>
+</span><span id="__span-8-11"><a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="c1">-- KỲ VỌNG: dia_chi = (0,1)</span>
+</span><span id="__span-8-12"><a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">ctid</span><span class="p">::</span><span class="nb">text</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">dia_chi</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">b33_hoc_sinh</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">ma_hs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Bạn <code>An</code> đang ở <code>(0,1)</code>. Giờ sửa tên:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="k">UPDATE</span><span class="w"> </span><span class="n">b33_hoc_sinh</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">ho_ten</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'An (đã sửa)'</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">ma_hs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="c1">-- KỲ VỌNG: dia_chi = (0,6)</span>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">ctid</span><span class="p">::</span><span class="nb">text</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">dia_chi</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">b33_hoc_sinh</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">ma_hs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Địa chỉ đổi thành <strong><code>(0,6)</code></strong> — bảng chỉ có năm dòng, vậy mà dòng này giờ ở vị trí số <strong>6</strong>. Vị trí số 1 đi đâu? Hỏi <code>pageinspect</code>:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1">-- KỲ VỌNG: 6 dòng</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="c1">-- KỲ VỌNG: lp = 1</span>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="c1">-- KỲ VỌNG: da_bi_thay_the = true</span>
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1">-- KỲ VỌNG: tro_toi = (0,6)</span>
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">lp</span><span class="p">,</span>
+</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="w">       </span><span class="n">t_xmax</span><span class="w"> </span><span class="o">&lt;&gt;</span><span class="w"> </span><span class="mi">0</span><span class="w">     </span><span class="k">AS</span><span class="w"> </span><span class="n">da_bi_thay_the</span><span class="p">,</span>
+</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="w">       </span><span class="n">t_ctid</span><span class="p">::</span><span class="nb">text</span><span class="w">    </span><span class="k">AS</span><span class="w"> </span><span class="n">tro_toi</span>
+</span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="k">FROM</span><span class="w"> </span><span class="n">heap_page_items</span><span class="p">(</span><span class="n">get_raw_page</span><span class="p">(</span><span class="s1">'b33_hoc_sinh'</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">))</span>
+</span><span id="__span-10-9"><a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">lp</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Trang có <strong>sáu</strong> tuple cho năm dòng. Tuple số 1 — bản cũ của <code>An</code> — <strong>vẫn còn nguyên</strong>, nhưng <code>xmax</code> của nó đã khác 0 (<em>"đã bị thay thế"</em>) và <code>t_ctid</code> của nó trỏ sang <code>(0,6)</code>, nơi phiên bản mới nằm. Đúng như cuốn sổ bị dán nhãn <em>"hết hiệu lực — xem cuốn mới ở ô 6"</em>.</p>
+<p>Mã giao dịch cụ thể trong <code>xmin</code>, <code>xmax</code> khác nhau trên mỗi máy, nên truy vấn chỉ so <code>xmax</code> với <code>0</code>. Bạn cứ bỏ điều kiện đó đi và <code>SELECT lp, t_xmin, t_xmax, t_ctid</code> để xem con số thật của mình.</p>
+<p>Giờ xoá một dòng:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="k">DELETE</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">b33_hoc_sinh</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">ma_hs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span><span class="p">;</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="c1">-- KỲ VỌNG: so_tuple_tren_trang = 6</span>
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1">-- KỲ VỌNG: so_tuple_het_hieu_luc = 2</span>
+</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="c1">-- KỲ VỌNG: so_dong_nhin_thay = 4</span>
+</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="k">SELECT</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">heap_page_items</span><span class="p">(</span><span class="n">get_raw_page</span><span class="p">(</span><span class="s1">'b33_hoc_sinh'</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">)))</span>
+</span><span id="__span-11-7"><a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="w">           </span><span class="k">AS</span><span class="w"> </span><span class="n">so_tuple_tren_trang</span><span class="p">,</span>
+</span><span id="__span-11-8"><a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="w">       </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">heap_page_items</span><span class="p">(</span><span class="n">get_raw_page</span><span class="p">(</span><span class="s1">'b33_hoc_sinh'</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">))</span>
+</span><span id="__span-11-9"><a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="w">        </span><span class="k">WHERE</span><span class="w"> </span><span class="n">t_xmax</span><span class="w"> </span><span class="o">&lt;&gt;</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+</span><span id="__span-11-10"><a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="w">           </span><span class="k">AS</span><span class="w"> </span><span class="n">so_tuple_het_hieu_luc</span><span class="p">,</span>
+</span><span id="__span-11-11"><a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a><span class="w">       </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">b33_hoc_sinh</span><span class="p">)</span>
+</span><span id="__span-11-12"><a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a><span class="w">           </span><span class="k">AS</span><span class="w"> </span><span class="n">so_dong_nhin_thay</span><span class="p">;</span>
+</span></code></pre></div>
+<p><code>DELETE</code> <strong>không làm biến mất</strong> tuple nào: trang vẫn có <strong>6</strong> tuple, trong đó <strong>2</strong> đã hết hiệu lực, và <code>SELECT</code> chỉ còn thấy <strong>4</strong> dòng. Hai tuple chết kia là rác.</p>
+<h3 id="vacuum-don-rac"><code>VACUUM</code> dọn rác<a class="headerlink" href="#vacuum-don-rac" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="k">VACUUM</span><span class="w"> </span><span class="n">b33_hoc_sinh</span><span class="p">;</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="c1">-- KỲ VỌNG: 6 dòng</span>
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1">-- KỲ VỌNG: lp = 1</span>
+</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="c1">-- KỲ VỌNG: trang_thai = 2</span>
+</span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">lp</span><span class="p">,</span>
+</span><span id="__span-12-7"><a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="w">       </span><span class="n">lp_flags</span><span class="w">   </span><span class="k">AS</span><span class="w"> </span><span class="n">trang_thai</span><span class="p">,</span>
+</span><span id="__span-12-8"><a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="w">       </span><span class="n">t_ctid</span><span class="p">::</span><span class="nb">text</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">tro_toi</span>
+</span><span id="__span-12-9"><a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="k">FROM</span><span class="w"> </span><span class="n">heap_page_items</span><span class="p">(</span><span class="n">get_raw_page</span><span class="p">(</span><span class="s1">'b33_hoc_sinh'</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">))</span>
+</span><span id="__span-12-10"><a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">lp</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Cột <code>lp_flags</code> cho biết trạng thái của từng con trỏ dòng: <code>0</code> = <strong>trống</strong>, dùng lại được; <code>1</code> = <strong>bình thường</strong>, trỏ tới một tuple sống; <code>2</code> = <strong>chuyển hướng</strong>; <code>3</code> = <strong>chết</strong>, chờ dọn nốt. Sau <code>VACUUM</code>:</p>
+<table>
+<thead>
+<tr>
+<th><code>lp</code></th>
+<th><code>lp_flags</code></th>
+<th>Chuyện gì đã xảy ra</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><strong>2</strong> — chuyển hướng</td>
+<td>Bản cũ của <code>An</code> đã bị dọn, nhưng <strong>con trỏ số 1 được giữ lại</strong> làm biển chỉ đường sang <code>(0,6)</code></td>
+</tr>
+<tr>
+<td>2, 3, 4</td>
+<td>1 — bình thường</td>
+<td>Ba dòng không ai đụng tới</td>
+</tr>
+<tr>
+<td>5</td>
+<td><strong>0</strong> — trống</td>
+<td>Bản của <code>Đức</code> đã bị dọn sạch, con trỏ số 5 dùng lại được</td>
+</tr>
+<tr>
+<td>6</td>
+<td>1 — bình thường</td>
+<td>Bản mới của <code>An</code></td>
+</tr>
+</tbody>
+</table>
+<p>Vì sao con trỏ số 1 không được giải phóng như số 5? Vì đây là một <strong>HOT update</strong>: bản mới nằm <strong>cùng trang</strong> với bản cũ. Nếu bảng có index, index vẫn đang trỏ vào địa chỉ cũ <code>(0,1)</code> — PostgreSQL không sửa index khi HOT update, đó chính là chỗ nó tiết kiệm. Nên con trỏ số 1 phải ở lại làm biển chỉ đường, để ai tìm tới <code>(0,1)</code> cũng được dẫn sang <code>(0,6)</code>. Còn <code>Đức</code> bị xoá hẳn, không ai cần tìm tới nữa.</p>
+<div class="highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1">-- KỲ VỌNG: so_tuple_song = 4</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="c1">-- KỲ VỌNG: so_tuple_het_hieu_luc = 0</span>
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="n">FILTER</span><span class="w"> </span><span class="p">(</span><span class="k">WHERE</span><span class="w"> </span><span class="n">lp_flags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w">    </span><span class="k">AS</span><span class="w"> </span><span class="n">so_tuple_song</span><span class="p">,</span>
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="w">       </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="n">FILTER</span><span class="w"> </span><span class="p">(</span><span class="k">WHERE</span><span class="w"> </span><span class="n">t_xmax</span><span class="w"> </span><span class="o">&lt;&gt;</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w">     </span><span class="k">AS</span><span class="w"> </span><span class="n">so_tuple_het_hieu_luc</span>
+</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="k">FROM</span><span class="w"> </span><span class="n">heap_page_items</span><span class="p">(</span><span class="n">get_raw_page</span><span class="p">(</span><span class="s1">'b33_hoc_sinh'</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">));</span>
+</span></code></pre></div>
+<p>Bốn tuple sống, <strong>không còn tuple hết hiệu lực nào</strong> trên trang.</p>
+<h3 id="toast-mot-bai-van-265000-byte-trong-trang-8kb">TOAST — một bài văn 265.000 byte trong trang 8KB<a class="headerlink" href="#toast-mot-bai-van-265000-byte-trong-trang-8kb" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">b33_bai_van</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">;</span>
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">b33_bai_van</span><span class="w"> </span><span class="p">(</span>
+</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="w">    </span><span class="n">ma_bai</span><span class="w">   </span><span class="nb">INTEGER</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span>
+</span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="w">    </span><span class="n">noi_dung</span><span class="w"> </span><span class="nb">TEXT</span>
+</span><span id="__span-14-6"><a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="p">);</span>
+</span><span id="__span-14-7"><a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>
+</span><span id="__span-14-8"><a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">b33_bai_van</span><span class="w"> </span><span class="k">VALUES</span>
+</span><span id="__span-14-9"><a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="s1">'Bài văn ngắn'</span><span class="p">),</span>
+</span><span id="__span-14-10"><a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="n">repeat</span><span class="p">(</span><span class="s1">'Ngày khai trường, sân trường rợp cờ hoa. '</span><span class="p">,</span><span class="w"> </span><span class="mi">5000</span><span class="p">));</span>
+</span><span id="__span-14-11"><a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>
+</span><span id="__span-14-12"><a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a><span class="c1">-- KỲ VỌNG: 2 dòng</span>
+</span><span id="__span-14-13"><a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a><span class="c1">-- KỲ VỌNG: ma_bai = 2</span>
+</span><span id="__span-14-14"><a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a><span class="c1">-- KỲ VỌNG: so_byte_that = 265000</span>
+</span><span id="__span-14-15"><a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a><span class="c1">-- KỲ VỌNG: so_byte_luu = 3089</span>
+</span><span id="__span-14-16"><a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">ma_bai</span><span class="p">,</span>
+</span><span id="__span-14-17"><a id="__codelineno-14-17" name="__codelineno-14-17" href="#__codelineno-14-17"></a><span class="w">       </span><span class="k">octet_length</span><span class="p">(</span><span class="n">noi_dung</span><span class="p">)</span><span class="w">   </span><span class="k">AS</span><span class="w"> </span><span class="n">so_byte_that</span><span class="p">,</span>
+</span><span id="__span-14-18"><a id="__codelineno-14-18" name="__codelineno-14-18" href="#__codelineno-14-18"></a><span class="w">       </span><span class="n">pg_column_size</span><span class="p">(</span><span class="n">noi_dung</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_byte_luu</span>
+</span><span id="__span-14-19"><a id="__codelineno-14-19" name="__codelineno-14-19" href="#__codelineno-14-19"></a><span class="k">FROM</span><span class="w"> </span><span class="n">b33_bai_van</span>
+</span><span id="__span-14-20"><a id="__codelineno-14-20" name="__codelineno-14-20" href="#__codelineno-14-20"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">ma_bai</span><span class="w"> </span><span class="k">DESC</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Bài văn số 2 dài <strong>265.000 byte</strong> khi đọc ra, nhưng chỉ chiếm <strong>3089 byte</strong> khi lưu. Câu văn lặp lại 5000 lần nên nén cực kỳ tốt. Dù vậy, 3089 byte vẫn vượt ngưỡng khoảng 2KB, nên nó bị chuyển sang bảng TOAST:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1">-- KỲ VỌNG: co_bang_toast = true</span>
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="c1">-- KỲ VỌNG: bang_toast_co_du_lieu = true</span>
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="c1">-- KỲ VỌNG: so_trang_bang_chinh = 1</span>
+</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">c</span><span class="p">.</span><span class="n">reltoastrelid</span><span class="w"> </span><span class="o">&lt;&gt;</span><span class="w"> </span><span class="mi">0</span><span class="w">                         </span><span class="k">AS</span><span class="w"> </span><span class="n">co_bang_toast</span><span class="p">,</span>
+</span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="w">       </span><span class="n">pg_relation_size</span><span class="p">(</span><span class="k">c</span><span class="p">.</span><span class="n">reltoastrelid</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="w">         </span><span class="k">AS</span><span class="w"> </span><span class="n">bang_toast_co_du_lieu</span><span class="p">,</span>
+</span><span id="__span-15-6"><a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="w">       </span><span class="n">pg_relation_size</span><span class="p">(</span><span class="s1">'b33_bai_van'</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">8192</span><span class="w">        </span><span class="k">AS</span><span class="w"> </span><span class="n">so_trang_bang_chinh</span>
+</span><span id="__span-15-7"><a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="k">FROM</span><span class="w"> </span><span class="n">pg_class</span><span class="w"> </span><span class="k">c</span>
+</span><span id="__span-15-8"><a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a><span class="k">WHERE</span><span class="w"> </span><span class="k">c</span><span class="p">.</span><span class="n">relname</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'b33_bai_van'</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Bảng chính chỉ có <strong>một</strong> trang cho cả hai bài văn — bài văn dài trên đó chỉ là một con trỏ nhỏ. Nội dung thật nằm ở bảng TOAST. Bạn tự <code>SELECT reltoastrelid::regclass FROM pg_class WHERE relname = 'b33_bai_van'</code> để xem tên bảng phụ đó.</p>
+<h3 id="bloat-o-tan-mat">Bloat — đo tận mắt<a class="headerlink" href="#bloat-o-tan-mat" title="Permanent link">&para;</a></h3>
+<p>Dựng 10.000 dòng rồi <strong>sửa tất cả</strong>:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">b33_phinh</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">;</span>
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>
+</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">b33_phinh</span><span class="w"> </span><span class="p">(</span>
+</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="w">    </span><span class="n">ma_hs</span><span class="w">   </span><span class="nb">INTEGER</span><span class="p">,</span>
+</span><span id="__span-16-5"><a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="w">    </span><span class="n">diem_so</span><span class="w"> </span><span class="nb">NUMERIC</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span>
+</span><span id="__span-16-6"><a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="w">    </span><span class="n">ghi_chu</span><span class="w"> </span><span class="nb">CHAR</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+</span><span id="__span-16-7"><a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="p">)</span><span class="w"> </span><span class="k">WITH</span><span class="w"> </span><span class="p">(</span><span class="n">autovacuum_enabled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">off</span><span class="p">);</span>
+</span><span id="__span-16-8"><a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>
+</span><span id="__span-16-9"><a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">b33_phinh</span>
+</span><span id="__span-16-10"><a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w"> </span><span class="s1">'ghi chú'</span>
+</span><span id="__span-16-11"><a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a><span class="k">FROM</span><span class="w"> </span><span class="n">generate_series</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">10000</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">n</span><span class="p">;</span>
+</span><span id="__span-16-12"><a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a>
+</span><span id="__span-16-13"><a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a><span class="c1">-- KỲ VỌNG: so_trang = 173</span>
+</span><span id="__span-16-14"><a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">pg_relation_size</span><span class="p">(</span><span class="s1">'b33_phinh'</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">8192</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_trang</span><span class="p">;</span>
+</span></code></pre></div>
+<p><strong>173 trang</strong> cho 10.000 dòng. Giờ cộng mỗi bạn 1 điểm:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="k">UPDATE</span><span class="w"> </span><span class="n">b33_phinh</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">diem_so</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">diem_so</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>
+</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="c1">-- KỲ VỌNG: so_trang = 345</span>
+</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="c1">-- KỲ VỌNG: so_dong_nhin_thay = 10000</span>
+</span><span id="__span-17-5"><a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">pg_relation_size</span><span class="p">(</span><span class="s1">'b33_phinh'</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">8192</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_trang</span><span class="p">,</span>
+</span><span id="__span-17-6"><a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a><span class="w">       </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">b33_phinh</span><span class="p">)</span><span class="w">      </span><span class="k">AS</span><span class="w"> </span><span class="n">so_dong_nhin_thay</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Vẫn <strong>10.000 dòng</strong>, nhưng bảng đã phình lên <strong>345 trang</strong> — gần gấp đôi. Mỗi dòng bây giờ có hai tuple: một sống, một chết. Các trang đã đầy 100% nên bản mới không nhét được vào cùng trang, phải đi ra các trang mới ở cuối tệp.</p>
+<p><code>VACUUM</code> có làm bảng nhỏ lại không?</p>
+<div class="highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="k">VACUUM</span><span class="w"> </span><span class="n">b33_phinh</span><span class="p">;</span>
+</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>
+</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="c1">-- KỲ VỌNG: so_trang = 345</span>
+</span><span id="__span-18-4"><a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">pg_relation_size</span><span class="p">(</span><span class="s1">'b33_phinh'</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">8192</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_trang</span><span class="p">;</span>
+</span></code></pre></div>
+<p><strong>Không.</strong> Vẫn 345 trang. Nhưng giờ nửa đầu tệp đầy chỗ trống đã được ghi vào bản đồ chỗ trống. Sửa tất cả thêm một lần nữa:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="k">UPDATE</span><span class="w"> </span><span class="n">b33_phinh</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">diem_so</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">diem_so</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>
+</span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="c1">-- KỲ VỌNG: so_trang = 345</span>
+</span><span id="__span-19-4"><a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">pg_relation_size</span><span class="p">(</span><span class="s1">'b33_phinh'</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">8192</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_trang</span><span class="p">;</span>
+</span></code></pre></div>
+<p><strong>Vẫn 345.</strong> Lần này 10.000 tuple mới <strong>dùng lại</strong> đúng chỗ mà <code>VACUUM</code> vừa dọn, nên tệp không to thêm một trang nào. Đó là toàn bộ ý nghĩa của <code>VACUUM</code>: nó không làm tệp nhỏ đi, nó <strong>chặn tệp to mãi</strong>. Nếu lần sửa thứ hai xảy ra mà không có <code>VACUUM</code> ở giữa, bảng sẽ tiếp tục phình.</p>
+<p>Muốn trả dung lượng lại cho hệ điều hành thì phải viết lại cả bảng:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="k">VACUUM</span><span class="w"> </span><span class="k">FULL</span><span class="w"> </span><span class="n">b33_phinh</span><span class="p">;</span>
+</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>
+</span><span id="__span-20-3"><a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="c1">-- KỲ VỌNG: so_trang = 173</span>
+</span><span id="__span-20-4"><a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">pg_relation_size</span><span class="p">(</span><span class="s1">'b33_phinh'</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">8192</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_trang</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Về lại <strong>173 trang</strong>. Trên bảng nháp 10.000 dòng thì việc này mất vài chục mili giây; trên bảng thật đang phục vụ người dùng thì đó là một khoảng thời gian <strong>bảng bị khoá hoàn toàn</strong>.</p>
+<h3 id="fill-factor-chua-cho-tren-moi-trang">Fill factor — chừa chỗ trên mỗi trang<a class="headerlink" href="#fill-factor-chua-cho-tren-moi-trang" title="Permanent link">&para;</a></h3>
+<p>Hai bảng giống hệt nhau, chỉ khác fill factor:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">b33_ff100</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">;</span>
+</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">b33_ff50</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">;</span>
+</span><span id="__span-21-3"><a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>
+</span><span id="__span-21-4"><a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">b33_ff100</span><span class="w"> </span><span class="p">(</span><span class="n">ma_hs</span><span class="w"> </span><span class="nb">INTEGER</span><span class="p">,</span><span class="w"> </span><span class="n">ghi_chu</span><span class="w"> </span><span class="nb">CHAR</span><span class="p">(</span><span class="mi">100</span><span class="p">))</span>
+</span><span id="__span-21-5"><a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a><span class="w">    </span><span class="k">WITH</span><span class="w"> </span><span class="p">(</span><span class="n">autovacuum_enabled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">off</span><span class="p">);</span>
+</span><span id="__span-21-6"><a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">b33_ff50</span><span class="w">  </span><span class="p">(</span><span class="n">ma_hs</span><span class="w"> </span><span class="nb">INTEGER</span><span class="p">,</span><span class="w"> </span><span class="n">ghi_chu</span><span class="w"> </span><span class="nb">CHAR</span><span class="p">(</span><span class="mi">100</span><span class="p">))</span>
+</span><span id="__span-21-7"><a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a><span class="w">    </span><span class="k">WITH</span><span class="w"> </span><span class="p">(</span><span class="n">fillfactor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">50</span><span class="p">,</span><span class="w"> </span><span class="n">autovacuum_enabled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">off</span><span class="p">);</span>
+</span><span id="__span-21-8"><a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a>
+</span><span id="__span-21-9"><a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">b33_ff100</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="s1">'x'</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">generate_series</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1000</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">n</span><span class="p">;</span>
+</span><span id="__span-21-10"><a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">b33_ff50</span><span class="w">  </span><span class="k">SELECT</span><span class="w"> </span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="s1">'x'</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">generate_series</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1000</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">n</span><span class="p">;</span>
+</span><span id="__span-21-11"><a id="__codelineno-21-11" name="__codelineno-21-11" href="#__codelineno-21-11"></a>
+</span><span id="__span-21-12"><a id="__codelineno-21-12" name="__codelineno-21-12" href="#__codelineno-21-12"></a><span class="c1">-- KỲ VỌNG: trang_ff100 = 18</span>
+</span><span id="__span-21-13"><a id="__codelineno-21-13" name="__codelineno-21-13" href="#__codelineno-21-13"></a><span class="c1">-- KỲ VỌNG: trang_ff50 = 35</span>
+</span><span id="__span-21-14"><a id="__codelineno-21-14" name="__codelineno-21-14" href="#__codelineno-21-14"></a><span class="c1">-- KỲ VỌNG: dong_trang0_ff100 = 58</span>
+</span><span id="__span-21-15"><a id="__codelineno-21-15" name="__codelineno-21-15" href="#__codelineno-21-15"></a><span class="c1">-- KỲ VỌNG: dong_trang0_ff50 = 29</span>
+</span><span id="__span-21-16"><a id="__codelineno-21-16" name="__codelineno-21-16" href="#__codelineno-21-16"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">pg_relation_size</span><span class="p">(</span><span class="s1">'b33_ff100'</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">8192</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">trang_ff100</span><span class="p">,</span>
+</span><span id="__span-21-17"><a id="__codelineno-21-17" name="__codelineno-21-17" href="#__codelineno-21-17"></a><span class="w">       </span><span class="n">pg_relation_size</span><span class="p">(</span><span class="s1">'b33_ff50'</span><span class="p">)</span><span class="w">  </span><span class="o">/</span><span class="w"> </span><span class="mi">8192</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">trang_ff50</span><span class="p">,</span>
+</span><span id="__span-21-18"><a id="__codelineno-21-18" name="__codelineno-21-18" href="#__codelineno-21-18"></a><span class="w">       </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">b33_ff100</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="p">(</span><span class="n">ctid</span><span class="p">::</span><span class="nb">text</span><span class="p">::</span><span class="n">point</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">dong_trang0_ff100</span><span class="p">,</span>
+</span><span id="__span-21-19"><a id="__codelineno-21-19" name="__codelineno-21-19" href="#__codelineno-21-19"></a><span class="w">       </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">b33_ff50</span><span class="w">  </span><span class="k">WHERE</span><span class="w"> </span><span class="p">(</span><span class="n">ctid</span><span class="p">::</span><span class="nb">text</span><span class="p">::</span><span class="n">point</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">dong_trang0_ff50</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Fill factor 50 xếp <strong>29</strong> dòng mỗi trang thay vì <strong>58</strong>, nên cùng 1000 dòng cần <strong>35</strong> trang thay vì <strong>18</strong>. Quét toàn bảng <code>b33_ff50</code> phải đọc gần gấp đôi số trang. Đó là cái giá bạn trả trước cho các lần <code>UPDATE</code> về sau.</p>
+<h3 id="don-diem_lon-cho-cac-bai-sau">Dọn <code>diem_lon</code> cho các bài sau<a class="headerlink" href="#don-diem_lon-cho-cac-bai-sau" title="Permanent link">&para;</a></h3>
+<p>Bảng <code>diem_lon</code> vừa được nạp bằng một lệnh <code>INSERT</code> lớn, chưa từng được <code>VACUUM</code>, nên bản đồ hiển thị của nó còn trống trơn. Bài 34 cần tấm bản đồ đó đầy đủ để minh hoạ một kiểu quét đặc biệt. Chạy <code>VACUUM</code> một lần:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="k">VACUUM</span><span class="w"> </span><span class="n">diem_lon</span><span class="p">;</span>
+</span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>
+</span><span id="__span-22-3"><a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="c1">-- KỲ VỌNG: trang_da_danh_dau = 4167</span>
+</span><span id="__span-22-4"><a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">relallvisible</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">trang_da_danh_dau</span>
+</span><span id="__span-22-5"><a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a><span class="k">FROM</span><span class="w"> </span><span class="n">pg_class</span>
+</span><span id="__span-22-6"><a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">relname</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'diem_lon'</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Cả <strong>4167</strong> trang giờ đã được đánh dấu <em>"mọi tuple ở đây đều sống và ai cũng thấy"</em> trong bản đồ hiển thị. Không dòng nào bị đổi — <code>VACUUM</code> không sửa dữ liệu — nên đây là thao tác an toàn trên bảng thực hành.</p>
+<p>(Nếu bạn chờ đủ lâu thì autovacuum cũng sẽ tự làm việc này, vì 500.000 dòng vừa thêm đã vượt ngưỡng của nó. Khoá học chạy tay để kết quả của Bài 34 không phụ thuộc vào việc autovacuum đã kịp chạy hay chưa.)</p>
+<p>Cuối cùng, xác nhận autovacuum đang bật cho toàn máy chủ:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="c1">-- KỲ VỌNG: autovacuum = on</span>
+</span><span id="__span-23-2"><a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">current_setting</span><span class="p">(</span><span class="s1">'autovacuum'</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">autovacuum</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Các bảng nháp <code>b33_</code> được giữ tới cuối bài vì phần <strong>Lỗi thường gặp</strong> và <strong>Bài tập</strong> còn dùng. Mục dọn dẹp nằm ở cuối.</p>
+<h2 id="loi-thuong-gap">⚠️ Lỗi thường gặp<a class="headerlink" href="#loi-thuong-gap" title="Permanent link">&para;</a></h2>
+<div class="admonition danger">
+<p class="admonition-title">Lỗi 1: Lưu <code>ctid</code> để lát nữa tìm lại dòng</p>
+<p>Một phần mềm đọc danh sách học sinh kèm <code>ctid</code>, lưu vào bộ nhớ, rồi vài phút sau dùng <code>WHERE ctid = '(0,2)'</code> để cập nhật bạn <code>Bình</code>. Chạy đúng trong lúc thử — rồi một hôm cập nhật nhầm người.</p>
+<div class="highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="c1">-- KỲ VỌNG: dia_chi = (0,2)</span>
+</span><span id="__span-24-2"><a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">ctid</span><span class="p">::</span><span class="nb">text</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">dia_chi</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">b33_hoc_sinh</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">ma_hs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Phần mềm ghi nhớ: <em>"bạn Bình ở <code>(0,2)</code>"</em>. Trong lúc đó, có người sửa tên bạn ấy:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="k">UPDATE</span><span class="w"> </span><span class="n">b33_hoc_sinh</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">ho_ten</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'Bình (đã sửa)'</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">ma_hs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
+</span><span id="__span-25-2"><a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>
+</span><span id="__span-25-3"><a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a><span class="c1">-- KỲ VỌNG: dia_chi = (0,5)</span>
+</span><span id="__span-25-4"><a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">ctid</span><span class="p">::</span><span class="nb">text</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">dia_chi</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">b33_hoc_sinh</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">ma_hs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
+</span></code></pre></div>
+<p><code>Bình</code> giờ ở <strong><code>(0,5)</code></strong> — và <code>(0,5)</code> chính là địa chỉ cũ của bạn <strong><code>Đức</code></strong>, người đã bị xoá ở phần thực hành. <code>VACUUM</code> đã giải phóng con trỏ số 5, nên lần ghi tiếp theo <strong>dùng lại nó cho một dòng hoàn toàn khác</strong>. Địa chỉ <code>(0,2)</code> mà phần mềm đang giữ thì trỏ vào một tuple đã hết hiệu lực, và sau lần <code>VACUUM</code> kế tiếp, nó cũng sẽ được giao cho ai đó khác.</p>
+<p>Nói cách khác: một địa chỉ <code>ctid</code> cũ không chỉ <strong>sai</strong>, nó có thể trỏ <strong>đúng vào người khác</strong>.</p>
+<p>Sửa: luôn trỏ tới dòng bằng <strong>khoá chính</strong>. <code>ctid</code> chỉ dùng bên trong <strong>một</strong> câu lệnh.</p>
+</div>
+<div class="admonition danger">
+<p class="admonition-title">Lỗi 2: Tưởng <code>DELETE</code> làm bảng nhỏ lại</p>
+<p>Một thầy giáo xoá hết điểm của năm học cũ — một nửa bảng — rồi ngạc nhiên vì ổ đĩa không trống ra chút nào.</p>
+<div class="highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="k">DELETE</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">b33_phinh</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">ma_hs</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mi">5000</span><span class="p">;</span>
+</span><span id="__span-26-2"><a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>
+</span><span id="__span-26-3"><a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a><span class="c1">-- KỲ VỌNG: so_trang = 173</span>
+</span><span id="__span-26-4"><a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a><span class="c1">-- KỲ VỌNG: so_dong_nhin_thay = 5000</span>
+</span><span id="__span-26-5"><a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">pg_relation_size</span><span class="p">(</span><span class="s1">'b33_phinh'</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">8192</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_trang</span><span class="p">,</span>
+</span><span id="__span-26-6"><a id="__codelineno-26-6" name="__codelineno-26-6" href="#__codelineno-26-6"></a><span class="w">       </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">b33_phinh</span><span class="p">)</span><span class="w">      </span><span class="k">AS</span><span class="w"> </span><span class="n">so_dong_nhin_thay</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Còn <strong>5000</strong> dòng mà vẫn <strong>173</strong> trang, y như lúc có 10.000 dòng. <code>DELETE</code> chỉ điền <code>xmax</code>; <code>VACUUM</code> sau đó sẽ biến chỗ ấy thành chỗ trống dùng lại được, nhưng tệp vẫn giữ nguyên kích thước — trừ khi các trang trống nằm đúng ở đuôi tệp.</p>
+<p>Nếu bạn thật sự cần lấy lại đĩa: xoá theo lô rồi để autovacuum dọn là đủ cho hầu hết trường hợp, vì chỗ trống sẽ được dữ liệu mới dùng lại. Chỉ khi bảng sẽ <strong>không bao giờ lớn trở lại</strong> mới cân nhắc <code>VACUUM FULL</code>, vào giờ không ai dùng. Còn với dữ liệu "xoá theo năm học", giải pháp gọn nhất là chia bảng theo năm — chuyện của Cấp 5.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Lỗi 3: Tắt autovacuum \"cho máy đỡ bận\"</p>
+<p>Bạn đã thấy ở phần thực hành: không có <code>VACUUM</code> thì mỗi lần sửa cả bảng là thêm một lớp tuple chết. Một bảng điểm danh được sửa hàng ngày sẽ phình lên gấp mấy lần chỉ sau vài tuần, và mọi truy vấn quét bảng chậm theo.</p>
+<p>Nếu autovacuum <strong>có vẻ</strong> gây tải, đừng tắt nó — hãy cho nó chạy <strong>thường xuyên hơn và nhẹ hơn</strong>: hạ ngưỡng <code>autovacuum_vacuum_scale_factor</code> cho riêng bảng hay bị sửa. Tuỳ chọn <code>autovacuum_enabled = off</code> trong bài này chỉ dùng cho bảng nháp, để bạn tự quan sát.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Lỗi 4: Chạy <code>VACUUM FULL</code> như một thói quen bảo trì</p>
+<p><code>VACUUM FULL</code> giữ khoá mạnh nhất có thể trên bảng suốt thời gian chép lại. Mọi <code>SELECT</code> của người khác phải xếp hàng chờ. Có những người lên lịch <code>VACUUM FULL</code> mỗi đêm cho mọi bảng "cho sạch" — thứ họ thật sự nhận được là một khoảng ngừng phục vụ mỗi đêm, và một bảng lại phình dần trở lại ngay sáng hôm sau vì dữ liệu mới cần chỗ.</p>
+<p><code>VACUUM</code> thường (do autovacuum chạy) <strong>không</strong> khoá người đọc và người ghi. Đó là thứ bảo trì hằng ngày. <code>VACUUM FULL</code> là thuốc đặc trị, dùng một lần sau một sự cố phình nặng.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Lỗi 5: <code>SELECT *</code> trên bảng có cột lớn</p>
+<p>Với bảng <code>b33_bai_van</code>, hai câu sau trả về cùng số dòng:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a><span class="c1">-- KỲ VỌNG: 2 dòng</span>
+</span><span id="__span-27-2"><a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">ma_bai</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">b33_bai_van</span><span class="w"> </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">ma_bai</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Nhưng <code>SELECT * FROM b33_bai_van</code> còn phải lần theo con trỏ TOAST, đọc thêm các trang của bảng phụ và <strong>giải nén 265.000 byte</strong> chỉ để in ra một bài văn mà có khi bạn không cần. Trên một trang web liệt kê 50 bài văn mỗi trang, khác biệt đó là giữa vài mili giây và vài giây.</p>
+</div>
+<h2 id="bai-tap">✍️ Bài tập<a class="headerlink" href="#bai-tap" title="Permanent link">&para;</a></h2>
+<ol>
+<li>
+<p>Bảng <code>hoc_sinh_lon</code> (50.000 dòng) chiếm bao nhiêu trang, và mỗi trang đầy chứa bao nhiêu dòng? Viết truy vấn trả lời, rồi giải thích vì sao con số dòng mỗi trang <strong>gần bằng</strong> của <code>diem_lon</code> dù hai bảng có cột khác nhau.</p>
+</li>
+<li>
+<p>Không chạy truy vấn, hãy dự đoán <code>ctid</code> của học sinh <code>HS040</code> trong bảng <code>hoc_sinh</code>. Rồi chạy truy vấn để kiểm. Vì sao bạn dự đoán được?</p>
+</li>
+<li>
+<p>Trong bảng <code>b33_phinh</code> đã bị xoá một nửa ở <strong>Lỗi 2</strong>, nếu bây giờ bạn chạy <code>VACUUM</code> rồi <code>INSERT</code> thêm 5000 dòng mới giống hệt, bảng sẽ có bao nhiêu trang? Giải thích bằng khái niệm bản đồ chỗ trống, rồi chạy thử.</p>
+</li>
+<li>
+<p>Bảng <code>diem_danh</code> mỗi ngày được <code>UPDATE</code> cột <code>trang_thai</code> rất nhiều lần (điểm danh buổi sáng, sửa lại khi học sinh tới muộn…). Cột <code>trang_thai</code> không có index. Bạn sẽ đề xuất fill factor bao nhiêu cho bảng này, và kiểu cập nhật nào giúp nó rẻ? Nếu sau này có người tạo index trên <code>trang_thai</code> thì lợi ích đó còn không?</p>
+</li>
+<li>
+<p>Một bảng không có khoá chính lỡ bị nạp trùng: mỗi dòng xuất hiện hai lần. Viết câu lệnh xoá bản trùng, <strong>dùng <code>ctid</code></strong>, và giải thích vì sao ở đây dùng <code>ctid</code> lại an toàn trong khi <strong>Lỗi 1</strong> nói không được.</p>
+</li>
+</ol>
+<details class="success">
+<summary>Đáp án</summary>
+<p><strong>Câu 1.</strong></p>
+<div class="highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="c1">-- KỲ VỌNG: so_trang = 417</span>
+</span><span id="__span-28-2"><a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a><span class="c1">-- KỲ VỌNG: dong_moi_trang_day = 120</span>
+</span><span id="__span-28-3"><a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">pg_relation_size</span><span class="p">(</span><span class="s1">'hoc_sinh_lon'</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">8192</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_trang</span><span class="p">,</span>
+</span><span id="__span-28-4"><a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a><span class="w">       </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="k">max</span><span class="p">(</span><span class="n">so_dong</span><span class="p">)</span>
+</span><span id="__span-28-5"><a id="__codelineno-28-5" name="__codelineno-28-5" href="#__codelineno-28-5"></a><span class="w">        </span><span class="k">FROM</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_dong</span>
+</span><span id="__span-28-6"><a id="__codelineno-28-6" name="__codelineno-28-6" href="#__codelineno-28-6"></a><span class="w">              </span><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh_lon</span>
+</span><span id="__span-28-7"><a id="__codelineno-28-7" name="__codelineno-28-7" href="#__codelineno-28-7"></a><span class="w">              </span><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="p">(</span><span class="n">ctid</span><span class="p">::</span><span class="nb">text</span><span class="p">::</span><span class="n">point</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">t</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">dong_moi_trang_day</span><span class="p">;</span>
+</span></code></pre></div>
+<p><strong>417 trang</strong>, mỗi trang đầy chứa <strong>120</strong> dòng — đúng bằng <code>diem_lon</code>. Trùng hợp này có lý do: mỗi dòng <code>hoc_sinh_lon</code> có dữ liệu dài hơn (<code>ho_ten</code> kiểu <code>'Học sinh số 123'</code>), nhưng tổng độ dài sau khi cộng <strong>đầu tuple 24 byte</strong> và <strong>con trỏ dòng 4 byte</strong> vẫn rơi vào cùng khoảng 68 byte. Với dòng nhỏ, phần "thuế" cố định chiếm gần một nửa, nên khác biệt vài byte dữ liệu không đổi được số dòng mỗi trang.</p>
+<p><strong>Câu 2.</strong></p>
+<p>Dự đoán: <code>(0,40)</code>. Cả bảng nằm trong một trang (phần thực hành đã đếm), bốn mươi dòng được nạp theo thứ tự <code>HS001</code> → <code>HS040</code> bằng một câu <code>INSERT</code>, và từ đó bảng <strong>chưa từng bị sửa hay xoá</strong> — khóa học chỉ <code>SELECT</code> trên 10 bảng thật.</p>
+<div class="highlight"><pre><span></span><code><span id="__span-29-1"><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a><span class="c1">-- KỲ VỌNG: dia_chi = (0,40)</span>
+</span><span id="__span-29-2"><a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">ctid</span><span class="p">::</span><span class="nb">text</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">dia_chi</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">hoc_sinh</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">ma_hs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'HS040'</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Bạn dự đoán được <strong>chỉ vì</strong> bảng chưa từng bị sửa. Chỉ cần một lệnh <code>UPDATE</code> là quy luật này vỡ — lại là lý do không dùng <code>ctid</code> làm khoá.</p>
+<p><strong>Câu 3.</strong></p>
+<p>Dự đoán: vẫn <strong>173</strong> trang. <code>VACUUM</code> ghi chỗ trống của 5000 dòng đã xoá vào bản đồ chỗ trống; 5000 dòng mới cùng cỡ sẽ được xếp vào đúng chỗ đó thay vì nối thêm trang vào cuối tệp.</p>
+<div class="highlight"><pre><span></span><code><span id="__span-30-1"><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a><span class="k">VACUUM</span><span class="w"> </span><span class="n">b33_phinh</span><span class="p">;</span>
+</span><span id="__span-30-2"><a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a>
+</span><span id="__span-30-3"><a id="__codelineno-30-3" name="__codelineno-30-3" href="#__codelineno-30-3"></a><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">b33_phinh</span>
+</span><span id="__span-30-4"><a id="__codelineno-30-4" name="__codelineno-30-4" href="#__codelineno-30-4"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w"> </span><span class="s1">'ghi chú'</span>
+</span><span id="__span-30-5"><a id="__codelineno-30-5" name="__codelineno-30-5" href="#__codelineno-30-5"></a><span class="k">FROM</span><span class="w"> </span><span class="n">generate_series</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">5000</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">n</span><span class="p">;</span>
+</span><span id="__span-30-6"><a id="__codelineno-30-6" name="__codelineno-30-6" href="#__codelineno-30-6"></a>
+</span><span id="__span-30-7"><a id="__codelineno-30-7" name="__codelineno-30-7" href="#__codelineno-30-7"></a><span class="c1">-- KỲ VỌNG: so_trang = 173</span>
+</span><span id="__span-30-8"><a id="__codelineno-30-8" name="__codelineno-30-8" href="#__codelineno-30-8"></a><span class="c1">-- KỲ VỌNG: so_dong = 10000</span>
+</span><span id="__span-30-9"><a id="__codelineno-30-9" name="__codelineno-30-9" href="#__codelineno-30-9"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">pg_relation_size</span><span class="p">(</span><span class="s1">'b33_phinh'</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">8192</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_trang</span><span class="p">,</span>
+</span><span id="__span-30-10"><a id="__codelineno-30-10" name="__codelineno-30-10" href="#__codelineno-30-10"></a><span class="w">       </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">b33_phinh</span><span class="p">)</span><span class="w">      </span><span class="k">AS</span><span class="w"> </span><span class="n">so_dong</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Đủ 10.000 dòng, vẫn 173 trang. Nếu bỏ lệnh <code>VACUUM</code> đi, bản đồ chỗ trống không biết có chỗ, và 5000 dòng mới sẽ nối vào cuối tệp.</p>
+<p><strong>Câu 4.</strong></p>
+<p>Đề xuất fill factor khoảng <strong>70–90</strong>, ví dụ <code>ALTER TABLE diem_danh SET (fillfactor = 80)</code> (lệnh này chỉ áp dụng cho các trang được ghi <strong>từ đây về sau</strong>; khoá học không chạy nó trên bảng thật). Phần trống 20% trên mỗi trang để tuple mới của lần sửa <code>trang_thai</code> nằm được <strong>cùng trang</strong> với tuple cũ.</p>
+<p>Khi đủ hai điều kiện — tuple mới cùng trang, và cột bị sửa không có index — PostgreSQL dùng <strong>HOT update</strong>: không phải thêm mục mới vào bất kỳ index nào, và tuple cũ được dọn ngay lúc trang được đọc lần sau, không phải đợi <code>VACUUM</code>.</p>
+<p>Nếu ai đó tạo index trên <code>trang_thai</code>, điều kiện thứ hai <strong>không còn thoả</strong>: mỗi lần sửa <code>trang_thai</code> phải thêm một mục mới vào index đó, và cả vào <strong>mọi index khác</strong> của bảng. Đây là một trong những cái giá ẩn của index mà Bài 34 sẽ bàn: index trên cột hay bị sửa không chỉ tốn chỗ, nó còn tắt HOT.</p>
+<p><strong>Câu 5.</strong></p>
+<div class="highlight"><pre><span></span><code><span id="__span-31-1"><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a><span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">b33_trung</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">;</span>
+</span><span id="__span-31-2"><a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">b33_trung</span><span class="w"> </span><span class="p">(</span><span class="n">ma_hs</span><span class="w"> </span><span class="nb">INTEGER</span><span class="p">,</span><span class="w"> </span><span class="n">ho_ten</span><span class="w"> </span><span class="nb">TEXT</span><span class="p">);</span>
+</span><span id="__span-31-3"><a id="__codelineno-31-3" name="__codelineno-31-3" href="#__codelineno-31-3"></a><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">b33_trung</span><span class="w"> </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="s1">'An'</span><span class="p">),</span><span class="w"> </span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="s1">'Bình'</span><span class="p">),</span><span class="w"> </span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="s1">'Cường'</span><span class="p">);</span>
+</span><span id="__span-31-4"><a id="__codelineno-31-4" name="__codelineno-31-4" href="#__codelineno-31-4"></a><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">b33_trung</span><span class="w"> </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="s1">'An'</span><span class="p">),</span><span class="w"> </span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="s1">'Bình'</span><span class="p">),</span><span class="w"> </span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="s1">'Cường'</span><span class="p">);</span><span class="w">   </span><span class="c1">-- nạp trùng</span>
+</span><span id="__span-31-5"><a id="__codelineno-31-5" name="__codelineno-31-5" href="#__codelineno-31-5"></a>
+</span><span id="__span-31-6"><a id="__codelineno-31-6" name="__codelineno-31-6" href="#__codelineno-31-6"></a><span class="k">DELETE</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">b33_trung</span><span class="w"> </span><span class="n">a</span>
+</span><span id="__span-31-7"><a id="__codelineno-31-7" name="__codelineno-31-7" href="#__codelineno-31-7"></a><span class="k">USING</span><span class="w"> </span><span class="n">b33_trung</span><span class="w"> </span><span class="n">b</span>
+</span><span id="__span-31-8"><a id="__codelineno-31-8" name="__codelineno-31-8" href="#__codelineno-31-8"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">ma_hs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">b</span><span class="p">.</span><span class="n">ma_hs</span>
+</span><span id="__span-31-9"><a id="__codelineno-31-9" name="__codelineno-31-9" href="#__codelineno-31-9"></a><span class="w">  </span><span class="k">AND</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">ho_ten</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">b</span><span class="p">.</span><span class="n">ho_ten</span>
+</span><span id="__span-31-10"><a id="__codelineno-31-10" name="__codelineno-31-10" href="#__codelineno-31-10"></a><span class="w">  </span><span class="k">AND</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">ctid</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">b</span><span class="p">.</span><span class="n">ctid</span><span class="p">;</span>
+</span><span id="__span-31-11"><a id="__codelineno-31-11" name="__codelineno-31-11" href="#__codelineno-31-11"></a>
+</span><span id="__span-31-12"><a id="__codelineno-31-12" name="__codelineno-31-12" href="#__codelineno-31-12"></a><span class="c1">-- KỲ VỌNG: 3 dòng</span>
+</span><span id="__span-31-13"><a id="__codelineno-31-13" name="__codelineno-31-13" href="#__codelineno-31-13"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">ma_hs</span><span class="p">,</span><span class="w"> </span><span class="n">ho_ten</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">b33_trung</span><span class="w"> </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">ma_hs</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Còn đúng <strong>3</strong> dòng. Hai bản trùng giống hệt nhau ở mọi cột, nên cột duy nhất phân biệt được chúng là <strong>địa chỉ vật lý</strong>. Điều kiện <code>a.ctid &gt; b.ctid</code> giữ lại bản có địa chỉ nhỏ hơn và xoá bản còn lại.</p>
+<p>An toàn vì <code>ctid</code> chỉ được dùng <strong>bên trong một câu lệnh duy nhất</strong>: lúc câu <code>DELETE</code> chạy, không ai đổi được địa chỉ của các dòng nó đang xét. <strong>Lỗi 1</strong> thì khác — địa chỉ được lưu lại rồi dùng ở một câu lệnh <strong>sau đó</strong>, khi mọi thứ đã có thể thay đổi. Và bài học lớn hơn: hãy thêm khoá chính để lần sau không phải dùng tới mẹo này.</p>
+</details>
+<h3 id="don-dep-cuoi-bai">Dọn dẹp cuối bài<a class="headerlink" href="#don-dep-cuoi-bai" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span id="__span-32-1"><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a><span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">b33_hoc_sinh</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">;</span>
+</span><span id="__span-32-2"><a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a><span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">b33_bai_van</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">;</span>
+</span><span id="__span-32-3"><a id="__codelineno-32-3" name="__codelineno-32-3" href="#__codelineno-32-3"></a><span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">b33_phinh</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">;</span>
+</span><span id="__span-32-4"><a id="__codelineno-32-4" name="__codelineno-32-4" href="#__codelineno-32-4"></a><span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">b33_ff100</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">;</span>
+</span><span id="__span-32-5"><a id="__codelineno-32-5" name="__codelineno-32-5" href="#__codelineno-32-5"></a><span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">b33_ff50</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">;</span>
+</span><span id="__span-32-6"><a id="__codelineno-32-6" name="__codelineno-32-6" href="#__codelineno-32-6"></a><span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">b33_trung</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">;</span>
+</span><span id="__span-32-7"><a id="__codelineno-32-7" name="__codelineno-32-7" href="#__codelineno-32-7"></a>
+</span><span id="__span-32-8"><a id="__codelineno-32-8" name="__codelineno-32-8" href="#__codelineno-32-8"></a><span class="c1">-- KỲ VỌNG: bang_con_lai = 0</span>
+</span><span id="__span-32-9"><a id="__codelineno-32-9" name="__codelineno-32-9" href="#__codelineno-32-9"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">bang_con_lai</span>
+</span><span id="__span-32-10"><a id="__codelineno-32-10" name="__codelineno-32-10" href="#__codelineno-32-10"></a><span class="k">FROM</span><span class="w"> </span><span class="n">information_schema</span><span class="p">.</span><span class="n">tables</span>
+</span><span id="__span-32-11"><a id="__codelineno-32-11" name="__codelineno-32-11" href="#__codelineno-32-11"></a><span class="k">WHERE</span><span class="w"> </span><span class="k">table_name</span><span class="w"> </span><span class="k">LIKE</span><span class="w"> </span><span class="s1">'b33\_%'</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Extension <code>pageinspect</code> được <strong>giữ lại</strong>, vì Bài 34 còn dùng nó để đo độ sâu của cây index. Việc <code>VACUUM diem_lon</code> cũng được giữ lại có chủ đích: nó không đổi dữ liệu, chỉ điền bản đồ hiển thị mà các bài sau cần.</p>
+<h2 id="tom-tat">🔑 Tóm tắt<a class="headerlink" href="#tom-tat" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Mỗi bảng là một <strong>tệp heap</strong> chứa các tuple xếp không theo thứ tự nào, chia thành những <strong>trang 8KB</strong>; PostgreSQL luôn đọc ghi <strong>nguyên trang</strong>, nên chi phí thật của một truy vấn là <strong>số trang</strong>, không phải số dòng. <code>diem_lon</code> có 4167 trang, mỗi trang 120 dòng.</li>
+<li>Một trang gồm đầu trang 24 byte, mảng <strong>con trỏ dòng</strong> mọc xuống, khoảng trống ở giữa, và các <strong>tuple</strong> mọc lên; mỗi tuple mang một <strong>đầu tuple</strong> 23 byte chứa <code>xmin</code>, <code>xmax</code>, <code>t_ctid</code>, nên dòng nhỏ tốn gần gấp đôi dữ liệu thật.</li>
+<li><strong><code>ctid</code></strong> = (số trang, số con trỏ dòng) là địa chỉ vật lý của tuple; nó <strong>đổi sau mỗi <code>UPDATE</code></strong> và sau <code>VACUUM FULL</code>, nên chỉ dùng được bên trong một câu lệnh, không bao giờ làm khoá.</li>
+<li><code>UPDATE</code> và <code>DELETE</code> <strong>không sửa tại chỗ</strong>: chúng điền <code>xmax</code> cho tuple cũ, để lại <strong>tuple chết</strong> làm bảng <strong>phình</strong>. <strong><code>VACUUM</code></strong> biến chỗ đó thành chỗ trống dùng lại được mà không trả đĩa cho hệ điều hành; <strong><code>VACUUM FULL</code></strong> trả đĩa nhưng khoá bảng; <strong>autovacuum</strong> tự làm việc này và không bao giờ nên tắt.</li>
+<li>Ô lớn được <strong>TOAST</strong> — nén, rồi nếu vẫn quá khoảng 2KB thì cắt ra bảng phụ, trên dòng chính chỉ còn con trỏ; còn <strong>fill factor</strong> chừa chỗ trống mỗi trang để <code>UPDATE</code> thành <strong>HOT update</strong> cùng trang, đổi lại bảng cần nhiều trang hơn — mặc định 100 là đúng cho mọi bảng bạn chưa đo.</li>
+</ol>
+<hr />
+<p>⬅️ <a href="../../cap-3-sql/32-jsonb-va-full-text-search/">Bài 32 — JSONB và Full-Text Search</a> · ➡️ <a href="../34-index-va-b-tree/">Bài 34 — Index và B+Tree</a></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Trở lại mục lục
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Chân trang" >
+        
+          
+          <a href="../../cap-3-sql/32-jsonb-va-full-text-search/" class="md-footer__link md-footer__link--prev" aria-label="Trước: Bài 32 — JSONB và Full-Text Search">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Trước
+              </span>
+              <div class="md-ellipsis">
+                Bài 32 — JSONB và Full-Text Search
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../34-index-va-b-tree/" class="md-footer__link md-footer__link--next" aria-label="Sau: Bài 34 — Index và B+Tree">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Sau
+              </span>
+              <div class="md-ellipsis">
+                Bài 34 — Index và B+Tree
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Nội dung theo giấy phép CC BY 4.0
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/hungnguyen010518/database-tu-a-z" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.sections", "navigation.top", "navigation.footer", "navigation.indexes", "navigation.tracking", "toc.follow", "content.code.copy", "content.code.annotate", "search.highlight", "search.suggest"], "search": "../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "\u0110\u00e3 sao ch\u00e9p", "clipboard.copy": "Sao ch\u00e9p v\u00e0o b\u1ed9 nh\u1edb t\u1ea1m", "search.result.more.one": "1 t\u1eeb kh\u00e1c trong trang", "search.result.more.other": "# t\u1eeb kh\u00e1c trong trang", "search.result.none": "Kh\u00f4ng t\u00ecm th\u1ea5y t\u00e0i li\u1ec7u li\u00ean quan", "search.result.one": "1 t\u00e0i li\u1ec7u li\u00ean quan", "search.result.other": "# t\u00e0i li\u1ec7u li\u00ean quan", "search.result.placeholder": "Nh\u1eadp \u0111\u1ec3 b\u1eaft \u0111\u1ea7u t\u00ecm ki\u1ebfm", "search.result.term.missing": "Kh\u00f4ng", "select.version": "Ch\u1ecdn phi\u00ean b\u1ea3n"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.525ec568.min.js"></script>
+      
+    
+  </body>
+</html>

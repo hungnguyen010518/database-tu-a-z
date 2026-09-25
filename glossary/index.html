@@ -1206,6 +1206,170 @@
   
   
   
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Cấp 4 — Bên trong động cơ
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            Cấp 4 — Bên trong động cơ
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cap-4-ben-trong-dong-co/33-page-heap-tuple/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 33 — Trang, heap và tuple: PostgreSQL lưu dữ liệu thế nào
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cap-4-ben-trong-dong-co/34-index-va-b-tree/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 34 — Index và B+Tree
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cap-4-ben-trong-dong-co/35-cac-loai-index-khac/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 35 — Các loại index khác: Hash, GiST, GIN, BRIN
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cap-4-ben-trong-dong-co/36-explain-va-query-planner/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 36 — EXPLAIN và bộ tối ưu truy vấn
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cap-4-ben-trong-dong-co/37-transaction-va-acid/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 37 — Transaction và ACID
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
     <li class="md-nav__item">
       <a href="../dataset/" class="md-nav__link">
         
@@ -1761,7 +1925,7 @@
 <p>Bảng được sắp xếp theo thứ tự chữ cái của <strong>thuật ngữ tiếng Anh</strong>, vì đó là dạng bạn sẽ gặp khi đọc tài liệu và khi đi phỏng vấn.</p>
 <div class="admonition info">
 <p class="admonition-title">Bảng này lớn dần theo khóa học</p>
-<p>Mỗi khi một cấp độ mới được xuất bản, thuật ngữ của cấp đó được bổ sung vào đây. Hiện bảng phủ trọn <strong>Bài 1–32</strong>: Cấp 0 (Nhập môn), Cấp 1 (Mô hình quan hệ &amp; ER), Cấp 2 (Chuẩn hoá) và toàn bộ Cấp 3 (SQL).</p>
+<p>Mỗi khi một cấp độ mới được xuất bản, thuật ngữ của cấp đó được bổ sung vào đây. Hiện bảng phủ trọn <strong>Bài 1–37</strong>: Cấp 0 (Nhập môn), Cấp 1 (Mô hình quan hệ &amp; ER), Cấp 2 (Chuẩn hoá), toàn bộ Cấp 3 (SQL) và nửa đầu Cấp 4 (Bên trong động cơ).</p>
 </div>
 <div class="admonition tip">
 <p class="admonition-title">Vì sao có nhiều từ trùng nghĩa?</p>
@@ -1798,6 +1962,18 @@
 </thead>
 <tbody>
 <tr>
+<td>Giao dịch bị hỏng</td>
+<td><em>aborted transaction</em></td>
+<td>Giao dịch có một câu lỗi; mọi lệnh sau bị từ chối (<em>current transaction is aborted</em>) cho tới <code>ROLLBACK</code> hoặc <code>ROLLBACK TO SAVEPOINT</code></td>
+<td><a href="../cap-4-ben-trong-dong-co/37-transaction-va-acid/">Bài 37</a></td>
+</tr>
+<tr>
+<td>Bốn tính chất ACID</td>
+<td><em>ACID</em></td>
+<td>Nguyên tử, nhất quán, cô lập, bền vững — bốn lời hứa của một giao dịch đáng tin</td>
+<td><a href="../cap-4-ben-trong-dong-co/37-transaction-va-acid/">Bài 37</a></td>
+</tr>
+<tr>
 <td>Danh sách kề</td>
 <td><em>adjacency list</em></td>
 <td>Cách lưu cây bằng một cột "mã cha" trên mỗi dòng — mỗi nút chỉ biết cha trực tiếp của mình</td>
@@ -1832,6 +2008,12 @@
 <td><em>alternate key</em></td>
 <td>Khoá dự tuyển không được chọn làm khoá chính, thường giữ bằng <code>UNIQUE</code></td>
 <td><a href="../cap-1-mo-hinh-er/12-bay-loai-khoa/">Bài 12</a></td>
+</tr>
+<tr>
+<td>Lệnh thu thống kê</td>
+<td><em>ANALYZE</em></td>
+<td>Lấy mẫu khoảng 30.000 dòng để cập nhật thống kê cho planner; khác với <code>EXPLAIN ANALYZE</code> là chạy thật và đo</td>
+<td><a href="../cap-4-ben-trong-dong-co/36-explain-va-query-planner/">Bài 36</a></td>
 </tr>
 <tr>
 <td>Phần neo</td>
@@ -1876,6 +2058,12 @@
 <td><a href="../cap-1-mo-hinh-er/06-mo-hinh-quan-he/">Bài 6</a></td>
 </tr>
 <tr>
+<td>Tính nguyên tử (giao dịch)</td>
+<td><em>atomicity</em> (ACID)</td>
+<td>Chữ <strong>A</strong> của ACID: hoặc mọi thao tác của giao dịch có hiệu lực, hoặc không thao tác nào — khác nghĩa "ô chứa một giá trị đơn" của Bài 6</td>
+<td><a href="../cap-4-ben-trong-dong-co/37-transaction-va-acid/">Bài 37</a></td>
+</tr>
+<tr>
 <td>Thuộc tính</td>
 <td><em>attribute</em></td>
 <td>Một cột trong bảng, mô tả một đặc điểm của bản ghi — tên học thuật của <em>column</em> và <em>field</em></td>
@@ -1905,6 +2093,18 @@
 <td>Tiên đề Armstrong: thêm cùng một nhóm thuộc tính vào cả hai vế thì luật vẫn đúng</td>
 <td><a href="../cap-2-chuan-hoa/16-phu-thuoc-ham/">Bài 16</a></td>
 </tr>
+<tr>
+<td>Tự động xác nhận</td>
+<td><em>autocommit</em></td>
+<td>Chế độ mặc định: mỗi câu lệnh đứng một mình là một giao dịch riêng</td>
+<td><a href="../cap-4-ben-trong-dong-co/37-transaction-va-acid/">Bài 37</a></td>
+</tr>
+<tr>
+<td>Dọn rác tự động</td>
+<td><em>autovacuum</em></td>
+<td>Tiến trình nền tự <code>VACUUM</code> và <code>ANALYZE</code> các bảng khi số tuple chết hoặc số dòng thay đổi vượt ngưỡng; không nên tắt</td>
+<td><a href="../cap-4-ben-trong-dong-co/33-page-heap-tuple/">Bài 33</a></td>
+</tr>
 </tbody>
 </table>
 <h2 id="b">B<a class="headerlink" href="#b" title="Permanent link">&para;</a></h2>
@@ -1919,16 +2119,70 @@
 </thead>
 <tbody>
 <tr>
+<td>Cây B+</td>
+<td><em>B+Tree</em></td>
+<td>Biến thể B-Tree chỉ lưu <code>ctid</code> ở tầng lá và nối các lá thành chuỗi để quét khoảng; là index mặc định <code>btree</code> của PostgreSQL</td>
+<td><a href="../cap-4-ben-trong-dong-co/34-index-va-b-tree/">Bài 34</a></td>
+</tr>
+<tr>
+<td>Cây B</td>
+<td><em>B-Tree</em></td>
+<td>Cây cân bằng, mỗi nút là một trang chứa nhiều khoá; mọi đường từ gốc xuống đáy dài bằng nhau</td>
+<td><a href="../cap-4-ben-trong-dong-co/34-index-va-b-tree/">Bài 34</a></td>
+</tr>
+<tr>
+<td>Mở giao dịch</td>
+<td><em>BEGIN</em></td>
+<td>Bắt đầu một giao dịch; mọi lệnh sau đó thuộc về nó cho tới <code>COMMIT</code> hoặc <code>ROLLBACK</code></td>
+<td><a href="../cap-4-ben-trong-dong-co/37-transaction-va-acid/">Bài 37</a></td>
+</tr>
+<tr>
 <td>Hai ngôi</td>
 <td><em>binary</em></td>
 <td>Mối quan hệ có đúng hai tập thực thể tham gia — loại phổ biến nhất</td>
 <td><a href="../cap-1-mo-hinh-er/08-moi-quan-he-va-cardinality/">Bài 8</a></td>
 </tr>
 <tr>
+<td>Quét heap theo bitmap</td>
+<td><em>bitmap heap scan</em></td>
+<td>Gom mọi <code>ctid</code> từ index theo số trang trước, rồi đọc mỗi trang heap đúng một lần — <code>Bitmap Heap Scan</code></td>
+<td><a href="../cap-4-ben-trong-dong-co/34-index-va-b-tree/">Bài 34</a></td>
+</tr>
+<tr>
+<td>Phình</td>
+<td><em>bloat</em></td>
+<td>Bảng chiếm nhiều trang hơn hẳn lượng dữ liệu sống bên trong vì tích tụ tuple chết</td>
+<td><a href="../cap-4-ben-trong-dong-co/33-page-heap-tuple/">Bài 33</a></td>
+</tr>
+<tr>
+<td>Khối</td>
+<td><em>block</em></td>
+<td>Tên gọi khác của trang — miếng 8KB mà PostgreSQL đọc ghi</td>
+<td><a href="../cap-4-ben-trong-dong-co/33-page-heap-tuple/">Bài 33</a></td>
+</tr>
+<tr>
+<td>Index khoảng khối</td>
+<td><em>Block Range Index</em> (BRIN)</td>
+<td>Lưu giá trị nhỏ nhất và lớn nhất cho mỗi dải 128 trang liền nhau; cực nhỏ, chỉ có ích khi tương quan gần 1</td>
+<td><a href="../cap-4-ben-trong-dong-co/35-cac-loai-index-khac/">Bài 35</a></td>
+</tr>
+<tr>
 <td>BCNF</td>
 <td><em>Boyce–Codd Normal Form</em></td>
 <td>Dạng chuẩn bỏ hẳn lối thoát của 3NF: mọi định thức đều phải là siêu khoá</td>
 <td><a href="../cap-2-chuan-hoa/18-dang-chuan-3nf-bcnf/">Bài 18</a></td>
+</tr>
+<tr>
+<td>Ngăn</td>
+<td><em>bucket</em></td>
+<td>Ô chứa của index băm; hàm băm của giá trị quyết định giá trị rơi vào ngăn nào</td>
+<td><a href="../cap-4-ben-trong-dong-co/35-cac-loai-index-khac/">Bài 35</a></td>
+</tr>
+<tr>
+<td>Tuỳ chọn đếm trang</td>
+<td><em>BUFFERS</em></td>
+<td>Tuỳ chọn của <code>EXPLAIN</code> in số trang mỗi nút đã chạm tới: <code>shared hit</code> từ bộ đệm, <code>read</code> phải xin hệ điều hành</td>
+<td><a href="../cap-4-ben-trong-dong-co/36-explain-va-query-planner/">Bài 36</a></td>
 </tr>
 </tbody>
 </table>
@@ -2046,6 +2300,12 @@
 <td><a href="../cap-0-nhap-mon/04-cac-mo-hinh-du-lieu/">Bài 4</a></td>
 </tr>
 <tr>
+<td>Xác nhận</td>
+<td><em>COMMIT</em></td>
+<td>Chốt giao dịch: thay đổi thành vĩnh viễn và người khác nhìn thấy</td>
+<td><a href="../cap-4-ben-trong-dong-co/37-transaction-va-acid/">Bài 37</a></td>
+</tr>
+<tr>
 <td>Biểu thức bảng dùng chung</td>
 <td><em>Common Table Expression</em> (CTE)</td>
 <td>Bảng tạm có tên, khai bằng <code>WITH</code> ở đầu câu lệnh và chỉ sống trong đúng câu lệnh đó</td>
@@ -2062,6 +2322,12 @@
 <td><em>composite attribute</em></td>
 <td>Thuộc tính tách được thành nhiều thuộc tính con có ý nghĩa riêng</td>
 <td><a href="../cap-1-mo-hinh-er/07-thuc-the-va-thuoc-tinh/">Bài 7</a></td>
+</tr>
+<tr>
+<td>Index phức hợp</td>
+<td><em>composite index</em></td>
+<td>Index trên nhiều cột, sắp theo cột đầu trước rồi mới tới cột sau</td>
+<td><a href="../cap-4-ben-trong-dong-co/34-index-va-b-tree/">Bài 34</a></td>
 </tr>
 <tr>
 <td>Khoá phức hợp</td>
@@ -2082,6 +2348,12 @@
 <td><a href="../cap-0-nhap-mon/02-tu-so-giay-den-excel/">Bài 2</a></td>
 </tr>
 <tr>
+<td>Tính nhất quán</td>
+<td><em>consistency</em></td>
+<td>Chữ <strong>C</strong> của ACID: giao dịch chỉ đưa database từ trạng thái hợp lệ sang trạng thái hợp lệ, theo các ràng buộc đã khai báo</td>
+<td><a href="../cap-4-ben-trong-dong-co/37-transaction-va-acid/">Bài 37</a></td>
+</tr>
+<tr>
 <td>Vùng chứa</td>
 <td><em>container</em></td>
 <td>Cái hộp chạy sẵn một phần mềm, tách biệt hẳn với máy thật</td>
@@ -2092,6 +2364,24 @@
 <td><em>correlated subquery</em></td>
 <td>Truy vấn con có tham chiếu cột của truy vấn ngoài, nên về ngữ nghĩa phải chạy lại một lần cho mỗi dòng ngoài</td>
 <td><a href="../cap-3-sql/27-subquery-va-exists/">Bài 27</a></td>
+</tr>
+<tr>
+<td>Tính tương quan</td>
+<td><em>correlation</em></td>
+<td>Thứ tự giá trị trong cột khớp tới đâu với thứ tự vật lý trên heap, từ −1 tới 1; lưu trong <code>pg_stats</code></td>
+<td><a href="../cap-4-ben-trong-dong-co/34-index-va-b-tree/">Bài 34</a></td>
+</tr>
+<tr>
+<td>Bộ tối ưu dựa trên chi phí</td>
+<td><em>cost-based optimizer</em></td>
+<td>Planner liệt kê nhiều cách chạy, ước lượng chi phí từng cách và chọn cách rẻ nhất theo ước lượng</td>
+<td><a href="../cap-4-ben-trong-dong-co/36-explain-va-query-planner/">Bài 36</a></td>
+</tr>
+<tr>
+<td>Index phủ</td>
+<td><em>covering index</em></td>
+<td>Index chứa đủ mọi cột truy vấn cần, thường nhờ <code>INCLUDE</code>, để chạy được <code>Index Only Scan</code></td>
+<td><a href="../cap-4-ben-trong-dong-co/34-index-va-b-tree/">Bài 34</a></td>
 </tr>
 <tr>
 <td>Kết nối chéo</td>
@@ -2110,6 +2400,12 @@
 <td><em>Crow's Foot notation</em></td>
 <td>Bộ ký hiệu ER gọn: cột liệt kê bên trong hình chữ nhật, bản số ghi bằng ký hiệu ở đầu đường</td>
 <td><a href="../cap-1-mo-hinh-er/11-bieu-do-er-crows-foot/">Bài 11</a></td>
+</tr>
+<tr>
+<td>Địa chỉ tuple</td>
+<td><em>ctid</em></td>
+<td>Cặp (số trang, số con trỏ dòng); đổi sau mỗi <code>UPDATE</code> nên không bao giờ dùng làm khoá</td>
+<td><a href="../cap-4-ben-trong-dong-co/33-page-heap-tuple/">Bài 33</a></td>
 </tr>
 <tr>
 <td>Gom theo mọi tổ hợp</td>
@@ -2239,6 +2535,12 @@
 <td><a href="../cap-0-nhap-mon/03-dbms-la-gi/">Bài 3</a></td>
 </tr>
 <tr>
+<td>Tuple chết</td>
+<td><em>dead tuple</em></td>
+<td>Phiên bản cũ của một dòng sau <code>UPDATE</code>/<code>DELETE</code>, không ai còn thấy nhưng vẫn chiếm chỗ tới khi <code>VACUUM</code> dọn</td>
+<td><a href="../cap-4-ben-trong-dong-co/33-page-heap-tuple/">Bài 33</a></td>
+</tr>
+<tr>
 <td>Bế tắc</td>
 <td><em>deadlock</em></td>
 <td>Hai giao dịch chờ khoá của nhau nên không ai đi tiếp được; hay xảy ra khi chúng lấy khoá theo hai thứ tự khác nhau</td>
@@ -2255,6 +2557,12 @@
 <td><em>decomposition</em></td>
 <td>Luật suy diễn: <code>X → YZ</code> thì <code>X → Y</code> và <code>X → Z</code></td>
 <td><a href="../cap-2-chuan-hoa/16-phu-thuoc-ham/">Bài 16</a></td>
+</tr>
+<tr>
+<td>Khử trùng lặp</td>
+<td><em>deduplication</em></td>
+<td>Index B-Tree ghi một khoá lặp nhiều lần đúng một lần kèm danh sách <code>ctid</code>, nên index trên cột nhiều giá trị trùng gọn hơn tỉ lệ</td>
+<td><a href="../cap-4-ben-trong-dong-co/34-index-va-b-tree/">Bài 34</a></td>
 </tr>
 <tr>
 <td>Giá trị mặc định</td>
@@ -2376,6 +2684,12 @@
 <td>Mọi ô phải nằm trong miền giá trị hợp lệ của cột</td>
 <td><a href="../cap-1-mo-hinh-er/15-rang-buoc-toan-ven/">Bài 15</a></td>
 </tr>
+<tr>
+<td>Tính bền vững</td>
+<td><em>durability</em></td>
+<td>Chữ <strong>D</strong> của ACID: đã <code>COMMIT</code> thì không mất, kể cả mất điện ngay sau đó</td>
+<td><a href="../cap-4-ben-trong-dong-co/37-transaction-va-acid/">Bài 37</a></td>
+</tr>
 </tbody>
 </table>
 <h2 id="e">E<a class="headerlink" href="#e" title="Permanent link">&para;</a></h2>
@@ -2432,16 +2746,46 @@
 <td><a href="../cap-1-mo-hinh-er/14-chuyen-er-sang-bang/">Bài 14</a></td>
 </tr>
 <tr>
+<td>Chi phí ước lượng</td>
+<td><em>estimated cost</em></td>
+<td>Con số planner dùng để so các kế hoạch, đo bằng đơn vị tuỳ ý với mốc đọc một trang tuần tự = 1 — không phải mili giây</td>
+<td><a href="../cap-4-ben-trong-dong-co/36-explain-va-query-planner/">Bài 36</a></td>
+</tr>
+<tr>
 <td>Bảng ảo dòng bị từ chối</td>
 <td><em>EXCLUDED</em></td>
 <td>Bảng ảo trong <code>ON CONFLICT DO UPDATE</code>, chứa đúng dòng <strong>mới</strong> vừa định thêm nhưng bị đụng độ</td>
 <td><a href="../cap-3-sql/23-dml-insert-update-delete/">Bài 23</a></td>
 </tr>
 <tr>
+<td>Ràng buộc loại trừ</td>
+<td><em>exclusion constraint</em></td>
+<td>Cấm hai dòng cùng thoả một bộ toán tử, ví dụ cùng phòng và giờ chồng nhau; cưỡng chế bằng index GiST</td>
+<td><a href="../cap-4-ben-trong-dong-co/35-cac-loai-index-khac/">Bài 35</a></td>
+</tr>
+<tr>
+<td>Kế hoạch thực thi</td>
+<td><em>execution plan</em></td>
+<td>Cách chạy cụ thể mà planner đã chọn cho một câu truy vấn</td>
+<td><a href="../cap-4-ben-trong-dong-co/36-explain-va-query-planner/">Bài 36</a></td>
+</tr>
+<tr>
 <td>Ràng buộc tồn tại</td>
 <td><em>existence dependency</em></td>
 <td>Tên gọi khác của tham gia toàn phần: thực thể không được phép tồn tại nếu thiếu liên kết đó</td>
 <td><a href="../cap-1-mo-hinh-er/09-participation-va-thuc-the-yeu/">Bài 9</a></td>
+</tr>
+<tr>
+<td>Lệnh xem kế hoạch</td>
+<td><em>EXPLAIN</em></td>
+<td>In kế hoạch thực thi mà không chạy; thêm <code>ANALYZE</code> để chạy thật và đo, thêm <code>BUFFERS</code> để đếm trang</td>
+<td><a href="../cap-4-ben-trong-dong-co/36-explain-va-query-planner/">Bài 36</a></td>
+</tr>
+<tr>
+<td>Index biểu thức</td>
+<td><em>expression index</em></td>
+<td>Index trên kết quả của một biểu thức <code>IMMUTABLE</code>, như <code>lower(ho_ten)</code>; chỉ dùng khi truy vấn viết đúng biểu thức đó</td>
+<td><a href="../cap-4-ben-trong-dong-co/34-index-va-b-tree/">Bài 34</a></td>
 </tr>
 <tr>
 <td>Mức ngoài</td>
@@ -2469,6 +2813,12 @@
 <td><a href="../cap-2-chuan-hoa/19-dang-chuan-4nf-5nf-6nf/">Bài 19</a></td>
 </tr>
 <tr>
+<td>Hệ số phân nhánh</td>
+<td><em>fan-out</em></td>
+<td>Số nhánh con của một nút trong cây index — vài trăm với khoá số nguyên, nên cây rất nông</td>
+<td><a href="../cap-4-ben-trong-dong-co/34-index-va-b-tree/">Bài 34</a></td>
+</tr>
+<tr>
 <td>Trường</td>
 <td><em>field</em></td>
 <td>Một cột trong bảng — cách gọi khác của <em>column</em> và <em>attribute</em></td>
@@ -2479,6 +2829,12 @@
 <td><em>Fifth Normal Form — 5NF / PJ-NF</em></td>
 <td>Mọi phụ thuộc kết nối không tầm thường của bảng đều suy ra được từ các khoá dự tuyển</td>
 <td><a href="../cap-2-chuan-hoa/19-dang-chuan-4nf-5nf-6nf/">Bài 19</a></td>
+</tr>
+<tr>
+<td>Hệ số lấp đầy</td>
+<td><em>fill factor</em></td>
+<td>Tỉ lệ phần trăm một trang được lấp khi thêm dòng, chừa phần còn lại cho <code>UPDATE</code> cùng trang</td>
+<td><a href="../cap-4-ben-trong-dong-co/33-page-heap-tuple/">Bài 33</a></td>
 </tr>
 <tr>
 <td>Lọc riêng cho một hàm</td>
@@ -2509,6 +2865,12 @@
 <td><em>Fourth Normal Form — 4NF</em></td>
 <td>Bảng đã ở BCNF và mọi định thức đa trị đều là siêu khoá</td>
 <td><a href="../cap-2-chuan-hoa/19-dang-chuan-4nf-5nf-6nf/">Bài 19</a></td>
+</tr>
+<tr>
+<td>Bản đồ chỗ trống</td>
+<td><em>free space map</em></td>
+<td>Tệp phụ ghi mỗi trang còn trống bao nhiêu, để lần ghi sau biết chỗ mà nhét</td>
+<td><a href="../cap-4-ben-trong-dong-co/33-page-heap-tuple/">Bài 33</a></td>
 </tr>
 <tr>
 <td>Phụ thuộc đầy đủ</td>
@@ -2560,6 +2922,12 @@
 <td><a href="../cap-3-sql/32-jsonb-va-full-text-search/">Bài 32</a></td>
 </tr>
 <tr>
+<td>Cây tìm kiếm tổng quát</td>
+<td><em>Generalized Search Tree</em> (GiST)</td>
+<td>Khung cây lưu vùng bao ở mỗi nút; phục vụ hình học, khoảng, tìm gần nhất, ràng buộc loại trừ</td>
+<td><a href="../cap-4-ben-trong-dong-co/35-cac-loai-index-khac/">Bài 35</a></td>
+</tr>
+<tr>
 <td>Cột sinh sẵn</td>
 <td><em>generated column</em></td>
 <td>Cột có giá trị tính từ các cột khác bằng một biểu thức <code>IMMUTABLE</code>, tự cập nhật mà không cần trigger</td>
@@ -2597,16 +2965,46 @@
 </thead>
 <tbody>
 <tr>
+<td>Index băm</td>
+<td><em>hash index</em></td>
+<td>Index chỉ trả lời phép so sánh bằng, lưu mã băm thay cho giá trị — chỉ nhỏ hơn B-Tree khi khoá rất dài</td>
+<td><a href="../cap-4-ben-trong-dong-co/35-cac-loai-index-khac/">Bài 35</a></td>
+</tr>
+<tr>
+<td>Nối băm</td>
+<td><em>hash join</em></td>
+<td>Dựng bảng băm từ bảng nhỏ rồi quét bảng lớn một lượt; thắng khi cả hai bên nhiều dòng</td>
+<td><a href="../cap-4-ben-trong-dong-co/36-explain-va-query-planner/">Bài 36</a></td>
+</tr>
+<tr>
 <td>Lọc nhóm</td>
 <td><em>HAVING</em></td>
 <td>Lọc trên <strong>nhóm</strong> sau khi đã gom, nên dùng được hàm tổng hợp; khác <code>WHERE</code> vốn lọc từng dòng</td>
 <td><a href="../cap-3-sql/26-group-by-having/">Bài 26</a></td>
 </tr>
 <tr>
+<td>Tệp đống</td>
+<td><em>heap</em></td>
+<td>Tệp chứa các dòng của một bảng, xếp không theo thứ tự nào</td>
+<td><a href="../cap-4-ben-trong-dong-co/33-page-heap-tuple/">Bài 33</a></td>
+</tr>
+<tr>
+<td>Cập nhật chỉ trên heap</td>
+<td><em>Heap-Only Tuple</em> (HOT)</td>
+<td><code>UPDATE</code> mà tuple mới nằm cùng trang và không cột nào có index bị sửa — khỏi phải sửa index</td>
+<td><a href="../cap-4-ben-trong-dong-co/33-page-heap-tuple/">Bài 33</a></td>
+</tr>
+<tr>
 <td>Mô hình phân cấp</td>
 <td><em>hierarchical model</em></td>
 <td>Mô hình tổ chức dữ liệu thành cây: mỗi bản ghi có đúng một bản ghi cha</td>
 <td><a href="../cap-0-nhap-mon/04-cac-mo-hinh-du-lieu/">Bài 4</a></td>
+</tr>
+<tr>
+<td>Biểu đồ tần suất</td>
+<td><em>histogram</em></td>
+<td>Các mốc chia giá trị của cột thành khoảng 100 khoảng có số dòng xấp xỉ bằng nhau, dùng để ước lượng điều kiện khoảng</td>
+<td><a href="../cap-4-ben-trong-dong-co/36-explain-va-query-planner/">Bài 36</a></td>
 </tr>
 <tr>
 <td>Mở rộng ngang</td>
@@ -2662,6 +3060,24 @@
 <td><em>index</em></td>
 <td>Cấu trúc ở mức trong giúp tìm dữ liệu nhanh hơn</td>
 <td><a href="../cap-0-nhap-mon/03-dbms-la-gi/">Bài 3</a></td>
+</tr>
+<tr>
+<td>Phương thức truy cập index</td>
+<td><em>index access method</em></td>
+<td>Cách tổ chức một index — <code>btree</code>, <code>hash</code>, <code>gist</code>, <code>spgist</code>, <code>gin</code>, <code>brin</code> — chọn bằng <code>USING</code></td>
+<td><a href="../cap-4-ben-trong-dong-co/35-cac-loai-index-khac/">Bài 35</a></td>
+</tr>
+<tr>
+<td>Quét theo index</td>
+<td><em>index scan</em></td>
+<td>Đi cây index rồi nhảy sang heap cho từng khoá — <code>Index Scan</code></td>
+<td><a href="../cap-4-ben-trong-dong-co/34-index-va-b-tree/">Bài 34</a></td>
+</tr>
+<tr>
+<td>Quét chỉ index</td>
+<td><em>index-only scan</em></td>
+<td>Lấy dữ liệu thẳng từ index, không đụng heap — cần trang đã được đánh dấu trong bản đồ hiển thị</td>
+<td><a href="../cap-4-ben-trong-dong-co/34-index-va-b-tree/">Bài 34</a></td>
 </tr>
 <tr>
 <td>Đệ quy vô hạn</td>
@@ -2724,6 +3140,12 @@
 <td><a href="../cap-0-nhap-mon/03-dbms-la-gi/">Bài 3</a></td>
 </tr>
 <tr>
+<td>Nút trong</td>
+<td><em>internal node</em></td>
+<td>Trang ở tầng giữa của cây index, chỉ chứa khoá và con trỏ xuống tầng dưới</td>
+<td><a href="../cap-4-ben-trong-dong-co/34-index-va-b-tree/">Bài 34</a></td>
+</tr>
+<tr>
 <td>Phép giao</td>
 <td><em>intersection</em></td>
 <td>Phép ∩ lấy những dòng có mặt ở cả hai quan hệ; trong SQL là <code>INTERSECT</code></td>
@@ -2734,6 +3156,12 @@
 <td><em>IS-A relationship</em></td>
 <td>Quan hệ <em>một A là một B</em> giữa lớp con và lớp cha</td>
 <td><a href="../cap-1-mo-hinh-er/13-mo-hinh-eer/">Bài 13</a></td>
+</tr>
+<tr>
+<td>Tính cô lập</td>
+<td><em>isolation</em></td>
+<td>Chữ <strong>I</strong> của ACID: các giao dịch chạy đồng thời không thấy trạng thái dở dang của nhau</td>
+<td><a href="../cap-4-ben-trong-dong-co/37-transaction-va-acid/">Bài 37</a></td>
 </tr>
 </tbody>
 </table>
@@ -2805,16 +3233,34 @@
 <td><a href="../cap-3-sql/32-jsonb-va-full-text-search/">Bài 32</a></td>
 </tr>
 <tr>
+<td>Nút lá</td>
+<td><em>leaf node</em></td>
+<td>Trang ở tầng dưới cùng của cây index, chứa mọi khoá kèm <code>ctid</code>, nối với lá bên cạnh</td>
+<td><a href="../cap-4-ben-trong-dong-co/34-index-va-b-tree/">Bài 34</a></td>
+</tr>
+<tr>
 <td>Kết nối ngoài bên trái</td>
 <td><em>LEFT OUTER JOIN</em></td>
 <td>Giữ mọi dòng bảng trái; các cột bên phải được điền <code>NULL</code> khi không tìm được dòng khớp</td>
 <td><a href="../cap-3-sql/25-join/">Bài 25</a></td>
 </tr>
 <tr>
+<td>Quy tắc cột trái nhất</td>
+<td><em>leftmost prefix rule</em></td>
+<td>Index phức hợp chỉ dùng được khi điều kiện chứa một đoạn đầu liên tục của danh sách cột</td>
+<td><a href="../cap-4-ben-trong-dong-co/34-index-va-b-tree/">Bài 34</a></td>
+</tr>
+<tr>
 <td>Từ tố</td>
 <td><em>lexeme</em></td>
 <td>Một từ đã được chuẩn hoá trong <code>tsvector</code> — đơn vị mà full-text search thật sự so khớp</td>
 <td><a href="../cap-3-sql/32-jsonb-va-full-text-search/">Bài 32</a></td>
+</tr>
+<tr>
+<td>Con trỏ dòng</td>
+<td><em>line pointer</em></td>
+<td>Ô 4 byte ở đầu trang ghi vị trí của một tuple; cho phép dời tuple trong trang mà không đổi địa chỉ</td>
+<td><a href="../cap-4-ben-trong-dong-co/33-page-heap-tuple/">Bài 33</a></td>
 </tr>
 <tr>
 <td>Tranh chấp khoá</td>
@@ -2845,6 +3291,12 @@
 <td><em>lossless-join decomposition</em></td>
 <td>Tách bảng rồi nối lại ra đúng bảng gốc: không thiếu dòng nào và không sinh thêm dòng nào</td>
 <td><a href="../cap-2-chuan-hoa/18-dang-chuan-3nf-bcnf/">Bài 18</a></td>
+</tr>
+<tr>
+<td>Index xấp xỉ</td>
+<td><em>lossy index</em></td>
+<td>Index có thể trả thừa dòng; PostgreSQL kiểm tra lại trên heap (<code>Recheck Cond</code>) nên kết quả vẫn đúng</td>
+<td><a href="../cap-4-ben-trong-dong-co/35-cac-loai-index-khac/">Bài 35</a></td>
 </tr>
 <tr>
 <td>Mất cập nhật</td>
@@ -2878,6 +3330,12 @@
 <td><a href="../cap-0-nhap-mon/03-dbms-la-gi/">Bài 3</a></td>
 </tr>
 <tr>
+<td>Nối trộn</td>
+<td><em>merge join</em></td>
+<td>Đi song song hai danh sách đã sắp theo cột nối; thắng khi dữ liệu đã có thứ tự</td>
+<td><a href="../cap-4-ben-trong-dong-co/36-explain-va-query-planner/">Bài 36</a></td>
+</tr>
+<tr>
 <td>Lệnh meta</td>
 <td><em>meta-command</em></td>
 <td>Lệnh của riêng <code>psql</code>, bắt đầu bằng <code>\</code> và không có dấu chấm phẩy</td>
@@ -2894,6 +3352,12 @@
 <td><em>minimal cover / canonical cover</em></td>
 <td>Bản rút gọn hết cỡ của một tập phụ thuộc hàm, vẫn suy ra được y hệt tập gốc</td>
 <td><a href="../cap-2-chuan-hoa/16-phu-thuoc-ham/">Bài 16</a></td>
+</tr>
+<tr>
+<td>Giá trị phổ biến nhất</td>
+<td><em>most common values</em> (MCV)</td>
+<td>Danh sách giá trị hay gặp nhất của một cột kèm tần suất, trong thống kê của planner</td>
+<td><a href="../cap-4-ben-trong-dong-co/36-explain-va-query-planner/">Bài 36</a></td>
 </tr>
 <tr>
 <td>Thuộc tính đa trị</td>
@@ -2933,6 +3397,12 @@
 </thead>
 <tbody>
 <tr>
+<td>Số giá trị phân biệt</td>
+<td><em>n_distinct</em></td>
+<td>Số giá trị khác nhau của một cột trong thống kê; số âm là tỉ lệ so với số dòng, <code>-1</code> là mọi giá trị đều khác nhau</td>
+<td><a href="../cap-4-ben-trong-dong-co/36-explain-va-query-planner/">Bài 36</a></td>
+</tr>
+<tr>
 <td>Kết nối tự nhiên</td>
 <td><em>natural join</em></td>
 <td>Equi join tự động trên mọi cột trùng tên và bỏ bớt cột lặp — tiện nhưng dễ đổi kết quả trong im lặng, nên tránh</td>
@@ -2949,6 +3419,18 @@
 <td><em>navigational programming</em></td>
 <td>Kiểu lập trình phải tự viết lộ trình đi theo con trỏ mới lấy được dữ liệu</td>
 <td><a href="../cap-0-nhap-mon/04-cac-mo-hinh-du-lieu/">Bài 4</a></td>
+</tr>
+<tr>
+<td>Tìm lân cận gần nhất</td>
+<td><em>nearest neighbor search</em></td>
+<td><code>ORDER BY cot &lt;-&gt; điểm LIMIT n</code> — trả lời thẳng từ cây GiST mà không tính khoảng cách tới mọi dòng</td>
+<td><a href="../cap-4-ben-trong-dong-co/35-cac-loai-index-khac/">Bài 35</a></td>
+</tr>
+<tr>
+<td>Nối vòng lặp lồng</td>
+<td><em>nested loop join</em></td>
+<td>Với mỗi dòng bảng ngoài, tìm dòng khớp ở bảng trong; thắng khi bảng ngoài rất ít dòng</td>
+<td><a href="../cap-4-ben-trong-dong-co/36-explain-va-query-planner/">Bài 36</a></td>
 </tr>
 <tr>
 <td>Mô hình mạng</td>
@@ -3018,6 +3500,12 @@
 <td><a href="../cap-0-nhap-mon/04-cac-mo-hinh-du-lieu/">Bài 4</a></td>
 </tr>
 <tr>
+<td>Lớp toán tử</td>
+<td><em>operator class</em></td>
+<td>Danh sách toán tử mà một phương thức index hỗ trợ cho một kiểu dữ liệu, ví dụ <code>gin_trgm_ops</code></td>
+<td><a href="../cap-4-ben-trong-dong-co/35-cac-loai-index-khac/">Bài 35</a></td>
+</tr>
+<tr>
 <td>Rào vật chất hoá</td>
 <td><em>optimization fence</em></td>
 <td>Khi việc vật chất hoá bị bắt buộc, nên bộ tối ưu không được đẩy điều kiện lọc từ ngoài vào trong nữa</td>
@@ -3061,6 +3549,12 @@
 </thead>
 <tbody>
 <tr>
+<td>Trang</td>
+<td><em>page</em></td>
+<td>Miếng 8KB — đơn vị nhỏ nhất PostgreSQL đọc ghi; chi phí thật của truy vấn tính bằng số trang</td>
+<td><a href="../cap-4-ben-trong-dong-co/33-page-heap-tuple/">Bài 33</a></td>
+</tr>
+<tr>
 <td>Phân trang</td>
 <td><em>pagination</em></td>
 <td>Cắt kết quả thành từng trang bằng <code>LIMIT</code> và <code>OFFSET</code></td>
@@ -3071,6 +3565,12 @@
 <td><em>partial functional dependency</em></td>
 <td><code>X → Y</code> mà chỉ một phần của <code>X</code> đã đủ xác định <code>Y</code> — vế trái thừa cột</td>
 <td><a href="../cap-2-chuan-hoa/16-phu-thuoc-ham/">Bài 16</a></td>
+</tr>
+<tr>
+<td>Index bộ phận</td>
+<td><em>partial index</em></td>
+<td>Index chỉ chứa những dòng thoả một điều kiện <code>WHERE</code></td>
+<td><a href="../cap-4-ben-trong-dong-co/34-index-va-b-tree/">Bài 34</a></td>
 </tr>
 <tr>
 <td>Khoá bộ phận</td>
@@ -3113,6 +3613,24 @@
 <td><em>physical data independence</em></td>
 <td>Đổi mức trong mà mức khái niệm không phải đổi theo</td>
 <td><a href="../cap-0-nhap-mon/03-dbms-la-gi/">Bài 3</a></td>
+</tr>
+<tr>
+<td>Nút kế hoạch</td>
+<td><em>plan node</em></td>
+<td>Một bước trong cây kế hoạch — <code>Seq Scan</code>, <code>Hash Join</code>, <code>Sort</code>…</td>
+<td><a href="../cap-4-ben-trong-dong-co/36-explain-va-query-planner/">Bài 36</a></td>
+</tr>
+<tr>
+<td>Cây kế hoạch</td>
+<td><em>plan tree</em></td>
+<td>Hình cây của kế hoạch thực thi; đọc từ trong ra ngoài vì dữ liệu chảy từ nút sâu nhất lên nút trên cùng</td>
+<td><a href="../cap-4-ben-trong-dong-co/36-explain-va-query-planner/">Bài 36</a></td>
+</tr>
+<tr>
+<td>Bộ lập kế hoạch</td>
+<td><em>planner</em></td>
+<td>Bộ phận của PostgreSQL chọn cách chạy một câu truy vấn — bộ tối ưu truy vấn của PostgreSQL</td>
+<td><a href="../cap-4-ben-trong-dong-co/36-explain-va-query-planner/">Bài 36</a></td>
 </tr>
 <tr>
 <td>Cổng</td>
@@ -3212,6 +3730,12 @@
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>Chi phí trang ngẫu nhiên</td>
+<td><em>random_page_cost</em></td>
+<td>Chi phí đọc một trang nhảy cóc, mặc định 4; ổ SSD thường chỉnh xuống khoảng 1.1</td>
+<td><a href="../cap-4-ben-trong-dong-co/36-explain-va-query-planner/">Bài 36</a></td>
+</tr>
 <tr>
 <td>Hệ quản trị cơ sở dữ liệu quan hệ</td>
 <td><em>RDBMS — relational database management system</em></td>
@@ -3339,10 +3863,22 @@
 <td><a href="../cap-0-nhap-mon/05-cai-dat-postgresql/">Bài 5</a></td>
 </tr>
 <tr>
+<td>Huỷ bỏ</td>
+<td><em>ROLLBACK</em></td>
+<td>Huỷ giao dịch: mọi thay đổi biến mất như chưa từng có</td>
+<td><a href="../cap-4-ben-trong-dong-co/37-transaction-va-acid/">Bài 37</a></td>
+</tr>
+<tr>
 <td>Gom theo thứ bậc</td>
 <td><em>ROLLUP</em></td>
 <td>Mệnh đề sinh thêm dòng tổng theo thứ bậc cha–con, ví dụ lớp → khối → toàn trường</td>
 <td><a href="../cap-3-sql/26-group-by-having/">Bài 26</a></td>
+</tr>
+<tr>
+<td>Nút gốc</td>
+<td><em>root node</em></td>
+<td>Trang duy nhất trên cùng của cây index, nơi mọi lần tìm bắt đầu</td>
+<td><a href="../cap-4-ben-trong-dong-co/34-index-va-b-tree/">Bài 34</a></td>
 </tr>
 <tr>
 <td>Dòng</td>
@@ -3370,6 +3906,12 @@
 </thead>
 <tbody>
 <tr>
+<td>Điểm lưu</td>
+<td><em>SAVEPOINT</em></td>
+<td>Mốc giữa giao dịch; <code>ROLLBACK TO SAVEPOINT</code> huỷ phần sau mốc mà giữ phần trước</td>
+<td><a href="../cap-4-ben-trong-dong-co/37-transaction-va-acid/">Bài 37</a></td>
+</tr>
+<tr>
 <td>Truy vấn con vô hướng</td>
 <td><em>scalar subquery</em></td>
 <td>Truy vấn con trả về đúng 1 dòng 1 cột, dùng được ở mọi chỗ chờ một giá trị; trả về 0 dòng thì cho <code>NULL</code></td>
@@ -3392,6 +3934,12 @@
 <td><em>selection</em></td>
 <td>Phép σ giữ lại những dòng thoả điều kiện — cắt ngang; trong SQL là <code>WHERE</code></td>
 <td><a href="../cap-3-sql/21-dai-so-quan-he/">Bài 21</a></td>
+</tr>
+<tr>
+<td>Tính chọn lọc</td>
+<td><em>selectivity</em></td>
+<td>Tỉ lệ dòng mà điều kiện giữ lại; tỉ lệ càng nhỏ, điều kiện càng chọn lọc mạnh</td>
+<td><a href="../cap-4-ben-trong-dong-co/34-index-va-b-tree/">Bài 34</a></td>
 </tr>
 <tr>
 <td>Tự kết nối</td>
@@ -3418,16 +3966,34 @@
 <td><a href="../cap-3-sql/32-jsonb-va-full-text-search/">Bài 32</a></td>
 </tr>
 <tr>
+<td>Chi phí trang tuần tự</td>
+<td><em>seq_page_cost</em></td>
+<td>Chi phí đọc một trang theo thứ tự, mặc định 1 — mốc chuẩn của mọi chi phí ước lượng</td>
+<td><a href="../cap-4-ben-trong-dong-co/36-explain-va-query-planner/">Bài 36</a></td>
+</tr>
+<tr>
 <td>Bộ đếm</td>
 <td><em>sequence</em></td>
 <td>Đối tượng sinh số tăng dần — là thứ nằm sau từ viết tắt <code>SERIAL</code></td>
 <td><a href="../cap-3-sql/22-ddl-va-kieu-du-lieu/">Bài 22</a></td>
 </tr>
 <tr>
+<td>Quét toàn bảng</td>
+<td><em>sequential scan</em></td>
+<td>Đọc mọi trang heap theo thứ tự — <code>Seq Scan</code></td>
+<td><a href="../cap-4-ben-trong-dong-co/34-index-va-b-tree/">Bài 34</a></td>
+</tr>
+<tr>
 <td>Máy chủ</td>
 <td><em>server</em></td>
 <td>Chương trình chạy âm thầm và liên tục ở nền, nằm chờ máy khách gõ cửa</td>
 <td><a href="../cap-0-nhap-mon/05-cai-dat-postgresql/">Bài 5</a></td>
+</tr>
+<tr>
+<td>Bộ đệm dùng chung</td>
+<td><em>shared buffers</em></td>
+<td>Vùng nhớ PostgreSQL giữ các trang vừa dùng; <code>shared hit</code> là trang lấy được từ đây</td>
+<td><a href="../cap-4-ben-trong-dong-co/36-explain-va-query-planner/">Bài 36</a></td>
 </tr>
 <tr>
 <td>Thuộc tính đơn</td>
@@ -3466,6 +4032,12 @@
 <td><a href="../cap-2-chuan-hoa/16-phu-thuoc-ham/">Bài 16</a></td>
 </tr>
 <tr>
+<td>GiST phân hoạch không gian</td>
+<td><em>Space-Partitioned GiST</em> (SP-GiST)</td>
+<td>Cây không cân bằng chia không gian thành các phần không chồng nhau; hợp dữ liệu phân bố rất lệch</td>
+<td><a href="../cap-4-ben-trong-dong-co/35-cac-loai-index-khac/">Bài 35</a></td>
+</tr>
+<tr>
 <td>Chuyên biệt hoá</td>
 <td><em>specialization</em></td>
 <td>Đi từ lớp cha xuống: nhận ra các nhóm khác nhau bên trong rồi tách thành lớp con</td>
@@ -3500,6 +4072,18 @@
 <td><em>star schema</em></td>
 <td>Kiểu phi chuẩn hoá có hệ thống, dành cho kho dữ liệu phân tích chỉ đọc</td>
 <td><a href="../cap-2-chuan-hoa/20-denormalization/">Bài 20</a></td>
+</tr>
+<tr>
+<td>Chi phí khởi động</td>
+<td><em>startup cost</em></td>
+<td>Chi phí trước khi trả được dòng đầu tiên — số thứ nhất trong <code>cost=a..b</code></td>
+<td><a href="../cap-4-ben-trong-dong-co/36-explain-va-query-planner/">Bài 36</a></td>
+</tr>
+<tr>
+<td>Thống kê</td>
+<td><em>statistics</em></td>
+<td>Bản tóm tắt từng cột — <code>n_distinct</code>, MCV, histogram, tương quan — do <code>ANALYZE</code> thu từ một mẫu ngẫu nhiên</td>
+<td><a href="../cap-4-ben-trong-dong-co/36-explain-va-query-planner/">Bài 36</a></td>
 </tr>
 <tr>
 <td>Đưa về dạng gốc</td>
@@ -3623,6 +4207,12 @@
 <td><a href="../cap-3-sql/32-jsonb-va-full-text-search/">Bài 32</a></td>
 </tr>
 <tr>
+<td>Kỹ thuật lưu thuộc tính quá khổ</td>
+<td><em>The Oversized-Attribute Storage Technique</em> (TOAST)</td>
+<td>Nén ô lớn, nếu vẫn quá khoảng 2KB thì cắt ra bảng phụ, trên dòng chính chỉ để lại con trỏ</td>
+<td><a href="../cap-4-ben-trong-dong-co/33-page-heap-tuple/">Bài 33</a></td>
+</tr>
+<tr>
 <td>Kết nối theta</td>
 <td><em>theta join</em></td>
 <td>Kết nối với điều kiện so sánh bất kỳ, không chỉ dấu bằng</td>
@@ -3639,6 +4229,12 @@
 <td><em>three-valued logic</em></td>
 <td>Hệ logic của SQL, có thêm giá trị thứ ba <code>UNKNOWN</code> bên cạnh <code>TRUE</code> và <code>FALSE</code></td>
 <td><a href="../cap-3-sql/24-select-where-order-by/">Bài 24</a></td>
+</tr>
+<tr>
+<td>Tổng chi phí</td>
+<td><em>total cost</em></td>
+<td>Chi phí để trả hết mọi dòng, đã gồm chi phí các nút con — số thứ hai trong <code>cost=a..b</code></td>
+<td><a href="../cap-4-ben-trong-dong-co/36-explain-va-query-planner/">Bài 36</a></td>
 </tr>
 <tr>
 <td>Tham gia toàn phần</td>
@@ -3665,6 +4261,12 @@
 <td><a href="../cap-3-sql/22-ddl-va-kieu-du-lieu/">Bài 22</a></td>
 </tr>
 <tr>
+<td>DDL trong giao dịch</td>
+<td><em>transactional DDL</em></td>
+<td><code>CREATE</code>, <code>ALTER</code>, <code>DROP</code> nằm được trong giao dịch và bị <code>ROLLBACK</code> huỷ được</td>
+<td><a href="../cap-4-ben-trong-dong-co/37-transaction-va-acid/">Bài 37</a></td>
+</tr>
+<tr>
 <td>Phụ thuộc bắc cầu</td>
 <td><em>transitive functional dependency</em></td>
 <td><code>X → Z</code> đi vòng qua một tập <code>Y</code> trung gian, trong khi <code>Y</code> không xác định ngược lại <code>X</code></td>
@@ -3675,6 +4277,12 @@
 <td><em>transitivity</em></td>
 <td>Tiên đề Armstrong: <code>X → Y</code> và <code>Y → Z</code> thì <code>X → Z</code></td>
 <td><a href="../cap-2-chuan-hoa/16-phu-thuoc-ham/">Bài 16</a></td>
+</tr>
+<tr>
+<td>Độ sâu cây</td>
+<td><em>tree depth</em></td>
+<td>Số tầng từ gốc tới lá — 3 tầng cho vài chục triệu khoá, 4 tầng cho vài tỉ</td>
+<td><a href="../cap-4-ben-trong-dong-co/34-index-va-b-tree/">Bài 34</a></td>
 </tr>
 <tr>
 <td>Duyệt cây</td>
@@ -3717,6 +4325,12 @@
 <td><em>tuple</em></td>
 <td>Tên học thuật của một hàng trong bảng — cùng nghĩa với <em>record</em> và <em>row</em></td>
 <td><a href="../cap-0-nhap-mon/01-du-lieu-va-thong-tin/">Bài 1</a></td>
+</tr>
+<tr>
+<td>Đầu tuple</td>
+<td><em>tuple header</em></td>
+<td>Phần 23 byte trước dữ liệu của mỗi tuple, chứa <code>xmin</code>, <code>xmax</code>, <code>t_ctid</code>…</td>
+<td><a href="../cap-4-ben-trong-dong-co/33-page-heap-tuple/">Bài 33</a></td>
 </tr>
 </tbody>
 </table>
@@ -3811,6 +4425,18 @@
 </thead>
 <tbody>
 <tr>
+<td>Dọn rác</td>
+<td><em>VACUUM</em></td>
+<td>Đánh dấu chỗ của tuple chết là dùng lại được; không trả dung lượng cho hệ điều hành</td>
+<td><a href="../cap-4-ben-trong-dong-co/33-page-heap-tuple/">Bài 33</a></td>
+</tr>
+<tr>
+<td>Dọn rác toàn phần</td>
+<td><em>VACUUM FULL</em></td>
+<td>Viết lại cả bảng cho gọn và trả dung lượng — nhưng khoá bảng hoàn toàn khi chạy</td>
+<td><a href="../cap-4-ben-trong-dong-co/33-page-heap-tuple/">Bài 33</a></td>
+</tr>
+<tr>
 <td>Khoảng thời gian có hiệu lực</td>
 <td><em>valid-time period</em></td>
 <td>Cặp mốc đầu – cuối được tính là <strong>một</strong> giá trị duy nhất, cho biết một sự thật đúng trong khoảng nào</td>
@@ -3827,6 +4453,12 @@
 <td><em>view</em></td>
 <td>Một câu truy vấn được đặt tên; bản thân nó <strong>không chứa</strong> dữ liệu thật</td>
 <td><a href="../cap-0-nhap-mon/03-dbms-la-gi/">Bài 3</a></td>
+</tr>
+<tr>
+<td>Bản đồ hiển thị</td>
+<td><em>visibility map</em></td>
+<td>Tệp phụ đánh dấu những trang mà mọi tuple đều sống và ai cũng thấy; điều kiện của <code>Index Only Scan</code></td>
+<td><a href="../cap-4-ben-trong-dong-co/33-page-heap-tuple/">Bài 33</a></td>
 </tr>
 <tr>
 <td>Bất định</td>

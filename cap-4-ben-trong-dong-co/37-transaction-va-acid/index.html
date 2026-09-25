@@ -1,0 +1,2796 @@
+
+<!doctype html>
+<html lang="vi" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Khóa học cơ sở dữ liệu tiếng Việt, từ con số 0 tới mức siêu nâng cao — giải thích để học sinh cấp 2 cũng hiểu được.">
+      
+      
+      
+        <link rel="canonical" href="https://hungnguyen010518.github.io/database-tu-a-z/cap-4-ben-trong-dong-co/37-transaction-va-acid/">
+      
+      
+        <link rel="prev" href="../36-explain-va-query-planner/">
+      
+      
+        <link rel="next" href="../../dataset/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.39">
+    
+    
+      
+        <title>Bài 37 — Transaction và ACID - Database từ A-Z</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.8c3ca2c6.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#bai-37-transaction-va-acid" class="md-skip">
+          Bỏ qua
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Đầu trang">
+    <a href="../.." title="Database từ A-Z" class="md-header__button md-logo" aria-label="Database từ A-Z" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3C7.58 3 4 4.79 4 7s3.58 4 8 4 8-1.79 8-4-3.58-4-8-4M4 9v3c0 2.21 3.58 4 8 4s8-1.79 8-4V9c0 2.21-3.58 4-8 4s-8-1.79-8-4m0 5v3c0 2.21 3.58 4 8 4s8-1.79 8-4v-3c0 2.21-3.58 4-8 4s-8-1.79-8-4"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Database từ A-Z
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Bài 37 — Transaction và ACID
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Chuyển sang chế độ tối"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Chuyển sang chế độ tối" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Chuyển sang chế độ sáng"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Chuyển sang chế độ sáng" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Tìm kiếm" placeholder="Tìm kiếm" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Tìm kiếm">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Xoá" aria-label="Xoá" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/hungnguyen010518/database-tu-a-z" title="Xem mã nguồn" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    database-tu-a-z
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Thanh điều hướng" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Database từ A-Z" class="md-nav__button md-logo" aria-label="Database từ A-Z" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3C7.58 3 4 4.79 4 7s3.58 4 8 4 8-1.79 8-4-3.58-4-8-4M4 9v3c0 2.21 3.58 4 8 4s8-1.79 8-4V9c0 2.21-3.58 4-8 4s-8-1.79-8-4m0 5v3c0 2.21 3.58 4 8 4s8-1.79 8-4v-3c0 2.21-3.58 4-8 4s-8-1.79-8-4"/></svg>
+
+    </a>
+    Database từ A-Z
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/hungnguyen010518/database-tu-a-z" title="Xem mã nguồn" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    database-tu-a-z
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Trang chủ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Cấp 0 — Nhập môn
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Cấp 0 — Nhập môn
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-0-nhap-mon/01-du-lieu-va-thong-tin/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 1 — Dữ liệu, thông tin và tại sao phải lưu trữ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-0-nhap-mon/02-tu-so-giay-den-excel/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 2 — Từ sổ giấy đến Excel
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-0-nhap-mon/03-dbms-la-gi/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 3 — DBMS là gì
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-0-nhap-mon/04-cac-mo-hinh-du-lieu/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 4 — Các mô hình dữ liệu
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-0-nhap-mon/05-cai-dat-postgresql/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 5 — Cài đặt PostgreSQL
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Cấp 1 — Mô hình quan hệ & Biểu đồ ER
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Cấp 1 — Mô hình quan hệ & Biểu đồ ER
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/06-mo-hinh-quan-he/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 6 — Mô hình quan hệ: bảng, dòng, cột, miền giá trị, lược đồ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/07-thuc-the-va-thuoc-tinh/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 7 — Thực thể và các loại thuộc tính
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/08-moi-quan-he-va-cardinality/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 8 — Mối quan hệ, bậc và bản số (Cardinality)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/09-participation-va-thuc-the-yeu/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 9 — Ràng buộc tham gia và Thực thể yếu
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/10-bieu-do-er-ky-hieu-chen/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 10 — Biểu đồ ER — ký hiệu Chen
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/11-bieu-do-er-crows-foot/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 11 — Biểu đồ ER — ký hiệu Crow's Foot và vẽ bằng Mermaid
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/12-bay-loai-khoa/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 12 — Bảy loại khoá trong cơ sở dữ liệu
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/13-mo-hinh-eer/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 13 — Mô hình EER: Generalization, Specialization, Aggregation
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/14-chuyen-er-sang-bang/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 14 — Chuyển biểu đồ ER thành lược đồ quan hệ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/15-rang-buoc-toan-ven/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 15 — Ràng buộc toàn vẹn (Integrity Constraints)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Cấp 2 — Chuẩn hoá
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Cấp 2 — Chuẩn hoá
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-2-chuan-hoa/16-phu-thuoc-ham/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 16 — Phụ thuộc hàm và bao đóng
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-2-chuan-hoa/17-dang-chuan-1nf-2nf/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 17 — Dạng chuẩn 1 (1NF) và Dạng chuẩn 2 (2NF)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-2-chuan-hoa/18-dang-chuan-3nf-bcnf/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 18 — Dạng chuẩn 3 (3NF) và BCNF
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-2-chuan-hoa/19-dang-chuan-4nf-5nf-6nf/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 19 — 4NF, 5NF và 6NF
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-2-chuan-hoa/20-denormalization/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 20 — Phi chuẩn hoá — khi nào nên phá luật
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Cấp 3 — SQL từ 0 tới cao thủ
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Cấp 3 — SQL từ 0 tới cao thủ
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-3-sql/21-dai-so-quan-he/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 21 — Đại số quan hệ: nền toán học phía sau SQL
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-3-sql/22-ddl-va-kieu-du-lieu/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 22 — DDL: CREATE, ALTER, DROP và các kiểu dữ liệu
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-3-sql/23-dml-insert-update-delete/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 23 — DML: INSERT, UPDATE, DELETE
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-3-sql/24-select-where-order-by/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 24 — SELECT, WHERE, ORDER BY, LIMIT
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-3-sql/25-join/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 25 — JOIN: sáu cách ghép bảng
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-3-sql/26-group-by-having/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 26 — GROUP BY, HAVING và các hàm tổng hợp
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-3-sql/27-subquery-va-exists/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 27 — Truy vấn con (Subquery) và EXISTS
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-3-sql/28-cte-va-recursive-cte/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 28 — CTE và CTE đệ quy
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-3-sql/29-window-function/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 29 — Window Function: tính toán theo cửa sổ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-3-sql/30-view-va-materialized-view/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 30 — View và Materialized View
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-3-sql/31-trigger-procedure-function/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 31 — Trigger, Stored Procedure và Function
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-3-sql/32-jsonb-va-full-text-search/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 32 — JSONB và Full-Text Search
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Cấp 4 — Bên trong động cơ
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            Cấp 4 — Bên trong động cơ
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../33-page-heap-tuple/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 33 — Trang, heap và tuple: PostgreSQL lưu dữ liệu thế nào
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../34-index-va-b-tree/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 34 — Index và B+Tree
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../35-cac-loai-index-khac/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 35 — Các loại index khác: Hash, GiST, GIN, BRIN
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../36-explain-va-query-planner/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 36 — EXPLAIN và bộ tối ưu truy vấn
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Bài 37 — Transaction và ACID
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Bài 37 — Transaction và ACID
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Mục lục">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Mục lục
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#cau-chuyen-mo-au" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧠 Câu chuyện mở đầu
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#khai-niem-thuat-ngu" class="md-nav__link">
+    <span class="md-ellipsis">
+      📖 Khái niệm &amp; thuật ngữ
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📖 Khái niệm & thuật ngữ">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#giao-dich" class="md-nav__link">
+    <span class="md-ellipsis">
+      Giao dịch
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tu-ong-xac-nhan" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tự động xác nhận
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bon-tinh-chat-acid" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bốn tính chất ACID
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#co-che-ang-sau-tung-chu-neu-ten-ao-sau-sau" class="md-nav__link">
+    <span class="md-ellipsis">
+      Cơ chế đằng sau từng chữ — nêu tên, đào sâu sau
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#iem-luu" class="md-nav__link">
+    <span class="md-ellipsis">
+      Điểm lưu
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#giao-dich-bi-hong" class="md-nav__link">
+    <span class="md-ellipsis">
+      Giao dịch bị hỏng
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ddl-cung-nam-trong-giao-dich" class="md-nav__link">
+    <span class="md-ellipsis">
+      DDL cũng nằm trong giao dịch
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bang-thuat-ngu" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bảng thuật ngữ
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#so-o" class="md-nav__link">
+    <span class="md-ellipsis">
+      🖼️ Sơ đồ
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#thuc-hanh" class="md-nav__link">
+    <span class="md-ellipsis">
+      💻 Thực hành
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="💻 Thực hành">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bang-iem-thi-ua" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bảng điểm thi đua
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#chuyen-iem-trong-mot-giao-dich" class="md-nav__link">
+    <span class="md-ellipsis">
+      Chuyển điểm trong một giao dịch
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rollback-va-cach-chung-minh-no-a-that-su-huy-mot-thu-gi-o" class="md-nav__link">
+    <span class="md-ellipsis">
+      ROLLBACK — và cách chứng minh nó đã thật sự huỷ một thứ gì đó
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tinh-nguyen-tu-khi-co-loi-giua-chung" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tính nguyên tử khi có lỗi giữa chừng
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#trang-thai-giao-dich-bi-hong" class="md-nav__link">
+    <span class="md-ellipsis">
+      Trạng thái giao dịch bị hỏng
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#savepoint-huy-mot-phan" class="md-nav__link">
+    <span class="md-ellipsis">
+      SAVEPOINT — huỷ một phần
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mot-giao-dich-la-mot-khoanh-khac" class="md-nav__link">
+    <span class="md-ellipsis">
+      Một giao dịch là một khoảnh khắc
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ddl-trong-giao-dich" class="md-nav__link">
+    <span class="md-ellipsis">
+      DDL trong giao dịch
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tinh-ben-vung-hai-tham-so-ung-sau" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tính bền vững: hai tham số đứng sau
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#loi-thuong-gap" class="md-nav__link">
+    <span class="md-ellipsis">
+      ⚠️ Lỗi thường gặp
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bai-tap" class="md-nav__link">
+    <span class="md-ellipsis">
+      ✍️ Bài tập
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="✍️ Bài tập">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#don-dep-cuoi-bai" class="md-nav__link">
+    <span class="md-ellipsis">
+      Dọn dẹp cuối bài
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tom-tat" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔑 Tóm tắt
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../dataset/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Database mẫu
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../glossary/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bảng thuật ngữ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Mục lục">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Mục lục
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#cau-chuyen-mo-au" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧠 Câu chuyện mở đầu
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#khai-niem-thuat-ngu" class="md-nav__link">
+    <span class="md-ellipsis">
+      📖 Khái niệm &amp; thuật ngữ
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📖 Khái niệm & thuật ngữ">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#giao-dich" class="md-nav__link">
+    <span class="md-ellipsis">
+      Giao dịch
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tu-ong-xac-nhan" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tự động xác nhận
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bon-tinh-chat-acid" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bốn tính chất ACID
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#co-che-ang-sau-tung-chu-neu-ten-ao-sau-sau" class="md-nav__link">
+    <span class="md-ellipsis">
+      Cơ chế đằng sau từng chữ — nêu tên, đào sâu sau
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#iem-luu" class="md-nav__link">
+    <span class="md-ellipsis">
+      Điểm lưu
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#giao-dich-bi-hong" class="md-nav__link">
+    <span class="md-ellipsis">
+      Giao dịch bị hỏng
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ddl-cung-nam-trong-giao-dich" class="md-nav__link">
+    <span class="md-ellipsis">
+      DDL cũng nằm trong giao dịch
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bang-thuat-ngu" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bảng thuật ngữ
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#so-o" class="md-nav__link">
+    <span class="md-ellipsis">
+      🖼️ Sơ đồ
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#thuc-hanh" class="md-nav__link">
+    <span class="md-ellipsis">
+      💻 Thực hành
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="💻 Thực hành">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bang-iem-thi-ua" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bảng điểm thi đua
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#chuyen-iem-trong-mot-giao-dich" class="md-nav__link">
+    <span class="md-ellipsis">
+      Chuyển điểm trong một giao dịch
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rollback-va-cach-chung-minh-no-a-that-su-huy-mot-thu-gi-o" class="md-nav__link">
+    <span class="md-ellipsis">
+      ROLLBACK — và cách chứng minh nó đã thật sự huỷ một thứ gì đó
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tinh-nguyen-tu-khi-co-loi-giua-chung" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tính nguyên tử khi có lỗi giữa chừng
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#trang-thai-giao-dich-bi-hong" class="md-nav__link">
+    <span class="md-ellipsis">
+      Trạng thái giao dịch bị hỏng
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#savepoint-huy-mot-phan" class="md-nav__link">
+    <span class="md-ellipsis">
+      SAVEPOINT — huỷ một phần
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mot-giao-dich-la-mot-khoanh-khac" class="md-nav__link">
+    <span class="md-ellipsis">
+      Một giao dịch là một khoảnh khắc
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ddl-trong-giao-dich" class="md-nav__link">
+    <span class="md-ellipsis">
+      DDL trong giao dịch
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tinh-ben-vung-hai-tham-so-ung-sau" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tính bền vững: hai tham số đứng sau
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#loi-thuong-gap" class="md-nav__link">
+    <span class="md-ellipsis">
+      ⚠️ Lỗi thường gặp
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bai-tap" class="md-nav__link">
+    <span class="md-ellipsis">
+      ✍️ Bài tập
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="✍️ Bài tập">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#don-dep-cuoi-bai" class="md-nav__link">
+    <span class="md-ellipsis">
+      Dọn dẹp cuối bài
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tom-tat" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔑 Tóm tắt
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="bai-37-transaction-va-acid">Bài 37 — Transaction và ACID<a class="headerlink" href="#bai-37-transaction-va-acid" title="Permanent link">&para;</a></h1>
+<div class="admonition abstract">
+<p class="admonition-title">🎯 Học xong bài này, bạn sẽ</p>
+<ul>
+<li>Giải thích được vì sao "trừ điểm lớp này, cộng điểm lớp kia" phải là <strong>một</strong> giao dịch, và điều gì xảy ra nếu nó bị cắt đôi</li>
+<li>Viết đúng <code>BEGIN</code>, <code>COMMIT</code>, <code>ROLLBACK</code>, và dùng <code>SAVEPOINT</code> để huỷ <strong>một phần</strong> giao dịch mà giữ phần còn lại</li>
+<li>Phát biểu được bốn tính chất <strong>ACID</strong>, mỗi tính chất một ví dụ ở trường học và tên cơ chế PostgreSQL dùng để giữ nó</li>
+<li>Nhận ra trạng thái <em>"current transaction is aborted"</em> và biết cách thoát ra</li>
+<li>Tránh được năm lỗi hay gặp: quên <code>COMMIT</code>, giao dịch dài vô tận, tin rằng <code>SERIAL</code> không bao giờ nhảy số, kiểm tra rồi mới ghi, và gõ tiếp sau lỗi</li>
+</ul>
+</div>
+<h2 id="cau-chuyen-mo-au">🧠 Câu chuyện mở đầu<a class="headerlink" href="#cau-chuyen-mo-au" title="Permanent link">&para;</a></h2>
+<p>Cuối tuần, cô Tổng phụ trách chốt bảng <strong>điểm thi đua</strong> của các lớp. Lớp 8A1 được Ban giám hiệu đồng ý <strong>chuyển 10 điểm</strong> thi đua sang lớp 8A2 — hai lớp làm chung một công trình măng non, thống nhất để 8A2 đứng tên.</p>
+<p>Việc chuyển gồm hai bước:</p>
+<ol>
+<li>Trừ 10 điểm của 8A1.</li>
+<li>Cộng 10 điểm cho 8A2.</li>
+</ol>
+<p>Bạn trực nhật văn phòng làm bước 1 trên máy tính. Đúng lúc chuẩn bị làm bước 2 thì <strong>mất điện</strong>.</p>
+<p>Sáng thứ Hai, bảng thi đua hiện ra: 8A1 đã bị trừ 10 điểm, 8A2 <strong>chưa</strong> được cộng. Mười điểm <strong>biến mất</strong> khỏi toàn trường. Không ai cố ý làm sai; chỉ là một việc lẽ ra phải <strong>trọn vẹn</strong> lại bị <strong>cắt đôi</strong> giữa chừng.</p>
+<p>Tệ hơn nữa, cùng lúc đó một thầy khác đang in bảng xếp hạng. Máy in chạy ngay giữa bước 1 và bước 2, nên tờ bảng xếp hạng dán ở bảng tin cũng <strong>thiếu 10 điểm</strong> — dù cuối cùng mọi thứ có được sửa đúng thì tờ giấy đã dán lên rồi.</p>
+<p>Hai vấn đề, cùng một gốc: một <strong>việc</strong> trong đầu người (<em>"chuyển 10 điểm"</em>) lại là <strong>hai thao tác</strong> trên máy. Cần một cách nói với database: <em>"hai thao tác này là một khối. Hoặc làm hết, hoặc coi như chưa làm gì. Và trong lúc đang làm, đừng cho ai nhìn thấy trạng thái dở dang."</em></p>
+<p>Cách nói đó tồn tại từ Bài 2. Bài này mổ xẻ nó.</p>
+<h2 id="khai-niem-thuat-ngu">📖 Khái niệm &amp; thuật ngữ<a class="headerlink" href="#khai-niem-thuat-ngu" title="Permanent link">&para;</a></h2>
+<h3 id="giao-dich">Giao dịch<a class="headerlink" href="#giao-dich" title="Permanent link">&para;</a></h3>
+<p><strong>Giao dịch</strong> (<em>transaction</em>) — <a href="../../cap-0-nhap-mon/02-tu-so-giay-den-excel/">Bài 2</a> đã giới thiệu tên — là một nhóm thao tác mà database coi như <strong>một đơn vị không chia cắt</strong>. Ba lệnh điều khiển nó, thuộc nhóm lệnh giao tác (TCL) mà <a href="../../cap-3-sql/22-ddl-va-kieu-du-lieu/">Bài 22</a> đã liệt kê:</p>
+<table>
+<thead>
+<tr>
+<th>Lệnh</th>
+<th>Ý nghĩa</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Mở giao dịch</strong> (<em>BEGIN</em>) — <code>BEGIN</code></td>
+<td>Từ đây, mọi lệnh thuộc về một giao dịch</td>
+</tr>
+<tr>
+<td><strong>Xác nhận</strong> (<em>COMMIT</em>) — <code>COMMIT</code></td>
+<td>Chốt: mọi thay đổi trong giao dịch trở thành <strong>vĩnh viễn</strong> và <strong>người khác nhìn thấy được</strong></td>
+</tr>
+<tr>
+<td><strong>Huỷ bỏ</strong> (<em>ROLLBACK</em>) — <code>ROLLBACK</code></td>
+<td>Huỷ: mọi thay đổi trong giao dịch <strong>biến mất như chưa từng có</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Việc chuyển điểm viết đúng là:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>BEGIN;
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>UPDATE b37_thi_dua SET diem_thi_dua = diem_thi_dua - 10 WHERE ma_lop = 'L01';
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>UPDATE b37_thi_dua SET diem_thi_dua = diem_thi_dua + 10 WHERE ma_lop = 'L02';
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>COMMIT;
+</span></code></pre></div>
+<p>Mất điện ở giữa hai câu <code>UPDATE</code>? Giao dịch chưa <code>COMMIT</code> nên khi máy khởi động lại, PostgreSQL coi như nó <strong>chưa từng xảy ra</strong>: 8A1 vẫn còn nguyên điểm.</p>
+<h3 id="tu-ong-xac-nhan">Tự động xác nhận<a class="headerlink" href="#tu-ong-xac-nhan" title="Permanent link">&para;</a></h3>
+<p>Suốt Cấp 3 bạn chưa gõ <code>BEGIN</code> lần nào, vậy các lệnh <code>INSERT</code>, <code>UPDATE</code> hồi đó thuộc giao dịch nào? PostgreSQL mặc định chạy ở chế độ <strong>tự động xác nhận</strong> (<em>autocommit</em>): mỗi câu lệnh <strong>đứng một mình</strong> tự động được bọc trong một giao dịch riêng — <code>BEGIN</code> ngầm trước câu, <code>COMMIT</code> ngầm sau câu.</p>
+<p>Nhờ vậy, một câu <code>UPDATE</code> chạm vào 1000 dòng <strong>luôn</strong> hoặc sửa đủ 1000 dòng, hoặc không sửa dòng nào — kể cả khi dòng thứ 700 vi phạm ràng buộc. Nhưng <strong>hai</strong> câu <code>UPDATE</code> liên tiếp là <strong>hai</strong> giao dịch, và điện có thể mất giữa chúng. Muốn nhiều câu thành một khối, phải tự viết <code>BEGIN</code>.</p>
+<h3 id="bon-tinh-chat-acid">Bốn tính chất ACID<a class="headerlink" href="#bon-tinh-chat-acid" title="Permanent link">&para;</a></h3>
+<p>Một giao dịch đáng tin phải có bốn tính chất, gọi chung theo chữ cái đầu của tên tiếng Anh là <strong>bốn tính chất ACID</strong> (<em>ACID</em>):</p>
+<table>
+<thead>
+<tr>
+<th>Chữ</th>
+<th>Tính chất</th>
+<th>Hứa điều gì</th>
+<th>Ví dụ ở trường</th>
+<th>Cơ chế PostgreSQL dùng</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>A</strong></td>
+<td><strong>Tính nguyên tử</strong> (<em>atomicity</em>)</td>
+<td>Hoặc <strong>tất cả</strong>, hoặc <strong>không gì cả</strong></td>
+<td>Trừ 8A1 mà chưa cộng 8A2 thì không được phép tồn tại</td>
+<td>Huỷ giao dịch + nhật ký ghi trước</td>
+</tr>
+<tr>
+<td><strong>C</strong></td>
+<td><strong>Tính nhất quán</strong> (<em>consistency</em>)</td>
+<td>Giao dịch đưa database từ một trạng thái <strong>hợp lệ</strong> sang một trạng thái <strong>hợp lệ</strong> khác</td>
+<td>Điểm thi đua không bao giờ âm; điểm của học sinh luôn thuộc một học sinh có thật</td>
+<td>Ràng buộc toàn vẹn: <code>CHECK</code>, khoá ngoại, <code>UNIQUE</code>, trigger</td>
+</tr>
+<tr>
+<td><strong>I</strong></td>
+<td><strong>Tính cô lập</strong> (<em>isolation</em>)</td>
+<td>Các giao dịch chạy <strong>đồng thời</strong> không nhìn thấy trạng thái <strong>dở dang</strong> của nhau</td>
+<td>Thầy in bảng xếp hạng không thấy lúc 8A1 đã bị trừ mà 8A2 chưa được cộng</td>
+<td>Đa phiên bản dữ liệu (Bài 39) và khoá (Bài 41)</td>
+</tr>
+<tr>
+<td><strong>D</strong></td>
+<td><strong>Tính bền vững</strong> (<em>durability</em>)</td>
+<td>Đã <code>COMMIT</code> thì <strong>không mất</strong>, kể cả mất điện ngay sau đó</td>
+<td>Cô Tổng phụ trách bấm "Lưu", màn hình báo xong, rồi điện mới cắt — điểm vẫn còn</td>
+<td>Nhật ký ghi trước + <code>fsync</code> (Bài 40)</td>
+</tr>
+</tbody>
+</table>
+<p>Lưu ý chữ <strong>A</strong> ở đây <strong>khác</strong> với <em>atomicity</em> của <a href="../../cap-1-mo-hinh-er/06-mo-hinh-quan-he/">Bài 6</a>. Ở Bài 6, "nguyên tử" nói về <strong>một ô</strong> chỉ chứa một giá trị đơn. Ở đây, "nguyên tử" nói về <strong>một giao dịch</strong> không chia cắt được. Cùng một từ, hai tầng khác nhau.</p>
+<h3 id="co-che-ang-sau-tung-chu-neu-ten-ao-sau-sau">Cơ chế đằng sau từng chữ — nêu tên, đào sâu sau<a class="headerlink" href="#co-che-ang-sau-tung-chu-neu-ten-ao-sau-sau" title="Permanent link">&para;</a></h3>
+<p>Bài này chỉ nêu tên cơ chế; Bài 38 tới Bài 41 sẽ mở từng cái ra. Nhưng chữ <strong>A</strong> thì bạn đã đủ kiến thức để hiểu ngay, nhờ Bài 33:</p>
+<ul>
+<li><strong>A</strong> — Nhớ lại: <code>UPDATE</code> <strong>không ghi đè</strong> tuple cũ, mà ghi một tuple <strong>mới</strong> mang <code>xmin</code> là mã số của giao dịch đang chạy. Khi giao dịch bị huỷ, PostgreSQL chỉ cần <strong>đánh dấu mã số giao dịch đó là "đã huỷ"</strong> trong một tệp trạng thái giao dịch. Từ đó, mọi tuple mới mang <code>xmin</code> ấy bị <strong>mọi người bỏ qua</strong>, còn tuple cũ <strong>chưa từng bị đụng tới</strong> nên vẫn nguyên vẹn. Không phải chép lại gì, không phải "hoàn tác" từng dòng. Đó là lý do <code>ROLLBACK</code> một giao dịch sửa một triệu dòng vẫn <strong>tức thì</strong>. Các tuple bị bỏ lại thành tuple chết, chờ <code>VACUUM</code> dọn.</li>
+<li><strong>C</strong> — Là các ràng buộc của <a href="../../cap-1-mo-hinh-er/15-rang-buoc-toan-ven/">Bài 15</a>. Câu lệnh nào làm vi phạm ràng buộc thì báo lỗi, và nhờ chữ <strong>A</strong>, cả giao dịch không thể <code>COMMIT</code> với lỗi đó. Nhưng database chỉ giữ được những luật <strong>đã được khai báo</strong>; luật nào chỉ nằm trong đầu người thiết kế thì không ai bảo vệ.</li>
+<li><strong>I</strong> — PostgreSQL giữ <strong>nhiều phiên bản</strong> của một dòng — chính là tuple cũ và tuple mới của Bài 33 — để người đọc luôn thấy một <strong>bức ảnh chụp</strong> nhất quán, trong khi người ghi tạo phiên bản mới. Cơ chế này có tên riêng và được dành trọn Bài 39. Mức độ cô lập có thể chỉnh được, và Bài 38 cho thấy chỉnh xuống thì những hiện tượng lạ nào xuất hiện.</li>
+<li><strong>D</strong> — Trước khi báo <code>COMMIT</code> thành công, PostgreSQL ghi <strong>mô tả của thay đổi</strong> vào một tệp nhật ký, và bắt hệ điều hành đẩy tệp đó <strong>xuống tận đĩa</strong> bằng lời gọi hệ thống <code>fsync</code>. Trang dữ liệu thật có thể được ghi sau. Mất điện? Khởi động lại, đọc nhật ký, làm lại những gì đã <code>COMMIT</code>. Cơ chế nhật ký này tên là <strong>WAL</strong> — Bài 40.</li>
+</ul>
+<h3 id="iem-luu">Điểm lưu<a class="headerlink" href="#iem-luu" title="Permanent link">&para;</a></h3>
+<p>Đôi khi bạn chỉ muốn huỷ <strong>một phần</strong> giao dịch. Ví dụ: đã cộng điểm cho 8A3, rồi lỡ tay trừ nhầm lớp 9A1 — muốn huỷ đúng lệnh trừ nhầm mà <strong>giữ</strong> lệnh cộng điểm.</p>
+<p><strong>Điểm lưu</strong> (<em>SAVEPOINT</em>) là một cái mốc đặt giữa giao dịch:</p>
+<table>
+<thead>
+<tr>
+<th>Lệnh</th>
+<th>Ý nghĩa</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SAVEPOINT ten_moc</code></td>
+<td>Đặt một mốc tại vị trí hiện tại</td>
+</tr>
+<tr>
+<td><code>ROLLBACK TO SAVEPOINT ten_moc</code></td>
+<td>Huỷ mọi thứ <strong>từ mốc tới giờ</strong>; giao dịch <strong>vẫn tiếp tục</strong>, phần trước mốc vẫn giữ</td>
+</tr>
+<tr>
+<td><code>RELEASE SAVEPOINT ten_moc</code></td>
+<td>Xoá mốc đi (không huỷ gì); phần sau mốc nhập vào phần trước</td>
+</tr>
+</tbody>
+</table>
+<p>Chú ý hai điều. Thứ nhất, <code>ROLLBACK TO SAVEPOINT</code> <strong>khác hẳn</strong> <code>ROLLBACK</code>: cái trước chỉ lùi về mốc, cái sau huỷ cả giao dịch. Thứ hai, điểm lưu <strong>không</strong> làm gì trở nên vĩnh viễn — mọi thứ vẫn phải chờ <code>COMMIT</code> cuối cùng; <code>ROLLBACK</code> toàn bộ thì cả phần trước mốc cũng mất.</p>
+<h3 id="giao-dich-bi-hong">Giao dịch bị hỏng<a class="headerlink" href="#giao-dich-bi-hong" title="Permanent link">&para;</a></h3>
+<p>Khi một câu lệnh bên trong giao dịch báo lỗi — chia cho 0, vi phạm ràng buộc, gõ sai tên cột — PostgreSQL đưa giao dịch vào trạng thái <strong>giao dịch bị hỏng</strong> (<em>aborted transaction</em>). Từ đó, <strong>mọi</strong> lệnh tiếp theo đều bị từ chối với thông báo:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>ERROR:  current transaction is aborted, commands ignored until end of transaction block
+</span></code></pre></div>
+<p><em>"Giao dịch hiện tại đã bị huỷ, mọi lệnh bị bỏ qua cho tới hết khối giao dịch."</em> Chỉ có hai lối ra: <code>ROLLBACK</code> (huỷ cả giao dịch), hoặc <code>ROLLBACK TO SAVEPOINT</code> về một mốc đặt <strong>trước</strong> câu lỗi. Kể cả gõ <code>COMMIT</code> lúc này, PostgreSQL cũng chỉ thực hiện <code>ROLLBACK</code> và in chữ <code>ROLLBACK</code>.</p>
+<p>Đây là chữ <strong>A</strong> đang làm việc: giao dịch đã có một phần hỏng, nên nó <strong>không được phép</strong> kết thúc thành công.</p>
+<div class="admonition note">
+<p class="admonition-title">Một số hệ quản trị khác xử lý khác</p>
+<p>MySQL và SQL Server mặc định chỉ huỷ <strong>câu lệnh lỗi</strong> rồi cho giao dịch chạy tiếp. PostgreSQL chặt chẽ hơn: một câu lỗi làm hỏng cả giao dịch, trừ khi bạn chủ động dùng điểm lưu. Nếu bạn chuyển mã từ hệ khác sang, đây là chỗ hay vấp.</p>
+</div>
+<h3 id="ddl-cung-nam-trong-giao-dich">DDL cũng nằm trong giao dịch<a class="headerlink" href="#ddl-cung-nam-trong-giao-dich" title="Permanent link">&para;</a></h3>
+<p><a href="../../cap-0-nhap-mon/03-dbms-la-gi/">Bài 3</a> đã hé lộ: PostgreSQL cho phép <code>CREATE TABLE</code>, <code>ALTER TABLE</code>, <code>DROP TABLE</code> nằm <strong>trong</strong> một giao dịch, và <code>ROLLBACK</code> huỷ được cả chúng. Tính chất này gọi là <strong>DDL trong giao dịch</strong> (<em>transactional DDL</em>). Hệ quả thực tế rất lớn: một đợt nâng cấp lược đồ gồm mười lệnh <code>ALTER TABLE</code> có thể bọc trong một giao dịch — lệnh thứ bảy lỗi thì cả mười lệnh cùng được huỷ, không bao giờ để lại lược đồ "nửa cũ nửa mới". Không phải hệ quản trị nào cũng làm được điều này; Oracle và MySQL tự <code>COMMIT</code> ngầm trước mỗi lệnh DDL.</p>
+<h3 id="bang-thuat-ngu">Bảng thuật ngữ<a class="headerlink" href="#bang-thuat-ngu" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Tiếng Việt</th>
+<th>English</th>
+<th>Nghĩa dễ hiểu</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Giao dịch</td>
+<td><em>transaction</em></td>
+<td>Nhóm thao tác được coi là một đơn vị không chia cắt</td>
+</tr>
+<tr>
+<td>Mở giao dịch</td>
+<td><em>BEGIN</em></td>
+<td>Bắt đầu một giao dịch; mọi lệnh sau đó thuộc về nó cho tới <code>COMMIT</code> hoặc <code>ROLLBACK</code></td>
+</tr>
+<tr>
+<td>Xác nhận</td>
+<td><em>COMMIT</em></td>
+<td>Chốt giao dịch: thay đổi thành vĩnh viễn và người khác nhìn thấy</td>
+</tr>
+<tr>
+<td>Huỷ bỏ</td>
+<td><em>ROLLBACK</em></td>
+<td>Huỷ giao dịch: mọi thay đổi biến mất như chưa từng có</td>
+</tr>
+<tr>
+<td>Điểm lưu</td>
+<td><em>SAVEPOINT</em></td>
+<td>Mốc giữa giao dịch; <code>ROLLBACK TO SAVEPOINT</code> huỷ phần sau mốc mà giữ phần trước</td>
+</tr>
+<tr>
+<td>Tự động xác nhận</td>
+<td><em>autocommit</em></td>
+<td>Chế độ mặc định: mỗi câu lệnh đứng một mình là một giao dịch riêng</td>
+</tr>
+<tr>
+<td>Bốn tính chất ACID</td>
+<td><em>ACID</em></td>
+<td>Nguyên tử, nhất quán, cô lập, bền vững — bốn lời hứa của một giao dịch đáng tin</td>
+</tr>
+<tr>
+<td>Tính nguyên tử</td>
+<td><em>atomicity</em></td>
+<td>Chữ <strong>A</strong>: hoặc tất cả thao tác của giao dịch có hiệu lực, hoặc không thao tác nào</td>
+</tr>
+<tr>
+<td>Tính nhất quán</td>
+<td><em>consistency</em></td>
+<td>Chữ <strong>C</strong>: giao dịch chỉ đưa database từ trạng thái hợp lệ sang trạng thái hợp lệ, theo các ràng buộc đã khai báo</td>
+</tr>
+<tr>
+<td>Tính cô lập</td>
+<td><em>isolation</em></td>
+<td>Chữ <strong>I</strong>: các giao dịch đồng thời không thấy trạng thái dở dang của nhau</td>
+</tr>
+<tr>
+<td>Tính bền vững</td>
+<td><em>durability</em></td>
+<td>Chữ <strong>D</strong>: đã <code>COMMIT</code> thì không mất, kể cả mất điện</td>
+</tr>
+<tr>
+<td>Giao dịch bị hỏng</td>
+<td><em>aborted transaction</em></td>
+<td>Giao dịch có một câu lỗi; mọi lệnh sau bị từ chối cho tới <code>ROLLBACK</code> hoặc <code>ROLLBACK TO SAVEPOINT</code></td>
+</tr>
+<tr>
+<td>DDL trong giao dịch</td>
+<td><em>transactional DDL</em></td>
+<td><code>CREATE</code>, <code>ALTER</code>, <code>DROP</code> nằm được trong giao dịch và bị <code>ROLLBACK</code> huỷ được</td>
+</tr>
+</tbody>
+</table>
+<h2 id="so-o">🖼️ Sơ đồ<a class="headerlink" href="#so-o" title="Permanent link">&para;</a></h2>
+<p>Vòng đời của một giao dịch — hai lối ra, và cái bẫy ở giữa:</p>
+<pre class="mermaid"><code>flowchart LR
+    B["&lt;b&gt;BEGIN&lt;/b&gt;"]
+    W["&lt;b&gt;Đang chạy&lt;/b&gt;&lt;br/&gt;UPDATE · INSERT · DELETE&lt;br/&gt;chỉ mình mình thấy"]
+    S["&lt;b&gt;SAVEPOINT m&lt;/b&gt;&lt;br/&gt;đặt mốc"]
+    E["&lt;b&gt;Giao dịch bị hỏng&lt;/b&gt;&lt;br/&gt;mọi lệnh bị từ chối"]
+    C["&lt;b&gt;COMMIT&lt;/b&gt;&lt;br/&gt;vĩnh viễn · mọi người thấy"]
+    R["&lt;b&gt;ROLLBACK&lt;/b&gt;&lt;br/&gt;như chưa từng có"]
+
+    B --&gt; W
+    W --&gt; S --&gt; W
+    W --&gt;|"một câu lỗi"| E
+    E --&gt;|"ROLLBACK TO SAVEPOINT m"| W
+    E --&gt; R
+    W --&gt; C
+    W --&gt; R
+
+    style C fill:#e8f5e9,stroke:#2e7d32,stroke-width:3px
+    style R fill:#ffebee,stroke:#c62828,stroke-width:2px
+    style E fill:#fff8e1,stroke:#f9a825,stroke-width:3px</code></pre>
+<p>Tính cô lập trong câu chuyện mở đầu — thầy in bảng xếp hạng <strong>giữa chừng</strong> việc chuyển điểm, nhưng không thấy trạng thái dở dang:</p>
+<pre class="mermaid"><code>sequenceDiagram
+    participant A as Cô Tổng phụ trách
+    participant DB as PostgreSQL
+    participant B as Thầy in bảng xếp hạng
+    A-&gt;&gt;DB: BEGIN
+    A-&gt;&gt;DB: UPDATE 8A1 trừ 10 điểm
+    B-&gt;&gt;DB: SELECT tổng điểm toàn trường
+    DB--&gt;&gt;B: 300 — vẫn là trạng thái trước khi chuyển
+    A-&gt;&gt;DB: UPDATE 8A2 cộng 10 điểm
+    A-&gt;&gt;DB: COMMIT
+    B-&gt;&gt;DB: SELECT tổng điểm toàn trường
+    DB--&gt;&gt;B: 300 — trạng thái sau khi chuyển
+    Note over B: Không bao giờ thấy 290</code></pre>
+<p>Người đọc chỉ thấy <strong>trước</strong> hoặc <strong>sau</strong>, không bao giờ thấy <strong>giữa</strong>. Cơ chế làm được điều này là chủ đề của Bài 39; thí nghiệm với hai phiên chạy song song là của Bài 38.</p>
+<h2 id="thuc-hanh">💻 Thực hành<a class="headerlink" href="#thuc-hanh" title="Permanent link">&para;</a></h2>
+<h3 id="bang-iem-thi-ua">Bảng điểm thi đua<a class="headerlink" href="#bang-iem-thi-ua" title="Permanent link">&para;</a></h3>
+<p>Bảng nháp một dòng cho mỗi lớp, mỗi lớp khởi đầu 50 điểm. Ràng buộc <code>CHECK</code> là chữ <strong>C</strong> — điểm thi đua không được âm:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">b37_thi_dua</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">;</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">b37_thi_dua</span><span class="w"> </span><span class="p">(</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span><span class="n">ma_lop</span><span class="w">       </span><span class="nb">CHAR</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="w">     </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">    </span><span class="n">ten_lop</span><span class="w">      </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">    </span><span class="n">diem_thi_dua</span><span class="w"> </span><span class="nb">INTEGER</span><span class="w">     </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">CHECK</span><span class="w"> </span><span class="p">(</span><span class="n">diem_thi_dua</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="p">);</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">b37_thi_dua</span><span class="w"> </span><span class="p">(</span><span class="n">ma_lop</span><span class="p">,</span><span class="w"> </span><span class="n">ten_lop</span><span class="p">,</span><span class="w"> </span><span class="n">diem_thi_dua</span><span class="p">)</span>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">ma_lop</span><span class="p">,</span><span class="w"> </span><span class="n">ten_lop</span><span class="p">,</span><span class="w"> </span><span class="mi">50</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">lop</span><span class="p">;</span>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
+</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1">-- KỲ VỌNG: 6 dòng</span>
+</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1">-- KỲ VỌNG: ma_lop = L01</span>
+</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1">-- KỲ VỌNG: ten_lop = 8A1</span>
+</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="c1">-- KỲ VỌNG: diem_thi_dua = 50</span>
+</span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">ma_lop</span><span class="p">,</span><span class="w"> </span><span class="n">ten_lop</span><span class="p">,</span><span class="w"> </span><span class="n">diem_thi_dua</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">b37_thi_dua</span><span class="w"> </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">ma_lop</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Sáu lớp, tổng <strong>300</strong> điểm. Con số 300 này sẽ là phép thử cho mọi thí nghiệm: một việc chuyển điểm đúng thì tổng <strong>không đổi</strong>.</p>
+<h3 id="chuyen-iem-trong-mot-giao-dich">Chuyển điểm trong một giao dịch<a class="headerlink" href="#chuyen-iem-trong-mot-giao-dich" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="k">BEGIN</span><span class="p">;</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="k">UPDATE</span><span class="w"> </span><span class="n">b37_thi_dua</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">diem_thi_dua</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">diem_thi_dua</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">10</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">ma_lop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'L01'</span><span class="p">;</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="k">UPDATE</span><span class="w"> </span><span class="n">b37_thi_dua</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">diem_thi_dua</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">diem_thi_dua</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">10</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">ma_lop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'L02'</span><span class="p">;</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="k">COMMIT</span><span class="p">;</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1">-- KỲ VỌNG: diem_8a1 = 40</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1">-- KỲ VỌNG: diem_8a2 = 60</span>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1">-- KỲ VỌNG: tong = 300</span>
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="k">SELECT</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">diem_thi_dua</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">b37_thi_dua</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">ma_lop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'L01'</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">diem_8a1</span><span class="p">,</span>
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">       </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">diem_thi_dua</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">b37_thi_dua</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">ma_lop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'L02'</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">diem_8a2</span><span class="p">,</span>
+</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">       </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="k">sum</span><span class="p">(</span><span class="n">diem_thi_dua</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">b37_thi_dua</span><span class="p">)</span><span class="w">                  </span><span class="k">AS</span><span class="w"> </span><span class="n">tong</span><span class="p">;</span>
+</span></code></pre></div>
+<p>8A1 còn 40, 8A2 lên 60, tổng vẫn 300.</p>
+<h3 id="rollback-va-cach-chung-minh-no-a-that-su-huy-mot-thu-gi-o"><code>ROLLBACK</code> — và cách chứng minh nó đã thật sự huỷ một thứ gì đó<a class="headerlink" href="#rollback-va-cach-chung-minh-no-a-that-su-huy-mot-thu-gi-o" title="Permanent link">&para;</a></h3>
+<p>Thử trừ tiếp 10 điểm của 8A1, rồi đổi ý:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="k">DROP</span><span class="w"> </span><span class="n">SEQUENCE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">b37_bang_chung</span><span class="p">;</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="k">CREATE</span><span class="w"> </span><span class="n">SEQUENCE</span><span class="w"> </span><span class="n">b37_bang_chung</span><span class="w"> </span><span class="k">MINVALUE</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="k">BEGIN</span><span class="p">;</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="k">UPDATE</span><span class="w"> </span><span class="n">b37_thi_dua</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">diem_thi_dua</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">diem_thi_dua</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">10</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">ma_lop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'L01'</span><span class="p">;</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1">-- Ghi lại điểm của 8A1 NHƯ GIAO DỊCH ĐANG THẤY vào một sequence</span>
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">setval</span><span class="p">(</span><span class="s1">'b37_bang_chung'</span><span class="p">,</span><span class="w"> </span><span class="n">diem_thi_dua</span><span class="p">)</span>
+</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="k">FROM</span><span class="w"> </span><span class="n">b37_thi_dua</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">ma_lop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'L01'</span><span class="p">;</span>
+</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
+</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="k">ROLLBACK</span><span class="p">;</span>
+</span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
+</span><span id="__span-4-13"><a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1">-- KỲ VỌNG: diem_trong_giao_dich = 30</span>
+</span><span id="__span-4-14"><a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="c1">-- KỲ VỌNG: diem_sau_rollback = 40</span>
+</span><span id="__span-4-15"><a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="k">SELECT</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">last_value</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">b37_bang_chung</span><span class="p">)</span><span class="w">                      </span><span class="k">AS</span><span class="w"> </span><span class="n">diem_trong_giao_dich</span><span class="p">,</span>
+</span><span id="__span-4-16"><a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="w">       </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">diem_thi_dua</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">b37_thi_dua</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">ma_lop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'L01'</span><span class="p">)</span><span class="w">  </span><span class="k">AS</span><span class="w"> </span><span class="n">diem_sau_rollback</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Bên trong giao dịch, 8A1 <strong>đã</strong> xuống <strong>30</strong> — bằng chứng là con số đó được ghi lại. Sau <code>ROLLBACK</code>, 8A1 trở về <strong>40</strong>. Lệnh <code>UPDATE</code> đã chạy thật, rồi bị xoá sạch.</p>
+<p>Bằng chứng được cất trong một <strong>sequence</strong> — bộ đếm tự tăng mà <code>SERIAL</code> của <a href="../../cap-3-sql/22-ddl-va-kieu-du-lieu/">Bài 22</a> dùng ngầm bên dưới — vì một lý do đặc biệt: <strong>thay đổi trên sequence không bị <code>ROLLBACK</code> huỷ</strong>. Mọi bảng trong giao dịch đều bị huỷ, nên nếu cất bằng chứng vào một bảng thì bằng chứng cũng mất theo. Tính chất lạ lùng này của sequence sẽ quay lại trong phần <strong>Lỗi thường gặp</strong>.</p>
+<p>Trên bảng thật của khoá học, bạn làm đúng thí nghiệm đó trong <code>psql</code> của mình để tự thấy dữ liệu không đổi. Khối lệnh dưới đây <strong>không chạy tự động</strong> vì khoá học không bao giờ ghi vào 10 bảng thật, kể cả khi ghi rồi huỷ:</p>
+<!-- sql:khong-chay -->
+<div class="highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="k">BEGIN</span><span class="p">;</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="k">UPDATE</span><span class="w"> </span><span class="n">diem</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">diem_so</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">ma_hs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'HS001'</span><span class="p">;</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">ma_mon</span><span class="p">,</span><span class="w"> </span><span class="n">diem_so</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">diem</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">ma_hs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'HS001'</span><span class="p">;</span><span class="w">   </span><span class="c1">-- toàn điểm 10</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="k">ROLLBACK</span><span class="p">;</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">ma_mon</span><span class="p">,</span><span class="w"> </span><span class="n">diem_so</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">diem</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">ma_hs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'HS001'</span><span class="p">;</span><span class="w">   </span><span class="c1">-- điểm cũ trở lại</span>
+</span></code></pre></div>
+<h3 id="tinh-nguyen-tu-khi-co-loi-giua-chung">Tính nguyên tử khi có lỗi giữa chừng<a class="headerlink" href="#tinh-nguyen-tu-khi-co-loi-giua-chung" title="Permanent link">&para;</a></h3>
+<p>Giờ chuyển <strong>60</strong> điểm từ 8A1 (đang có 40) sang 8A2. Lần này làm ngược thứ tự: <strong>cộng trước, trừ sau</strong>:</p>
+<!-- sql:co-y-loi -->
+<div class="highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="k">BEGIN</span><span class="p">;</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="k">UPDATE</span><span class="w"> </span><span class="n">b37_thi_dua</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">diem_thi_dua</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">diem_thi_dua</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">60</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">ma_lop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'L02'</span><span class="p">;</span><span class="w">   </span><span class="c1">-- chạy được</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="k">UPDATE</span><span class="w"> </span><span class="n">b37_thi_dua</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">diem_thi_dua</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">diem_thi_dua</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">60</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">ma_lop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'L01'</span><span class="p">;</span><span class="w">   </span><span class="c1">-- 40 - 60 &lt; 0</span>
+</span></code></pre></div>
+<p>Câu thứ hai vi phạm <code>CHECK</code>:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>ERROR:  new row for relation "b37_thi_dua" violates check constraint "b37_thi_dua_diem_thi_dua_check"
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>DETAIL:  Failing row contains (L01, 8A1, -20).
+</span></code></pre></div>
+<p>Câu thứ nhất đã chạy xong — 8A2 đã lên 120 điểm <strong>bên trong</strong> giao dịch. Nhưng giao dịch giờ đã hỏng; bạn chỉ còn cách gõ <code>ROLLBACK</code>, và cả câu cộng điểm cũng bị huỷ theo.</p>
+<p>Khối lệnh trên không chạy tự động được vì nó cố ý gây lỗi. Để khoá học <strong>tự kiểm</strong> điều vừa nói, ta làm lại trong một khối <code>DO</code> của PL/pgSQL (<a href="../../cap-3-sql/31-trigger-procedure-function/">Bài 31</a>). Khối <code>BEGIN ... EXCEPTION ... END</code> của PL/pgSQL có một tính chất quan trọng: khi lỗi xảy ra, <strong>mọi thay đổi từ đầu khối</strong> bị huỷ, y như lùi về một điểm lưu đặt ngầm ở đầu khối:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="k">DO</span><span class="w"> </span><span class="err">$$</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="k">BEGIN</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">    </span><span class="k">UPDATE</span><span class="w"> </span><span class="n">b37_thi_dua</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">diem_thi_dua</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">diem_thi_dua</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">60</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">ma_lop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'L02'</span><span class="p">;</span>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">    </span><span class="c1">-- bằng chứng: 8A2 đã lên bao nhiêu SAU câu thứ nhất</span>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">    </span><span class="n">PERFORM</span><span class="w"> </span><span class="n">setval</span><span class="p">(</span><span class="s1">'b37_bang_chung'</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">diem_thi_dua</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">b37_thi_dua</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">ma_lop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'L02'</span><span class="p">));</span>
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">    </span><span class="k">UPDATE</span><span class="w"> </span><span class="n">b37_thi_dua</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">diem_thi_dua</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">diem_thi_dua</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">60</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">ma_lop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'L01'</span><span class="p">;</span>
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="k">EXCEPTION</span>
+</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">    </span><span class="k">WHEN</span><span class="w"> </span><span class="n">check_violation</span><span class="w"> </span><span class="k">THEN</span>
+</span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">        </span><span class="n">RAISE</span><span class="w"> </span><span class="n">NOTICE</span><span class="w"> </span><span class="s1">'Chuyển điểm thất bại, huỷ cả khối: %'</span><span class="p">,</span><span class="w"> </span><span class="n">SQLERRM</span><span class="p">;</span>
+</span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="k">END</span><span class="w"> </span><span class="err">$$</span><span class="p">;</span>
+</span><span id="__span-8-11"><a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>
+</span><span id="__span-8-12"><a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="c1">-- KỲ VỌNG: diem_8a2_giua_chung = 120</span>
+</span><span id="__span-8-13"><a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="c1">-- KỲ VỌNG: diem_8a2_bay_gio = 60</span>
+</span><span id="__span-8-14"><a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="c1">-- KỲ VỌNG: diem_8a1_bay_gio = 40</span>
+</span><span id="__span-8-15"><a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="c1">-- KỲ VỌNG: tong = 300</span>
+</span><span id="__span-8-16"><a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="k">SELECT</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">last_value</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">b37_bang_chung</span><span class="p">)</span><span class="w">                      </span><span class="k">AS</span><span class="w"> </span><span class="n">diem_8a2_giua_chung</span><span class="p">,</span>
+</span><span id="__span-8-17"><a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="w">       </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">diem_thi_dua</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">b37_thi_dua</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">ma_lop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'L02'</span><span class="p">)</span><span class="w">  </span><span class="k">AS</span><span class="w"> </span><span class="n">diem_8a2_bay_gio</span><span class="p">,</span>
+</span><span id="__span-8-18"><a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a><span class="w">       </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">diem_thi_dua</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">b37_thi_dua</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">ma_lop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'L01'</span><span class="p">)</span><span class="w">  </span><span class="k">AS</span><span class="w"> </span><span class="n">diem_8a1_bay_gio</span><span class="p">,</span>
+</span><span id="__span-8-19"><a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a><span class="w">       </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="k">sum</span><span class="p">(</span><span class="n">diem_thi_dua</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">b37_thi_dua</span><span class="p">)</span><span class="w">                  </span><span class="k">AS</span><span class="w"> </span><span class="n">tong</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Giữa chừng, 8A2 <strong>đã</strong> là <strong>120</strong>. Sau khi lỗi xảy ra, 8A2 trở về <strong>60</strong>, 8A1 vẫn <strong>40</strong>, tổng vẫn <strong>300</strong>. Không có trạng thái "đã cộng mà chưa trừ" nào sống sót. Đó là chữ <strong>A</strong> và chữ <strong>C</strong> cùng làm việc: <strong>C</strong> phát hiện trạng thái sai, <strong>A</strong> bảo đảm không mảnh nào của nó còn lại.</p>
+<h3 id="trang-thai-giao-dich-bi-hong">Trạng thái giao dịch bị hỏng<a class="headerlink" href="#trang-thai-giao-dich-bi-hong" title="Permanent link">&para;</a></h3>
+<!-- sql:co-y-loi -->
+<div class="highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="k">BEGIN</span><span class="p">;</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w">                </span><span class="c1">-- lỗi</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">lop</span><span class="p">;</span><span class="w">    </span><span class="c1">-- câu hoàn toàn vô hại</span>
+</span></code></pre></div>
+<div class="highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>ERROR:  division by zero
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>ERROR:  current transaction is aborted, commands ignored until end of transaction block
+</span></code></pre></div>
+<p>Câu <code>SELECT count(*) FROM lop</code> không có gì sai, nhưng vẫn bị từ chối. Gõ <code>ROLLBACK</code> để thoát. Nếu bạn gõ <code>COMMIT</code>, <code>psql</code> sẽ in ra chữ <code>ROLLBACK</code> — PostgreSQL không cho một giao dịch hỏng kết thúc thành công.</p>
+<h3 id="savepoint-huy-mot-phan"><code>SAVEPOINT</code> — huỷ một phần<a class="headerlink" href="#savepoint-huy-mot-phan" title="Permanent link">&para;</a></h3>
+<p>Tuần này có ba quyết định: thưởng 8A3 năm điểm, phạt 9A2 năm điểm. Bạn nhập thưởng cho 8A3, rồi lỡ tay phạt nhầm lớp 9A1 những <strong>20</strong> điểm:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="k">BEGIN</span><span class="p">;</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="k">UPDATE</span><span class="w"> </span><span class="n">b37_thi_dua</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">diem_thi_dua</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">diem_thi_dua</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">5</span><span class="w">  </span><span class="k">WHERE</span><span class="w"> </span><span class="n">ma_lop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'L03'</span><span class="p">;</span><span class="w">   </span><span class="c1">-- thưởng 8A3: đúng</span>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="n">SAVEPOINT</span><span class="w"> </span><span class="n">truoc_khi_phat</span><span class="p">;</span>
+</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="k">UPDATE</span><span class="w"> </span><span class="n">b37_thi_dua</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">diem_thi_dua</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">diem_thi_dua</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">20</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">ma_lop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'L04'</span><span class="p">;</span><span class="w">   </span><span class="c1">-- phạt 9A1: NHẦM</span>
+</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>
+</span><span id="__span-11-7"><a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="k">ROLLBACK</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">SAVEPOINT</span><span class="w"> </span><span class="n">truoc_khi_phat</span><span class="p">;</span><span class="w">                                            </span><span class="c1">-- huỷ đúng lệnh nhầm</span>
+</span><span id="__span-11-8"><a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="k">UPDATE</span><span class="w"> </span><span class="n">b37_thi_dua</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">diem_thi_dua</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">diem_thi_dua</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">5</span><span class="w">  </span><span class="k">WHERE</span><span class="w"> </span><span class="n">ma_lop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'L05'</span><span class="p">;</span><span class="w">   </span><span class="c1">-- phạt 9A2: đúng</span>
+</span><span id="__span-11-9"><a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="k">COMMIT</span><span class="p">;</span>
+</span><span id="__span-11-10"><a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>
+</span><span id="__span-11-11"><a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a><span class="c1">-- KỲ VỌNG: diem_8a3 = 55</span>
+</span><span id="__span-11-12"><a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a><span class="c1">-- KỲ VỌNG: diem_9a1 = 50</span>
+</span><span id="__span-11-13"><a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a><span class="c1">-- KỲ VỌNG: diem_9a2 = 45</span>
+</span><span id="__span-11-14"><a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a><span class="k">SELECT</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">diem_thi_dua</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">b37_thi_dua</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">ma_lop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'L03'</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">diem_8a3</span><span class="p">,</span>
+</span><span id="__span-11-15"><a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a><span class="w">       </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">diem_thi_dua</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">b37_thi_dua</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">ma_lop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'L04'</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">diem_9a1</span><span class="p">,</span>
+</span><span id="__span-11-16"><a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a><span class="w">       </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">diem_thi_dua</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">b37_thi_dua</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">ma_lop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'L05'</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">diem_9a2</span><span class="p">;</span>
+</span></code></pre></div>
+<p>8A3 được thưởng (<strong>55</strong>), 9A1 <strong>không</strong> bị phạt nhầm (<strong>50</strong>), 9A2 bị phạt đúng (<strong>45</strong>). <code>ROLLBACK TO SAVEPOINT</code> chỉ huỷ phần từ mốc trở đi; lệnh thưởng đứng trước mốc vẫn còn, và giao dịch vẫn tiếp tục để nhận lệnh phạt đúng.</p>
+<p>Điểm lưu cũng là cách <strong>thoát khỏi trạng thái hỏng</strong> mà không mất phần việc trước đó. Khối dưới đây cố ý gây lỗi nên không chạy tự động:</p>
+<!-- sql:co-y-loi -->
+<div class="highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="k">BEGIN</span><span class="p">;</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="k">UPDATE</span><span class="w"> </span><span class="n">b37_thi_dua</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">diem_thi_dua</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">diem_thi_dua</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">5</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">ma_lop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'L06'</span><span class="p">;</span><span class="w">     </span><span class="c1">-- việc đúng</span>
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="n">SAVEPOINT</span><span class="w"> </span><span class="n">thu_phat</span><span class="p">;</span>
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="k">UPDATE</span><span class="w"> </span><span class="n">b37_thi_dua</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">diem_thi_dua</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">diem_thi_dua</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">999</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">ma_lop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'L01'</span><span class="p">;</span><span class="w">   </span><span class="c1">-- lỗi CHECK</span>
+</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="k">ROLLBACK</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">SAVEPOINT</span><span class="w"> </span><span class="n">thu_phat</span><span class="p">;</span><span class="w">   </span><span class="c1">-- giao dịch hết hỏng, việc đúng phía trên vẫn còn</span>
+</span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="k">COMMIT</span><span class="p">;</span><span class="w">                            </span><span class="c1">-- 9A3 được +5</span>
+</span></code></pre></div>
+<div class="admonition tip">
+<p class="admonition-title"><code>psql</code> có sẵn một chế độ tự đặt điểm lưu</p>
+<p>Gõ <code>\set ON_ERROR_ROLLBACK interactive</code> trong <code>psql</code>: từ đó, trước <strong>mỗi</strong> câu lệnh bạn gõ tay bên trong một giao dịch, <code>psql</code> tự đặt một điểm lưu ngầm. Gõ sai một câu thì chỉ câu đó bị huỷ, giao dịch không bị hỏng. Rất tiện khi thử nghiệm bằng tay — nhưng đừng dựa vào nó trong script, nơi một câu lỗi <strong>nên</strong> làm hỏng cả khối.</p>
+</div>
+<h3 id="mot-giao-dich-la-mot-khoanh-khac">Một giao dịch là một khoảnh khắc<a class="headerlink" href="#mot-giao-dich-la-mot-khoanh-khac" title="Permanent link">&para;</a></h3>
+<p>Mỗi câu lệnh đứng một mình là một giao dịch riêng, nên mỗi câu nhận một <strong>mã số giao dịch</strong> khác nhau. Hàm <code>pg_current_xact_id()</code> trả về mã số đó:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">b37_ma_gd</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">;</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">b37_ma_gd</span><span class="w"> </span><span class="p">(</span>
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="w">    </span><span class="n">lan</span><span class="w">     </span><span class="nb">INTEGER</span><span class="p">,</span>
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="w">    </span><span class="n">ma_gd</span><span class="w">   </span><span class="n">XID8</span><span class="w">        </span><span class="k">DEFAULT</span><span class="w"> </span><span class="n">pg_current_xact_id</span><span class="p">(),</span>
+</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="w">    </span><span class="n">luc</span><span class="w">     </span><span class="n">TIMESTAMPTZ</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="n">now</span><span class="p">(),</span>
+</span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="w">    </span><span class="n">luc_that</span><span class="w"> </span><span class="n">TIMESTAMPTZ</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="n">clock_timestamp</span><span class="p">()</span>
+</span><span id="__span-13-7"><a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="p">);</span>
+</span><span id="__span-13-8"><a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>
+</span><span id="__span-13-9"><a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="c1">-- Hai câu đứng một mình: hai giao dịch</span>
+</span><span id="__span-13-10"><a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">b37_ma_gd</span><span class="w"> </span><span class="p">(</span><span class="n">lan</span><span class="p">)</span><span class="w"> </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+</span><span id="__span-13-11"><a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">b37_ma_gd</span><span class="w"> </span><span class="p">(</span><span class="n">lan</span><span class="p">)</span><span class="w"> </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+</span><span id="__span-13-12"><a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>
+</span><span id="__span-13-13"><a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a><span class="c1">-- Hai câu trong một khối BEGIN ... COMMIT: một giao dịch</span>
+</span><span id="__span-13-14"><a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a><span class="k">BEGIN</span><span class="p">;</span>
+</span><span id="__span-13-15"><a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">b37_ma_gd</span><span class="w"> </span><span class="p">(</span><span class="n">lan</span><span class="p">)</span><span class="w"> </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+</span><span id="__span-13-16"><a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">pg_sleep</span><span class="p">(</span><span class="mi">0</span><span class="p">.</span><span class="mi">05</span><span class="p">);</span>
+</span><span id="__span-13-17"><a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">b37_ma_gd</span><span class="w"> </span><span class="p">(</span><span class="n">lan</span><span class="p">)</span><span class="w"> </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+</span><span id="__span-13-18"><a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a><span class="k">COMMIT</span><span class="p">;</span>
+</span><span id="__span-13-19"><a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a>
+</span><span id="__span-13-20"><a id="__codelineno-13-20" name="__codelineno-13-20" href="#__codelineno-13-20"></a><span class="c1">-- KỲ VỌNG: so_giao_dich_lan_1_2 = 2</span>
+</span><span id="__span-13-21"><a id="__codelineno-13-21" name="__codelineno-13-21" href="#__codelineno-13-21"></a><span class="c1">-- KỲ VỌNG: so_giao_dich_lan_3_4 = 1</span>
+</span><span id="__span-13-22"><a id="__codelineno-13-22" name="__codelineno-13-22" href="#__codelineno-13-22"></a><span class="c1">-- KỲ VỌNG: so_moc_now_lan_3_4 = 1</span>
+</span><span id="__span-13-23"><a id="__codelineno-13-23" name="__codelineno-13-23" href="#__codelineno-13-23"></a><span class="c1">-- KỲ VỌNG: so_moc_that_lan_3_4 = 2</span>
+</span><span id="__span-13-24"><a id="__codelineno-13-24" name="__codelineno-13-24" href="#__codelineno-13-24"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="k">DISTINCT</span><span class="w"> </span><span class="n">ma_gd</span><span class="p">)</span><span class="w">    </span><span class="n">FILTER</span><span class="w"> </span><span class="p">(</span><span class="k">WHERE</span><span class="w"> </span><span class="n">lan</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">))</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_giao_dich_lan_1_2</span><span class="p">,</span>
+</span><span id="__span-13-25"><a id="__codelineno-13-25" name="__codelineno-13-25" href="#__codelineno-13-25"></a><span class="w">       </span><span class="k">count</span><span class="p">(</span><span class="k">DISTINCT</span><span class="w"> </span><span class="n">ma_gd</span><span class="p">)</span><span class="w">    </span><span class="n">FILTER</span><span class="w"> </span><span class="p">(</span><span class="k">WHERE</span><span class="w"> </span><span class="n">lan</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">))</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_giao_dich_lan_3_4</span><span class="p">,</span>
+</span><span id="__span-13-26"><a id="__codelineno-13-26" name="__codelineno-13-26" href="#__codelineno-13-26"></a><span class="w">       </span><span class="k">count</span><span class="p">(</span><span class="k">DISTINCT</span><span class="w"> </span><span class="n">luc</span><span class="p">)</span><span class="w">      </span><span class="n">FILTER</span><span class="w"> </span><span class="p">(</span><span class="k">WHERE</span><span class="w"> </span><span class="n">lan</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">))</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_moc_now_lan_3_4</span><span class="p">,</span>
+</span><span id="__span-13-27"><a id="__codelineno-13-27" name="__codelineno-13-27" href="#__codelineno-13-27"></a><span class="w">       </span><span class="k">count</span><span class="p">(</span><span class="k">DISTINCT</span><span class="w"> </span><span class="n">luc_that</span><span class="p">)</span><span class="w"> </span><span class="n">FILTER</span><span class="w"> </span><span class="p">(</span><span class="k">WHERE</span><span class="w"> </span><span class="n">lan</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">))</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_moc_that_lan_3_4</span>
+</span><span id="__span-13-28"><a id="__codelineno-13-28" name="__codelineno-13-28" href="#__codelineno-13-28"></a><span class="k">FROM</span><span class="w"> </span><span class="n">b37_ma_gd</span><span class="p">;</span>
+</span></code></pre></div>
+<ul>
+<li>Lần 1 và 2: <strong>hai</strong> mã giao dịch — chế độ tự động xác nhận.</li>
+<li>Lần 3 và 4: <strong>một</strong> mã giao dịch — chung một khối <code>BEGIN ... COMMIT</code>.</li>
+<li>Hàm <code>now()</code> trả về <strong>thời điểm bắt đầu giao dịch</strong>, nên lần 3 và 4 có <strong>cùng một</strong> giá trị dù cách nhau 50 mili giây. Hàm <code>clock_timestamp()</code> trả về giờ thật lúc gọi, nên ra <strong>hai</strong> giá trị.</li>
+</ul>
+<p>Cả giao dịch mang <strong>một</strong> dấu thời gian <code>now()</code>. Điều này có chủ đích: mọi dòng một giao dịch ghi ra — ví dụ một lượt chuyển điểm và dòng nhật ký của nó — mang cùng một mốc thời gian, như thể chúng xảy ra trong <strong>cùng một khoảnh khắc</strong>. Đó cũng là cách chữ <strong>A</strong> hiện ra trong dữ liệu.</p>
+<h3 id="ddl-trong-giao-dich">DDL trong giao dịch<a class="headerlink" href="#ddl-trong-giao-dich" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="k">BEGIN</span><span class="p">;</span>
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">b37_tam</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="w"> </span><span class="nb">INTEGER</span><span class="p">);</span>
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">b37_tam</span><span class="w"> </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="p">),</span><span class="w"> </span><span class="p">(</span><span class="mi">2</span><span class="p">),</span><span class="w"> </span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="k">ALTER</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">b37_thi_dua</span><span class="w"> </span><span class="k">ADD</span><span class="w"> </span><span class="k">COLUMN</span><span class="w"> </span><span class="n">ghi_chu</span><span class="w"> </span><span class="nb">TEXT</span><span class="p">;</span>
+</span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="k">ROLLBACK</span><span class="p">;</span>
+</span><span id="__span-14-6"><a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>
+</span><span id="__span-14-7"><a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="c1">-- KỲ VỌNG: bang_tam_ton_tai = 0</span>
+</span><span id="__span-14-8"><a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="c1">-- KỲ VỌNG: cot_ghi_chu_ton_tai = 0</span>
+</span><span id="__span-14-9"><a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a><span class="k">SELECT</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">information_schema</span><span class="p">.</span><span class="n">tables</span>
+</span><span id="__span-14-10"><a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="w">        </span><span class="k">WHERE</span><span class="w"> </span><span class="k">table_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'b37_tam'</span><span class="p">)</span><span class="w">                                </span><span class="k">AS</span><span class="w"> </span><span class="n">bang_tam_ton_tai</span><span class="p">,</span>
+</span><span id="__span-14-11"><a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a><span class="w">       </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">information_schema</span><span class="p">.</span><span class="n">columns</span>
+</span><span id="__span-14-12"><a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a><span class="w">        </span><span class="k">WHERE</span><span class="w"> </span><span class="k">table_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'b37_thi_dua'</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="k">column_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'ghi_chu'</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">cot_ghi_chu_ton_tai</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Bảng <code>b37_tam</code> <strong>không tồn tại</strong>, cột <code>ghi_chu</code> <strong>không được thêm</strong>. <code>ROLLBACK</code> huỷ cả việc tạo bảng lẫn việc sửa cấu trúc bảng — đúng lời hứa của Bài 3.</p>
+<h3 id="tinh-ben-vung-hai-tham-so-ung-sau">Tính bền vững: hai tham số đứng sau<a class="headerlink" href="#tinh-ben-vung-hai-tham-so-ung-sau" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1">-- KỲ VỌNG: fsync = on</span>
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="c1">-- KỲ VỌNG: synchronous_commit = on</span>
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">current_setting</span><span class="p">(</span><span class="s1">'fsync'</span><span class="p">)</span><span class="w">              </span><span class="k">AS</span><span class="w"> </span><span class="n">fsync</span><span class="p">,</span>
+</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="w">       </span><span class="n">current_setting</span><span class="p">(</span><span class="s1">'synchronous_commit'</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">synchronous_commit</span><span class="p">;</span>
+</span></code></pre></div>
+<ul>
+<li><code>fsync = on</code>: PostgreSQL bắt hệ điều hành đẩy nhật ký xuống <strong>tận đĩa</strong>, không để nằm trong bộ nhớ đệm của hệ điều hành.</li>
+<li><code>synchronous_commit = on</code>: <code>COMMIT</code> <strong>chờ</strong> việc đẩy xuống đĩa xong mới báo thành công.</li>
+</ul>
+<p>Tắt một trong hai thì <code>COMMIT</code> nhanh hơn — và chữ <strong>D</strong> không còn được bảo đảm trọn vẹn. Tắt <code>fsync</code> trên máy chủ thật là một trong những cách nhanh nhất để <strong>mất dữ liệu vĩnh viễn</strong> sau một lần mất điện. Bài 40 sẽ giải thích vì sao, và khi nào tắt <code>synchronous_commit</code> là chấp nhận được.</p>
+<h2 id="loi-thuong-gap">⚠️ Lỗi thường gặp<a class="headerlink" href="#loi-thuong-gap" title="Permanent link">&para;</a></h2>
+<div class="admonition danger">
+<p class="admonition-title">Lỗi 1: Tin rằng <code>SERIAL</code> không bao giờ nhảy số</p>
+<p>Sequence nằm <strong>ngoài</strong> giao dịch — phần thực hành đã dùng chính tính chất đó để giữ bằng chứng. Hệ quả: một giao dịch lấy số từ sequence rồi bị huỷ thì <strong>con số đó mất luôn</strong>.</p>
+<div class="highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">b37_phieu_muon</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">;</span>
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">b37_phieu_muon</span><span class="w"> </span><span class="p">(</span><span class="n">so_phieu</span><span class="w"> </span><span class="nb">SERIAL</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span><span class="w"> </span><span class="n">ma_hs</span><span class="w"> </span><span class="nb">CHAR</span><span class="p">(</span><span class="mi">5</span><span class="p">));</span>
+</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>
+</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">b37_phieu_muon</span><span class="w"> </span><span class="p">(</span><span class="n">ma_hs</span><span class="p">)</span><span class="w"> </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="s1">'HS001'</span><span class="p">);</span><span class="w">   </span><span class="c1">-- phiếu số 1</span>
+</span><span id="__span-16-5"><a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>
+</span><span id="__span-16-6"><a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="k">BEGIN</span><span class="p">;</span>
+</span><span id="__span-16-7"><a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">b37_phieu_muon</span><span class="w"> </span><span class="p">(</span><span class="n">ma_hs</span><span class="p">)</span><span class="w"> </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="s1">'HS002'</span><span class="p">);</span><span class="w">   </span><span class="c1">-- lấy số 2...</span>
+</span><span id="__span-16-8"><a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a><span class="k">ROLLBACK</span><span class="p">;</span><span class="w">                                              </span><span class="c1">-- ...rồi huỷ</span>
+</span><span id="__span-16-9"><a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>
+</span><span id="__span-16-10"><a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">b37_phieu_muon</span><span class="w"> </span><span class="p">(</span><span class="n">ma_hs</span><span class="p">)</span><span class="w"> </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="s1">'HS003'</span><span class="p">);</span>
+</span><span id="__span-16-11"><a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a>
+</span><span id="__span-16-12"><a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a><span class="c1">-- KỲ VỌNG: 2 dòng</span>
+</span><span id="__span-16-13"><a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a><span class="c1">-- KỲ VỌNG: so_phieu = 1</span>
+</span><span id="__span-16-14"><a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">so_phieu</span><span class="p">,</span><span class="w"> </span><span class="n">ma_hs</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">b37_phieu_muon</span><span class="w"> </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">so_phieu</span><span class="p">;</span>
+</span></code></pre></div>
+<div class="highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1">-- KỲ VỌNG: so_phieu_cua_hs003 = 3</span>
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">so_phieu</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_phieu_cua_hs003</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">b37_phieu_muon</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">ma_hs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'HS003'</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Phiếu của <code>HS003</code> mang số <strong>3</strong>; số <strong>2</strong> không bao giờ xuất hiện. Sequence thiết kế như vậy có chủ đích: nếu nó chờ giao dịch kết thúc mới biết có được dùng số hay không, mọi người thêm dòng sẽ phải <strong>xếp hàng</strong> chờ nhau.</p>
+<p>Sửa: dùng <code>SERIAL</code> làm <strong>định danh</strong>, không làm <strong>số thứ tự không đứt quãng</strong>. Nếu luật nghiệp vụ đòi số phiếu liên tục (hoá đơn, sổ văn thư), phải cấp số bằng một cơ chế khác — và chấp nhận việc cấp số phải xếp hàng.</p>
+</div>
+<div class="admonition danger">
+<p class="admonition-title">Lỗi 2: Kiểm tra bằng một câu, ghi bằng câu khác</p>
+<p>Luật mới: sau khi chuyển, lớp nguồn <strong>phải còn ít nhất 10 điểm</strong>. Muốn chuyển 35 điểm "chỉ khi 8A1 còn đủ", bạn viết:</p>
+<p><!-- sql:khong-chay -->
+<div class="highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">diem_thi_dua</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">b37_thi_dua</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">ma_lop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'L01'</span><span class="p">;</span><span class="w">   </span><span class="c1">-- thấy 50</span>
+</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="c1">-- ... phần mềm kiểm tra: 50 - 35 &gt;= 10, được ...</span>
+</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="k">UPDATE</span><span class="w"> </span><span class="n">b37_thi_dua</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">diem_thi_dua</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">diem_thi_dua</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">35</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">ma_lop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'L01'</span><span class="p">;</span>
+</span></code></pre></div></p>
+<p>Hai giáo viên cùng làm việc này <strong>cùng lúc</strong> khi 8A1 có 50 điểm: cả hai đều thấy 50, cả hai đều quyết định "đủ", cả hai cùng trừ 35. Kể cả khi bọc trong <code>BEGIN ... COMMIT</code>, ở mức cô lập mặc định điều này <strong>vẫn có thể xảy ra</strong> — Bài 38 sẽ dựng lại nó bằng hai phiên song song. Lần trừ thứ hai làm điểm âm nên ràng buộc <code>CHECK (diem_thi_dua &gt;= 0)</code> sẽ chặn nó. Nhưng luật "phải còn ít nhất 10 điểm" thì <strong>không</strong> có ràng buộc nào ghi lại: nếu hai người cùng chuyển 20 điểm từ 50, cả hai đều qua được bước kiểm tra, và 8A1 còn 10 rồi 0 — vi phạm luật mà không ai chặn.</p>
+<p>Sửa: gộp kiểm tra vào <strong>chính câu ghi</strong>, để database làm cả hai việc trong một bước:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="k">UPDATE</span><span class="w"> </span><span class="n">b37_thi_dua</span>
+</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="k">SET</span><span class="w"> </span><span class="n">diem_thi_dua</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">diem_thi_dua</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">30</span>
+</span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">ma_lop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'L01'</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">diem_thi_dua</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">35</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">10</span><span class="p">;</span><span class="w">   </span><span class="c1">-- phải còn ít nhất 10 sau khi trừ</span>
+</span><span id="__span-19-4"><a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>
+</span><span id="__span-19-5"><a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a><span class="c1">-- KỲ VỌNG: diem_8a1 = 40</span>
+</span><span id="__span-19-6"><a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">diem_thi_dua</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">diem_8a1</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">b37_thi_dua</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">ma_lop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'L01'</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Lúc này 8A1 có 40, không đủ <code>35 + 10</code>, nên câu <code>UPDATE</code> <strong>không sửa dòng nào</strong> — 8A1 vẫn <strong>40</strong>. Phần mềm biết kết quả nhờ số dòng bị ảnh hưởng (<code>UPDATE 0</code>). Và luật nào quan trọng thì khai thành ràng buộc — chữ <strong>C</strong> chỉ bảo vệ những gì được khai báo.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Lỗi 3: Mở giao dịch rồi quên đóng</p>
+<p>Bạn gõ <code>BEGIN</code>, sửa vài dòng, rồi đi ăn trưa với cửa sổ <code>psql</code> còn mở. Hoặc một công cụ đồ hoạ tắt chế độ tự động xác nhận, và mọi câu bạn gõ cả buổi sáng đều nằm trong một giao dịch chưa <code>COMMIT</code>.</p>
+<p>Hậu quả: người khác <strong>không thấy</strong> thay đổi của bạn; các dòng bạn đã sửa bị <strong>khoá</strong> nên ai sửa chúng phải chờ; và <code>VACUUM</code> của Bài 33 <strong>không dọn được</strong> tuple chết nào sinh ra sau khi giao dịch của bạn bắt đầu — vì biết đâu bạn vẫn cần nhìn thấy chúng. Bảng phình dần cả buổi.</p>
+<p>Sửa: giữ giao dịch <strong>ngắn</strong> — mở, làm, đóng. Kiểm tra định kỳ bảng hệ thống <code>pg_stat_activity</code>, tìm các phiên có <code>state = 'idle in transaction'</code> — phiên đang giữ một giao dịch mở mà không làm gì. PostgreSQL có tham số <code>idle_in_transaction_session_timeout</code> để tự ngắt những phiên như vậy.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Lỗi 4: Gõ tiếp sau lỗi và tưởng các lệnh sau đã chạy</p>
+<p>Trong một script dài, câu thứ 5 lỗi, và câu thứ 6 tới 50 đều bị từ chối với <em>"current transaction is aborted"</em>. Nếu công cụ chạy script bỏ qua lỗi và cứ chạy tiếp, cuối cùng nó gặp <code>COMMIT</code> — và PostgreSQL âm thầm <code>ROLLBACK</code>. Người chạy script thấy chữ <code>ROLLBACK</code> lẫn giữa hàng trăm dòng đầu ra, hoặc không thấy gì, và tưởng mọi thứ đã xong.</p>
+<p>Sửa: chạy script bằng <code>psql -v ON_ERROR_STOP=1</code> — dừng ngay ở lỗi đầu tiên, và trả mã lỗi để bạn biết. Hệ thống kiểm thử của chính khoá học này chạy mọi câu SQL trong bài theo đúng cách đó.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Lỗi 5: Bọc cả một đợt xử lý khổng lồ trong một giao dịch</p>
+<p>Làm tròn 500.000 con điểm trong <strong>một</strong> câu <code>UPDATE</code> là một giao dịch khổng lồ: nó khoá cả 500.000 dòng tới cuối, sinh 500.000 tuple chết cùng lúc, và nếu lỗi ở dòng cuối cùng thì toàn bộ công sức mất trắng. Đó là lý do <a href="../../cap-3-sql/31-trigger-procedure-function/">Bài 31</a> viết thủ tục xử lý <strong>theo lô</strong>, <code>COMMIT</code> sau mỗi lô.</p>
+<p>Sửa: giao dịch phải bao đúng <strong>một đơn vị nghiệp vụ</strong> — một lượt chuyển điểm, một lượt mượn sách — không hơn không kém. Việc hàng loạt thì chia lô, mỗi lô một giao dịch, và thiết kế để chạy lại được từ lô bị lỗi.</p>
+</div>
+<h2 id="bai-tap">✍️ Bài tập<a class="headerlink" href="#bai-tap" title="Permanent link">&para;</a></h2>
+<ol>
+<li>
+<p>Không chạy, hãy dự đoán điểm cuối cùng của 8A1 (<code>L01</code>) và 8A2 (<code>L02</code>) sau đoạn lệnh sau, biết lúc bắt đầu 8A1 có 40, 8A2 có 60. Rồi chạy để kiểm.</p>
+<p><!-- sql:khong-chay -->
+<div class="highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="k">BEGIN</span><span class="p">;</span>
+</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="k">UPDATE</span><span class="w"> </span><span class="n">b37_thi_dua</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">diem_thi_dua</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">diem_thi_dua</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">ma_lop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'L01'</span><span class="p">;</span>
+</span><span id="__span-20-3"><a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="n">SAVEPOINT</span><span class="w"> </span><span class="n">a</span><span class="p">;</span>
+</span><span id="__span-20-4"><a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="k">UPDATE</span><span class="w"> </span><span class="n">b37_thi_dua</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">diem_thi_dua</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">diem_thi_dua</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">ma_lop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'L01'</span><span class="p">;</span>
+</span><span id="__span-20-5"><a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a><span class="n">SAVEPOINT</span><span class="w"> </span><span class="n">b</span><span class="p">;</span>
+</span><span id="__span-20-6"><a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a><span class="k">UPDATE</span><span class="w"> </span><span class="n">b37_thi_dua</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">diem_thi_dua</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">diem_thi_dua</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">ma_lop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'L02'</span><span class="p">;</span>
+</span><span id="__span-20-7"><a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a><span class="k">ROLLBACK</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">SAVEPOINT</span><span class="w"> </span><span class="n">a</span><span class="p">;</span>
+</span><span id="__span-20-8"><a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a><span class="k">UPDATE</span><span class="w"> </span><span class="n">b37_thi_dua</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">diem_thi_dua</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">diem_thi_dua</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">8</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">ma_lop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'L02'</span><span class="p">;</span>
+</span><span id="__span-20-9"><a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a><span class="k">COMMIT</span><span class="p">;</span>
+</span></code></pre></div></p>
+</li>
+<li>
+<p>Luật <em>"tổng điểm thi đua toàn trường luôn là 300"</em> có được database bảo vệ không? Chứng minh bằng một câu lệnh <strong>hợp lệ</strong> làm vỡ luật này, và cho biết đó là vấn đề của chữ nào trong ACID.</p>
+</li>
+<li>
+<p>Viết một thủ tục <code>b37_chuyen_diem(tu_lop, den_lop, so_diem)</code> thực hiện việc chuyển điểm, <strong>báo lỗi</strong> với thông điệp tiếng Việt khi lớp nguồn không đủ điểm. Chứng minh rằng khi thủ tục báo lỗi, <strong>không</strong> lớp nào bị thay đổi.</p>
+</li>
+<li>
+<p>Mỗi tình huống sau vi phạm chữ nào của ACID?</p>
+<p>a. Mất điện ngay sau khi phần mềm báo "Đã lưu điểm", khởi động lại thì điểm không còn.</p>
+<p>b. Một con điểm 11 lọt được vào bảng dù thang điểm là 0 tới 10.</p>
+<p>c. Phần mềm thư viện ghi phiếu mượn nhưng chưa kịp trừ số lượng sách thì bị tắt; phiếu mượn còn, số sách chưa trừ.</p>
+<p>d. Thầy in bảng xếp hạng thấy tổng điểm 290 vì in đúng lúc đang chuyển điểm.</p>
+</li>
+<li>
+<p>Giải thích bằng kiến thức Bài 33 vì sao <code>ROLLBACK</code> một giao dịch vừa <code>UPDATE</code> 500.000 dòng gần như <strong>tức thì</strong>, trong khi chính câu <code>UPDATE</code> đó tốn vài giây. Sau <code>ROLLBACK</code>, bảng có phình ra không?</p>
+</li>
+</ol>
+<details class="success">
+<summary>Đáp án</summary>
+<p><strong>Câu 1.</strong></p>
+<p>Dự đoán: 8A1 = <strong>41</strong>, 8A2 = <strong>68</strong>.</p>
+<ul>
+<li><code>+1</code> cho 8A1 đứng <strong>trước</strong> mốc <code>a</code> nên được giữ.</li>
+<li><code>+2</code> cho 8A1 và <code>+4</code> cho 8A2 đứng <strong>sau</strong> mốc <code>a</code>, bị <code>ROLLBACK TO SAVEPOINT a</code> huỷ — mốc <code>b</code> nằm sau <code>a</code> nên cũng biến mất theo.</li>
+<li><code>+8</code> cho 8A2 chạy sau khi đã lùi về <code>a</code>, được giữ.</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="k">BEGIN</span><span class="p">;</span>
+</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="k">UPDATE</span><span class="w"> </span><span class="n">b37_thi_dua</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">diem_thi_dua</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">diem_thi_dua</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">ma_lop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'L01'</span><span class="p">;</span>
+</span><span id="__span-21-3"><a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="n">SAVEPOINT</span><span class="w"> </span><span class="n">a</span><span class="p">;</span>
+</span><span id="__span-21-4"><a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="k">UPDATE</span><span class="w"> </span><span class="n">b37_thi_dua</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">diem_thi_dua</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">diem_thi_dua</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">ma_lop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'L01'</span><span class="p">;</span>
+</span><span id="__span-21-5"><a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a><span class="n">SAVEPOINT</span><span class="w"> </span><span class="n">b</span><span class="p">;</span>
+</span><span id="__span-21-6"><a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a><span class="k">UPDATE</span><span class="w"> </span><span class="n">b37_thi_dua</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">diem_thi_dua</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">diem_thi_dua</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">ma_lop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'L02'</span><span class="p">;</span>
+</span><span id="__span-21-7"><a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a><span class="k">ROLLBACK</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">SAVEPOINT</span><span class="w"> </span><span class="n">a</span><span class="p">;</span>
+</span><span id="__span-21-8"><a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a><span class="k">UPDATE</span><span class="w"> </span><span class="n">b37_thi_dua</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">diem_thi_dua</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">diem_thi_dua</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">8</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">ma_lop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'L02'</span><span class="p">;</span>
+</span><span id="__span-21-9"><a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a><span class="k">COMMIT</span><span class="p">;</span>
+</span><span id="__span-21-10"><a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a>
+</span><span id="__span-21-11"><a id="__codelineno-21-11" name="__codelineno-21-11" href="#__codelineno-21-11"></a><span class="c1">-- KỲ VỌNG: diem_8a1 = 41</span>
+</span><span id="__span-21-12"><a id="__codelineno-21-12" name="__codelineno-21-12" href="#__codelineno-21-12"></a><span class="c1">-- KỲ VỌNG: diem_8a2 = 68</span>
+</span><span id="__span-21-13"><a id="__codelineno-21-13" name="__codelineno-21-13" href="#__codelineno-21-13"></a><span class="k">SELECT</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">diem_thi_dua</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">b37_thi_dua</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">ma_lop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'L01'</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">diem_8a1</span><span class="p">,</span>
+</span><span id="__span-21-14"><a id="__codelineno-21-14" name="__codelineno-21-14" href="#__codelineno-21-14"></a><span class="w">       </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">diem_thi_dua</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">b37_thi_dua</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">ma_lop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'L02'</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">diem_8a2</span><span class="p">;</span>
+</span></code></pre></div>
+<p><strong>Câu 2.</strong></p>
+<p>Không. Ràng buộc duy nhất là <code>CHECK (diem_thi_dua &gt;= 0)</code> trên <strong>từng dòng</strong>. Câu sau hoàn toàn hợp lệ với nó:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="k">UPDATE</span><span class="w"> </span><span class="n">b37_thi_dua</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">diem_thi_dua</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">diem_thi_dua</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">ma_lop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'L06'</span><span class="p">;</span>
+</span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>
+</span><span id="__span-22-3"><a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="c1">-- KỲ VỌNG: tong = 310</span>
+</span><span id="__span-22-4"><a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">sum</span><span class="p">(</span><span class="n">diem_thi_dua</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">tong</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">b37_thi_dua</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Tổng giờ không còn là 300 — nó là <strong>310</strong>, vì từ đầu bài tới giờ đã có các lượt thưởng, phạt hợp lệ và câu lệnh vừa rồi. Luật "tổng luôn là 300" chỉ là mong muốn trong đầu người, <strong>chưa được khai báo</strong> ở đâu cả.</p>
+<p>Đây là vấn đề của chữ <strong>C</strong>: database chỉ giữ nhất quán theo những ràng buộc <strong>đã khai</strong>. <code>CHECK</code> chỉ nhìn được một dòng; luật cộng qua nhiều dòng là loại <strong>ràng buộc giới hạn tổng</strong> mà <a href="../../cap-1-mo-hinh-er/14-chuyen-er-sang-bang/">Bài 14</a> đã nói là khoá ngoại và <code>UNIQUE</code> không cưỡng chế nổi. Muốn bảo vệ nó phải dùng trigger (<a href="../../cap-3-sql/31-trigger-procedure-function/">Bài 31</a>), hoặc thiết kế lại để mọi thay đổi điểm đều đi qua một thủ tục duy nhất như câu 3.</p>
+<p><strong>Câu 3.</strong></p>
+<div class="highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="k">DROP</span><span class="w"> </span><span class="k">PROCEDURE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">b37_chuyen_diem</span><span class="p">(</span><span class="nb">CHAR</span><span class="p">,</span><span class="w"> </span><span class="nb">CHAR</span><span class="p">,</span><span class="w"> </span><span class="nb">INTEGER</span><span class="p">);</span>
+</span><span id="__span-23-2"><a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>
+</span><span id="__span-23-3"><a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">PROCEDURE</span><span class="w"> </span><span class="n">b37_chuyen_diem</span><span class="p">(</span><span class="n">p_tu</span><span class="w"> </span><span class="nb">CHAR</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span><span class="w"> </span><span class="n">p_den</span><span class="w"> </span><span class="nb">CHAR</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span><span class="w"> </span><span class="n">p_so_diem</span><span class="w"> </span><span class="nb">INTEGER</span><span class="p">)</span>
+</span><span id="__span-23-4"><a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a><span class="k">LANGUAGE</span><span class="w"> </span><span class="n">plpgsql</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="err">$$</span>
+</span><span id="__span-23-5"><a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a><span class="k">DECLARE</span>
+</span><span id="__span-23-6"><a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a><span class="w">    </span><span class="n">v_so_dong</span><span class="w"> </span><span class="nb">INTEGER</span><span class="p">;</span>
+</span><span id="__span-23-7"><a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a><span class="k">BEGIN</span>
+</span><span id="__span-23-8"><a id="__codelineno-23-8" name="__codelineno-23-8" href="#__codelineno-23-8"></a><span class="w">    </span><span class="k">UPDATE</span><span class="w"> </span><span class="n">b37_thi_dua</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">diem_thi_dua</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">diem_thi_dua</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">p_so_diem</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">ma_lop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p_den</span><span class="p">;</span>
+</span><span id="__span-23-9"><a id="__codelineno-23-9" name="__codelineno-23-9" href="#__codelineno-23-9"></a><span class="w">    </span><span class="k">UPDATE</span><span class="w"> </span><span class="n">b37_thi_dua</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">diem_thi_dua</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">diem_thi_dua</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">p_so_diem</span>
+</span><span id="__span-23-10"><a id="__codelineno-23-10" name="__codelineno-23-10" href="#__codelineno-23-10"></a><span class="w">    </span><span class="k">WHERE</span><span class="w"> </span><span class="n">ma_lop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p_tu</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">diem_thi_dua</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">p_so_diem</span><span class="p">;</span>
+</span><span id="__span-23-11"><a id="__codelineno-23-11" name="__codelineno-23-11" href="#__codelineno-23-11"></a><span class="w">    </span><span class="k">GET</span><span class="w"> </span><span class="k">DIAGNOSTICS</span><span class="w"> </span><span class="n">v_so_dong</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ROW_COUNT</span><span class="p">;</span>
+</span><span id="__span-23-12"><a id="__codelineno-23-12" name="__codelineno-23-12" href="#__codelineno-23-12"></a><span class="w">    </span><span class="k">IF</span><span class="w"> </span><span class="n">v_so_dong</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="k">THEN</span>
+</span><span id="__span-23-13"><a id="__codelineno-23-13" name="__codelineno-23-13" href="#__codelineno-23-13"></a><span class="w">        </span><span class="n">RAISE</span><span class="w"> </span><span class="k">EXCEPTION</span><span class="w"> </span><span class="s1">'Lớp % không đủ % điểm để chuyển'</span><span class="p">,</span><span class="w"> </span><span class="n">p_tu</span><span class="p">,</span><span class="w"> </span><span class="n">p_so_diem</span><span class="p">;</span>
+</span><span id="__span-23-14"><a id="__codelineno-23-14" name="__codelineno-23-14" href="#__codelineno-23-14"></a><span class="w">    </span><span class="k">END</span><span class="w"> </span><span class="k">IF</span><span class="p">;</span>
+</span><span id="__span-23-15"><a id="__codelineno-23-15" name="__codelineno-23-15" href="#__codelineno-23-15"></a><span class="k">END</span><span class="w"> </span><span class="err">$$</span><span class="p">;</span>
+</span><span id="__span-23-16"><a id="__codelineno-23-16" name="__codelineno-23-16" href="#__codelineno-23-16"></a>
+</span><span id="__span-23-17"><a id="__codelineno-23-17" name="__codelineno-23-17" href="#__codelineno-23-17"></a><span class="k">CALL</span><span class="w"> </span><span class="n">b37_chuyen_diem</span><span class="p">(</span><span class="s1">'L02'</span><span class="p">,</span><span class="w"> </span><span class="s1">'L01'</span><span class="p">,</span><span class="w"> </span><span class="mi">8</span><span class="p">);</span>
+</span><span id="__span-23-18"><a id="__codelineno-23-18" name="__codelineno-23-18" href="#__codelineno-23-18"></a>
+</span><span id="__span-23-19"><a id="__codelineno-23-19" name="__codelineno-23-19" href="#__codelineno-23-19"></a><span class="c1">-- KỲ VỌNG: diem_8a1 = 49</span>
+</span><span id="__span-23-20"><a id="__codelineno-23-20" name="__codelineno-23-20" href="#__codelineno-23-20"></a><span class="c1">-- KỲ VỌNG: diem_8a2 = 60</span>
+</span><span id="__span-23-21"><a id="__codelineno-23-21" name="__codelineno-23-21" href="#__codelineno-23-21"></a><span class="k">SELECT</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">diem_thi_dua</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">b37_thi_dua</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">ma_lop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'L01'</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">diem_8a1</span><span class="p">,</span>
+</span><span id="__span-23-22"><a id="__codelineno-23-22" name="__codelineno-23-22" href="#__codelineno-23-22"></a><span class="w">       </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">diem_thi_dua</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">b37_thi_dua</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">ma_lop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'L02'</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">diem_8a2</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Chuyển 8 điểm từ 8A2 (68) sang 8A1 (41): được <strong>49</strong> và <strong>60</strong>. <code>GET DIAGNOSTICS ... ROW_COUNT</code> lấy số dòng câu lệnh vừa sửa — cách một thủ tục biết câu <code>UPDATE</code> có điều kiện đã thành công hay không.</p>
+<p>Giờ thử chuyển 1000 điểm. Một câu <code>CALL</code> đứng một mình tự là một giao dịch, nên lỗi sẽ huỷ cả câu cộng điểm đã chạy trước đó. Để khoá học tự kiểm được mà không dừng vì lỗi, ta gọi nó trong một khối có <code>EXCEPTION</code>:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="k">DO</span><span class="w"> </span><span class="err">$$</span>
+</span><span id="__span-24-2"><a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a><span class="k">BEGIN</span>
+</span><span id="__span-24-3"><a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a><span class="w">    </span><span class="k">CALL</span><span class="w"> </span><span class="n">b37_chuyen_diem</span><span class="p">(</span><span class="s1">'L01'</span><span class="p">,</span><span class="w"> </span><span class="s1">'L02'</span><span class="p">,</span><span class="w"> </span><span class="mi">1000</span><span class="p">);</span>
+</span><span id="__span-24-4"><a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a><span class="k">EXCEPTION</span>
+</span><span id="__span-24-5"><a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a><span class="w">    </span><span class="k">WHEN</span><span class="w"> </span><span class="n">raise_exception</span><span class="w"> </span><span class="k">THEN</span>
+</span><span id="__span-24-6"><a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a><span class="w">        </span><span class="n">RAISE</span><span class="w"> </span><span class="n">NOTICE</span><span class="w"> </span><span class="s1">'Bị từ chối: %'</span><span class="p">,</span><span class="w"> </span><span class="n">SQLERRM</span><span class="p">;</span>
+</span><span id="__span-24-7"><a id="__codelineno-24-7" name="__codelineno-24-7" href="#__codelineno-24-7"></a><span class="k">END</span><span class="w"> </span><span class="err">$$</span><span class="p">;</span>
+</span><span id="__span-24-8"><a id="__codelineno-24-8" name="__codelineno-24-8" href="#__codelineno-24-8"></a>
+</span><span id="__span-24-9"><a id="__codelineno-24-9" name="__codelineno-24-9" href="#__codelineno-24-9"></a><span class="c1">-- KỲ VỌNG: diem_8a1 = 49</span>
+</span><span id="__span-24-10"><a id="__codelineno-24-10" name="__codelineno-24-10" href="#__codelineno-24-10"></a><span class="c1">-- KỲ VỌNG: diem_8a2 = 60</span>
+</span><span id="__span-24-11"><a id="__codelineno-24-11" name="__codelineno-24-11" href="#__codelineno-24-11"></a><span class="k">SELECT</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">diem_thi_dua</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">b37_thi_dua</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">ma_lop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'L01'</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">diem_8a1</span><span class="p">,</span>
+</span><span id="__span-24-12"><a id="__codelineno-24-12" name="__codelineno-24-12" href="#__codelineno-24-12"></a><span class="w">       </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">diem_thi_dua</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">b37_thi_dua</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">ma_lop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'L02'</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">diem_8a2</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Thông báo <em>"Lớp L01 không đủ 1000 điểm để chuyển"</em>, và cả hai lớp <strong>giữ nguyên</strong> 49 và 60 — kể cả 8A2, lớp đã được cộng 1000 điểm ở câu đầu tiên của thủ tục. Thủ tục cố ý <strong>cộng trước, trừ sau</strong> để chứng minh điều này: dù thứ tự thế nào, tính nguyên tử bảo đảm không có nửa lượt chuyển nào sống sót.</p>
+<p><strong>Câu 4.</strong></p>
+<table>
+<thead>
+<tr>
+<th>Tình huống</th>
+<th>Chữ bị vi phạm</th>
+<th>Vì sao</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>a. Báo "Đã lưu" rồi mất</td>
+<td><strong>D</strong> — bền vững</td>
+<td>Đã <code>COMMIT</code> thì không được mất</td>
+</tr>
+<tr>
+<td>b. Điểm 11 lọt vào</td>
+<td><strong>C</strong> — nhất quán</td>
+<td>Trạng thái vi phạm luật lọt vào database. (Với bảng <code>diem</code> của khoá học, <code>CHECK (diem_so BETWEEN 0 AND 10)</code> chặn được việc này)</td>
+</tr>
+<tr>
+<td>c. Phiếu còn, sách chưa trừ</td>
+<td><strong>A</strong> — nguyên tử</td>
+<td>Hai thao tác của một việc bị cắt đôi — đúng câu chuyện mở đầu</td>
+</tr>
+<tr>
+<td>d. Thấy tổng 290</td>
+<td><strong>I</strong> — cô lập</td>
+<td>Nhìn thấy trạng thái dở dang của một giao dịch khác</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Câu 5.</strong></p>
+<p>Bài 33: <code>UPDATE</code> không ghi đè mà ghi <strong>500.000 tuple mới</strong>, mỗi tuple mang <code>xmin</code> là mã số giao dịch đang chạy, và điền <code>xmax</code> cho 500.000 tuple cũ. Việc ghi này tốn thời gian — vài giây.</p>
+<p><code>ROLLBACK</code> thì chỉ <strong>đánh dấu một mã số giao dịch là "đã huỷ"</strong> — một thao tác cỡ vài byte. Từ đó mọi người đọc tự động:</p>
+<ul>
+<li>bỏ qua 500.000 tuple mới vì <code>xmin</code> của chúng thuộc một giao dịch đã huỷ;</li>
+<li>coi 500.000 tuple cũ là <strong>còn sống</strong>, vì <code>xmax</code> của chúng cũng thuộc giao dịch đã huỷ đó — một lần xoá bị huỷ thì coi như chưa xoá.</li>
+</ul>
+<p>Không phải chép lại dòng nào, nên gần như tức thì.</p>
+<p>Và <strong>có</strong>, bảng vẫn phình: 500.000 tuple mới vẫn nằm trên đĩa, giờ là tuple chết — bảng to gần gấp đôi, như thí nghiệm <code>b33_phinh</code> của Bài 33, cho tới khi <code>VACUUM</code> dọn chúng đi. Một giao dịch bị huỷ <strong>không miễn phí</strong>: nó để lại rác.</p>
+</details>
+<h3 id="don-dep-cuoi-bai">Dọn dẹp cuối bài<a class="headerlink" href="#don-dep-cuoi-bai" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="k">DROP</span><span class="w"> </span><span class="k">PROCEDURE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">b37_chuyen_diem</span><span class="p">(</span><span class="nb">CHAR</span><span class="p">,</span><span class="w"> </span><span class="nb">CHAR</span><span class="p">,</span><span class="w"> </span><span class="nb">INTEGER</span><span class="p">);</span>
+</span><span id="__span-25-2"><a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a><span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">b37_thi_dua</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">;</span>
+</span><span id="__span-25-3"><a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a><span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">b37_ma_gd</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">;</span>
+</span><span id="__span-25-4"><a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a><span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">b37_phieu_muon</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">;</span>
+</span><span id="__span-25-5"><a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a><span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">b37_tam</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">;</span>
+</span><span id="__span-25-6"><a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a><span class="k">DROP</span><span class="w"> </span><span class="n">SEQUENCE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">b37_bang_chung</span><span class="p">;</span>
+</span><span id="__span-25-7"><a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a>
+</span><span id="__span-25-8"><a id="__codelineno-25-8" name="__codelineno-25-8" href="#__codelineno-25-8"></a><span class="c1">-- KỲ VỌNG: bang_con_lai = 0</span>
+</span><span id="__span-25-9"><a id="__codelineno-25-9" name="__codelineno-25-9" href="#__codelineno-25-9"></a><span class="c1">-- KỲ VỌNG: sequence_con_lai = 0</span>
+</span><span id="__span-25-10"><a id="__codelineno-25-10" name="__codelineno-25-10" href="#__codelineno-25-10"></a><span class="c1">-- KỲ VỌNG: thu_tuc_con_lai = 0</span>
+</span><span id="__span-25-11"><a id="__codelineno-25-11" name="__codelineno-25-11" href="#__codelineno-25-11"></a><span class="k">SELECT</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">information_schema</span><span class="p">.</span><span class="n">tables</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="k">table_name</span><span class="w"> </span><span class="k">LIKE</span><span class="w"> </span><span class="s1">'b37\_%'</span><span class="p">)</span><span class="w">         </span><span class="k">AS</span><span class="w"> </span><span class="n">bang_con_lai</span><span class="p">,</span>
+</span><span id="__span-25-12"><a id="__codelineno-25-12" name="__codelineno-25-12" href="#__codelineno-25-12"></a><span class="w">       </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">information_schema</span><span class="p">.</span><span class="n">sequences</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">sequence_name</span><span class="w"> </span><span class="k">LIKE</span><span class="w"> </span><span class="s1">'b37\_%'</span><span class="p">)</span><span class="w">   </span><span class="k">AS</span><span class="w"> </span><span class="n">sequence_con_lai</span><span class="p">,</span>
+</span><span id="__span-25-13"><a id="__codelineno-25-13" name="__codelineno-25-13" href="#__codelineno-25-13"></a><span class="w">       </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">pg_proc</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">proname</span><span class="w"> </span><span class="k">LIKE</span><span class="w"> </span><span class="s1">'b37\_%'</span><span class="p">)</span><span class="w">                              </span><span class="k">AS</span><span class="w"> </span><span class="n">thu_tuc_con_lai</span><span class="p">;</span>
+</span></code></pre></div>
+<h2 id="tom-tat">🔑 Tóm tắt<a class="headerlink" href="#tom-tat" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Một <strong>giao dịch</strong> gom nhiều thao tác thành một đơn vị không chia cắt: <code>BEGIN</code> mở, <code>COMMIT</code> chốt cho vĩnh viễn và cho người khác thấy, <code>ROLLBACK</code> huỷ như chưa từng có. Không viết <code>BEGIN</code> thì PostgreSQL ở chế độ <strong>tự động xác nhận</strong> — mỗi câu lệnh một giao dịch — nên "trừ lớp này, cộng lớp kia" phải tự bọc trong <code>BEGIN ... COMMIT</code>.</li>
+<li><strong>ACID</strong> là bốn lời hứa: <strong>nguyên tử</strong> — tất cả hoặc không gì cả, nhờ huỷ giao dịch và nhật ký ghi trước; <strong>nhất quán</strong> — chỉ từ trạng thái hợp lệ sang trạng thái hợp lệ, nhờ ràng buộc <strong>đã khai báo</strong>; <strong>cô lập</strong> — không ai thấy trạng thái dở dang, nhờ đa phiên bản và khoá (Bài 38, 39, 41); <strong>bền vững</strong> — đã <code>COMMIT</code> thì không mất, nhờ nhật ký WAL và <code>fsync</code> (Bài 40).</li>
+<li><code>ROLLBACK</code> gần như tức thì vì <code>UPDATE</code> không ghi đè (Bài 33): chỉ cần đánh dấu mã giao dịch là "đã huỷ" thì mọi tuple nó tạo ra bị bỏ qua và tuple cũ vẫn nguyên — nhưng các tuple bị bỏ lại vẫn là rác chờ <code>VACUUM</code>. Bằng chứng trong bài: 8A2 đã lên 120 giữa chừng, rồi trở về 60, tổng vẫn 300.</li>
+<li><strong><code>SAVEPOINT</code></strong> đặt mốc giữa giao dịch; <code>ROLLBACK TO SAVEPOINT</code> huỷ phần sau mốc, giữ phần trước, và giao dịch chạy tiếp. Một câu lỗi đưa giao dịch vào trạng thái <strong>bị hỏng</strong> — <em>"current transaction is aborted"</em> — chỉ thoát bằng <code>ROLLBACK</code> hoặc <code>ROLLBACK TO SAVEPOINT</code>; gõ <code>COMMIT</code> lúc đó cũng thành <code>ROLLBACK</code>.</li>
+<li>PostgreSQL có <strong>DDL trong giao dịch</strong>: <code>CREATE</code>, <code>ALTER</code> bị <code>ROLLBACK</code> huỷ được. Sequence thì <strong>nằm ngoài</strong> giao dịch nên <code>SERIAL</code> có thể nhảy số. Giữ giao dịch <strong>ngắn</strong> và bao đúng một đơn vị nghiệp vụ, gộp kiểm tra vào chính câu ghi, và chạy script với <code>ON_ERROR_STOP</code> để không bao giờ tưởng một giao dịch hỏng đã thành công.</li>
+</ol>
+<hr />
+<p>⬅️ <a href="../36-explain-va-query-planner/">Bài 36 — EXPLAIN và bộ tối ưu truy vấn</a> · ➡️ <strong>Bài 38 — Mức cô lập và các hiện tượng bất thường</strong> <em>(sắp có)</em></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Trở lại mục lục
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Chân trang" >
+        
+          
+          <a href="../36-explain-va-query-planner/" class="md-footer__link md-footer__link--prev" aria-label="Trước: Bài 36 — EXPLAIN và bộ tối ưu truy vấn">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Trước
+              </span>
+              <div class="md-ellipsis">
+                Bài 36 — EXPLAIN và bộ tối ưu truy vấn
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../../dataset/" class="md-footer__link md-footer__link--next" aria-label="Sau: Database mẫu">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Sau
+              </span>
+              <div class="md-ellipsis">
+                Database mẫu
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Nội dung theo giấy phép CC BY 4.0
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/hungnguyen010518/database-tu-a-z" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.sections", "navigation.top", "navigation.footer", "navigation.indexes", "navigation.tracking", "toc.follow", "content.code.copy", "content.code.annotate", "search.highlight", "search.suggest"], "search": "../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "\u0110\u00e3 sao ch\u00e9p", "clipboard.copy": "Sao ch\u00e9p v\u00e0o b\u1ed9 nh\u1edb t\u1ea1m", "search.result.more.one": "1 t\u1eeb kh\u00e1c trong trang", "search.result.more.other": "# t\u1eeb kh\u00e1c trong trang", "search.result.none": "Kh\u00f4ng t\u00ecm th\u1ea5y t\u00e0i li\u1ec7u li\u00ean quan", "search.result.one": "1 t\u00e0i li\u1ec7u li\u00ean quan", "search.result.other": "# t\u00e0i li\u1ec7u li\u00ean quan", "search.result.placeholder": "Nh\u1eadp \u0111\u1ec3 b\u1eaft \u0111\u1ea7u t\u00ecm ki\u1ebfm", "search.result.term.missing": "Kh\u00f4ng", "select.version": "Ch\u1ecdn phi\u00ean b\u1ea3n"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.525ec568.min.js"></script>
+      
+    
+  </body>
+</html>
