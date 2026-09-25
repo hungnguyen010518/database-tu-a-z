@@ -1386,4 +1386,4 @@ Extension `unaccent` thì bài **không** xoá: nó không chiếm gì đáng k�
 
 ---
 
-⬅️ [Bài 31 — Trigger, Stored Procedure và Function](31-trigger-procedure-function.md) · ➡️ **Bài 33 — Trang, heap và tuple: PostgreSQL lưu dữ liệu thế nào** *(sắp có)*
+⬅️ [Bài 31 — Trigger, Stored Procedure và Function](31-trigger-procedure-function.md) · ➡️ [Bài 33 — Trang, heap và tuple: PostgreSQL lưu dữ liệu thế nào](../cap-4-ben-trong-dong-co/33-page-heap-tuple.md)
