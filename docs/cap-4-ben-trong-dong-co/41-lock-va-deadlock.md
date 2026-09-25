@@ -822,4 +822,4 @@ SELECT (SELECT count(*) FROM information_schema.tables WHERE table_name LIKE 'b4
 
 ---
 
-⬅️ [Bài 40 — WAL, checkpoint và phục hồi sau sự cố](40-wal-va-recovery.md)
+⬅️ [Bài 40 — WAL, checkpoint và phục hồi sau sự cố](40-wal-va-recovery.md) · ➡️ [Bài 42 — Replication: nhân bản dữ liệu ra nhiều máy](../cap-5-sieu-nang-cao/42-replication.md)
