@@ -473,7 +473,7 @@ Tắt một trong hai thì `COMMIT` nhanh hơn — và chữ **D** không còn �
     UPDATE b37_thi_dua SET diem_thi_dua = diem_thi_dua - 35 WHERE ma_lop = 'L01';
     ```
 
-    Hai giáo viên cùng làm việc này **cùng lúc** khi 8A1 có 50 điểm: cả hai đều thấy 50, cả hai đều quyết định "đủ", cả hai cùng trừ 35. Kể cả khi bọc trong `BEGIN ... COMMIT`, ở mức cô lập mặc định điều này **vẫn có thể xảy ra** — Bài 38 sẽ dựng lại nó bằng hai phiên song song. Lần trừ thứ hai làm điểm âm nên ràng buộc `CHECK (diem_thi_dua >= 0)` sẽ chặn nó. Nhưng luật "phải còn ít nhất 10 điểm" thì **không** có ràng buộc nào ghi lại: nếu hai người cùng chuyển 20 điểm từ 50, cả hai đều qua được bước kiểm tra, và 8A1 còn 10 rồi 0 — vi phạm luật mà không ai chặn.
+    Hai giáo viên cùng làm việc này **cùng lúc** khi 8A1 có 50 điểm: cả hai đều thấy 50, cả hai đều quyết định "đủ", cả hai cùng trừ 35. Kể cả khi bọc trong `BEGIN ... COMMIT`, ở mức cô lập mặc định điều này **vẫn có thể xảy ra** — Bài 38 sẽ dựng lại nó bằng hai phiên song song. Lần trừ thứ hai làm điểm âm nên ràng buộc `CHECK (diem_thi_dua >= 0)` sẽ chặn nó. Nhưng luật "phải còn ít nhất 10 điểm" thì **không** có ràng buộc nào ghi lại: nếu hai người cùng chuyển 25 điểm từ 50, cả hai đều thấy 50 và đều qua được bước kiểm tra (50 ≥ 25 + 10), nhưng vì cả hai cùng trừ trên cùng giá trị 50 nên 8A1 còn **0**, không phải 25 như một người tưởng — vi phạm luật mà không ai chặn.
 
     Sửa: gộp kiểm tra vào **chính câu ghi**, để database làm cả hai việc trong một bước:
 
