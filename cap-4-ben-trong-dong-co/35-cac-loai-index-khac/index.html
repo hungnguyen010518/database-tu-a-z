@@ -2316,10 +2316,10 @@
 <p>Chọn loại index nào — bắt đầu từ <strong>toán tử</strong> trong câu <code>WHERE</code>:</p>
 <pre class="mermaid"><code>flowchart LR
     Q["&lt;b&gt;Toán tử trong WHERE&lt;/b&gt;"]
-    E["= · #lt; · #gt; · BETWEEN&lt;br/&gt;ORDER BY · LIKE 'abc%'"]
+    E["= · &amp;lt; · &amp;gt; · BETWEEN&lt;br/&gt;ORDER BY · LIKE 'abc%'"]
     H["Chỉ =&lt;br/&gt;khoá rất dài"]
-    G["#amp;#amp; · #lt;@ · @#gt;&lt;br/&gt;#lt;-#gt; gần nhất"]
-    N["@#gt; trên mảng/JSONB&lt;br/&gt;@@ · LIKE '%x%'"]
+    G["&amp;amp;&amp;amp; · &amp;lt;@ · @&amp;gt;&lt;br/&gt;&amp;lt;-&amp;gt; gần nhất"]
+    N["@&amp;gt; trên mảng/JSONB&lt;br/&gt;@@ · LIKE '%x%'"]
     B["Khoảng thời gian&lt;br/&gt;trên bảng khổng lồ&lt;br/&gt;ghi theo thứ tự"]
 
     Q --&gt; E --&gt; E2["&lt;b&gt;B-Tree&lt;/b&gt;"]
