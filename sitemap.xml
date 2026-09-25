@@ -160,4 +160,20 @@
          <loc>https://hungnguyen010518.github.io/database-tu-a-z/cap-4-ben-trong-dong-co/37-transaction-va-acid/</loc>
          <lastmod>2026-09-25</lastmod>
     </url>
+    <url>
+         <loc>https://hungnguyen010518.github.io/database-tu-a-z/cap-4-ben-trong-dong-co/38-isolation-level-va-anomaly/</loc>
+         <lastmod>2026-09-25</lastmod>
+    </url>
+    <url>
+         <loc>https://hungnguyen010518.github.io/database-tu-a-z/cap-4-ben-trong-dong-co/39-mvcc/</loc>
+         <lastmod>2026-09-25</lastmod>
+    </url>
+    <url>
+         <loc>https://hungnguyen010518.github.io/database-tu-a-z/cap-4-ben-trong-dong-co/40-wal-va-recovery/</loc>
+         <lastmod>2026-09-25</lastmod>
+    </url>
+    <url>
+         <loc>https://hungnguyen010518.github.io/database-tu-a-z/cap-4-ben-trong-dong-co/41-lock-va-deadlock/</loc>
+         <lastmod>2026-09-25</lastmod>
+    </url>
 </urlset>

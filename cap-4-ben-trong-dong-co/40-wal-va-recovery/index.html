@@ -1,0 +1,2722 @@
+
+<!doctype html>
+<html lang="vi" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Khóa học cơ sở dữ liệu tiếng Việt, từ con số 0 tới mức siêu nâng cao — giải thích để học sinh cấp 2 cũng hiểu được.">
+      
+      
+      
+        <link rel="canonical" href="https://hungnguyen010518.github.io/database-tu-a-z/cap-4-ben-trong-dong-co/40-wal-va-recovery/">
+      
+      
+        <link rel="prev" href="../39-mvcc/">
+      
+      
+        <link rel="next" href="../41-lock-va-deadlock/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.39">
+    
+    
+      
+        <title>Bài 40 — WAL, checkpoint và phục hồi sau sự cố - Database từ A-Z</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.8c3ca2c6.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#bai-40-wal-checkpoint-va-phuc-hoi-sau-su-co" class="md-skip">
+          Bỏ qua
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Đầu trang">
+    <a href="../.." title="Database từ A-Z" class="md-header__button md-logo" aria-label="Database từ A-Z" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3C7.58 3 4 4.79 4 7s3.58 4 8 4 8-1.79 8-4-3.58-4-8-4M4 9v3c0 2.21 3.58 4 8 4s8-1.79 8-4V9c0 2.21-3.58 4-8 4s-8-1.79-8-4m0 5v3c0 2.21 3.58 4 8 4s8-1.79 8-4v-3c0 2.21-3.58 4-8 4s-8-1.79-8-4"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Database từ A-Z
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Bài 40 — WAL, checkpoint và phục hồi sau sự cố
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Chuyển sang chế độ tối"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Chuyển sang chế độ tối" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Chuyển sang chế độ sáng"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Chuyển sang chế độ sáng" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Tìm kiếm" placeholder="Tìm kiếm" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Tìm kiếm">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Xoá" aria-label="Xoá" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/hungnguyen010518/database-tu-a-z" title="Xem mã nguồn" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    database-tu-a-z
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Thanh điều hướng" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Database từ A-Z" class="md-nav__button md-logo" aria-label="Database từ A-Z" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3C7.58 3 4 4.79 4 7s3.58 4 8 4 8-1.79 8-4-3.58-4-8-4M4 9v3c0 2.21 3.58 4 8 4s8-1.79 8-4V9c0 2.21-3.58 4-8 4s-8-1.79-8-4m0 5v3c0 2.21 3.58 4 8 4s8-1.79 8-4v-3c0 2.21-3.58 4-8 4s-8-1.79-8-4"/></svg>
+
+    </a>
+    Database từ A-Z
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/hungnguyen010518/database-tu-a-z" title="Xem mã nguồn" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    database-tu-a-z
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Trang chủ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Cấp 0 — Nhập môn
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Cấp 0 — Nhập môn
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-0-nhap-mon/01-du-lieu-va-thong-tin/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 1 — Dữ liệu, thông tin và tại sao phải lưu trữ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-0-nhap-mon/02-tu-so-giay-den-excel/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 2 — Từ sổ giấy đến Excel
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-0-nhap-mon/03-dbms-la-gi/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 3 — DBMS là gì
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-0-nhap-mon/04-cac-mo-hinh-du-lieu/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 4 — Các mô hình dữ liệu
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-0-nhap-mon/05-cai-dat-postgresql/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 5 — Cài đặt PostgreSQL
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Cấp 1 — Mô hình quan hệ & Biểu đồ ER
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Cấp 1 — Mô hình quan hệ & Biểu đồ ER
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/06-mo-hinh-quan-he/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 6 — Mô hình quan hệ: bảng, dòng, cột, miền giá trị, lược đồ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/07-thuc-the-va-thuoc-tinh/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 7 — Thực thể và các loại thuộc tính
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/08-moi-quan-he-va-cardinality/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 8 — Mối quan hệ, bậc và bản số (Cardinality)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/09-participation-va-thuc-the-yeu/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 9 — Ràng buộc tham gia và Thực thể yếu
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/10-bieu-do-er-ky-hieu-chen/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 10 — Biểu đồ ER — ký hiệu Chen
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/11-bieu-do-er-crows-foot/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 11 — Biểu đồ ER — ký hiệu Crow's Foot và vẽ bằng Mermaid
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/12-bay-loai-khoa/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 12 — Bảy loại khoá trong cơ sở dữ liệu
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/13-mo-hinh-eer/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 13 — Mô hình EER: Generalization, Specialization, Aggregation
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/14-chuyen-er-sang-bang/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 14 — Chuyển biểu đồ ER thành lược đồ quan hệ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/15-rang-buoc-toan-ven/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 15 — Ràng buộc toàn vẹn (Integrity Constraints)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Cấp 2 — Chuẩn hoá
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Cấp 2 — Chuẩn hoá
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-2-chuan-hoa/16-phu-thuoc-ham/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 16 — Phụ thuộc hàm và bao đóng
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-2-chuan-hoa/17-dang-chuan-1nf-2nf/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 17 — Dạng chuẩn 1 (1NF) và Dạng chuẩn 2 (2NF)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-2-chuan-hoa/18-dang-chuan-3nf-bcnf/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 18 — Dạng chuẩn 3 (3NF) và BCNF
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-2-chuan-hoa/19-dang-chuan-4nf-5nf-6nf/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 19 — 4NF, 5NF và 6NF
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-2-chuan-hoa/20-denormalization/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 20 — Phi chuẩn hoá — khi nào nên phá luật
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Cấp 3 — SQL từ 0 tới cao thủ
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Cấp 3 — SQL từ 0 tới cao thủ
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-3-sql/21-dai-so-quan-he/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 21 — Đại số quan hệ: nền toán học phía sau SQL
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-3-sql/22-ddl-va-kieu-du-lieu/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 22 — DDL: CREATE, ALTER, DROP và các kiểu dữ liệu
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-3-sql/23-dml-insert-update-delete/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 23 — DML: INSERT, UPDATE, DELETE
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-3-sql/24-select-where-order-by/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 24 — SELECT, WHERE, ORDER BY, LIMIT
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-3-sql/25-join/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 25 — JOIN: sáu cách ghép bảng
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-3-sql/26-group-by-having/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 26 — GROUP BY, HAVING và các hàm tổng hợp
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-3-sql/27-subquery-va-exists/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 27 — Truy vấn con (Subquery) và EXISTS
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-3-sql/28-cte-va-recursive-cte/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 28 — CTE và CTE đệ quy
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-3-sql/29-window-function/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 29 — Window Function: tính toán theo cửa sổ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-3-sql/30-view-va-materialized-view/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 30 — View và Materialized View
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-3-sql/31-trigger-procedure-function/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 31 — Trigger, Stored Procedure và Function
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-3-sql/32-jsonb-va-full-text-search/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 32 — JSONB và Full-Text Search
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Cấp 4 — Bên trong động cơ
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            Cấp 4 — Bên trong động cơ
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../33-page-heap-tuple/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 33 — Trang, heap và tuple: PostgreSQL lưu dữ liệu thế nào
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../34-index-va-b-tree/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 34 — Index và B+Tree
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../35-cac-loai-index-khac/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 35 — Các loại index khác: Hash, GiST, GIN, BRIN
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../36-explain-va-query-planner/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 36 — EXPLAIN và bộ tối ưu truy vấn
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../37-transaction-va-acid/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 37 — Transaction và ACID
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../38-isolation-level-va-anomaly/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 38 — Mức cô lập và các hiện tượng bất thường
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../39-mvcc/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 39 — MVCC: nhiều phiên bản cho một dòng
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Bài 40 — WAL, checkpoint và phục hồi sau sự cố
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Bài 40 — WAL, checkpoint và phục hồi sau sự cố
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Mục lục">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Mục lục
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#cau-chuyen-mo-au" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧠 Câu chuyện mở đầu
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#khai-niem-thuat-ngu" class="md-nav__link">
+    <span class="md-ellipsis">
+      📖 Khái niệm &amp; thuật ngữ
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📖 Khái niệm & thuật ngữ">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#nhat-ky-ghi-truoc" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nhật ký ghi trước
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lsn-ia-chi-trong-nhat-ky" class="md-nav__link">
+    <span class="md-ellipsis">
+      LSN — địa chỉ trong nhật ký
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fsync-xuong-ia-that-su" class="md-nav__link">
+    <span class="md-ellipsis">
+      fsync — "xuống đĩa" thật sự
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#checkpoint" class="md-nav__link">
+    <span class="md-ellipsis">
+      Checkpoint
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phuc-hoi-sau-su-co" class="md-nav__link">
+    <span class="md-ellipsis">
+      Phục hồi sau sự cố
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ghi-tron-trang" class="md-nav__link">
+    <span class="md-ellipsis">
+      Ghi trọn trang
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#synchronous_commit-va-bang-khong-ghi-nhat-ky" class="md-nav__link">
+    <span class="md-ellipsis">
+      synchronous_commit và bảng không ghi nhật ký
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sao-luu-va-pitr" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sao lưu và PITR
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bang-thuat-ngu" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bảng thuật ngữ
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#so-o" class="md-nav__link">
+    <span class="md-ellipsis">
+      🖼️ Sơ đồ
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#thuc-hanh" class="md-nav__link">
+    <span class="md-ellipsis">
+      💻 Thực hành
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="💻 Thực hành">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#lsn-hien-tai" class="md-nav__link">
+    <span class="md-ellipsis">
+      LSN hiện tại
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#o-chinh-xac-wal-cua-mot-cau-lenh" class="md-nav__link">
+    <span class="md-ellipsis">
+      Đo chính xác WAL của một câu lệnh
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#checkpoint_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Checkpoint
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ghi-tron-trang-thay-tan-mat" class="md-nav__link">
+    <span class="md-ellipsis">
+      Ghi trọn trang — thấy tận mắt
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cac-tham-so-o-ben" class="md-nav__link">
+    <span class="md-ellipsis">
+      Các tham số độ bền
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sao-luu-nen-va-pitr-mo-ta-khong-chay" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sao lưu nền và PITR — mô tả, không chạy
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#loi-thuong-gap" class="md-nav__link">
+    <span class="md-ellipsis">
+      ⚠️ Lỗi thường gặp
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bai-tap" class="md-nav__link">
+    <span class="md-ellipsis">
+      ✍️ Bài tập
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="✍️ Bài tập">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#don-dep-cuoi-bai" class="md-nav__link">
+    <span class="md-ellipsis">
+      Dọn dẹp cuối bài
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tom-tat" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔑 Tóm tắt
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../41-lock-va-deadlock/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 41 — Khoá và bế tắc
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../dataset/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Database mẫu
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../glossary/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bảng thuật ngữ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Mục lục">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Mục lục
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#cau-chuyen-mo-au" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧠 Câu chuyện mở đầu
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#khai-niem-thuat-ngu" class="md-nav__link">
+    <span class="md-ellipsis">
+      📖 Khái niệm &amp; thuật ngữ
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📖 Khái niệm & thuật ngữ">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#nhat-ky-ghi-truoc" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nhật ký ghi trước
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lsn-ia-chi-trong-nhat-ky" class="md-nav__link">
+    <span class="md-ellipsis">
+      LSN — địa chỉ trong nhật ký
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fsync-xuong-ia-that-su" class="md-nav__link">
+    <span class="md-ellipsis">
+      fsync — "xuống đĩa" thật sự
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#checkpoint" class="md-nav__link">
+    <span class="md-ellipsis">
+      Checkpoint
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phuc-hoi-sau-su-co" class="md-nav__link">
+    <span class="md-ellipsis">
+      Phục hồi sau sự cố
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ghi-tron-trang" class="md-nav__link">
+    <span class="md-ellipsis">
+      Ghi trọn trang
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#synchronous_commit-va-bang-khong-ghi-nhat-ky" class="md-nav__link">
+    <span class="md-ellipsis">
+      synchronous_commit và bảng không ghi nhật ký
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sao-luu-va-pitr" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sao lưu và PITR
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bang-thuat-ngu" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bảng thuật ngữ
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#so-o" class="md-nav__link">
+    <span class="md-ellipsis">
+      🖼️ Sơ đồ
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#thuc-hanh" class="md-nav__link">
+    <span class="md-ellipsis">
+      💻 Thực hành
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="💻 Thực hành">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#lsn-hien-tai" class="md-nav__link">
+    <span class="md-ellipsis">
+      LSN hiện tại
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#o-chinh-xac-wal-cua-mot-cau-lenh" class="md-nav__link">
+    <span class="md-ellipsis">
+      Đo chính xác WAL của một câu lệnh
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#checkpoint_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Checkpoint
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ghi-tron-trang-thay-tan-mat" class="md-nav__link">
+    <span class="md-ellipsis">
+      Ghi trọn trang — thấy tận mắt
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cac-tham-so-o-ben" class="md-nav__link">
+    <span class="md-ellipsis">
+      Các tham số độ bền
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sao-luu-nen-va-pitr-mo-ta-khong-chay" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sao lưu nền và PITR — mô tả, không chạy
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#loi-thuong-gap" class="md-nav__link">
+    <span class="md-ellipsis">
+      ⚠️ Lỗi thường gặp
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bai-tap" class="md-nav__link">
+    <span class="md-ellipsis">
+      ✍️ Bài tập
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="✍️ Bài tập">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#don-dep-cuoi-bai" class="md-nav__link">
+    <span class="md-ellipsis">
+      Dọn dẹp cuối bài
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tom-tat" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔑 Tóm tắt
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="bai-40-wal-checkpoint-va-phuc-hoi-sau-su-co">Bài 40 — WAL, checkpoint và phục hồi sau sự cố<a class="headerlink" href="#bai-40-wal-checkpoint-va-phuc-hoi-sau-su-co" title="Permanent link">&para;</a></h1>
+<div class="admonition abstract">
+<p class="admonition-title">🎯 Học xong bài này, bạn sẽ</p>
+<ul>
+<li>Giải thích được <strong>nhật ký ghi trước</strong> bằng cuốn sổ nháp của thủ thư, và vì sao nhờ nó mà <code>COMMIT</code> vừa <strong>bền</strong> vừa <strong>nhanh</strong></li>
+<li>Đọc được <strong>LSN</strong>, và đo chính xác một câu lệnh sinh ra bao nhiêu bản ghi WAL bằng <code>EXPLAIN (ANALYZE, WAL)</code></li>
+<li>Mô tả được <strong>checkpoint</strong> làm gì, và PostgreSQL tự <strong>phục hồi</strong> thế nào sau khi mất điện — kể cả vì sao giao dịch dở dang tự biến mất mà không cần "hoàn tác"</li>
+<li>Phân biệt được <code>fsync</code>, <code>synchronous_commit</code>, <code>full_page_writes</code> và biết tắt cái nào thì mất gì</li>
+<li>Mô tả được <strong>PITR</strong>: dựng lại database ở đúng một thời điểm trong quá khứ từ một <strong>bản sao lưu nền</strong> và kho WAL</li>
+</ul>
+</div>
+<h2 id="cau-chuyen-mo-au">🧠 Câu chuyện mở đầu<a class="headerlink" href="#cau-chuyen-mo-au" title="Permanent link">&para;</a></h2>
+<p>Thầy thủ thư giữ một <strong>sổ mượn chính</strong>: mỗi học sinh một trang, sắp theo mã học sinh. Ghi một lượt mượn nghĩa là lật tới đúng trang của học sinh đó, tìm dòng trống, ghi vào. Giờ ra chơi có 30 học sinh xếp hàng — thầy lật sổ không kịp.</p>
+<p>Thầy nghĩ ra một mẹo. Cạnh sổ chính, thầy đặt một <strong>sổ nháp</strong> chỉ ghi theo <strong>thứ tự thời gian</strong>:</p>
+<blockquote>
+<p>9:01 — HS003 mượn S001
+9:01 — HS017 trả S004
+9:02 — HS022 mượn S009</p>
+</blockquote>
+<p>Ghi sổ nháp cực nhanh: luôn viết tiếp vào dòng cuối, không phải lật tìm gì. Thầy chỉ <strong>gật đầu "xong"</strong> với học sinh <strong>sau khi</strong> đã ghi dòng đó vào sổ nháp bằng bút mực. Còn sổ chính thì cuối giờ, lúc vắng người, thầy mới <strong>chép dần</strong> từ sổ nháp sang.</p>
+<p>Một buổi, đang chép dở thì <strong>mất điện</strong>. Sổ chính lộn xộn: trang của HS003 đã cập nhật, trang của HS022 chưa, và một trang đang chép dở thì bị nhoè mực. Nhưng thầy không lo. Sáng hôm sau, thầy mở sổ nháp, tìm <strong>vạch kẻ</strong> cuối cùng ghi <em>"đã chép hết tới đây"</em>, rồi <strong>làm lại</strong> mọi dòng sau vạch. Sổ chính trở lại đúng như trước lúc mất điện — không sót một lượt mượn nào đã được gật đầu.</p>
+<p>Còn học sinh đang đứng trước bàn lúc mất điện, <strong>chưa</strong> được gật đầu? Lượt của em ấy không có trong sổ nháp, nên coi như chưa từng xảy ra. Em ấy làm lại là xong.</p>
+<p>Bài 37 nói chữ <strong>D</strong> của ACID được giữ bằng "nhật ký ghi trước + <code>fsync</code>". Đây chính là cuốn sổ nháp đó.</p>
+<h2 id="khai-niem-thuat-ngu">📖 Khái niệm &amp; thuật ngữ<a class="headerlink" href="#khai-niem-thuat-ngu" title="Permanent link">&para;</a></h2>
+<h3 id="nhat-ky-ghi-truoc">Nhật ký ghi trước<a class="headerlink" href="#nhat-ky-ghi-truoc" title="Permanent link">&para;</a></h3>
+<p><strong>Nhật ký ghi trước</strong> (<em>write-ahead logging</em>, viết tắt <strong>WAL</strong>) là một tệp nhật ký chỉ <strong>ghi nối tiếp</strong>, trong đó mỗi bản ghi mô tả một thay đổi: <em>"trang 17 của bảng <code>diem</code>: thêm tuple này vào ô số 5"</em>. Luật duy nhất của nó nằm ngay trong tên gọi:</p>
+<blockquote>
+<p>Bản ghi WAL mô tả một thay đổi phải nằm <strong>trên đĩa</strong> trước khi trang dữ liệu chứa thay đổi đó được ghi xuống đĩa. Và <code>COMMIT</code> chỉ được báo thành công khi bản ghi <code>COMMIT</code> đã nằm <strong>trên đĩa</strong>.</p>
+</blockquote>
+<p>Nhờ luật này, trang dữ liệu thật — các trang 8KB của Bài 33 — <strong>không cần</strong> ghi xuống đĩa lúc <code>COMMIT</code>. Chúng được sửa trong bộ nhớ, và được ghi xuống sau, lúc nào tiện. Mất điện thì mọi thứ trong bộ nhớ mất, nhưng WAL trên đĩa đủ để dựng lại.</p>
+<p>Vì sao nhanh hơn ghi thẳng trang dữ liệu? Cùng lý do với sổ nháp:</p>
+<table>
+<thead>
+<tr>
+<th>Ghi thẳng trang dữ liệu lúc <code>COMMIT</code></th>
+<th>Ghi WAL lúc <code>COMMIT</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Một giao dịch sửa 10 dòng rải trên 10 trang → ghi 10 chỗ <strong>rải rác</strong> trên đĩa, mỗi chỗ 8KB</td>
+<td>Ghi <strong>nối tiếp</strong> vài trăm byte vào cuối một tệp</td>
+</tr>
+<tr>
+<td>Mỗi giao dịch ghi riêng</td>
+<td>Nhiều giao dịch xác nhận cùng lúc được đẩy xuống đĩa <strong>chung một lần</strong></td>
+</tr>
+</tbody>
+</table>
+<p>WAL được chia thành các tệp 16MB trong thư mục <code>pg_wal</code> của thư mục dữ liệu. Tên tệp như <code>00000001000000000000001A</code> là một con số tăng dần.</p>
+<h3 id="lsn-ia-chi-trong-nhat-ky">LSN — địa chỉ trong nhật ký<a class="headerlink" href="#lsn-ia-chi-trong-nhat-ky" title="Permanent link">&para;</a></h3>
+<p>Mỗi bản ghi WAL có một địa chỉ: vị trí <strong>byte</strong> của nó tính từ đầu dòng nhật ký. Địa chỉ đó gọi là <strong>số thứ tự nhật ký</strong> (<em>Log Sequence Number</em>, viết tắt <strong>LSN</strong>), viết dạng hai số thập lục phân như <code>0/1AB50910</code>. LSN chỉ tăng, không bao giờ lùi, nên so hai LSN là biết cái nào xảy ra trước.</p>
+<p>Đầu mỗi trang dữ liệu — phần 24 byte của Bài 33 — ghi LSN của bản ghi WAL <strong>cuối cùng</strong> đã sửa trang đó. Luật ghi trước được giữ bằng chính con số này: trước khi ghi một trang xuống đĩa, PostgreSQL bảo đảm WAL đã được đẩy xuống ít nhất tới LSN của trang.</p>
+<h3 id="fsync-xuong-ia-that-su"><code>fsync</code> — "xuống đĩa" thật sự<a class="headerlink" href="#fsync-xuong-ia-that-su" title="Permanent link">&para;</a></h3>
+<p>Khi một chương trình "ghi tệp", hệ điều hành thường chỉ chép dữ liệu vào <strong>bộ nhớ đệm</strong> của nó rồi báo xong ngay; việc ghi ra đĩa thật để sau. Mất điện lúc đó thì dữ liệu "đã ghi" vẫn mất.</p>
+<p><strong>Đẩy xuống đĩa</strong> (<em>fsync</em>) là lời gọi hệ thống bắt hệ điều hành ghi hết dữ liệu của một tệp ra <strong>thiết bị lưu trữ</strong> rồi mới trả về. PostgreSQL gọi nó cho WAL mỗi lần <code>COMMIT</code>. Đây là bước chậm nhất của <code>COMMIT</code>, và là bước biến lời hứa <strong>D</strong> thành sự thật.</p>
+<h3 id="checkpoint">Checkpoint<a class="headerlink" href="#checkpoint" title="Permanent link">&para;</a></h3>
+<p>Nếu trang dữ liệu không bao giờ phải ghi xuống đĩa, WAL sẽ dài vô tận, và sau khi mất điện phải làm lại từ đầu năm. <strong>Điểm kiểm tra</strong> (<em>checkpoint</em>) giải quyết cả hai: đó là lúc PostgreSQL</p>
+<ol>
+<li>ghi <strong>mọi trang đã bị sửa</strong> trong bộ nhớ xuống tệp dữ liệu, rồi <code>fsync</code> chúng;</li>
+<li>ghi một bản ghi checkpoint vào WAL, và lưu vào tệp điều khiển <code>pg_control</code> vị trí <strong>bắt đầu làm lại</strong> — <strong>điểm làm lại</strong> (<em>redo point</em>).</li>
+</ol>
+<p>Sau checkpoint, mọi WAL <strong>trước</strong> điểm làm lại không còn cần cho việc phục hồi sau mất điện, nên được tái sử dụng hoặc xoá. Đó là vạch <em>"đã chép hết tới đây"</em> trong sổ nháp.</p>
+<p>Checkpoint tự chạy khi đủ một trong hai điều kiện:</p>
+<table>
+<thead>
+<tr>
+<th>Tham số</th>
+<th>Mặc định</th>
+<th>Ý nghĩa</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>checkpoint_timeout</code></td>
+<td><code>5min</code></td>
+<td>Tối đa bao lâu giữa hai checkpoint</td>
+</tr>
+<tr>
+<td><code>max_wal_size</code></td>
+<td><code>1GB</code></td>
+<td>WAL sinh ra kể từ checkpoint trước vượt ngưỡng này thì checkpoint sớm</td>
+</tr>
+</tbody>
+</table>
+<p>Ngoài ra, người quản trị có thể gõ lệnh <code>CHECKPOINT</code> để ép chạy ngay. Việc ghi trang được dàn đều trong khoảng thời gian giữa hai checkpoint (tham số <code>checkpoint_completion_target</code>), để đĩa không bị dội một lúc.</p>
+<h3 id="phuc-hoi-sau-su-co">Phục hồi sau sự cố<a class="headerlink" href="#phuc-hoi-sau-su-co" title="Permanent link">&para;</a></h3>
+<p>Khi PostgreSQL khởi động mà thấy lần trước không tắt đàng hoàng, nó tự chạy <strong>phục hồi sau sự cố</strong> (<em>crash recovery</em>):</p>
+<ol>
+<li>Đọc <code>pg_control</code>, lấy điểm làm lại của checkpoint cuối cùng.</li>
+<li>Đọc WAL từ đó tới hết, <strong>làm lại</strong> (<em>redo</em>) từng bản ghi lên các trang dữ liệu. Trang nào đã có LSN mới hơn bản ghi — tức thay đổi đã kịp xuống đĩa — thì bỏ qua.</li>
+<li>Mở cửa nhận kết nối.</li>
+</ol>
+<p>Một câu hỏi tự nhiên: giao dịch <strong>chưa</strong> <code>COMMIT</code> lúc mất điện thì sao? Các thay đổi của nó cũng nằm trong WAL và cũng được làm lại. Nhưng không có bản ghi <code>COMMIT</code> nào cho mã giao dịch ấy, nên sau phục hồi nó được coi là <strong>đã huỷ</strong> — và theo quy tắc thấy được của Bài 39, mọi tuple nó tạo ra <strong>không ai thấy</strong>. PostgreSQL chỉ cần <strong>làm lại</strong>, không bao giờ cần <strong>hoàn tác</strong>. MVCC và WAL khớp vào nhau như vậy.</p>
+<p>Nhật ký máy chủ ghi lại quá trình này. Đây là nhật ký thật khi ngắt điện đột ngột một máy chủ thử nghiệm của khoá học; LSN và thời gian trên máy bạn sẽ khác:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>LOG:  database system was not properly shut down; automatic recovery in progress
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>LOG:  redo starts at 0/5F828788
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>LOG:  redo done at 0/6140DAA0 system usage: CPU: user: 0.07 s, system: 0.02 s, elapsed: 0.10 s
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>LOG:  database system is ready to accept connections
+</span></code></pre></div>
+<p>Khoảng cách giữa hai LSN — khoảng 28MB WAL — quyết định thời gian phục hồi. Checkpoint càng thưa thì đoạn cần làm lại càng dài.</p>
+<h3 id="ghi-tron-trang">Ghi trọn trang<a class="headerlink" href="#ghi-tron-trang" title="Permanent link">&para;</a></h3>
+<p>Trang của PostgreSQL dài 8KB, nhưng nhiều ổ đĩa chỉ bảo đảm ghi trọn từng khối 4KB hoặc nhỏ hơn. Mất điện đúng lúc đang ghi một trang có thể để lại một trang <strong>rách</strong>: nửa mới, nửa cũ — trang bị nhoè mực trong câu chuyện. Bản ghi WAL chỉ mô tả "thêm tuple vào ô số 5" thì không cứu được một trang đã rách.</p>
+<p>Vì vậy, lần <strong>đầu tiên</strong> một trang bị sửa sau mỗi checkpoint, PostgreSQL chép <strong>nguyên cả trang</strong> vào WAL. Cơ chế này gọi là <strong>ghi trọn trang</strong> (<em>full-page writes</em>), bật bằng tham số <code>full_page_writes</code>. Khi phục hồi, trang rách được thay bằng bản chép nguyên vẹn, rồi mới làm lại các thay đổi sau đó. Cái giá: ngay sau mỗi checkpoint, lượng WAL tăng vọt. Phần thực hành sẽ đo điều này.</p>
+<h3 id="synchronous_commit-va-bang-khong-ghi-nhat-ky"><code>synchronous_commit</code> và bảng không ghi nhật ký<a class="headerlink" href="#synchronous_commit-va-bang-khong-ghi-nhat-ky" title="Permanent link">&para;</a></h3>
+<p>Hai cách đánh đổi độ bền lấy tốc độ — một cách an toàn, một cách phải hiểu rõ:</p>
+<p><strong>Xác nhận đồng bộ</strong> (<em>synchronous commit</em>) — tham số <code>synchronous_commit</code>, mặc định <code>on</code>: <code>COMMIT</code> chờ WAL được <code>fsync</code> rồi mới báo xong. Đặt <code>off</code> thì <code>COMMIT</code> báo xong <strong>ngay</strong>, WAL được đẩy xuống đĩa sau đó một chút. Mất điện có thể <strong>mất vài giao dịch cuối cùng</strong> đã được báo thành công — nhưng database <strong>không bao giờ hỏng</strong>: những gì còn lại vẫn nhất quán, vì luật ghi trước vẫn được giữ. Tham số này đặt được cho <strong>từng giao dịch</strong>, nên có thể chỉ nới lỏng cho dữ liệu kém quan trọng như nhật ký truy cập.</p>
+<p><strong>Bảng không ghi nhật ký</strong> (<em>unlogged table</em>) — tạo bằng <code>CREATE UNLOGGED TABLE</code>: thay đổi trên bảng <strong>không ghi WAL</strong> chút nào, nên ghi rất nhanh. Cái giá: sau một lần mất điện, PostgreSQL không có gì để làm lại, nên bảng bị <strong>làm rỗng</strong>. Chỉ hợp với dữ liệu tạm, dựng lại được.</p>
+<h3 id="sao-luu-va-pitr">Sao lưu và PITR<a class="headerlink" href="#sao-luu-va-pitr" title="Permanent link">&para;</a></h3>
+<p>WAL còn một công dụng thứ hai, quan trọng không kém. Nếu <strong>giữ lại mọi tệp WAL</strong> thay vì xoá sau checkpoint, cộng với <strong>một bản chụp thư mục dữ liệu</strong> ở một thời điểm, ta dựng lại được database ở <strong>bất kỳ thời điểm nào</strong> sau bản chụp đó: khôi phục bản chụp, rồi làm lại WAL tới đúng thời điểm muốn dừng.</p>
+<table>
+<thead>
+<tr>
+<th>Thành phần</th>
+<th>Tên gọi</th>
+<th>Cách có</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Bản chụp thư mục dữ liệu</td>
+<td><strong>Bản sao lưu nền</strong> (<em>base backup</em>)</td>
+<td>Công cụ dòng lệnh <code>pg_basebackup</code>, chạy khi máy chủ đang hoạt động</td>
+</tr>
+<tr>
+<td>Kho chứa mọi tệp WAL</td>
+<td><strong>Lưu trữ WAL</strong> (<em>WAL archiving</em>)</td>
+<td>Tham số <code>archive_mode = on</code> và <code>archive_command</code> — lệnh chép mỗi tệp WAL 16MB đã đầy sang kho</td>
+</tr>
+<tr>
+<td>Dựng lại tới một thời điểm</td>
+<td><strong>Khôi phục về một thời điểm</strong> (<em>Point-In-Time Recovery</em>, viết tắt <strong>PITR</strong>)</td>
+<td>Tham số <code>restore_command</code> và <code>recovery_target_time</code> lúc khởi động bản khôi phục</td>
+</tr>
+</tbody>
+</table>
+<p>PITR là thứ cứu bạn khỏi lỗi <strong>của con người</strong>: ai đó <code>DELETE</code> nhầm lúc 10:15 thì dựng lại database lúc 10:14:59. Không cơ chế nào ở trên — <code>fsync</code>, checkpoint, phục hồi sau sự cố — làm được điều này, vì với chúng, câu <code>DELETE</code> nhầm là một giao dịch <strong>đã xác nhận hợp lệ</strong>, phải được giữ bền vững.</p>
+<div class="admonition note">
+<p class="admonition-title">WAL cũng là nền của nhân bản</p>
+<p>Gửi từng bản ghi WAL sang một máy chủ khác và làm lại liên tục ở đó, ta có một bản sao <strong>luôn bám sát</strong> máy chính. Đó là nhân bản vật lý của PostgreSQL — nội dung Bài 42, Cấp 5. Tham số <code>wal_level = replica</code> mặc định ghi đủ thông tin cho cả lưu trữ WAL lẫn nhân bản.</p>
+</div>
+<h3 id="bang-thuat-ngu">Bảng thuật ngữ<a class="headerlink" href="#bang-thuat-ngu" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Tiếng Việt</th>
+<th>English</th>
+<th>Nghĩa dễ hiểu</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Nhật ký ghi trước</td>
+<td><em>write-ahead logging</em> (WAL)</td>
+<td>Nhật ký ghi nối tiếp mô tả mọi thay đổi; phải xuống đĩa trước trang dữ liệu, và <code>COMMIT</code> chỉ xong khi bản ghi <code>COMMIT</code> đã xuống đĩa</td>
+</tr>
+<tr>
+<td>Số thứ tự nhật ký</td>
+<td><em>Log Sequence Number</em> (LSN)</td>
+<td>Vị trí byte của một bản ghi trong WAL, dạng <code>0/1AB50910</code>; chỉ tăng</td>
+</tr>
+<tr>
+<td>Đẩy xuống đĩa</td>
+<td><em>fsync</em></td>
+<td>Lời gọi hệ thống bắt hệ điều hành ghi dữ liệu từ bộ nhớ đệm ra thiết bị lưu trữ thật</td>
+</tr>
+<tr>
+<td>Điểm kiểm tra</td>
+<td><em>checkpoint</em></td>
+<td>Lúc ghi mọi trang đã sửa xuống tệp dữ liệu và đánh dấu điểm làm lại; WAL trước đó không còn cần để phục hồi</td>
+</tr>
+<tr>
+<td>Điểm làm lại</td>
+<td><em>redo point</em></td>
+<td>Vị trí trong WAL mà phục hồi sau sự cố bắt đầu đọc, lưu trong <code>pg_control</code></td>
+</tr>
+<tr>
+<td>Phục hồi sau sự cố</td>
+<td><em>crash recovery</em></td>
+<td>Khởi động sau khi tắt đột ngột: làm lại WAL từ điểm làm lại của checkpoint cuối</td>
+</tr>
+<tr>
+<td>Làm lại</td>
+<td><em>redo</em></td>
+<td>Áp lại một bản ghi WAL lên trang dữ liệu; giao dịch không có bản ghi <code>COMMIT</code> được coi là đã huỷ</td>
+</tr>
+<tr>
+<td>Ghi trọn trang</td>
+<td><em>full-page writes</em></td>
+<td>Lần sửa đầu tiên của mỗi trang sau checkpoint chép nguyên trang vào WAL, chống trang rách</td>
+</tr>
+<tr>
+<td>Xác nhận đồng bộ</td>
+<td><em>synchronous commit</em></td>
+<td><code>COMMIT</code> chờ WAL xuống đĩa mới báo xong; tắt đi thì có thể mất giao dịch cuối nhưng không hỏng dữ liệu</td>
+</tr>
+<tr>
+<td>Bảng không ghi nhật ký</td>
+<td><em>unlogged table</em></td>
+<td>Bảng không ghi WAL: ghi nhanh, nhưng bị làm rỗng sau mất điện và không được nhân bản</td>
+</tr>
+<tr>
+<td>Bản sao lưu nền</td>
+<td><em>base backup</em></td>
+<td>Bản chụp thư mục dữ liệu lấy khi máy chủ đang chạy, bằng <code>pg_basebackup</code></td>
+</tr>
+<tr>
+<td>Lưu trữ WAL</td>
+<td><em>WAL archiving</em></td>
+<td>Giữ lại mọi tệp WAL ở một kho riêng, thay vì xoá sau checkpoint</td>
+</tr>
+<tr>
+<td>Khôi phục về một thời điểm</td>
+<td><em>Point-In-Time Recovery</em> (PITR)</td>
+<td>Khôi phục bản sao lưu nền rồi làm lại WAL từ kho tới đúng thời điểm mong muốn</td>
+</tr>
+</tbody>
+</table>
+<h2 id="so-o">🖼️ Sơ đồ<a class="headerlink" href="#so-o" title="Permanent link">&para;</a></h2>
+<p>Đường đi của một <code>COMMIT</code> — và trang dữ liệu được ghi <strong>sau</strong> khi người dùng đã nhận "thành công":</p>
+<pre class="mermaid"><code>sequenceDiagram
+    participant U as Ứng dụng
+    participant P as Tiến trình phục vụ
+    participant M as Bộ nhớ chung
+    participant W as Tệp WAL trên đĩa
+    participant D as Tệp dữ liệu trên đĩa
+    U-&gt;&gt;P: UPDATE điểm An = 8
+    P-&gt;&gt;M: sửa trang dữ liệu trong bộ nhớ (trang "bẩn")
+    P-&gt;&gt;M: thêm bản ghi WAL vào bộ đệm WAL
+    U-&gt;&gt;P: COMMIT
+    P-&gt;&gt;M: thêm bản ghi COMMIT
+    P-&gt;&gt;W: ghi bộ đệm WAL + fsync
+    W--&gt;&gt;P: đã nằm trên đĩa
+    P--&gt;&gt;U: COMMIT thành công
+    Note over M,D: vài giây hoặc vài phút sau...
+    M-&gt;&gt;D: checkpoint ghi trang bẩn xuống tệp dữ liệu + fsync</code></pre>
+<p>Mất điện ở bất kỳ thời điểm nào <strong>sau</strong> mũi tên "đã nằm trên đĩa" thì thay đổi vẫn được phục hồi. Mất điện <strong>trước</strong> đó thì người dùng chưa bao giờ nhận được "thành công".</p>
+<p>Phục hồi sau sự cố nhìn trên dòng WAL:</p>
+<pre class="mermaid"><code>flowchart LR
+    C["&lt;b&gt;Checkpoint cuối&lt;/b&gt;&lt;br/&gt;điểm làm lại&lt;br/&gt;lưu trong pg_control"]
+    T1["Giao dịch 501&lt;br/&gt;UPDATE ... COMMIT"]
+    T2["Giao dịch 502&lt;br/&gt;INSERT ...&lt;br/&gt;chưa COMMIT"]
+    X["&lt;b&gt;Mất điện&lt;/b&gt;"]
+    R1["Sau phục hồi:&lt;br/&gt;501 &lt;b&gt;còn&lt;/b&gt;"]
+    R2["Sau phục hồi:&lt;br/&gt;502 &lt;b&gt;coi như đã huỷ&lt;/b&gt;&lt;br/&gt;tuple của nó không ai thấy"]
+    C --&gt; T1 --&gt; T2 --&gt; X
+    T1 -.-&gt; R1
+    T2 -.-&gt; R2
+
+    style C fill:#e3f2fd,stroke:#1565c0,stroke-width:3px
+    style X fill:#ffebee,stroke:#c62828,stroke-width:3px
+    style R1 fill:#e8f5e9,stroke:#2e7d32
+    style R2 fill:#fff8e1,stroke:#f9a825</code></pre>
+<p>Mọi thứ <strong>bên trái</strong> checkpoint đã nằm an toàn trong tệp dữ liệu. Mọi thứ <strong>bên phải</strong> được làm lại từ WAL.</p>
+<h2 id="thuc-hanh">💻 Thực hành<a class="headerlink" href="#thuc-hanh" title="Permanent link">&para;</a></h2>
+<h3 id="lsn-hien-tai">LSN hiện tại<a class="headerlink" href="#lsn-hien-tai" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1">-- KỲ VỌNG: kieu = pg_lsn</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">pg_typeof</span><span class="p">(</span><span class="n">pg_current_wal_lsn</span><span class="p">())::</span><span class="nb">text</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">kieu</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Tự xem vị trí hiện tại và tên tệp WAL đang được ghi — hai con số này khác trên mỗi máy và mỗi lần chạy:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">pg_current_wal_lsn</span><span class="p">()</span><span class="w">                   </span><span class="k">AS</span><span class="w"> </span><span class="n">lsn_hien_tai</span><span class="p">,</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">       </span><span class="n">pg_walfile_name</span><span class="p">(</span><span class="n">pg_current_wal_lsn</span><span class="p">())</span><span class="w">  </span><span class="k">AS</span><span class="w"> </span><span class="n">tep_wal_dang_ghi</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Ghi dữ liệu thì LSN tăng. Hàm <code>pg_wal_lsn_diff(a, b)</code> tính số byte WAL giữa hai LSN:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">b40_moc</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">;</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">b40_moc</span><span class="w"> </span><span class="p">(</span><span class="n">ten</span><span class="w"> </span><span class="nb">TEXT</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span><span class="w"> </span><span class="n">lsn</span><span class="w"> </span><span class="n">PG_LSN</span><span class="p">);</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">b40_muon</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">;</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">b40_muon</span><span class="w"> </span><span class="p">(</span><span class="n">ma_luot</span><span class="w"> </span><span class="nb">INTEGER</span><span class="p">,</span><span class="w"> </span><span class="n">ma_hs</span><span class="w"> </span><span class="nb">CHAR</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span><span class="w"> </span><span class="n">ma_sach</span><span class="w"> </span><span class="nb">CHAR</span><span class="p">(</span><span class="mi">4</span><span class="p">));</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">b40_moc</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="s1">'truoc_ghi'</span><span class="p">,</span><span class="w"> </span><span class="n">pg_current_wal_lsn</span><span class="p">();</span>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">b40_muon</span>
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">g</span><span class="p">,</span><span class="w"> </span><span class="s1">'HS'</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">lpad</span><span class="p">((</span><span class="k">g</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mi">40</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)::</span><span class="nb">text</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="s1">'0'</span><span class="p">),</span><span class="w"> </span><span class="s1">'S'</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">lpad</span><span class="p">((</span><span class="k">g</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mi">20</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)::</span><span class="nb">text</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="s1">'0'</span><span class="p">)</span>
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="k">FROM</span><span class="w"> </span><span class="n">generate_series</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">10000</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="k">g</span><span class="p">;</span>
+</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">b40_moc</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="s1">'sau_ghi'</span><span class="p">,</span><span class="w"> </span><span class="n">pg_current_wal_lsn</span><span class="p">();</span>
+</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
+</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c1">-- KỲ VỌNG: lsn_tang = true</span>
+</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="k">SELECT</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">lsn</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">b40_moc</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">ten</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'sau_ghi'</span><span class="p">)</span>
+</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="w">     </span><span class="o">&gt;</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">lsn</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">b40_moc</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">ten</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'truoc_ghi'</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">lsn_tang</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Xem số byte trên máy mình:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">pg_size_pretty</span><span class="p">(</span><span class="n">pg_wal_lsn_diff</span><span class="p">(</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">           </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">lsn</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">b40_moc</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">ten</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'sau_ghi'</span><span class="p">),</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">           </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">lsn</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">b40_moc</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">ten</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'truoc_ghi'</span><span class="p">)))</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">wal_da_sinh</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Con số này đo <strong>toàn bộ</strong> WAL của cả máy chủ trong khoảng đó — kể cả việc của các tiến trình nền — nên chỉ là ước lượng cho câu lệnh của bạn.</p>
+<h3 id="o-chinh-xac-wal-cua-mot-cau-lenh">Đo chính xác WAL của một câu lệnh<a class="headerlink" href="#o-chinh-xac-wal-cua-mot-cau-lenh" title="Permanent link">&para;</a></h3>
+<p><code>EXPLAIN (ANALYZE, WAL)</code> chạy thật câu lệnh và báo lượng WAL <strong>chính câu lệnh đó</strong> sinh ra: số bản ghi, số bản chép trọn trang, và số byte. Như ở Bài 36, <code>EXPLAIN</code> không dùng được trực tiếp trong truy vấn con, nên ta bọc nó trong một hàm, lần này đọc kết quả dạng JSON:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="k">DROP</span><span class="w"> </span><span class="k">FUNCTION</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">b40_wal_cua</span><span class="p">(</span><span class="nb">text</span><span class="p">);</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">FUNCTION</span><span class="w"> </span><span class="n">b40_wal_cua</span><span class="p">(</span><span class="n">cau_lenh</span><span class="w"> </span><span class="nb">text</span><span class="p">)</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="k">RETURNS</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="p">(</span><span class="n">so_ban_ghi</span><span class="w"> </span><span class="nb">bigint</span><span class="p">,</span><span class="w"> </span><span class="n">so_trang_tron</span><span class="w"> </span><span class="nb">bigint</span><span class="p">,</span><span class="w"> </span><span class="n">so_byte</span><span class="w"> </span><span class="nb">numeric</span><span class="p">)</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="k">LANGUAGE</span><span class="w"> </span><span class="n">plpgsql</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="err">$$</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="k">DECLARE</span><span class="w"> </span><span class="n">ke_hoach</span><span class="w"> </span><span class="n">json</span><span class="p">;</span>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="k">BEGIN</span>
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">    </span><span class="k">EXECUTE</span><span class="w"> </span><span class="s1">'EXPLAIN (ANALYZE, WAL, FORMAT JSON) '</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">cau_lenh</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">ke_hoach</span><span class="p">;</span>
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">    </span><span class="n">so_ban_ghi</span><span class="w">    </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">ke_hoach</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="s1">'Plan'</span><span class="w"> </span><span class="o">-&gt;&gt;</span><span class="w"> </span><span class="s1">'WAL Records'</span><span class="p">)::</span><span class="nb">bigint</span><span class="p">;</span>
+</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">    </span><span class="n">so_trang_tron</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">ke_hoach</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="s1">'Plan'</span><span class="w"> </span><span class="o">-&gt;&gt;</span><span class="w"> </span><span class="s1">'WAL FPI'</span><span class="p">)::</span><span class="nb">bigint</span><span class="p">;</span>
+</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">    </span><span class="n">so_byte</span><span class="w">       </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">ke_hoach</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="s1">'Plan'</span><span class="w"> </span><span class="o">-&gt;&gt;</span><span class="w"> </span><span class="s1">'WAL Bytes'</span><span class="p">)::</span><span class="nb">numeric</span><span class="p">;</span>
+</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">    </span><span class="k">RETURN</span><span class="w"> </span><span class="k">NEXT</span><span class="p">;</span>
+</span><span id="__span-5-12"><a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="k">END</span><span class="w"> </span><span class="err">$$</span><span class="p">;</span>
+</span></code></pre></div>
+<p>So cùng một lệnh thêm 10.000 lượt mượn vào bảng thường và vào <strong>bảng không ghi nhật ký</strong>:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">b40_muon_tam</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">;</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="k">CREATE</span><span class="w"> </span><span class="n">UNLOGGED</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">b40_muon_tam</span><span class="w"> </span><span class="p">(</span><span class="n">ma_luot</span><span class="w"> </span><span class="nb">INTEGER</span><span class="p">,</span><span class="w"> </span><span class="n">ma_hs</span><span class="w"> </span><span class="nb">CHAR</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span><span class="w"> </span><span class="n">ma_sach</span><span class="w"> </span><span class="nb">CHAR</span><span class="p">(</span><span class="mi">4</span><span class="p">));</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">b40_do</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">;</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">b40_do</span><span class="w"> </span><span class="k">AS</span>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="k">SELECT</span><span class="w"> </span><span class="s1">'bang_thuong'</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">bang</span><span class="p">,</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">b40_wal_cua</span><span class="p">(</span>
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">    </span><span class="err">$$</span><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">b40_muon</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="k">g</span><span class="p">,</span><span class="w"> </span><span class="s1">'HS001'</span><span class="p">,</span><span class="w"> </span><span class="s1">'S001'</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">generate_series</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">10000</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="k">g</span><span class="err">$$</span><span class="p">)</span>
+</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="k">UNION</span><span class="w"> </span><span class="k">ALL</span>
+</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="k">SELECT</span><span class="w"> </span><span class="s1">'bang_khong_ghi_nhat_ky'</span><span class="p">,</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">b40_wal_cua</span><span class="p">(</span>
+</span><span id="__span-6-10"><a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="w">    </span><span class="err">$$</span><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">b40_muon_tam</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="k">g</span><span class="p">,</span><span class="w"> </span><span class="s1">'HS001'</span><span class="p">,</span><span class="w"> </span><span class="s1">'S001'</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">generate_series</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">10000</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="k">g</span><span class="err">$$</span><span class="p">);</span>
+</span><span id="__span-6-11"><a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>
+</span><span id="__span-6-12"><a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="c1">-- KỲ VỌNG: it_nhat_moi_dong_mot_ban_ghi = true</span>
+</span><span id="__span-6-13"><a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c1">-- KỲ VỌNG: ban_ghi_khong_log = 0</span>
+</span><span id="__span-6-14"><a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="c1">-- KỲ VỌNG: byte_khong_log = 0</span>
+</span><span id="__span-6-15"><a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="k">SELECT</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">so_ban_ghi</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">10000</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">b40_do</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">bang</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'bang_thuong'</span><span class="p">)</span><span class="w">      </span><span class="k">AS</span><span class="w"> </span><span class="n">it_nhat_moi_dong_mot_ban_ghi</span><span class="p">,</span>
+</span><span id="__span-6-16"><a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="w">       </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">so_ban_ghi</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">b40_do</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">bang</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'bang_khong_ghi_nhat_ky'</span><span class="p">)</span><span class="w">   </span><span class="k">AS</span><span class="w"> </span><span class="n">ban_ghi_khong_log</span><span class="p">,</span>
+</span><span id="__span-6-17"><a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="w">       </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">so_byte</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">b40_do</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">bang</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'bang_khong_ghi_nhat_ky'</span><span class="p">)</span><span class="w">      </span><span class="k">AS</span><span class="w"> </span><span class="n">byte_khong_log</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Bảng thường: mỗi dòng thêm vào là <strong>ít nhất một</strong> bản ghi WAL. Bảng không ghi nhật ký: <strong>0</strong> bản ghi, <strong>0</strong> byte. Xem con số byte thật trên máy bạn:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">bang</span><span class="p">,</span><span class="w"> </span><span class="n">so_ban_ghi</span><span class="p">,</span><span class="w"> </span><span class="n">so_trang_tron</span><span class="p">,</span><span class="w"> </span><span class="n">pg_size_pretty</span><span class="p">(</span><span class="n">so_byte</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">dung_luong</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">b40_do</span><span class="w"> </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">bang</span><span class="p">;</span>
+</span></code></pre></div>
+<h3 id="checkpoint_1">Checkpoint<a class="headerlink" href="#checkpoint_1" title="Permanent link">&para;</a></h3>
+<p>Bảng hệ thống <code>pg_stat_bgwriter</code> đếm số checkpoint đã chạy: <code>checkpoints_timed</code> do hết giờ <code>checkpoint_timeout</code>, <code>checkpoints_req</code> do được yêu cầu — bởi <code>max_wal_size</code> hoặc lệnh <code>CHECKPOINT</code>. Hàm <code>pg_control_checkpoint()</code> đọc tệp <code>pg_control</code>, trong đó có <code>redo_lsn</code> — điểm làm lại của checkpoint cuối cùng.</p>
+<div class="highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="k">DELETE</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">b40_moc</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">ten</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'truoc_checkpoint'</span><span class="p">;</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">b40_moc</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="s1">'truoc_checkpoint'</span><span class="p">,</span><span class="w"> </span><span class="n">pg_current_wal_lsn</span><span class="p">();</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">b40_dem_checkpoint</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">;</span>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">b40_dem_checkpoint</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="n">checkpoints_req</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">truoc</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">pg_stat_bgwriter</span><span class="p">;</span>
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="k">CHECKPOINT</span><span class="p">;</span>
+</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>
+</span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="c1">-- KỲ VỌNG: diem_lam_lai_da_tien = true</span>
+</span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1">-- KỲ VỌNG: so_checkpoint_tang = true</span>
+</span><span id="__span-8-11"><a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="k">SELECT</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">redo_lsn</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">pg_control_checkpoint</span><span class="p">())</span>
+</span><span id="__span-8-12"><a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="w">         </span><span class="o">&gt;=</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">lsn</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">b40_moc</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">ten</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'truoc_checkpoint'</span><span class="p">)</span><span class="w">      </span><span class="k">AS</span><span class="w"> </span><span class="n">diem_lam_lai_da_tien</span><span class="p">,</span>
+</span><span id="__span-8-13"><a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="w">       </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">checkpoints_req</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">pg_stat_bgwriter</span><span class="p">)</span>
+</span><span id="__span-8-14"><a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="w">         </span><span class="o">&gt;</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">truoc</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">b40_dem_checkpoint</span><span class="p">)</span><span class="w">                          </span><span class="k">AS</span><span class="w"> </span><span class="n">so_checkpoint_tang</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Điểm làm lại đã tiến lên <strong>sau</strong> vị trí WAL lúc trước checkpoint: nếu mất điện ngay bây giờ, phục hồi sẽ bắt đầu từ đây, không cần đọc lại những gì trước đó. Lệnh <code>CHECKPOINT</code> cần quyền quản trị; với Docker của Bài 5 bạn đang là người dùng <code>postgres</code> nên chạy được.</p>
+<div class="admonition note">
+<p class="admonition-title">PostgreSQL 17 trở lên</p>
+<p>Từ phiên bản 17, các cột đếm checkpoint chuyển sang bảng mới <code>pg_stat_checkpointer</code> (cột <code>num_timed</code>, <code>num_requested</code>). Khoá học dùng PostgreSQL 16 nên vẫn đọc <code>pg_stat_bgwriter</code>.</p>
+</div>
+<h3 id="ghi-tron-trang-thay-tan-mat">Ghi trọn trang — thấy tận mắt<a class="headerlink" href="#ghi-tron-trang-thay-tan-mat" title="Permanent link">&para;</a></h3>
+<p>Một bảng nhỏ vừa gọn trong <strong>một</strong> trang, còn nhiều chỗ trống — để phiên bản mới của dòng được ghi ngay trên chính trang đó. Ngay sau một checkpoint, sửa <strong>một</strong> dòng hai lần liên tiếp:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">b40_mot_trang</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">;</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">b40_mot_trang</span><span class="w"> </span><span class="k">AS</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">ma_sach</span><span class="p">,</span><span class="w"> </span><span class="n">ten_sach</span><span class="p">,</span><span class="w"> </span><span class="n">so_luong</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">sach</span><span class="p">;</span>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="k">CHECKPOINT</span><span class="p">;</span>
+</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
+</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">b40_trang</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">;</span>
+</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">b40_trang</span><span class="w"> </span><span class="k">AS</span>
+</span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="k">SELECT</span><span class="w"> </span><span class="s1">'lan_1_sau_checkpoint'</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">lan</span><span class="p">,</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">b40_wal_cua</span><span class="p">(</span>
+</span><span id="__span-9-10"><a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="w">    </span><span class="err">$$</span><span class="k">UPDATE</span><span class="w"> </span><span class="n">b40_mot_trang</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">so_luong</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">so_luong</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">ma_sach</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'S001'</span><span class="err">$$</span><span class="p">);</span>
+</span><span id="__span-9-11"><a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">b40_trang</span>
+</span><span id="__span-9-12"><a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="k">SELECT</span><span class="w"> </span><span class="s1">'lan_2_cung_trang'</span><span class="p">,</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">b40_wal_cua</span><span class="p">(</span>
+</span><span id="__span-9-13"><a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="w">    </span><span class="err">$$</span><span class="k">UPDATE</span><span class="w"> </span><span class="n">b40_mot_trang</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">so_luong</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">so_luong</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">ma_sach</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'S001'</span><span class="err">$$</span><span class="p">);</span>
+</span><span id="__span-9-14"><a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>
+</span><span id="__span-9-15"><a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a><span class="c1">-- KỲ VỌNG: 2 dòng</span>
+</span><span id="__span-9-16"><a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a><span class="c1">-- KỲ VỌNG: lan = lan_1_sau_checkpoint</span>
+</span><span id="__span-9-17"><a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a><span class="c1">-- KỲ VỌNG: so_ban_ghi = 1</span>
+</span><span id="__span-9-18"><a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a><span class="c1">-- KỲ VỌNG: so_trang_tron = 1</span>
+</span><span id="__span-9-19"><a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">lan</span><span class="p">,</span><span class="w"> </span><span class="n">so_ban_ghi</span><span class="p">,</span><span class="w"> </span><span class="n">so_trang_tron</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">b40_trang</span><span class="w"> </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">lan</span><span class="p">;</span>
+</span></code></pre></div>
+<div class="highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1">-- KỲ VỌNG: so_ban_ghi = 1</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="c1">-- KỲ VỌNG: so_trang_tron = 0</span>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="c1">-- KỲ VỌNG: lan_2_nho_hon_lan_1 = true</span>
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">so_ban_ghi</span><span class="p">,</span><span class="w"> </span><span class="n">so_trang_tron</span><span class="p">,</span>
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">       </span><span class="n">so_byte</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">so_byte</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">b40_trang</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">lan</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'lan_1_sau_checkpoint'</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">lan_2_nho_hon_lan_1</span>
+</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="k">FROM</span><span class="w"> </span><span class="n">b40_trang</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">lan</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'lan_2_cung_trang'</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Cả hai lần đều chỉ <strong>một</strong> bản ghi WAL. Nhưng lần đầu kèm <strong>một</strong> bản chép trọn trang — trang ấy bị sửa lần đầu kể từ checkpoint — nên nặng cỡ vài KB. Lần hai sửa đúng trang đó, không cần chép lại, chỉ vài chục byte. Tự xem con số:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">lan</span><span class="p">,</span><span class="w"> </span><span class="n">so_ban_ghi</span><span class="p">,</span><span class="w"> </span><span class="n">so_trang_tron</span><span class="p">,</span><span class="w"> </span><span class="n">so_byte</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">b40_trang</span><span class="w"> </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">lan</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Bản chép trọn trang thường nhỏ hơn 8KB, vì PostgreSQL bỏ qua khoảng trống giữa trang (Bài 33) khi chép.</p>
+<h3 id="cac-tham-so-o-ben">Các tham số độ bền<a class="headerlink" href="#cac-tham-so-o-ben" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1">-- KỲ VỌNG: wal_level = replica</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="c1">-- KỲ VỌNG: full_page_writes = on</span>
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="c1">-- KỲ VỌNG: checkpoint_timeout = 5min</span>
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1">-- KỲ VỌNG: max_wal_size = 1GB</span>
+</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">current_setting</span><span class="p">(</span><span class="s1">'wal_level'</span><span class="p">)</span><span class="w">           </span><span class="k">AS</span><span class="w"> </span><span class="n">wal_level</span><span class="p">,</span>
+</span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="w">       </span><span class="n">current_setting</span><span class="p">(</span><span class="s1">'full_page_writes'</span><span class="p">)</span><span class="w">    </span><span class="k">AS</span><span class="w"> </span><span class="n">full_page_writes</span><span class="p">,</span>
+</span><span id="__span-12-7"><a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="w">       </span><span class="n">current_setting</span><span class="p">(</span><span class="s1">'checkpoint_timeout'</span><span class="p">)</span><span class="w">  </span><span class="k">AS</span><span class="w"> </span><span class="n">checkpoint_timeout</span><span class="p">,</span>
+</span><span id="__span-12-8"><a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="w">       </span><span class="n">current_setting</span><span class="p">(</span><span class="s1">'max_wal_size'</span><span class="p">)</span><span class="w">        </span><span class="k">AS</span><span class="w"> </span><span class="n">max_wal_size</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Nới <code>synchronous_commit</code> cho <strong>riêng một</strong> giao dịch bằng <code>SET LOCAL</code> — chỉ có hiệu lực tới hết giao dịch:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">b40_nhat_ky</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">;</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">b40_nhat_ky</span><span class="w"> </span><span class="p">(</span><span class="n">buoc</span><span class="w"> </span><span class="nb">TEXT</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span><span class="w"> </span><span class="n">gia_tri</span><span class="w"> </span><span class="nb">TEXT</span><span class="p">);</span>
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="k">BEGIN</span><span class="p">;</span>
+</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="k">SET</span><span class="w"> </span><span class="k">LOCAL</span><span class="w"> </span><span class="n">synchronous_commit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">off</span><span class="p">;</span>
+</span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">b40_nhat_ky</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="s1">'trong_giao_dich'</span><span class="p">,</span><span class="w"> </span><span class="n">current_setting</span><span class="p">(</span><span class="s1">'synchronous_commit'</span><span class="p">);</span>
+</span><span id="__span-13-7"><a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="k">COMMIT</span><span class="p">;</span>
+</span><span id="__span-13-8"><a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">b40_nhat_ky</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="s1">'sau_giao_dich'</span><span class="p">,</span><span class="w"> </span><span class="n">current_setting</span><span class="p">(</span><span class="s1">'synchronous_commit'</span><span class="p">);</span>
+</span><span id="__span-13-9"><a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>
+</span><span id="__span-13-10"><a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="c1">-- KỲ VỌNG: trong_giao_dich = off</span>
+</span><span id="__span-13-11"><a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a><span class="c1">-- KỲ VỌNG: sau_giao_dich = on</span>
+</span><span id="__span-13-12"><a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a><span class="k">SELECT</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">gia_tri</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">b40_nhat_ky</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">buoc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'trong_giao_dich'</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">trong_giao_dich</span><span class="p">,</span>
+</span><span id="__span-13-13"><a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a><span class="w">       </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">gia_tri</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">b40_nhat_ky</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">buoc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'sau_giao_dich'</span><span class="p">)</span><span class="w">   </span><span class="k">AS</span><span class="w"> </span><span class="n">sau_giao_dich</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Giao dịch ghi nhật ký kia báo <code>COMMIT</code> xong mà không chờ <code>fsync</code>. Mọi giao dịch khác vẫn chờ như thường.</p>
+<h3 id="sao-luu-nen-va-pitr-mo-ta-khong-chay">Sao lưu nền và PITR — mô tả, không chạy<a class="headerlink" href="#sao-luu-nen-va-pitr-mo-ta-khong-chay" title="Permanent link">&para;</a></h3>
+<p>Các bước dưới đây cần quyền trên <strong>hệ thống tệp</strong> của máy chủ và sửa tệp cấu hình, nên khoá học chỉ mô tả, không chạy tự động.</p>
+<p><strong>Bước 1 — bật lưu trữ WAL.</strong> Trong <code>postgresql.conf</code>, rồi khởi động lại máy chủ:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="na">archive_mode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">on</span>
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="na">archive_command</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">'test ! -f /kho_wal/%f &amp;&amp; cp %p /kho_wal/%f'</span>
+</span></code></pre></div>
+<p><code>%p</code> là đường dẫn tệp WAL vừa đầy, <code>%f</code> là tên tệp. Lệnh <code>test ! -f</code> bảo đảm không bao giờ ghi đè một tệp đã có trong kho.</p>
+<p><strong>Bước 2 — lấy bản sao lưu nền</strong>, ví dụ mỗi Chủ nhật. Với Docker của Bài 5:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>pg-khoahoc<span class="w"> </span>pg_basebackup<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="w">    </span>-D<span class="w"> </span>/var/lib/postgresql/sao_luu/2026-09-20<span class="w"> </span>-Ft<span class="w"> </span>-z<span class="w"> </span>-X<span class="w"> </span>stream<span class="w"> </span>-P
+</span></code></pre></div>
+<p><code>-Ft -z</code> đóng gói thành tệp tar nén, <code>-X stream</code> kèm luôn các tệp WAL sinh ra <strong>trong lúc</strong> đang sao lưu — thiếu chúng thì bản sao lưu không dùng được — <code>-P</code> hiện tiến độ.</p>
+<p><strong>Bước 3 — trước một thao tác nguy hiểm</strong>, có thể đánh dấu một mốc có tên trong WAL để sau này dừng đúng chỗ. Lệnh này cần quyền quản trị và chỉ có ý nghĩa khi đã bật lưu trữ WAL, nên không chạy tự động:</p>
+<!-- sql:khong-chay -->
+<div class="highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">pg_create_restore_point</span><span class="p">(</span><span class="s1">'truoc_khi_xoa_diem_hoc_ky_1'</span><span class="p">);</span>
+</span></code></pre></div>
+<p><strong>Bước 4 — khôi phục.</strong> Thứ Ba 10:15, ai đó xoá nhầm điểm học kỳ 1. Trên một máy khác — <strong>không bao giờ</strong> đè lên máy đang chạy — giải nén bản sao lưu Chủ nhật vào thư mục dữ liệu trống, rồi thêm vào <code>postgresql.conf</code>:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="na">restore_command</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">'cp /kho_wal/%f %p'</span>
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="na">recovery_target_time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">'2026-09-22 10:14:00+07'</span>
+</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="na">recovery_target_action</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">'promote'</span>
+</span></code></pre></div>
+<p>Tạo một tệp rỗng tên <code>recovery.signal</code> trong thư mục dữ liệu để báo "đây là một lần khôi phục", rồi khởi động. PostgreSQL làm lại WAL từ Chủ nhật tới đúng 10:14 thứ Ba thì dừng và mở cửa. Chép dữ liệu điểm từ máy này về máy chính.</p>
+<h2 id="loi-thuong-gap">⚠️ Lỗi thường gặp<a class="headerlink" href="#loi-thuong-gap" title="Permanent link">&para;</a></h2>
+<div class="admonition danger">
+<p class="admonition-title">Lỗi 1: Tắt <code>fsync</code> để \"tăng tốc\"</p>
+<p><code>fsync = off</code> làm mọi lệnh ghi nhanh hẳn, và máy chủ chạy ngon lành... cho tới lần mất điện đầu tiên. Khi đó WAL và trang dữ liệu có thể nằm lại trong bộ nhớ đệm của hệ điều hành theo <strong>bất kỳ</strong> thứ tự nào, luật ghi trước bị phá vỡ, và phục hồi sau sự cố <strong>không thể</strong> dựng lại một database nhất quán. Kết quả thường là dữ liệu hỏng mà không ai biết, phát hiện ra sau nhiều tuần.</p>
+<table>
+<thead>
+<tr>
+<th>Tắt</th>
+<th>Mất điện thì</th>
+<th>Dữ liệu còn lại</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>synchronous_commit = off</code></td>
+<td>Mất vài giao dịch <strong>cuối cùng</strong> đã báo thành công</td>
+<td><strong>Nhất quán</strong> — như thể mất điện sớm hơn một chút</td>
+</tr>
+<tr>
+<td><code>fsync = off</code></td>
+<td>Có thể mất <strong>bất cứ thứ gì</strong></td>
+<td>Có thể <strong>hỏng</strong> — trang lẫn lộn cũ mới, index lệch bảng</td>
+</tr>
+</tbody>
+</table>
+<p>Sửa: không bao giờ tắt <code>fsync</code> trên dữ liệu thật. Nếu cần nhanh hơn, dùng <code>synchronous_commit = off</code> cho những giao dịch chịu được mất mát — nó cho phần lớn lợi ích tốc độ mà không đánh đổi sự nhất quán.</p>
+</div>
+<div class="admonition danger">
+<p class="admonition-title">Lỗi 2: Xoá tay tệp trong <code>pg_wal</code> khi đĩa đầy</p>
+<p>Đĩa đầy, thư mục <code>pg_wal</code> chiếm hàng chục GB, trông như "tệp nhật ký cũ". Xoá đi là mất những tệp mà phục hồi sau sự cố <strong>cần</strong>: lần khởi động kế tiếp, máy chủ không lên được, hoặc lên với dữ liệu hỏng.</p>
+<p>WAL chồng chất luôn có nguyên nhân, và phải xử lý nguyên nhân:</p>
+<ul>
+<li><code>archive_command</code> đang <strong>lỗi</strong> — PostgreSQL giữ lại mọi tệp chưa lưu trữ được. Xem cột <code>failed_count</code>, <code>last_failed_wal</code> trong bảng <code>pg_stat_archiver</code>.</li>
+<li>Một <strong>khe nhân bản</strong> (Bài 42) của một máy bản sao đã chết vẫn giữ WAL chờ nó. Xem bảng <code>pg_replication_slots</code>.</li>
+<li><code>max_wal_size</code> đặt quá lớn so với ổ đĩa.</li>
+</ul>
+<p>Sửa: tìm và gỡ nguyên nhân; PostgreSQL sẽ tự dọn WAL không còn cần ở checkpoint kế tiếp.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Lỗi 3: Checkpoint quá dày</p>
+<p>Với một đợt nhập liệu lớn mà <code>max_wal_size</code> quá nhỏ, WAL chạm ngưỡng liên tục và checkpoint chạy liên tục. Mỗi checkpoint lại kéo theo một đợt <strong>ghi trọn trang</strong> — phần thực hành vừa đo được một lần sửa sau checkpoint nặng gấp hàng chục lần bình thường — nên càng nhiều checkpoint thì càng nhiều WAL, càng nhiều checkpoint. Nhật ký máy chủ sẽ kêu — đây là nhật ký thật từ máy chủ thử nghiệm của khoá học khi cố ý đặt <code>max_wal_size</code> rất nhỏ; số giây tuỳ từng lần:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>LOG:  checkpoints are occurring too frequently (1 second apart)
+</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>HINT:  Consider increasing the configuration parameter "max_wal_size".
+</span></code></pre></div>
+<p>Sửa: tăng <code>max_wal_size</code> để checkpoint chủ yếu chạy theo <code>checkpoint_timeout</code>. Nhưng đừng đẩy sang cực kia: checkpoint càng thưa thì đoạn WAL phải làm lại sau mất điện càng dài, máy chủ khởi động lại càng lâu. Đây là một cán cân, không có con số đúng cho mọi hệ thống.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Lỗi 4: Dùng bảng không ghi nhật ký cho dữ liệu cần giữ</p>
+<p>Một bảng <code>UNLOGGED</code> chứa điểm danh tạm trong ngày chạy nhanh hẳn — rồi máy chủ bị ngắt điện, và bảng <strong>rỗng không</strong>. Không phải lỗi: đó đúng là lời hứa của nó. Khoá học đã thử trên một máy chủ thử nghiệm: bảng không ghi nhật ký có 100 dòng, ngắt điện đột ngột, khởi động lại còn <strong>0</strong> dòng; bảng thường bên cạnh còn nguyên dòng vừa xác nhận.</p>
+<p>Bảng không ghi nhật ký cũng <strong>không</strong> có mặt trên các máy bản sao của Bài 42, và không được phục hồi bằng PITR.</p>
+<p>Sửa: chỉ dùng cho dữ liệu dựng lại được — bảng trung gian của một đợt xử lý, bộ đệm tính toán. Kiểm tra bảng nào đang không ghi nhật ký:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1">-- KỲ VỌNG: 1 dòng</span>
+</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">relname</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">pg_class</span>
+</span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">relpersistence</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'u'</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">relkind</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'r'</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">relname</span><span class="w"> </span><span class="k">LIKE</span><span class="w"> </span><span class="s1">'b40\_%'</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Lúc này chỉ có <code>b40_muon_tam</code> của phần thực hành.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Lỗi 5: Sao lưu bằng cách chép thư mục dữ liệu — và chưa bao giờ thử khôi phục</p>
+<p>Chép nguyên thư mục dữ liệu khi máy chủ đang chạy cho ra một mớ tệp chụp ở <strong>những thời điểm khác nhau</strong>: tệp này chép lúc 2:00, tệp kia lúc 2:07. Không có WAL của khoảng giữa thì không gì hàn được chúng lại. <code>pg_basebackup</code> giải quyết đúng chuyện này bằng cách kèm theo WAL của chính khoảng thời gian sao lưu.</p>
+<p>Nhưng lỗi phổ biến hơn là <strong>có</strong> sao lưu mà chưa bao giờ thử khôi phục: <code>archive_command</code> đã lỗi âm thầm từ ba tháng trước, thư mục kho WAL nằm trên cùng ổ đĩa với database, mật khẩu giải nén không ai nhớ.</p>
+<p>Sửa: một bản sao lưu chưa từng được khôi phục thử thì coi như <strong>không có</strong>. Định kỳ dựng lại một máy từ sao lưu, chạy vài truy vấn đối chiếu, và theo dõi <code>pg_stat_archiver</code>.</p>
+</div>
+<h2 id="bai-tap">✍️ Bài tập<a class="headerlink" href="#bai-tap" title="Permanent link">&para;</a></h2>
+<ol>
+<li>
+<p>Sắp xếp đúng thứ tự các việc xảy ra khi bạn gõ <code>COMMIT</code> sau một câu <code>UPDATE</code>, ở cấu hình mặc định: (a) trang dữ liệu được ghi xuống tệp dữ liệu; (b) bản ghi <code>COMMIT</code> được thêm vào bộ đệm WAL; (c) <code>psql</code> in chữ <code>COMMIT</code>; (d) WAL được <code>fsync</code> xuống đĩa; (e) trang dữ liệu được sửa trong bộ nhớ.</p>
+</li>
+<li>
+<p>Checkpoint cuối cùng có điểm làm lại ở LSN <code>0/5000000</code>. Sau đó giao dịch 700 sửa điểm của An và <code>COMMIT</code>; giao dịch 701 thêm một học sinh mới nhưng <strong>chưa</strong> <code>COMMIT</code> thì mất điện. Trang chứa điểm của An <strong>chưa kịp</strong> ghi xuống tệp dữ liệu. Sau khi khởi động lại, điểm của An và học sinh mới thế nào? PostgreSQL làm những gì để ra kết quả đó?</p>
+</li>
+<li>
+<p>Dùng hàm <code>b40_wal_cua</code>, đo xem <code>UPDATE</code> <strong>toàn bộ</strong> bảng <code>b40_muon</code> sinh ra bao nhiêu bản ghi WAL, so với số dòng của bảng. Giải thích con số bằng kiến thức Bài 39.</p>
+</li>
+<li>
+<p>Một hệ thống ghi <strong>nhật ký truy cập</strong> của học sinh vào website trường — hàng nghìn dòng mỗi phút, mất vài giây dữ liệu cũng không sao — nằm chung database với bảng <strong>điểm thi</strong>. Bạn cấu hình độ bền cho hai loại dữ liệu này thế nào? Vì sao không tắt <code>fsync</code> cho nhanh?</p>
+</li>
+<li>
+<p>Nhà trường có bản sao lưu nền mỗi Chủ nhật và lưu trữ WAL liên tục. Thứ Năm 14:32, một câu <code>DELETE FROM diem WHERE hoc_ky = 1;</code> chạy nhầm. Liệt kê các bước để lấy lại điểm học kỳ 1 mà <strong>không</strong> làm mất những điểm học kỳ 2 được nhập sau 14:32.</p>
+</li>
+</ol>
+<details class="success">
+<summary>Đáp án</summary>
+<p><strong>Câu 1.</strong></p>
+<p><strong>e → b → d → c → a.</strong></p>
+<p>Trang được sửa trong bộ nhớ ngay lúc <code>UPDATE</code> (e). Lúc <code>COMMIT</code>, bản ghi <code>COMMIT</code> vào bộ đệm WAL (b), WAL được <code>fsync</code> (d), rồi mới báo thành công (c). Trang dữ liệu chỉ được ghi xuống sau đó — ở checkpoint kế tiếp hoặc khi tiến trình nền rảnh (a). Nếu (a) xảy ra trước (c) thì cũng không sai, nhưng <strong>không bao giờ</strong> được xảy ra trước (d): đó chính là luật ghi trước.</p>
+<p><strong>Câu 2.</strong></p>
+<p>Điểm của An <strong>còn</strong>, học sinh mới <strong>không có</strong>.</p>
+<ul>
+<li>Phục hồi đọc <code>pg_control</code>, bắt đầu làm lại từ <code>0/5000000</code>.</li>
+<li>Gặp bản ghi sửa điểm của giao dịch 700: trang chứa điểm An trên đĩa có LSN cũ hơn bản ghi, nên thay đổi được làm lại. Gặp bản ghi <code>COMMIT</code> của 700: giao dịch 700 được ghi nhận là đã xác nhận.</li>
+<li>Gặp bản ghi thêm học sinh của giao dịch 701: cũng được làm lại, tuple nằm trên trang. Nhưng không có bản ghi <code>COMMIT</code> nào cho 701, nên kết thúc phục hồi 701 được coi là <strong>đã huỷ</strong>. Theo quy tắc thấy được của Bài 39, tuple có <code>xmin = 701</code> không ai thấy — nó là tuple chết chờ <code>VACUUM</code>.</li>
+</ul>
+<p>PostgreSQL không cần "hoàn tác" gì, chỉ làm lại rồi để MVCC lo phần còn lại.</p>
+<p><strong>Câu 3.</strong></p>
+<div class="highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">b40_bt3</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">;</span>
+</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">b40_bt3</span><span class="w"> </span><span class="k">AS</span>
+</span><span id="__span-20-3"><a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="k">SELECT</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">b40_muon</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_dong</span><span class="p">,</span><span class="w"> </span><span class="o">*</span>
+</span><span id="__span-20-4"><a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="k">FROM</span><span class="w"> </span><span class="n">b40_wal_cua</span><span class="p">(</span><span class="err">$$</span><span class="k">UPDATE</span><span class="w"> </span><span class="n">b40_muon</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">ma_sach</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'S020'</span><span class="err">$$</span><span class="p">);</span>
+</span><span id="__span-20-5"><a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>
+</span><span id="__span-20-6"><a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a><span class="c1">-- KỲ VỌNG: so_dong = 20000</span>
+</span><span id="__span-20-7"><a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a><span class="c1">-- KỲ VỌNG: it_nhat_moi_dong_mot_ban_ghi = true</span>
+</span><span id="__span-20-8"><a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">so_dong</span><span class="p">,</span><span class="w"> </span><span class="n">so_ban_ghi</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">so_dong</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">it_nhat_moi_dong_mot_ban_ghi</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">b40_bt3</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Bảng có <strong>20.000</strong> dòng — 10.000 từ lần ghi đầu, 10.000 từ lần đo WAL. <code>UPDATE</code> cả bảng sinh <strong>ít nhất</strong> một bản ghi WAL cho mỗi dòng: theo Bài 39, mỗi <code>UPDATE</code> là "xoá + thêm" — đóng dấu <code>xmax</code> lên tuple cũ và ghi một tuple mới, và cả hai việc phải được mô tả trong WAL để làm lại được. Tự xem con số chính xác và số bản chép trọn trang bằng <code>SELECT * FROM b40_bt3;</code> — khi tuple mới không vừa trang cũ, việc ghi sang trang khác sinh thêm bản ghi, và mỗi trang được đụng lần đầu từ checkpoint lại kèm một bản chép trọn trang.</p>
+<p><strong>Câu 4.</strong></p>
+<ul>
+<li><strong>Điểm thi</strong>: giữ mặc định — <code>synchronous_commit = on</code>. Mất một con điểm đã báo "đã lưu" là không chấp nhận được.</li>
+<li><strong>Nhật ký truy cập</strong>: ghi trong các giao dịch có <code>SET LOCAL synchronous_commit = off</code>, hoặc đặt riêng cho người dùng mà ứng dụng ghi nhật ký dùng: <code>ALTER ROLE ... SET synchronous_commit = off</code>. Mất điện thì mất vài trăm mili giây nhật ký cuối, không hơn. Nếu nhật ký chỉ cần giữ trong ngày và dựng lại được từ tệp log của máy chủ web, còn có thể dùng bảng không ghi nhật ký.</li>
+</ul>
+<p>Không tắt <code>fsync</code> vì <code>fsync</code> là tham số của <strong>cả máy chủ</strong>, không đặt riêng cho một bảng hay một giao dịch được. Tắt nó là đặt cả bảng điểm thi vào nguy cơ <strong>hỏng dữ liệu</strong>, không chỉ mất vài giây — Lỗi 1.</p>
+<p><strong>Câu 5.</strong></p>
+<ol>
+<li><strong>Không</strong> đụng vào máy chủ đang chạy — nó đang nhận điểm học kỳ 2 mới.</li>
+<li>Trên một máy khác, giải nén bản sao lưu nền Chủ nhật vào thư mục dữ liệu trống.</li>
+<li>Đặt <code>restore_command</code> trỏ tới kho WAL, <code>recovery_target_time = '&lt;thứ Năm&gt; 14:31:00+07'</code> — trước câu <code>DELETE</code> —, <code>recovery_target_action = 'promote'</code>; tạo tệp <code>recovery.signal</code>; khởi động.</li>
+<li>Máy khôi phục làm lại WAL từ Chủ nhật tới 14:31 thứ Năm rồi mở cửa. Trên máy này bảng <code>diem</code> còn nguyên điểm học kỳ 1.</li>
+<li>Xuất <strong>chỉ</strong> các dòng <code>hoc_ky = 1</code> từ máy khôi phục, nạp lại vào máy chính. Điểm học kỳ 2 trên máy chính không bị đụng tới.</li>
+</ol>
+<p>Nếu bước 3 dừng <strong>sau</strong> 14:32 thì câu <code>DELETE</code> đã được làm lại — phải dừng trước. Đó là lý do mốc có tên <code>pg_create_restore_point</code> rất tiện trước những thao tác nguy hiểm theo kế hoạch.</p>
+</details>
+<h3 id="don-dep-cuoi-bai">Dọn dẹp cuối bài<a class="headerlink" href="#don-dep-cuoi-bai" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="k">DROP</span><span class="w"> </span><span class="k">FUNCTION</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">b40_wal_cua</span><span class="p">(</span><span class="nb">text</span><span class="p">);</span>
+</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">b40_moc</span><span class="p">,</span><span class="w"> </span><span class="n">b40_muon</span><span class="p">,</span><span class="w"> </span><span class="n">b40_muon_tam</span><span class="p">,</span><span class="w"> </span><span class="n">b40_do</span><span class="p">,</span><span class="w"> </span><span class="n">b40_dem_checkpoint</span><span class="p">,</span><span class="w"> </span><span class="n">b40_mot_trang</span><span class="p">,</span>
+</span><span id="__span-21-3"><a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="w">                     </span><span class="n">b40_trang</span><span class="p">,</span><span class="w"> </span><span class="n">b40_nhat_ky</span><span class="p">,</span><span class="w"> </span><span class="n">b40_bt3</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">;</span>
+</span><span id="__span-21-4"><a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>
+</span><span id="__span-21-5"><a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a><span class="c1">-- KỲ VỌNG: bang_con_lai = 0</span>
+</span><span id="__span-21-6"><a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a><span class="c1">-- KỲ VỌNG: ham_con_lai = 0</span>
+</span><span id="__span-21-7"><a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a><span class="k">SELECT</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">information_schema</span><span class="p">.</span><span class="n">tables</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="k">table_name</span><span class="w"> </span><span class="k">LIKE</span><span class="w"> </span><span class="s1">'b40\_%'</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">bang_con_lai</span><span class="p">,</span>
+</span><span id="__span-21-8"><a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a><span class="w">       </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">pg_proc</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">proname</span><span class="w"> </span><span class="k">LIKE</span><span class="w"> </span><span class="s1">'b40\_%'</span><span class="p">)</span><span class="w">                     </span><span class="k">AS</span><span class="w"> </span><span class="n">ham_con_lai</span><span class="p">;</span>
+</span></code></pre></div>
+<h2 id="tom-tat">🔑 Tóm tắt<a class="headerlink" href="#tom-tat" title="Permanent link">&para;</a></h2>
+<ol>
+<li><strong>Nhật ký ghi trước</strong> (WAL) là nhật ký ghi nối tiếp mô tả mọi thay đổi. Luật: bản ghi WAL xuống đĩa <strong>trước</strong> trang dữ liệu, và <code>COMMIT</code> chỉ báo thành công khi bản ghi <code>COMMIT</code> đã được <strong><code>fsync</code></strong>. Nhờ vậy trang dữ liệu được ghi sau, gom lại — <code>COMMIT</code> vừa bền vừa nhanh.</li>
+<li><strong>LSN</strong> là địa chỉ byte trong WAL, chỉ tăng. <code>EXPLAIN (ANALYZE, WAL)</code> đo đúng WAL của một câu lệnh: bài đo được thêm 10.000 dòng vào bảng thường sinh ít nhất 10.000 bản ghi, vào <strong>bảng không ghi nhật ký</strong> thì <strong>0</strong> — cái giá là bảng đó bị làm rỗng sau mất điện.</li>
+<li><strong>Checkpoint</strong> ghi mọi trang đã sửa xuống tệp dữ liệu và dời <strong>điểm làm lại</strong>; mất điện thì <strong>phục hồi sau sự cố</strong> làm lại WAL từ đó. Giao dịch dở dang không có bản ghi <code>COMMIT</code> nên tự thành "đã huỷ" nhờ MVCC — không cần hoàn tác. Checkpoint dày thì tốn WAL, thưa thì phục hồi lâu.</li>
+<li><strong>Ghi trọn trang</strong> chép nguyên trang vào WAL ở lần sửa đầu sau mỗi checkpoint để chống trang rách — bài đo được lần sửa đầu kèm 1 bản chép trọn trang, lần sau 0. <code>synchronous_commit = off</code> chỉ có thể mất vài giao dịch cuối, còn <code>fsync = off</code> có thể <strong>hỏng</strong> dữ liệu.</li>
+<li><strong>PITR</strong> = <strong>bản sao lưu nền</strong> (<code>pg_basebackup</code>) + <strong>lưu trữ WAL</strong> + làm lại tới <code>recovery_target_time</code>: cách duy nhất cứu được một câu <code>DELETE</code> nhầm đã xác nhận. Không xoá tay <code>pg_wal</code>, không chép thư mục dữ liệu đang chạy, và bản sao lưu chưa thử khôi phục thì coi như không có.</li>
+</ol>
+<hr />
+<p>⬅️ <a href="../39-mvcc/">Bài 39 — MVCC: nhiều phiên bản cho một dòng</a> · ➡️ <a href="../41-lock-va-deadlock/">Bài 41 — Khoá và bế tắc</a></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Trở lại mục lục
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Chân trang" >
+        
+          
+          <a href="../39-mvcc/" class="md-footer__link md-footer__link--prev" aria-label="Trước: Bài 39 — MVCC: nhiều phiên bản cho một dòng">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Trước
+              </span>
+              <div class="md-ellipsis">
+                Bài 39 — MVCC: nhiều phiên bản cho một dòng
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../41-lock-va-deadlock/" class="md-footer__link md-footer__link--next" aria-label="Sau: Bài 41 — Khoá và bế tắc">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Sau
+              </span>
+              <div class="md-ellipsis">
+                Bài 41 — Khoá và bế tắc
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Nội dung theo giấy phép CC BY 4.0
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/hungnguyen010518/database-tu-a-z" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.sections", "navigation.top", "navigation.footer", "navigation.indexes", "navigation.tracking", "toc.follow", "content.code.copy", "content.code.annotate", "search.highlight", "search.suggest"], "search": "../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "\u0110\u00e3 sao ch\u00e9p", "clipboard.copy": "Sao ch\u00e9p v\u00e0o b\u1ed9 nh\u1edb t\u1ea1m", "search.result.more.one": "1 t\u1eeb kh\u00e1c trong trang", "search.result.more.other": "# t\u1eeb kh\u00e1c trong trang", "search.result.none": "Kh\u00f4ng t\u00ecm th\u1ea5y t\u00e0i li\u1ec7u li\u00ean quan", "search.result.one": "1 t\u00e0i li\u1ec7u li\u00ean quan", "search.result.other": "# t\u00e0i li\u1ec7u li\u00ean quan", "search.result.placeholder": "Nh\u1eadp \u0111\u1ec3 b\u1eaft \u0111\u1ea7u t\u00ecm ki\u1ebfm", "search.result.term.missing": "Kh\u00f4ng", "select.version": "Ch\u1ecdn phi\u00ean b\u1ea3n"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.525ec568.min.js"></script>
+      
+    
+  </body>
+</html>

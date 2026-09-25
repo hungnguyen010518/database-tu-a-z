@@ -1219,6 +1219,14 @@
       
         
       
+        
+      
+        
+      
+        
+      
+        
+      
     
     
       
@@ -1348,6 +1356,90 @@
   
   <span class="md-ellipsis">
     Bài 37 — Transaction và ACID
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cap-4-ben-trong-dong-co/38-isolation-level-va-anomaly/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 38 — Mức cô lập và các hiện tượng bất thường
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cap-4-ben-trong-dong-co/39-mvcc/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 39 — MVCC: nhiều phiên bản cho một dòng
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cap-4-ben-trong-dong-co/40-wal-va-recovery/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 40 — WAL, checkpoint và phục hồi sau sự cố
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cap-4-ben-trong-dong-co/41-lock-va-deadlock/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 41 — Khoá và bế tắc
   </span>
   
 
@@ -1652,6 +1744,15 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#x" class="md-nav__link">
+    <span class="md-ellipsis">
+      X
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1902,6 +2003,15 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#x" class="md-nav__link">
+    <span class="md-ellipsis">
+      X
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1925,7 +2035,7 @@
 <p>Bảng được sắp xếp theo thứ tự chữ cái của <strong>thuật ngữ tiếng Anh</strong>, vì đó là dạng bạn sẽ gặp khi đọc tài liệu và khi đi phỏng vấn.</p>
 <div class="admonition info">
 <p class="admonition-title">Bảng này lớn dần theo khóa học</p>
-<p>Mỗi khi một cấp độ mới được xuất bản, thuật ngữ của cấp đó được bổ sung vào đây. Hiện bảng phủ trọn <strong>Bài 1–37</strong>: Cấp 0 (Nhập môn), Cấp 1 (Mô hình quan hệ &amp; ER), Cấp 2 (Chuẩn hoá), toàn bộ Cấp 3 (SQL) và nửa đầu Cấp 4 (Bên trong động cơ).</p>
+<p>Mỗi khi một cấp độ mới được xuất bản, thuật ngữ của cấp đó được bổ sung vào đây. Hiện bảng phủ trọn <strong>Bài 1–41</strong>: Cấp 0 (Nhập môn), Cấp 1 (Mô hình quan hệ &amp; ER), Cấp 2 (Chuẩn hoá), Cấp 3 (SQL) và Cấp 4 (Bên trong động cơ).</p>
 </div>
 <div class="admonition tip">
 <p class="admonition-title">Vì sao có nhiều từ trùng nghĩa?</p>
@@ -2131,6 +2241,12 @@
 <td><a href="../cap-4-ben-trong-dong-co/34-index-va-b-tree/">Bài 34</a></td>
 </tr>
 <tr>
+<td>Bản sao lưu nền</td>
+<td><em>base backup</em></td>
+<td>Bản chụp thư mục dữ liệu lấy khi máy chủ đang chạy, bằng <code>pg_basebackup</code>; điểm xuất phát của PITR</td>
+<td><a href="../cap-4-ben-trong-dong-co/40-wal-va-recovery/">Bài 40</a></td>
+</tr>
+<tr>
 <td>Mở giao dịch</td>
 <td><em>BEGIN</em></td>
 <td>Bắt đầu một giao dịch; mọi lệnh sau đó thuộc về nó cho tới <code>COMMIT</code> hoặc <code>ROLLBACK</code></td>
@@ -2250,6 +2366,12 @@
 <td><em>catalog</em></td>
 <td>Tên gọi khác của từ điển dữ liệu</td>
 <td><a href="../cap-0-nhap-mon/03-dbms-la-gi/">Bài 3</a></td>
+</tr>
+<tr>
+<td>Điểm kiểm tra</td>
+<td><em>checkpoint</em></td>
+<td>Lúc ghi mọi trang đã sửa xuống tệp dữ liệu và dời điểm làm lại; WAL trước đó không còn cần để phục hồi</td>
+<td><a href="../cap-4-ben-trong-dong-co/40-wal-va-recovery/">Bài 40</a></td>
 </tr>
 <tr>
 <td>Ký hiệu Chen</td>
@@ -2382,6 +2504,12 @@
 <td><em>covering index</em></td>
 <td>Index chứa đủ mọi cột truy vấn cần, thường nhờ <code>INCLUDE</code>, để chạy được <code>Index Only Scan</code></td>
 <td><a href="../cap-4-ben-trong-dong-co/34-index-va-b-tree/">Bài 34</a></td>
+</tr>
+<tr>
+<td>Phục hồi sau sự cố</td>
+<td><em>crash recovery</em></td>
+<td>Khởi động sau khi tắt đột ngột: làm lại WAL từ điểm làm lại của checkpoint cuối</td>
+<td><a href="../cap-4-ben-trong-dong-co/40-wal-va-recovery/">Bài 40</a></td>
 </tr>
 <tr>
 <td>Kết nối chéo</td>
@@ -2544,7 +2672,7 @@
 <td>Bế tắc</td>
 <td><em>deadlock</em></td>
 <td>Hai giao dịch chờ khoá của nhau nên không ai đi tiếp được; hay xảy ra khi chúng lấy khoá theo hai thứ tự khác nhau</td>
-<td><strong>Bài 41</strong> <em>(sắp có)</em></td>
+<td><a href="../cap-4-ben-trong-dong-co/41-lock-va-deadlock/">Bài 41</a></td>
 </tr>
 <tr>
 <td>Khai báo</td>
@@ -2647,6 +2775,12 @@
 <td><em>difference</em></td>
 <td>Phép − lấy những dòng có ở quan hệ trái mà không có ở quan hệ phải; trong SQL là <code>EXCEPT</code></td>
 <td><a href="../cap-3-sql/21-dai-so-quan-he/">Bài 21</a></td>
+</tr>
+<tr>
+<td>Đọc bẩn</td>
+<td><em>dirty read</em></td>
+<td>Đọc được dữ liệu một giao dịch khác đã ghi mà chưa xác nhận; PostgreSQL không bao giờ để xảy ra</td>
+<td><a href="../cap-4-ben-trong-dong-co/38-isolation-level-va-anomaly/">Bài 38</a></td>
 </tr>
 <tr>
 <td>Ràng buộc disjoint</td>
@@ -2764,6 +2898,12 @@
 <td><a href="../cap-4-ben-trong-dong-co/35-cac-loai-index-khac/">Bài 35</a></td>
 </tr>
 <tr>
+<td>Khoá độc quyền</td>
+<td><em>exclusive lock</em></td>
+<td>Khoá chỉ một giao dịch giữ; xung đột với mọi khoá khác trên cùng đối tượng</td>
+<td><a href="../cap-4-ben-trong-dong-co/41-lock-va-deadlock/">Bài 41</a></td>
+</tr>
+<tr>
 <td>Kế hoạch thực thi</td>
 <td><em>execution plan</em></td>
 <td>Cách chạy cụ thể mà planner đã chọn cho một câu truy vấn</td>
@@ -2873,6 +3013,18 @@
 <td><a href="../cap-4-ben-trong-dong-co/33-page-heap-tuple/">Bài 33</a></td>
 </tr>
 <tr>
+<td>Đóng băng</td>
+<td><em>freeze</em></td>
+<td><code>VACUUM</code> đánh dấu tuple đủ cũ là thấy được với mọi người, để khỏi bị cuộn vòng mã giao dịch</td>
+<td><a href="../cap-4-ben-trong-dong-co/39-mvcc/">Bài 39</a></td>
+</tr>
+<tr>
+<td>Đẩy xuống đĩa</td>
+<td><em>fsync</em></td>
+<td>Lời gọi hệ thống bắt hệ điều hành ghi dữ liệu từ bộ nhớ đệm ra thiết bị lưu trữ thật; tắt nó có thể làm hỏng dữ liệu</td>
+<td><a href="../cap-4-ben-trong-dong-co/40-wal-va-recovery/">Bài 40</a></td>
+</tr>
+<tr>
 <td>Phụ thuộc đầy đủ</td>
 <td><em>full functional dependency</em></td>
 <td><code>X → Y</code> mà bỏ bất kỳ thuộc tính nào khỏi <code>X</code> là luật không còn đúng</td>
@@ -2883,6 +3035,12 @@
 <td><em>FULL OUTER JOIN</em></td>
 <td>Giữ mọi dòng của cả hai bảng — dùng để đối chiếu hai danh sách và thấy phần lệch ở hai phía</td>
 <td><a href="../cap-3-sql/25-join/">Bài 25</a></td>
+</tr>
+<tr>
+<td>Ghi trọn trang</td>
+<td><em>full-page writes</em></td>
+<td>Lần sửa đầu tiên của mỗi trang sau checkpoint chép nguyên trang vào WAL, chống trang rách khi mất điện</td>
+<td><a href="../cap-4-ben-trong-dong-co/40-wal-va-recovery/">Bài 40</a></td>
 </tr>
 <tr>
 <td>Tìm kiếm toàn văn</td>
@@ -3163,6 +3321,12 @@
 <td>Chữ <strong>I</strong> của ACID: các giao dịch chạy đồng thời không thấy trạng thái dở dang của nhau</td>
 <td><a href="../cap-4-ben-trong-dong-co/37-transaction-va-acid/">Bài 37</a></td>
 </tr>
+<tr>
+<td>Mức cô lập</td>
+<td><em>isolation level</em></td>
+<td>Mức độ database cam kết các giao dịch đồng thời cư xử như chạy lần lượt; mức càng cao càng ít hiện tượng lạ</td>
+<td><a href="../cap-4-ben-trong-dong-co/38-isolation-level-va-anomaly/">Bài 38</a></td>
+</tr>
 </tbody>
 </table>
 <h2 id="j">J<a class="headerlink" href="#j" title="Permanent link">&para;</a></h2>
@@ -3263,10 +3427,28 @@
 <td><a href="../cap-4-ben-trong-dong-co/33-page-heap-tuple/">Bài 33</a></td>
 </tr>
 <tr>
+<td>Khoá (đồng thời)</td>
+<td><em>lock</em></td>
+<td>Quyền tạm thời một giao dịch giữ trên bảng hoặc dòng để chặn việc xung đột, giữ tới hết giao dịch; khác với khoá chính/khoá ngoại (<em>key</em>)</td>
+<td><a href="../cap-4-ben-trong-dong-co/41-lock-va-deadlock/">Bài 41</a></td>
+</tr>
+<tr>
 <td>Tranh chấp khoá</td>
 <td><em>lock contention</em></td>
 <td>Nhiều giao dịch phải xếp hàng chờ khoá cùng một dòng, làm thông lượng ghi sụt hẳn</td>
-<td><strong>Bài 41</strong> <em>(sắp có)</em></td>
+<td><a href="../cap-4-ben-trong-dong-co/41-lock-va-deadlock/">Bài 41</a></td>
+</tr>
+<tr>
+<td>Hàng đợi khoá</td>
+<td><em>lock queue</em></td>
+<td>Người chờ khoá xếp theo thứ tự đến; xin khoá tương thích vẫn phải chờ sau người đang chờ mà xung đột</td>
+<td><a href="../cap-4-ben-trong-dong-co/41-lock-va-deadlock/">Bài 41</a></td>
+</tr>
+<tr>
+<td>Số thứ tự nhật ký</td>
+<td><em>Log Sequence Number</em> (LSN)</td>
+<td>Vị trí byte của một bản ghi trong WAL, dạng <code>0/1AB50910</code>; chỉ tăng</td>
+<td><a href="../cap-4-ben-trong-dong-co/40-wal-va-recovery/">Bài 40</a></td>
 </tr>
 <tr>
 <td>Độc lập dữ liệu logic</td>
@@ -3378,6 +3560,12 @@
 <td><a href="../cap-2-chuan-hoa/19-dang-chuan-4nf-5nf-6nf/">Bài 19</a></td>
 </tr>
 <tr>
+<td>Kiểm soát đồng thời đa phiên bản</td>
+<td><em>Multi-Version Concurrency Control</em> (MVCC)</td>
+<td>Giữ nhiều phiên bản của một dòng để mỗi giao dịch thấy đúng một phiên bản; người đọc không chặn người ghi và ngược lại</td>
+<td><a href="../cap-4-ben-trong-dong-co/39-mvcc/">Bài 39</a></td>
+</tr>
+<tr>
 <td>Đa tập</td>
 <td><em>multiset</em></td>
 <td>Tập hợp có cho phép phần tử trùng nhau — đây là thứ SQL thật sự làm việc trên, khác tập hợp của toán học</td>
@@ -3445,6 +3633,12 @@
 <td><a href="../cap-2-chuan-hoa/16-phu-thuoc-ham/">Bài 16</a></td>
 </tr>
 <tr>
+<td>Đọc không lặp lại</td>
+<td><em>non-repeatable read</em></td>
+<td>Đọc lại cùng một dòng trong một giao dịch mà được giá trị khác, vì giao dịch khác vừa sửa và xác nhận</td>
+<td><a href="../cap-4-ben-trong-dong-co/38-isolation-level-va-anomaly/">Bài 38</a></td>
+</tr>
+<tr>
 <td>Dạng chuẩn</td>
 <td><em>normal form</em></td>
 <td>Một điều kiện đặt lên lược đồ bảng; các dạng chuẩn lồng nhau</td>
@@ -3467,6 +3661,12 @@
 <td><em>Not Only SQL</em></td>
 <td>Nhóm mô hình dữ liệu chấp nhận hy sinh một phần tính nhất quán để đổi lấy khả năng mở rộng ngang</td>
 <td><a href="../cap-0-nhap-mon/04-cac-mo-hinh-du-lieu/">Bài 4</a></td>
+</tr>
+<tr>
+<td>Không chờ</td>
+<td><em>NOWAIT</em></td>
+<td>Gặp khoá xung đột thì báo lỗi ngay thay vì đứng chờ</td>
+<td><a href="../cap-4-ben-trong-dong-co/41-lock-va-deadlock/">Bài 41</a></td>
 </tr>
 </tbody>
 </table>
@@ -3609,6 +3809,12 @@
 <td><a href="../cap-3-sql/29-window-function/">Bài 29</a></td>
 </tr>
 <tr>
+<td>Đọc bóng ma</td>
+<td><em>phantom read</em></td>
+<td>Chạy lại cùng một điều kiện trong một giao dịch mà được tập dòng khác</td>
+<td><a href="../cap-4-ben-trong-dong-co/38-isolation-level-va-anomaly/">Bài 38</a></td>
+</tr>
+<tr>
 <td>Độc lập dữ liệu vật lý</td>
 <td><em>physical data independence</em></td>
 <td>Đổi mức trong mà mức khái niệm không phải đổi theo</td>
@@ -3631,6 +3837,12 @@
 <td><em>planner</em></td>
 <td>Bộ phận của PostgreSQL chọn cách chạy một câu truy vấn — bộ tối ưu truy vấn của PostgreSQL</td>
 <td><a href="../cap-4-ben-trong-dong-co/36-explain-va-query-planner/">Bài 36</a></td>
+</tr>
+<tr>
+<td>Khôi phục về một thời điểm</td>
+<td><em>Point-In-Time Recovery</em> (PITR)</td>
+<td>Khôi phục bản sao lưu nền rồi làm lại WAL từ kho tới đúng thời điểm mong muốn — cách cứu một câu <code>DELETE</code> nhầm đã xác nhận</td>
+<td><a href="../cap-4-ben-trong-dong-co/40-wal-va-recovery/">Bài 40</a></td>
 </tr>
 <tr>
 <td>Cổng</td>
@@ -3743,6 +3955,18 @@
 <td><a href="../cap-0-nhap-mon/04-cac-mo-hinh-du-lieu/">Bài 4</a></td>
 </tr>
 <tr>
+<td>Đọc đã xác nhận</td>
+<td><em>Read Committed</em></td>
+<td>Mức mặc định của PostgreSQL: mỗi câu lệnh thấy dữ liệu đã xác nhận tính tới lúc câu lệnh bắt đầu</td>
+<td><a href="../cap-4-ben-trong-dong-co/38-isolation-level-va-anomaly/">Bài 38</a></td>
+</tr>
+<tr>
+<td>Đọc chưa xác nhận</td>
+<td><em>Read Uncommitted</em></td>
+<td>Mức thấp nhất của chuẩn SQL, cho phép đọc bẩn; trong PostgreSQL hành xử y hệt Read Committed</td>
+<td><a href="../cap-4-ben-trong-dong-co/38-isolation-level-va-anomaly/">Bài 38</a></td>
+</tr>
+<tr>
 <td>Bản ghi</td>
 <td><em>record</em></td>
 <td>Một hàng trong bảng — cách gọi khác của <em>row</em> và <em>tuple</em></td>
@@ -3759,6 +3983,18 @@
 <td><em>recursive member</em></td>
 <td>Câu <code>SELECT</code> sau <code>UNION ALL</code> trong CTE đệ quy, tự tham chiếu để sinh bước tiếp theo từ các dòng của vòng trước</td>
 <td><a href="../cap-3-sql/28-cte-va-recursive-cte/">Bài 28</a></td>
+</tr>
+<tr>
+<td>Làm lại</td>
+<td><em>redo</em></td>
+<td>Áp lại một bản ghi WAL lên trang dữ liệu khi phục hồi; giao dịch không có bản ghi <code>COMMIT</code> được coi là đã huỷ</td>
+<td><a href="../cap-4-ben-trong-dong-co/40-wal-va-recovery/">Bài 40</a></td>
+</tr>
+<tr>
+<td>Điểm làm lại</td>
+<td><em>redo point</em></td>
+<td>Vị trí trong WAL mà phục hồi sau sự cố bắt đầu đọc, lưu trong tệp <code>pg_control</code></td>
+<td><a href="../cap-4-ben-trong-dong-co/40-wal-va-recovery/">Bài 40</a></td>
 </tr>
 <tr>
 <td>Cột nhân bản</td>
@@ -3839,6 +4075,12 @@
 <td><a href="../cap-3-sql/21-dai-so-quan-he/">Bài 21</a></td>
 </tr>
 <tr>
+<td>Đọc lặp lại được</td>
+<td><em>Repeatable Read</em></td>
+<td>Cả giao dịch nhìn một ảnh chụp lúc câu lệnh đầu tiên chạy; trong PostgreSQL chặn cả đọc bóng ma</td>
+<td><a href="../cap-4-ben-trong-dong-co/38-isolation-level-va-anomaly/">Bài 38</a></td>
+</tr>
+<tr>
 <td>Nhóm lặp</td>
 <td><em>repeating group</em></td>
 <td>Cùng một nhóm thuộc tính bị lặp lại thành nhiều cột đánh số — vi phạm 1NF</td>
@@ -3887,6 +4129,12 @@
 <td><a href="../cap-0-nhap-mon/01-du-lieu-va-thong-tin/">Bài 1</a></td>
 </tr>
 <tr>
+<td>Khoá mức dòng</td>
+<td><em>row-level lock</em></td>
+<td>Khoá trên từng dòng, ghi ngay trong tuple; 4 mức từ <code>FOR KEY SHARE</code> tới <code>FOR UPDATE</code></td>
+<td><a href="../cap-4-ben-trong-dong-co/41-lock-va-deadlock/">Bài 41</a></td>
+</tr>
+<tr>
 <td>Tổng luỹ tiến</td>
 <td><em>running total</em></td>
 <td>Tổng cộng dồn từ đầu phân vùng tới dòng hiện tại — phải viết <code>ROWS</code> mới cộng từng dòng một</td>
@@ -3928,6 +4176,12 @@
 <td><em>Second Normal Form — 2NF</em></td>
 <td>Bảng đã ở 1NF và mọi thuộc tính không khoá đều phụ thuộc đầy đủ vào mọi khoá dự tuyển</td>
 <td><a href="../cap-2-chuan-hoa/17-dang-chuan-1nf-2nf/">Bài 17</a></td>
+</tr>
+<tr>
+<td>Khoá dòng khi đọc</td>
+<td><em>SELECT ... FOR UPDATE</em></td>
+<td>Đọc và khoá luôn các dòng, để không ai sửa chúng trước khi giao dịch mình kết thúc</td>
+<td><a href="../cap-4-ben-trong-dong-co/41-lock-va-deadlock/">Bài 41</a></td>
 </tr>
 <tr>
 <td>Phép chọn</td>
@@ -3984,6 +4238,24 @@
 <td><a href="../cap-4-ben-trong-dong-co/34-index-va-b-tree/">Bài 34</a></td>
 </tr>
 <tr>
+<td>Tuần tự hoá được</td>
+<td><em>Serializable</em></td>
+<td>Mức cô lập cao nhất: kết quả y như chạy lần lượt; giao dịch nào phá vỡ điều đó bị huỷ để làm lại</td>
+<td><a href="../cap-4-ben-trong-dong-co/38-isolation-level-va-anomaly/">Bài 38</a></td>
+</tr>
+<tr>
+<td>Bất thường tuần tự hoá</td>
+<td><em>serialization anomaly</em></td>
+<td>Kết quả chạy song song mà không thứ tự chạy lần lượt nào cho ra được; lệch ghi là một ví dụ</td>
+<td><a href="../cap-4-ben-trong-dong-co/38-isolation-level-va-anomaly/">Bài 38</a></td>
+</tr>
+<tr>
+<td>Lỗi tuần tự hoá</td>
+<td><em>serialization failure</em></td>
+<td>Lỗi <code>40001</code> — database huỷ giao dịch để giữ lời hứa của mức cô lập; ứng dụng phải làm lại cả giao dịch</td>
+<td><a href="../cap-4-ben-trong-dong-co/38-isolation-level-va-anomaly/">Bài 38</a></td>
+</tr>
+<tr>
 <td>Máy chủ</td>
 <td><em>server</em></td>
 <td>Chương trình chạy âm thầm và liên tục ở nền, nằm chờ máy khách gõ cửa</td>
@@ -3994,6 +4266,12 @@
 <td><em>shared buffers</em></td>
 <td>Vùng nhớ PostgreSQL giữ các trang vừa dùng; <code>shared hit</code> là trang lấy được từ đây</td>
 <td><a href="../cap-4-ben-trong-dong-co/36-explain-va-query-planner/">Bài 36</a></td>
+</tr>
+<tr>
+<td>Khoá chia sẻ</td>
+<td><em>shared lock</em></td>
+<td>Khoá nhiều giao dịch giữ cùng lúc được; chỉ xung đột với khoá độc quyền</td>
+<td><a href="../cap-4-ben-trong-dong-co/41-lock-va-deadlock/">Bài 41</a></td>
 </tr>
 <tr>
 <td>Thuộc tính đơn</td>
@@ -4018,6 +4296,18 @@
 <td><em>Sixth Normal Form — 6NF</em></td>
 <td>Mọi phụ thuộc kết nối của bảng đều tầm thường — bảng chỉ còn khoá cộng tối đa một thuộc tính không khoá</td>
 <td><a href="../cap-2-chuan-hoa/19-dang-chuan-4nf-5nf-6nf/">Bài 19</a></td>
+</tr>
+<tr>
+<td>Bỏ qua dòng đang khoá</td>
+<td><em>SKIP LOCKED</em></td>
+<td>Gặp dòng đang bị khoá thì bỏ qua, lấy các dòng khác — nền của hàng đợi công việc</td>
+<td><a href="../cap-4-ben-trong-dong-co/41-lock-va-deadlock/">Bài 41</a></td>
+</tr>
+<tr>
+<td>Ảnh chụp dữ liệu</td>
+<td><em>snapshot</em></td>
+<td>Bản ghi những giao dịch đã kết thúc tại một thời điểm, dạng <code>xmin:xmax:danh_sách_đang_chạy</code></td>
+<td><a href="../cap-4-ben-trong-dong-co/39-mvcc/">Bài 39</a></td>
 </tr>
 <tr>
 <td>Xoá mềm</td>
@@ -4151,6 +4441,12 @@
 <td>Khoá không mang ý nghĩa nghiệp vụ nào, chỉ tồn tại để định danh dòng</td>
 <td><a href="../cap-1-mo-hinh-er/09-participation-va-thuc-the-yeu/">Bài 9</a></td>
 </tr>
+<tr>
+<td>Xác nhận đồng bộ</td>
+<td><em>synchronous commit</em></td>
+<td><code>COMMIT</code> chờ WAL xuống đĩa mới báo xong; tắt đi thì có thể mất giao dịch cuối nhưng không hỏng dữ liệu</td>
+<td><a href="../cap-4-ben-trong-dong-co/40-wal-va-recovery/">Bài 40</a></td>
+</tr>
 </tbody>
 </table>
 <h2 id="t">T<a class="headerlink" href="#t" title="Permanent link">&para;</a></h2>
@@ -4187,6 +4483,12 @@
 <td><em>table per subclass / class table inheritance</em></td>
 <td>Cách hiện thực kế thừa: một bảng cho lớp cha, mỗi lớp con thêm một bảng chứa phần riêng và trỏ về cha bằng khoá ngoại</td>
 <td><a href="../cap-1-mo-hinh-er/13-mo-hinh-eer/">Bài 13</a></td>
+</tr>
+<tr>
+<td>Khoá mức bảng</td>
+<td><em>table-level lock</em></td>
+<td>Khoá trên cả bảng; PostgreSQL có 8 mức, từ <code>ACCESS SHARE</code> của <code>SELECT</code> tới <code>ACCESS EXCLUSIVE</code> của <code>DROP</code>/<code>ALTER</code></td>
+<td><a href="../cap-4-ben-trong-dong-co/41-lock-va-deadlock/">Bài 41</a></td>
 </tr>
 <tr>
 <td>Dữ liệu theo thời gian</td>
@@ -4261,6 +4563,12 @@
 <td><a href="../cap-3-sql/22-ddl-va-kieu-du-lieu/">Bài 22</a></td>
 </tr>
 <tr>
+<td>Cuộn vòng mã giao dịch</td>
+<td><em>transaction ID wraparound</em></td>
+<td>Mã giao dịch 32 bit dùng xoay vòng; tuple cũ không được đóng băng sẽ có ngày biến mất</td>
+<td><a href="../cap-4-ben-trong-dong-co/39-mvcc/">Bài 39</a></td>
+</tr>
+<tr>
 <td>DDL trong giao dịch</td>
 <td><em>transactional DDL</em></td>
 <td><code>CREATE</code>, <code>ALTER</code>, <code>DROP</code> nằm được trong giao dịch và bị <code>ROLLBACK</code> huỷ được</td>
@@ -4332,6 +4640,12 @@
 <td>Phần 23 byte trước dữ liệu của mỗi tuple, chứa <code>xmin</code>, <code>xmax</code>, <code>t_ctid</code>…</td>
 <td><a href="../cap-4-ben-trong-dong-co/33-page-heap-tuple/">Bài 33</a></td>
 </tr>
+<tr>
+<td>Khoá hai pha</td>
+<td><em>two-phase locking</em> (2PL)</td>
+<td>Pha chỉ lấy khoá rồi pha chỉ trả khoá; bảo đảm kết quả như chạy lần lượt</td>
+<td><a href="../cap-4-ben-trong-dong-co/41-lock-va-deadlock/">Bài 41</a></td>
+</tr>
 </tbody>
 </table>
 <h2 id="u">U<a class="headerlink" href="#u" title="Permanent link">&para;</a></h2>
@@ -4386,6 +4700,12 @@
 <td><em>UNKNOWN</em></td>
 <td>Giá trị chân lý thứ ba, sinh ra mỗi khi so sánh với <code>NULL</code>; <code>WHERE</code> <strong>loại bỏ</strong> mọi dòng cho <code>UNKNOWN</code></td>
 <td><a href="../cap-3-sql/24-select-where-order-by/">Bài 24</a></td>
+</tr>
+<tr>
+<td>Bảng không ghi nhật ký</td>
+<td><em>unlogged table</em></td>
+<td>Bảng không ghi WAL: ghi nhanh, nhưng bị làm rỗng sau mất điện và không được nhân bản</td>
+<td><a href="../cap-4-ben-trong-dong-co/40-wal-va-recovery/">Bài 40</a></td>
 </tr>
 <tr>
 <td>View cập nhật được</td>
@@ -4461,6 +4781,12 @@
 <td><a href="../cap-4-ben-trong-dong-co/33-page-heap-tuple/">Bài 33</a></td>
 </tr>
 <tr>
+<td>Quy tắc thấy được</td>
+<td><em>visibility rules</em></td>
+<td>Tuple thấy được khi <code>xmin</code> đã xác nhận trước lúc chụp ảnh, và <code>xmax</code> bằng 0, đã huỷ, hoặc chưa xác nhận lúc chụp</td>
+<td><a href="../cap-4-ben-trong-dong-co/39-mvcc/">Bài 39</a></td>
+</tr>
+<tr>
 <td>Bất định</td>
 <td><em>VOLATILE</em></td>
 <td>Một hàm có thể cho kết quả khác nhau mỗi lần gọi hoặc có tác dụng phụ; là <strong>mặc định</strong> và không được tối ưu</td>
@@ -4479,6 +4805,18 @@
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>Đồ thị chờ</td>
+<td><em>wait-for graph</em></td>
+<td>Đồ thị có mũi tên A → B khi A chờ khoá B đang giữ; có chu trình là có bế tắc</td>
+<td><a href="../cap-4-ben-trong-dong-co/41-lock-va-deadlock/">Bài 41</a></td>
+</tr>
+<tr>
+<td>Lưu trữ WAL</td>
+<td><em>WAL archiving</em></td>
+<td>Giữ lại mọi tệp WAL ở một kho riêng thay vì xoá sau checkpoint; cần cho PITR</td>
+<td><a href="../cap-4-ben-trong-dong-co/40-wal-va-recovery/">Bài 40</a></td>
+</tr>
 <tr>
 <td>Thực thể yếu</td>
 <td><em>weak entity</em></td>
@@ -4508,6 +4846,49 @@
 <td><em>WITH CHECK OPTION</em></td>
 <td>Bắt mọi dòng ghi qua view phải thoả điều kiện <code>WHERE</code> của view, thay vì lặng lẽ lọt ra ngoài tầm nhìn của nó</td>
 <td><a href="../cap-3-sql/30-view-va-materialized-view/">Bài 30</a></td>
+</tr>
+<tr>
+<td>Lệch ghi</td>
+<td><em>write skew</em></td>
+<td>Hai giao dịch cùng đọc, mỗi bên sửa một dòng khác nhau dựa trên cái đã đọc; từng bên đúng mà gộp lại sai</td>
+<td><a href="../cap-4-ben-trong-dong-co/38-isolation-level-va-anomaly/">Bài 38</a></td>
+</tr>
+<tr>
+<td>Nhật ký ghi trước</td>
+<td><em>write-ahead logging</em> (WAL)</td>
+<td>Nhật ký ghi nối tiếp mô tả mọi thay đổi; phải xuống đĩa trước trang dữ liệu, và <code>COMMIT</code> chỉ xong khi bản ghi <code>COMMIT</code> đã xuống đĩa</td>
+<td><a href="../cap-4-ben-trong-dong-co/40-wal-va-recovery/">Bài 40</a></td>
+</tr>
+</tbody>
+</table>
+<h2 id="x">X<a class="headerlink" href="#x" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Tiếng Việt</th>
+<th>English</th>
+<th>Nghĩa trong một câu</th>
+<th>Học ở bài</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Mã giao dịch xoá</td>
+<td><em>xmax</em></td>
+<td>Cột hệ thống: mã giao dịch đã xoá, thay thế — hoặc đang khoá — phiên bản dòng này; <code>0</code> nếu chưa ai đụng tới</td>
+<td><a href="../cap-4-ben-trong-dong-co/39-mvcc/">Bài 39</a></td>
+</tr>
+<tr>
+<td>Mã giao dịch tạo</td>
+<td><em>xmin</em></td>
+<td>Cột hệ thống: mã giao dịch đã tạo ra phiên bản dòng này</td>
+<td><a href="../cap-4-ben-trong-dong-co/39-mvcc/">Bài 39</a></td>
+</tr>
+<tr>
+<td>Mốc dọn rác</td>
+<td><em>xmin horizon</em></td>
+<td><code>xmin</code> nhỏ nhất trong mọi ảnh chụp đang dùng; <code>VACUUM</code> chỉ dọn tuple bị xoá trước mốc này</td>
+<td><a href="../cap-4-ben-trong-dong-co/39-mvcc/">Bài 39</a></td>
 </tr>
 </tbody>
 </table>

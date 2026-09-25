@@ -16,7 +16,7 @@
         <link rel="prev" href="../36-explain-va-query-planner/">
       
       
-        <link rel="next" href="../../dataset/">
+        <link rel="next" href="../38-isolation-level-va-anomaly/">
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
@@ -1223,6 +1223,14 @@
       
         
       
+        
+      
+        
+      
+        
+      
+        
+      
     
     
       
@@ -1639,6 +1647,90 @@
   
 </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../38-isolation-level-va-anomaly/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 38 — Mức cô lập và các hiện tượng bất thường
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../39-mvcc/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 39 — MVCC: nhiều phiên bản cho một dòng
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../40-wal-va-recovery/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 40 — WAL, checkpoint và phục hồi sau sự cố
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../41-lock-va-deadlock/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 41 — Khoá và bế tắc
+  </span>
+  
+
+      </a>
     </li>
   
 
@@ -2674,7 +2766,7 @@
 <li>PostgreSQL có <strong>DDL trong giao dịch</strong>: <code>CREATE</code>, <code>ALTER</code> bị <code>ROLLBACK</code> huỷ được. Sequence thì <strong>nằm ngoài</strong> giao dịch nên <code>SERIAL</code> có thể nhảy số. Giữ giao dịch <strong>ngắn</strong> và bao đúng một đơn vị nghiệp vụ, gộp kiểm tra vào chính câu ghi, và chạy script với <code>ON_ERROR_STOP</code> để không bao giờ tưởng một giao dịch hỏng đã thành công.</li>
 </ol>
 <hr />
-<p>⬅️ <a href="../36-explain-va-query-planner/">Bài 36 — EXPLAIN và bộ tối ưu truy vấn</a> · ➡️ <strong>Bài 38 — Mức cô lập và các hiện tượng bất thường</strong> <em>(sắp có)</em></p>
+<p>⬅️ <a href="../36-explain-va-query-planner/">Bài 36 — EXPLAIN và bộ tối ưu truy vấn</a> · ➡️ <a href="../38-isolation-level-va-anomaly/">Bài 38 — Mức cô lập và các hiện tượng bất thường</a></p>
 
 
 
@@ -2727,13 +2819,13 @@
         
         
           
-          <a href="../../dataset/" class="md-footer__link md-footer__link--next" aria-label="Sau: Database mẫu">
+          <a href="../38-isolation-level-va-anomaly/" class="md-footer__link md-footer__link--next" aria-label="Sau: Bài 38 — Mức cô lập và các hiện tượng bất thường">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Sau
               </span>
               <div class="md-ellipsis">
-                Database mẫu
+                Bài 38 — Mức cô lập và các hiện tượng bất thường
               </div>
             </div>
             <div class="md-footer__button md-icon">
