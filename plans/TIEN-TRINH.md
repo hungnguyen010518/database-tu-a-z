@@ -1,7 +1,9 @@
 # Tiến trình xây dựng khóa học "Database từ A-Z"
 
 > **Tài liệu bàn giao.** Đọc file này trước khi làm tiếp bất cứ việc gì.
-> Cập nhật lần cuối: sau khi hoàn tất Cấp 3 (32/51 bài).
+> Cập nhật lần cuối: 2026-09-25, sau khi hoàn tất Bài 47 (47/51 bài). **Phiên này DỪNG
+> theo yêu cầu người dùng** (hết token) — chưa làm gì cho Bài 48-51 và Task 9. Phiên sau
+> đọc mục 0 và mục 8 rồi tiếp tục ngay từ Bài 48.
 
 ## 0. Một phút nắm tình hình
 
@@ -9,11 +11,13 @@
 |---|---|
 | **Website** | https://hungnguyen010518.github.io/database-tu-a-z/ |
 | **Repo** | https://github.com/hungnguyen010518/database-tu-a-z |
-| **Đã viết** | **32 / 51 bài** — Cấp 0, 1, 2, 3 xong và đã qua review |
-| **Còn lại** | Cấp 4 (9 bài), Cấp 5 (10 bài), rà soát tổng cuối khoá |
-| **Khẳng định kết quả** | 867, tất cả được PostgreSQL 16 thật xác minh mỗi lần push |
-| **Bảng thuật ngữ** | 264 thuật ngữ, `CÒN THIẾU: 0` |
-| **CI** | 4 workflow, tất cả xanh trên `main` |
+| **Đã viết** | **47 / 51 bài** — Cấp 0, 1, 2, 3, 4 xong + đã qua review; Cấp 5 mới có Bài 42-47 |
+| **Còn lại** | Bài 48-51 (4 bài, xem mục 8), rà soát tổng cuối khoá (Task 9) |
+| **Khẳng định kết quả** | ~1432 (đếm `KỲ VỌNG` trong `docs/`), tất cả PostgreSQL 16 thật xác minh mỗi lần push |
+| **Bảng thuật ngữ** | ~498 dòng thuật ngữ trong `docs/glossary.md`, phạm vi "Bài 1–47" |
+| **Sơ đồ Mermaid** | 101 khối, tất cả CI Mermaid render được |
+| **CI** | 4 workflow, tất cả xanh trên `main`, commit mới nhất đã xác minh: `0e81430` |
+| **Bài 47 CHƯA qua task reviewer** | Implement xong, CI xanh, nhưng phiên này bỏ qua bước dispatch reviewer subagent để tiết kiệm token theo yêu cầu người dùng. Phiên sau nên dispatch 1 task reviewer cho riêng Bài 47 (dùng `review-package` với BASE = commit trước Bài 47, xem mục 2) trước khi coi Bài 47 là "đã qua review" như các bài khác. |
 
 Yêu cầu gốc của người dùng: khóa học database tiếng Việt từ A-Z, cơ bản đến siêu nâng cao,
 **mọi khái niệm giải thích sao cho học sinh cấp 2 hiểu được**, **đầy đủ thuật ngữ chuyên ngành**
@@ -25,12 +29,17 @@ Yêu cầu gốc của người dùng: khóa học database tiếng Việt từ 
 |---|---|
 | `specs/2026-09-24-khoa-hoc-database-design.md` | Spec thiết kế đã được người dùng duyệt |
 | `plans/2026-09-24-khoa-hoc-database.md` | Kế hoạch 9 task, danh sách 51 bài chốt cứng |
-| `.superpowers/sdd/2026-09-24-khoa-hoc-database/progress.md` | Ledger chi tiết từng vòng review (git-ignored) |
-| `.superpowers/sdd/2026-09-24-khoa-hoc-database/huong-dan-chung.md` | **Hướng dẫn chung cho implementer — file quan trọng nhất** (git-ignored) |
-| `.superpowers/sdd/2026-09-24-khoa-hoc-database/task-*-report.md` | Báo cáo từng task (git-ignored) |
+| `.superpowers/sdd/progress.md` | Ledger từng task (git-ignored) |
+| `.superpowers/sdd/huong-dan-chung.md` | **Hướng dẫn chung cho implementer — file quan trọng nhất** (git-ignored) |
+| `.superpowers/sdd/task-*a-brief.md`, `task-*b-brief.md` | Brief từng lô 5 bài, dùng lại được làm mẫu cho lô sau (git-ignored) |
+| `.superpowers/sdd/task-*-report.md` | Báo cáo từng task (git-ignored) |
+| `.superpowers/sdd/review-*.diff` | Gói diff đã sinh cho từng vòng review (git-ignored, có thể xoá an toàn) |
 
-⚠️ Thư mục `.superpowers/` bị git-ignore. Nếu nó bị xoá, dựng lại `huong-dan-chung.md` từ
-mục 4–7 của tài liệu này.
+⚠️ Thư mục `.superpowers/` bị git-ignore, KHÔNG theo cấu trúc con `2026-09-24-khoa-hoc-database/`
+như bản gốc — phiên 2026-09-25 dựng lại phẳng thẳng trong `.superpowers/sdd/`. Nếu thư mục này bị
+xoá, dựng lại `huong-dan-chung.md` từ mục 4–7 của tài liệu này (bản đã dùng ở phiên 2026-09-25 còn
+có thêm 1 dòng ở mục "Sơ đồ Mermaid không thụt lề": bổ sung `stateDiagram-v2` vào danh sách an
+toàn — nhớ thêm lại nếu dựng file từ đầu).
 
 ## 2. Quy trình đang dùng
 
@@ -234,41 +243,51 @@ diem 480 · sach 20 · muon_sach 50 · diem_danh 200 · bang_bet 30 · hoc_sinh_
 
 ## 8. Việc còn lại
 
-### Task 7 — Cấp 4 (Bài 33–41), chia 33–37 / 38–41
+### Đã xong (Task 7, Task 8a, và Bài 47 của Task 8b) — KHÔNG cần làm lại
 
-| File trong `docs/cap-4-ben-trong-dong-co/` | Tiêu đề |
-|---|---|
-| `33-page-heap-tuple.md` | Dữ liệu nằm ở đâu: Page, Heap, Tuple và TOAST |
-| `34-index-va-b-tree.md` | Index và cấu trúc B+Tree |
-| `35-cac-loai-index-khac.md` | Hash, GiST, GIN và BRIN |
-| `36-explain-va-query-planner.md` | EXPLAIN, Query Planner và Cost-Based Optimizer |
-| `37-transaction-va-acid.md` | Giao dịch (Transaction) và ACID |
-| `38-isolation-level-va-anomaly.md` | Mức cô lập và các hiện tượng bất thường |
-| `39-mvcc.md` | MVCC — điều khiển đồng thời đa phiên bản |
-| `40-wal-va-recovery.md` | WAL, Checkpoint và phục hồi sau sự cố |
-| `41-lock-va-deadlock.md` | Khoá (Lock) và Deadlock |
+Bài 33–46 xong qua đủ vòng implement + task reviewer, **Approved**, không Critical/Important
+còn mở (chi tiết từng vòng xem `.superpowers/sdd/progress.md`, git-ignored, hoặc lịch sử commit
+`main` từ `af787b7` tới `21382d2`). Bài 47 xong implement + CI xanh nhưng **CHƯA qua task
+reviewer** (xem cảnh báo ở mục 0) — làm bước đó trước khi coi Cấp 5 phần 47 là xong hẳn.
 
-- Dùng **kỹ thuật `EXPLAIN` bọc trong hàm** ở mục 4 cho mọi khẳng định về kế hoạch thực thi.
-- Bài 38 và 41 cần **hai phiên song song** — không mô phỏng được trong một script psql tuần tự.
-  Hãy trình bày bằng bảng hai cột "Session A | Session B" và đánh dấu `<!-- sql:khong-chay -->`,
-  hoặc dùng `dblink`/`pg_background` nếu có (khả năng thấp).
-- ⚠️ **BẮT BUỘC cho người viết Bài 41:** `docs/glossary.md` có hai dòng (`deadlock`,
-  `lock contention`) đang trỏ `**Bài 41** *(sắp có)*` **dạng chữ** vì file chưa tồn tại.
-  Phải đổi thành link thật.
-- `pageinspect` có thể không có trong image `postgres:16` — hoặc đánh dấu không chạy, hoặc thử
-  `CREATE EXTENSION IF NOT EXISTS pageinspect;` và xem CI.
+Vài điểm đáng nhớ đã học được qua Task 7-8a, để không lặp lại lỗi thiết kế task:
+- Bài lý thuyết thuần (không PostgreSQL cục bộ mô phỏng được, ví dụ CAP, 2 phiên song song) vẫn
+  chấp nhận được nếu 5 lớp CI khác đều xanh — không bắt buộc mọi bài đều có SQL chạy thật.
+- `stateDiagram-v2` đã được thêm vào danh sách Mermaid an toàn trong `huong-dan-chung.md` (mục 5
+  bản gốc chỉ có 4 loại) — CI Mermaid đã xác nhận render được, không cần lo lại.
+- Brief nên nhấn mạnh RÕ 1-2 bài nào trong mỗi lô 5 bài bắt buộc phải có SQL/EXPLAIN chạy thật
+  làm trọng tâm — các bài còn lại thường tự nhiên có ít phần chạy được hơn ở Cấp 5.
 
-### Task 8 — Cấp 5 (Bài 42–51), chia 42–46 / 47–51
+### Việc còn lại thật sự: Task 8b phần 2 (Bài 48–51) + Task 9
 
-`42-replication` · `43-partitioning-va-sharding` · `44-cap-va-base` · `45-distributed-transaction`
-· `46-consensus-va-raft` · `47-nosql-bon-ho` · `48-data-warehouse-va-olap` · `49-etl-elt-va-pipeline`
-· `50-vector-database` · `51-bao-mat-backup-monitoring`
+**Task 8b còn 4 bài** trong `docs/cap-5-sieu-nang-cao/`: `48-data-warehouse-va-olap.md`,
+`49-etl-elt-va-pipeline.md`, `50-vector-database.md`, `51-bao-mat-backup-monitoring.md`.
+Brief đầy đủ cho cả 5 bài (42-51 gốc) nằm ở `plans/2026-09-24-khoa-hoc-database.md` mục
+"Task 8", brief đã cắt riêng cho lô 47-51 nằm ở `.superpowers/sdd/task-8b-brief.md` (git-ignored,
+còn nguyên trên máy đã chạy phiên 2026-09-25 — nếu máy khác thì dựng lại từ plan gốc + phần dưới
+đây).
 
-- Bài 43 (partitioning) chạy thật được trên bảng nháp; sharding thì chỉ mô tả.
-- Bài 50 cần `pgvector` — **không** có trong `postgres:16`. Đánh dấu không chạy và ghi rõ cần
-  image `pgvector/pgvector:pg16`, hoặc thêm một job CI riêng dùng image đó.
+- **Việc cần làm ngay khi bắt đầu lại:** sửa dòng cuối Bài 47
+  (`docs/cap-5-sieu-nang-cao/47-nosql-bon-ho.md`) từ `➡️ **Bài 48** *(sắp có)*` thành link thật
+  trỏ `48-data-warehouse-va-olap.md` — implementer Bài 47 cố ý để vậy vì lúc đó Bài 48 chưa tồn
+  tại.
+- Bài 48 (star schema) và Bài 49 (idempotent pipeline) BẮT BUỘC có SQL chạy thật trên CI — đây là
+  2 điểm thực hành rõ ràng nhất của lô.
+- Bài 50 cần `pgvector` — **không** có trong `postgres:16` (đã xác nhận qua Bài 47: máy làm việc
+  không có pgvector). Đánh dấu không chạy và ghi rõ cần image `pgvector/pgvector:pg16`, KHÔNG tự
+  sửa `.github/workflows/` để đổi image CI — nếu thấy cần, ghi vào báo cáo để người dùng quyết.
 - Bài 51 (RLS, `CREATE POLICY`, `pg_stat_statements`) — `pg_stat_statements` cần
-  `shared_preload_libraries`, gần như chắc chắn phải đánh dấu không chạy.
+  `shared_preload_libraries`, gần như chắc chắn phải đánh dấu không chạy. **Lưu ý mới phát hiện ở
+  Bài 47:** CI chạy bằng superuser, mà superuser **bỏ qua RLS** theo mặc định — muốn chứng minh
+  RLS chạy thật (không chỉ khai báo suông) phải `CREATE ROLE` một role thường rồi `SET ROLE` sang
+  role đó trước khi `SELECT`, nếu không policy sẽ không bao giờ được áp dụng trong CI mà vẫn xanh
+  giả.
+- Bài 51 là bài CUỐI khóa — viết đoạn "học tiếp gì" nối vào `docs/index.md` (file này **chưa có**
+  mục đó, implementer Bài 51 phải tạo mới, không phải sửa mục sẵn có) và cập nhật `docs/index.md`
+  lên trạng thái 51/51 bài.
+- `docs/cap-1-mo-hinh-er/... Bài 4` (đầu khoá) hứa "Bài 47 dạy định lý CAP, nhất quán cuối cùng"
+  nhưng hai chủ đề đó thật ra nằm ở Bài 44 — Bài 47 chỉ trỏ về đó. Đây là lỗi ở bài cũ, ngoài phạm
+  vi Task 8b, ghi vào danh sách hoãn (mục 9) hoặc để Task 9 xử lý, ĐỪNG tự sửa giữa chừng Task 8b.
 
 ### Task 9 — Rà soát tổng cuối khoá
 
@@ -289,6 +308,8 @@ diem 480 · sach 20 · muon_sach 50 · diem_danh 200 · bang_bet 30 · hoc_sinh_
 | `docs/glossary.md` mục N | `not distinct` chèn trước `NoSQL` — lệch thứ tự alphabet một bậc |
 | 20 thuật ngữ | Chỉ tồn tại ở bảng cuối bài, không viết đúng quy ước trong thân bài (cả Bài 11 không đóng góp cụm nào) → ngoài tầm script |
 | `scripts/trich_sql.py` | Bọc ngoài không có `ORDER BY` tường minh → 3 khẳng định dựa vào `ORDER BY` trong truy vấn con là rủi ro lý thuyết (PostgreSQL thực tế giữ thứ tự, cả 3 cột đều ASCII, CI đã xác nhận đúng) |
+| `docs/cap-0-nhap-mon/.../04-...md` (Bài 4) | Hứa "Bài 47 dạy định lý CAP, nhất quán cuối cùng" nhưng hai chủ đề đó thật ra ở Bài 44; Bài 47 chỉ trỏ về đó — phát hiện khi viết Bài 47 (2026-09-25) |
+| `docs/glossary.md` | Thuật ngữ *eventual consistency*/*read-your-writes* của Bài 42-46 dịch là "nhất quán cuối cùng"/"đọc được điều mình vừa ghi", lệch chữ trong plan gốc ("nhất quán cuối"/"đọc-ghi-của-mình") — dùng NHẤT QUÁN trong cả 5 bài + glossary, task reviewer đã chấp nhận là judgment call hợp lý, không bắt buộc sửa nhưng Task 9 có thể chuẩn hoá lại nếu muốn khớp chữ plan |
 
 ## 10. Nhật ký các lỗi lớn đã bắt được
 
@@ -310,11 +331,17 @@ Giữ lại vì chúng cho thấy **loại** lỗi cần soi, không chỉ lỗi
 | 3 | `unaccent` được nói cần superuser | Sai từ PG13 (trusted extension), và chính lời sai đó là căn cứ bỏ chạy phần quan trọng nhất cho người học VN |
 | 3 | Ví dụ "bẫy so chuỗi" dùng 4 số cùng 3 chữ số | **Ví dụ không kích hoạt được bẫy nó định chỉ ra** |
 | 3 | Báo cáo khai có một khối `COMMIT` mà khối đó **chưa bao giờ tồn tại** | Báo cáo mô tả theo ý định, không theo file |
+| 4 | Bài 35 sơ đồ Mermaid dùng sai thực thể HTML (`#lt;`/`#gt;`/`#amp;` thay vì `&lt;`/`&gt;`/`&amp;`) | Không phá cú pháp Mermaid nên CI vẫn xanh, nhưng ký hiệu `<`/`>`/`&` hiện literal trên trang web — chỉ bắt được bằng đọc mắt |
+| 4 | Bài 37 "Lỗi 2": mạch văn nói "chuyển 35 điểm" nhưng câu `UPDATE` trừ 30 | CI vẫn xanh vì `WHERE` chặn cả hai trường hợp giống nhau (0 dòng), nên `KỲ VỌNG` không phát hiện được số liệu nội bộ vô lý — bài học: KỲ VỌNG kiểm được kết quả câu lệnh, không kiểm được tính nhất quán của lập luận xung quanh nó |
+| — | Bài 20 (Cấp 2, viết trước Cấp 4) tham chiếu "Bài 38 sẽ nói về khoá" | Khoá thật ra ở Bài 41 — lỗi tham chiếu chéo giữa các cấp chỉ lộ ra khi cấp sau đã viết xong, khó tránh hoàn toàn khi viết tuần tự |
 
-## 11. Thống kê hiện tại
+## 11. Thống kê hiện tại (sau khi xong Bài 47, chưa làm Bài 48-51)
 
 ```
-32 bài học · 264 thuật ngữ · 867 khẳng định kết quả · 71 sơ đồ Mermaid
-564 khối SQL chạy thật + 91 khối đánh dấu bỏ qua
-4 workflow CI, tất cả xanh trên main
+47 bài học · ~498 dòng thuật ngữ (docs/glossary.md) · ~1432 khẳng định KỲ VỌNG · 101 sơ đồ Mermaid
+4 workflow CI, tất cả xanh trên main — commit mới nhất đã xác minh: 0e81430
 ```
+
+Số liệu đếm bằng `grep -c` trực tiếp trên `docs/` lúc cập nhật tài liệu này (2026-09-25) — có thể
+chênh vài đơn vị so với đếm bằng công cụ đo chính thức của Task 9 (mục 8), không dùng số này làm
+căn cứ pháp lý cho "CÒN THIẾU: 0" của glossary, phải tự chạy `scripts/trich_thuat_ngu.py --thieu`.
