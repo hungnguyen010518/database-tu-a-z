@@ -1462,6 +1462,170 @@
   
   
   
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Cấp 5 — Siêu nâng cao
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            Cấp 5 — Siêu nâng cao
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cap-5-sieu-nang-cao/42-replication/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 42 — Replication: nhân bản dữ liệu ra nhiều máy
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cap-5-sieu-nang-cao/43-partitioning-va-sharding/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 43 — Partitioning và Sharding: chia nhỏ một bảng khổng lồ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cap-5-sieu-nang-cao/44-cap-va-base/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 44 — CAP và BASE: khi mạng đứt thì chọn gì
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cap-5-sieu-nang-cao/45-distributed-transaction/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 45 — Giao dịch phân tán: 2PC và Saga
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cap-5-sieu-nang-cao/46-consensus-va-raft/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 46 — Consensus và Raft: nhiều máy cùng đồng ý một điều
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
     <li class="md-nav__item">
       <a href="../dataset/" class="md-nav__link">
         
@@ -2035,7 +2199,7 @@
 <p>Bảng được sắp xếp theo thứ tự chữ cái của <strong>thuật ngữ tiếng Anh</strong>, vì đó là dạng bạn sẽ gặp khi đọc tài liệu và khi đi phỏng vấn.</p>
 <div class="admonition info">
 <p class="admonition-title">Bảng này lớn dần theo khóa học</p>
-<p>Mỗi khi một cấp độ mới được xuất bản, thuật ngữ của cấp đó được bổ sung vào đây. Hiện bảng phủ trọn <strong>Bài 1–41</strong>: Cấp 0 (Nhập môn), Cấp 1 (Mô hình quan hệ &amp; ER), Cấp 2 (Chuẩn hoá), Cấp 3 (SQL) và Cấp 4 (Bên trong động cơ).</p>
+<p>Mỗi khi một cấp độ mới được xuất bản, thuật ngữ của cấp đó được bổ sung vào đây. Hiện bảng phủ trọn <strong>Bài 1–46</strong>: Cấp 0 (Nhập môn), Cấp 1 (Mô hình quan hệ &amp; ER), Cấp 2 (Chuẩn hoá), Cấp 3 (SQL), Cấp 4 (Bên trong động cơ) và nửa đầu Cấp 5 (Siêu nâng cao).</p>
 </div>
 <div class="admonition tip">
 <p class="admonition-title">Vì sao có nhiều từ trùng nghĩa?</p>
@@ -2150,10 +2314,28 @@
 <td><a href="../cap-3-sql/25-join/">Bài 25</a></td>
 </tr>
 <tr>
+<td>Lệnh nối thêm</td>
+<td><em>AppendEntries</em></td>
+<td>Tin nhắn lãnh đạo Raft gửi mục nhật ký mới, kèm mục ngay trước để kiểm khớp; rỗng thì là nhịp tim</td>
+<td><a href="../cap-5-sieu-nang-cao/46-consensus-va-raft/">Bài 46</a></td>
+</tr>
+<tr>
 <td>Tiên đề Armstrong</td>
 <td><em>Armstrong's axioms</em></td>
 <td>Ba luật — phản xạ, tăng trưởng, bắc cầu — đủ để suy ra mọi phụ thuộc hàm suy ra được</td>
 <td><a href="../cap-2-chuan-hoa/16-phu-thuoc-ham/">Bài 16</a></td>
+</tr>
+<tr>
+<td>Nhân bản bất đồng bộ</td>
+<td><em>asynchronous replication</em></td>
+<td><code>COMMIT</code> không chờ máy bản sao; nhanh, nhưng máy chính sập có thể mất giao dịch cuối — mặc định của PostgreSQL</td>
+<td><a href="../cap-5-sieu-nang-cao/42-replication/">Bài 42</a></td>
+</tr>
+<tr>
+<td>Giao ít nhất một lần</td>
+<td><em>at-least-once delivery</em></td>
+<td>Thông điệp không bao giờ mất nhưng có thể tới nhiều lần; bên nhận phải luỹ đẳng</td>
+<td><a href="../cap-5-sieu-nang-cao/45-distributed-transaction/">Bài 45</a></td>
 </tr>
 <tr>
 <td>Nguyên tử</td>
@@ -2215,6 +2397,12 @@
 <td>Tiến trình nền tự <code>VACUUM</code> và <code>ANALYZE</code> các bảng khi số tuple chết hoặc số dòng thay đổi vượt ngưỡng; không nên tắt</td>
 <td><a href="../cap-4-ben-trong-dong-co/33-page-heap-tuple/">Bài 33</a></td>
 </tr>
+<tr>
+<td>Tính sẵn sàng</td>
+<td><em>availability</em></td>
+<td>Mọi yêu cầu tới một máy còn sống đều được trả lời — chữ <strong>A</strong> của CAP</td>
+<td><a href="../cap-5-sieu-nang-cao/44-cap-va-base/">Bài 44</a></td>
+</tr>
 </tbody>
 </table>
 <h2 id="b">B<a class="headerlink" href="#b" title="Permanent link">&para;</a></h2>
@@ -2245,6 +2433,12 @@
 <td><em>base backup</em></td>
 <td>Bản chụp thư mục dữ liệu lấy khi máy chủ đang chạy, bằng <code>pg_basebackup</code>; điểm xuất phát của PITR</td>
 <td><a href="../cap-4-ben-trong-dong-co/40-wal-va-recovery/">Bài 40</a></td>
+</tr>
+<tr>
+<td>BASE</td>
+<td><em>Basically Available, Soft state, Eventually consistent</em></td>
+<td>Kiểu thiết kế ưu tiên luôn trả lời, chấp nhận các bản sao lệch rồi dần khớp — đối lại ACID</td>
+<td><a href="../cap-5-sieu-nang-cao/44-cap-va-base/">Bài 44</a></td>
 </tr>
 <tr>
 <td>Mở giao dịch</td>
@@ -2283,6 +2477,12 @@
 <td><a href="../cap-4-ben-trong-dong-co/35-cac-loai-index-khac/">Bài 35</a></td>
 </tr>
 <tr>
+<td>Vấn đề bị chặn</td>
+<td><em>blocking problem</em></td>
+<td>Điều phối viên 2PC sập sau khi mọi bên đã chuẩn bị: tất cả chờ, giữ khoá, không ai được tự quyết</td>
+<td><a href="../cap-5-sieu-nang-cao/45-distributed-transaction/">Bài 45</a></td>
+</tr>
+<tr>
 <td>BCNF</td>
 <td><em>Boyce–Codd Normal Form</em></td>
 <td>Dạng chuẩn bỏ hẳn lối thoát của 3NF: mọi định thức đều phải là siêu khoá</td>
@@ -2300,6 +2500,12 @@
 <td>Tuỳ chọn của <code>EXPLAIN</code> in số trang mỗi nút đã chạm tới: <code>shared hit</code> từ bộ đệm, <code>read</code> phải xin hệ điều hành</td>
 <td><a href="../cap-4-ben-trong-dong-co/36-explain-va-query-planner/">Bài 36</a></td>
 </tr>
+<tr>
+<td>Lỗi Byzantine</td>
+<td><em>Byzantine fault</em></td>
+<td>Máy gửi thông tin sai hoặc cố ý lừa; Raft và Paxos không chống được</td>
+<td><a href="../cap-5-sieu-nang-cao/46-consensus-va-raft/">Bài 46</a></td>
+</tr>
 </tbody>
 </table>
 <h2 id="c">C<a class="headerlink" href="#c" title="Permanent link">&para;</a></h2>
@@ -2314,10 +2520,22 @@
 </thead>
 <tbody>
 <tr>
+<td>Ứng viên</td>
+<td><em>candidate</em></td>
+<td>Máy Raft đang xin phiếu để làm lãnh đạo — khác <em>candidate key</em> (khoá dự tuyển)</td>
+<td><a href="../cap-5-sieu-nang-cao/46-consensus-va-raft/">Bài 46</a></td>
+</tr>
+<tr>
 <td>Khoá dự tuyển</td>
 <td><em>candidate key</em></td>
 <td>Siêu khoá tối giản — bỏ bất kỳ cột nào là mất khả năng phân biệt</td>
 <td><a href="../cap-1-mo-hinh-er/12-bay-loai-khoa/">Bài 12</a></td>
+</tr>
+<tr>
+<td>Định lý CAP</td>
+<td><em>CAP theorem</em></td>
+<td>Khi mạng bị chia cắt, hệ nhân bản không thể vừa nhất quán mạnh vừa sẵn sàng</td>
+<td><a href="../cap-5-sieu-nang-cao/44-cap-va-base/">Bài 44</a></td>
 </tr>
 <tr>
 <td>Bản số</td>
@@ -2368,6 +2586,12 @@
 <td><a href="../cap-0-nhap-mon/03-dbms-la-gi/">Bài 3</a></td>
 </tr>
 <tr>
+<td>Nhất quán nhân quả</td>
+<td><em>causal consistency</em></td>
+<td>Thao tác xảy ra vì đã thấy thao tác khác thì luôn được mọi người thấy sau nó</td>
+<td><a href="../cap-5-sieu-nang-cao/44-cap-va-base/">Bài 44</a></td>
+</tr>
+<tr>
 <td>Điểm kiểm tra</td>
 <td><em>checkpoint</em></td>
 <td>Lúc ghi mọi trang đã sửa xuống tệp dữ liệu và dời điểm làm lại; WAL trước đó không còn cần để phục hồi</td>
@@ -2378,6 +2602,12 @@
 <td><em>Chen notation</em></td>
 <td>Bộ ký hiệu ER gốc năm 1976: mỗi loại phần tử một hình riêng, mỗi thuộc tính một elip treo ra ngoài</td>
 <td><a href="../cap-1-mo-hinh-er/10-bieu-do-er-ky-hieu-chen/">Bài 10</a></td>
+</tr>
+<tr>
+<td>Phối hợp theo sự kiện</td>
+<td><em>choreography</em></td>
+<td>Mỗi dịch vụ phát sự kiện khi xong, dịch vụ khác nghe và làm tiếp; không ai chỉ huy</td>
+<td><a href="../cap-5-sieu-nang-cao/45-distributed-transaction/">Bài 45</a></td>
 </tr>
 <tr>
 <td>Máy khách</td>
@@ -2428,10 +2658,28 @@
 <td><a href="../cap-4-ben-trong-dong-co/37-transaction-va-acid/">Bài 37</a></td>
 </tr>
 <tr>
+<td>Chỉ số đã xác nhận</td>
+<td><em>commit index</em></td>
+<td>Vị trí của mục nhật ký cuối cùng đã được lưu trên túc số máy</td>
+<td><a href="../cap-5-sieu-nang-cao/46-consensus-va-raft/">Bài 46</a></td>
+</tr>
+<tr>
+<td>Pha xác nhận</td>
+<td><em>commit phase</em></td>
+<td>Pha sau của 2PC: điều phối viên gửi quyết định chung, các bên làm theo và trả khoá</td>
+<td><a href="../cap-5-sieu-nang-cao/45-distributed-transaction/">Bài 45</a></td>
+</tr>
+<tr>
 <td>Biểu thức bảng dùng chung</td>
 <td><em>Common Table Expression</em> (CTE)</td>
 <td>Bảng tạm có tên, khai bằng <code>WITH</code> ở đầu câu lệnh và chỉ sống trong đúng câu lệnh đó</td>
 <td><a href="../cap-3-sql/28-cte-va-recursive-cte/">Bài 28</a></td>
+</tr>
+<tr>
+<td>Giao dịch bù trừ</td>
+<td><em>compensating transaction</em></td>
+<td>Giao dịch mới làm ngược lại về nghiệp vụ một bước đã <code>COMMIT</code> — không phải <code>ROLLBACK</code>; phải thử lại được</td>
+<td><a href="../cap-5-sieu-nang-cao/45-distributed-transaction/">Bài 45</a></td>
 </tr>
 <tr>
 <td>Đầy đủ (của hệ tiên đề)</td>
@@ -2470,16 +2718,34 @@
 <td><a href="../cap-0-nhap-mon/02-tu-so-giay-den-excel/">Bài 2</a></td>
 </tr>
 <tr>
+<td>Đồng thuận</td>
+<td><em>consensus</em></td>
+<td>Nhiều máy cùng đồng ý một giá trị hoặc một thứ tự lệnh, dù có máy sập hay chậm</td>
+<td><a href="../cap-5-sieu-nang-cao/46-consensus-va-raft/">Bài 46</a></td>
+</tr>
+<tr>
 <td>Tính nhất quán</td>
 <td><em>consistency</em></td>
 <td>Chữ <strong>C</strong> của ACID: giao dịch chỉ đưa database từ trạng thái hợp lệ sang trạng thái hợp lệ, theo các ràng buộc đã khai báo</td>
 <td><a href="../cap-4-ben-trong-dong-co/37-transaction-va-acid/">Bài 37</a></td>
 </tr>
 <tr>
+<td>Băm nhất quán</td>
+<td><em>consistent hashing</em></td>
+<td>Xếp máy và khoá lên một vòng băm; thêm máy chỉ chuyển các khoá ngay trước nó, và chỉ sang máy mới</td>
+<td><a href="../cap-5-sieu-nang-cao/43-partitioning-va-sharding/">Bài 43</a></td>
+</tr>
+<tr>
 <td>Vùng chứa</td>
 <td><em>container</em></td>
 <td>Cái hộp chạy sẵn một phần mềm, tách biệt hẳn với máy thật</td>
 <td><a href="../cap-0-nhap-mon/05-cai-dat-postgresql/">Bài 5</a></td>
+</tr>
+<tr>
+<td>Điều phối viên</td>
+<td><em>coordinator</em></td>
+<td>Bên điều khiển 2PC, thu câu trả lời của các bên và ra quyết định chung</td>
+<td><a href="../cap-5-sieu-nang-cao/45-distributed-transaction/">Bài 45</a></td>
 </tr>
 <tr>
 <td>Truy vấn con tương quan</td>
@@ -2693,6 +2959,12 @@
 <td><a href="../cap-4-ben-trong-dong-co/34-index-va-b-tree/">Bài 34</a></td>
 </tr>
 <tr>
+<td>Phân vùng mặc định</td>
+<td><em>default partition</em></td>
+<td>Phân vùng hứng mọi dòng không thuộc phân vùng nào khác — <code>DEFAULT</code></td>
+<td><a href="../cap-5-sieu-nang-cao/43-partitioning-va-sharding/">Bài 43</a></td>
+</tr>
+<tr>
 <td>Giá trị mặc định</td>
 <td><em>default value</em></td>
 <td>Giá trị DBMS tự điền khi câu <code>INSERT</code> không nhắc tới cột; nó <strong>không</strong> thay được cho <code>NOT NULL</code></td>
@@ -2789,6 +3061,12 @@
 <td><a href="../cap-1-mo-hinh-er/13-mo-hinh-eer/">Bài 13</a></td>
 </tr>
 <tr>
+<td>Giao dịch phân tán</td>
+<td><em>distributed transaction</em></td>
+<td>Giao dịch có thao tác trên nhiều database độc lập mà vẫn cần tất cả hoặc không gì cả</td>
+<td><a href="../cap-5-sieu-nang-cao/45-distributed-transaction/">Bài 45</a></td>
+</tr>
+<tr>
 <td>Phép chia</td>
 <td><em>division</em></td>
 <td>Phép ÷ trả lời câu hỏi "giá trị nào đi kèm với <strong>toàn bộ</strong> một tập cho trước"; SQL không có từ khoá riêng cho nó</td>
@@ -2819,6 +3097,12 @@
 <td><a href="../cap-1-mo-hinh-er/15-rang-buoc-toan-ven/">Bài 15</a></td>
 </tr>
 <tr>
+<td>Ghi kép</td>
+<td><em>dual write</em></td>
+<td>Ghi database và gửi thông điệp thành hai việc riêng — sập giữa chừng thì hai bên lệch nhau</td>
+<td><a href="../cap-5-sieu-nang-cao/45-distributed-transaction/">Bài 45</a></td>
+</tr>
+<tr>
 <td>Tính bền vững</td>
 <td><em>durability</em></td>
 <td>Chữ <strong>D</strong> của ACID: đã <code>COMMIT</code> thì không mất, kể cả mất điện ngay sau đó</td>
@@ -2842,6 +3126,12 @@
 <td><em>EER — Enhanced ER / Extended ER</em></td>
 <td>Mô hình ER cơ bản cộng thêm lớp cha – lớp con, các ràng buộc chuyên biệt hoá, và kết tập</td>
 <td><a href="../cap-1-mo-hinh-er/13-mo-hinh-eer/">Bài 13</a></td>
+</tr>
+<tr>
+<td>Thời gian chờ bầu cử</td>
+<td><em>election timeout</em></td>
+<td>Không nghe lãnh đạo quá thời gian này thì ứng cử; chọn ngẫu nhiên để tránh phiếu chia đều</td>
+<td><a href="../cap-5-sieu-nang-cao/46-consensus-va-raft/">Bài 46</a></td>
 </tr>
 <tr>
 <td>Thực thể</td>
@@ -2884,6 +3174,12 @@
 <td><em>estimated cost</em></td>
 <td>Con số planner dùng để so các kế hoạch, đo bằng đơn vị tuỳ ý với mốc đọc một trang tuần tự = 1 — không phải mili giây</td>
 <td><a href="../cap-4-ben-trong-dong-co/36-explain-va-query-planner/">Bài 36</a></td>
+</tr>
+<tr>
+<td>Nhất quán cuối cùng</td>
+<td><em>eventual consistency</em></td>
+<td>Ngừng ghi đủ lâu thì mọi bản sao sẽ giống nhau — không hứa khi nào, không hứa giống nhau ở giá trị đúng</td>
+<td><a href="../cap-5-sieu-nang-cao/44-cap-va-base/">Bài 44</a></td>
 </tr>
 <tr>
 <td>Bảng ảo dòng bị từ chối</td>
@@ -2953,10 +3249,22 @@
 <td><a href="../cap-2-chuan-hoa/19-dang-chuan-4nf-5nf-6nf/">Bài 19</a></td>
 </tr>
 <tr>
+<td>Chuyển đổi dự phòng</td>
+<td><em>failover</em></td>
+<td>Đưa một máy bản sao lên thay máy chính đã sập: phát hiện, chọn, nâng lên, chuyển hướng</td>
+<td><a href="../cap-5-sieu-nang-cao/42-replication/">Bài 42</a></td>
+</tr>
+<tr>
 <td>Hệ số phân nhánh</td>
 <td><em>fan-out</em></td>
 <td>Số nhánh con của một nút trong cây index — vài trăm với khoá số nguyên, nên cây rất nông</td>
 <td><a href="../cap-4-ben-trong-dong-co/34-index-va-b-tree/">Bài 34</a></td>
+</tr>
+<tr>
+<td>Rào chắn</td>
+<td><em>fencing</em></td>
+<td>Biện pháp bảo đảm máy chính cũ không thể ghi nữa trước khi nâng máy mới lên</td>
+<td><a href="../cap-5-sieu-nang-cao/42-replication/">Bài 42</a></td>
 </tr>
 <tr>
 <td>Trường</td>
@@ -2993,6 +3301,12 @@
 <td><em>flat table</em></td>
 <td>Một bảng duy nhất nhồi mọi thứ vào — gốc rễ của dư thừa và ba loại bất thường</td>
 <td><a href="../cap-0-nhap-mon/02-tu-so-giay-den-excel/">Bài 2</a></td>
+</tr>
+<tr>
+<td>Nút theo sau</td>
+<td><em>follower</em></td>
+<td>Máy thụ động trong cụm Raft, trả lời lãnh đạo và ứng viên</td>
+<td><a href="../cap-5-sieu-nang-cao/46-consensus-va-raft/">Bài 46</a></td>
 </tr>
 <tr>
 <td>Khoá ngoại</td>
@@ -3135,6 +3449,18 @@
 <td><a href="../cap-4-ben-trong-dong-co/36-explain-va-query-planner/">Bài 36</a></td>
 </tr>
 <tr>
+<td>Phân vùng theo băm</td>
+<td><em>hash partitioning</em></td>
+<td>Chia theo số dư của hàm băm khoá cho <code>MODULUS</code>; rải đều nhưng chỉ cắt tỉa được phép bằng</td>
+<td><a href="../cap-5-sieu-nang-cao/43-partitioning-va-sharding/">Bài 43</a></td>
+</tr>
+<tr>
+<td>Vòng băm</td>
+<td><em>hash ring</em></td>
+<td>Vòng tròn mọi giá trị băm trong băm nhất quán; khoá thuộc máy đầu tiên gặp theo chiều kim đồng hồ</td>
+<td><a href="../cap-5-sieu-nang-cao/43-partitioning-va-sharding/">Bài 43</a></td>
+</tr>
+<tr>
 <td>Lọc nhóm</td>
 <td><em>HAVING</em></td>
 <td>Lọc trên <strong>nhóm</strong> sau khi đã gom, nên dùng được hàm tổng hợp; khác <code>WHERE</code> vốn lọc từng dòng</td>
@@ -3151,6 +3477,12 @@
 <td><em>Heap-Only Tuple</em> (HOT)</td>
 <td><code>UPDATE</code> mà tuple mới nằm cùng trang và không cột nào có index bị sửa — khỏi phải sửa index</td>
 <td><a href="../cap-4-ben-trong-dong-co/33-page-heap-tuple/">Bài 33</a></td>
+</tr>
+<tr>
+<td>Nhịp tim</td>
+<td><em>heartbeat</em></td>
+<td>Tin nhắn đều đặn của lãnh đạo báo "tôi còn sống"</td>
+<td><a href="../cap-5-sieu-nang-cao/46-consensus-va-raft/">Bài 46</a></td>
 </tr>
 <tr>
 <td>Mô hình phân cấp</td>
@@ -3170,6 +3502,12 @@
 <td>Tăng sức chứa bằng cách thêm máy, thay vì mua một máy to hơn</td>
 <td><a href="../cap-0-nhap-mon/04-cac-mo-hinh-du-lieu/">Bài 4</a></td>
 </tr>
+<tr>
+<td>Mảnh nóng</td>
+<td><em>hot shard</em></td>
+<td>Mảnh phải gánh phần việc nặng hơn hẳn các mảnh khác, thường do khoá tăng dần theo thời gian</td>
+<td><a href="../cap-5-sieu-nang-cao/43-partitioning-va-sharding/">Bài 43</a></td>
+</tr>
 </tbody>
 </table>
 <h2 id="i">I<a class="headerlink" href="#i" title="Permanent link">&para;</a></h2>
@@ -3183,6 +3521,12 @@
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>Khoá luỹ đẳng</td>
+<td><em>idempotency key</em></td>
+<td>Mã duy nhất của một thông điệp hay yêu cầu, để bên nhận nhận ra và bỏ qua lần trùng</td>
+<td><a href="../cap-5-sieu-nang-cao/45-distributed-transaction/">Bài 45</a></td>
+</tr>
 <tr>
 <td>Luỹ đẳng</td>
 <td><em>idempotent</em></td>
@@ -3391,10 +3735,34 @@
 </thead>
 <tbody>
 <tr>
+<td>Lần ghi sau thắng</td>
+<td><em>last-write-wins</em> (LWW)</td>
+<td>Khớp xung đột bằng cách giữ lần ghi có dấu thời gian lớn hơn, lặng lẽ bỏ lần kia; đồng hồ lệch thì giữ nhầm</td>
+<td><a href="../cap-5-sieu-nang-cao/44-cap-va-base/">Bài 44</a></td>
+</tr>
+<tr>
+<td>Độ trễ</td>
+<td><em>latency</em></td>
+<td>Thời gian một yêu cầu phải chờ để có câu trả lời</td>
+<td><a href="../cap-5-sieu-nang-cao/44-cap-va-base/">Bài 44</a></td>
+</tr>
+<tr>
 <td>Kết nối ngang</td>
 <td><em>lateral join</em></td>
 <td>Phép ghép cho bảng bên phải <strong>đọc được cột của dòng bên trái</strong> đang xét; cơ chế duy nhất để một hàm trả bảng nhận tham số từ bảng đang quét</td>
 <td><a href="../cap-3-sql/32-jsonb-va-full-text-search/">Bài 32</a></td>
+</tr>
+<tr>
+<td>Nút lãnh đạo</td>
+<td><em>leader</em></td>
+<td>Máy duy nhất trong cụm Raft nhận yêu cầu ghi và gửi nhật ký cho các máy khác</td>
+<td><a href="../cap-5-sieu-nang-cao/46-consensus-va-raft/">Bài 46</a></td>
+</tr>
+<tr>
+<td>Bầu lãnh đạo</td>
+<td><em>leader election</em></td>
+<td>Nút theo sau hết thời gian chờ thì ứng cử, gom túc số phiếu thì làm lãnh đạo</td>
+<td><a href="../cap-5-sieu-nang-cao/46-consensus-va-raft/">Bài 46</a></td>
 </tr>
 <tr>
 <td>Nút lá</td>
@@ -3427,6 +3795,18 @@
 <td><a href="../cap-4-ben-trong-dong-co/33-page-heap-tuple/">Bài 33</a></td>
 </tr>
 <tr>
+<td>Tuyến tính hoá được</td>
+<td><em>linearizability</em></td>
+<td>Tên chính xác của nhất quán mạnh: mọi thao tác như xảy ra tức thì, theo một thứ tự khớp đồng hồ thật</td>
+<td><a href="../cap-5-sieu-nang-cao/44-cap-va-base/">Bài 44</a></td>
+</tr>
+<tr>
+<td>Phân vùng theo danh sách</td>
+<td><em>list partitioning</em></td>
+<td>Mỗi phân vùng giữ một danh sách giá trị rời rạc</td>
+<td><a href="../cap-5-sieu-nang-cao/43-partitioning-va-sharding/">Bài 43</a></td>
+</tr>
+<tr>
 <td>Khoá (đồng thời)</td>
 <td><em>lock</em></td>
 <td>Quyền tạm thời một giao dịch giữ trên bảng hoặc dòng để chặn việc xung đột, giữ tới hết giao dịch; khác với khoá chính/khoá ngoại (<em>key</em>)</td>
@@ -3443,6 +3823,12 @@
 <td><em>lock queue</em></td>
 <td>Người chờ khoá xếp theo thứ tự đến; xin khoá tương thích vẫn phải chờ sau người đang chờ mà xung đột</td>
 <td><a href="../cap-4-ben-trong-dong-co/41-lock-va-deadlock/">Bài 41</a></td>
+</tr>
+<tr>
+<td>Nhân bản nhật ký</td>
+<td><em>log replication</em></td>
+<td>Lãnh đạo gửi các mục nhật ký mới cho nút theo sau và xác nhận khi túc số máy đã lưu</td>
+<td><a href="../cap-5-sieu-nang-cao/46-consensus-va-raft/">Bài 46</a></td>
 </tr>
 <tr>
 <td>Số thứ tự nhật ký</td>
@@ -3467,6 +3853,12 @@
 <td><em>logical query processing order</em></td>
 <td>Trình tự ngữ nghĩa <code>FROM</code> → <code>WHERE</code> → <code>GROUP BY</code> → <code>HAVING</code> → <code>SELECT</code> → <code>DISTINCT</code> → <code>ORDER BY</code> → <code>LIMIT</code>, khác thứ tự viết</td>
 <td><a href="../cap-3-sql/26-group-by-having/">Bài 26</a></td>
+</tr>
+<tr>
+<td>Nhân bản logic</td>
+<td><em>logical replication</em></td>
+<td>Gửi thay đổi ở mức dòng; chọn từng bảng, bên nhận ghi được, cần <code>wal_level = logical</code></td>
+<td><a href="../cap-5-sieu-nang-cao/42-replication/">Bài 42</a></td>
 </tr>
 <tr>
 <td>Phân rã không mất mát</td>
@@ -3518,6 +3910,12 @@
 <td><a href="../cap-4-ben-trong-dong-co/36-explain-va-query-planner/">Bài 36</a></td>
 </tr>
 <tr>
+<td>Bộ chuyển thông điệp</td>
+<td><em>message broker</em></td>
+<td>Chương trình nhận thông điệp và chuyển tới các dịch vụ đang nghe, như Kafka, RabbitMQ</td>
+<td><a href="../cap-5-sieu-nang-cao/45-distributed-transaction/">Bài 45</a></td>
+</tr>
+<tr>
 <td>Lệnh meta</td>
 <td><em>meta-command</em></td>
 <td>Lệnh của riêng <code>psql</code>, bắt đầu bằng <code>\</code> và không có dấu chấm phẩy</td>
@@ -3534,6 +3932,12 @@
 <td><em>minimal cover / canonical cover</em></td>
 <td>Bản rút gọn hết cỡ của một tập phụ thuộc hàm, vẫn suy ra được y hệt tập gốc</td>
 <td><a href="../cap-2-chuan-hoa/16-phu-thuoc-ham/">Bài 16</a></td>
+</tr>
+<tr>
+<td>Đọc đơn điệu</td>
+<td><em>monotonic reads</em></td>
+<td>Đã thấy giá trị mới thì không bao giờ đọc lại được giá trị cũ hơn</td>
+<td><a href="../cap-5-sieu-nang-cao/44-cap-va-base/">Bài 44</a></td>
 </tr>
 <tr>
 <td>Giá trị phổ biến nhất</td>
@@ -3627,6 +4031,12 @@
 <td><a href="../cap-0-nhap-mon/04-cac-mo-hinh-du-lieu/">Bài 4</a></td>
 </tr>
 <tr>
+<td>Chia cắt mạng</td>
+<td><em>network partition</em></td>
+<td>Mạng đứt, các máy tách thành những nhóm không liên lạc được với nhau</td>
+<td><a href="../cap-5-sieu-nang-cao/44-cap-va-base/">Bài 44</a></td>
+</tr>
+<tr>
 <td>Thuộc tính không khoá</td>
 <td><em>non-prime attribute</em></td>
 <td>Thuộc tính không nằm trong bất kỳ khoá dự tuyển nào</td>
@@ -3712,10 +4122,22 @@
 <td><a href="../cap-3-sql/28-cte-va-recursive-cte/">Bài 28</a></td>
 </tr>
 <tr>
+<td>Điều phối tập trung</td>
+<td><em>orchestration</em></td>
+<td>Một bộ điều phối gọi từng bước của Saga và quyết định khi nào bù trừ</td>
+<td><a href="../cap-5-sieu-nang-cao/45-distributed-transaction/">Bài 45</a></td>
+</tr>
+<tr>
 <td>Dòng mồ côi</td>
 <td><em>orphan row</em></td>
 <td>Dòng con trỏ tới một dòng cha đã biến mất</td>
 <td><a href="../cap-1-mo-hinh-er/15-rang-buoc-toan-ven/">Bài 15</a></td>
+</tr>
+<tr>
+<td>Mẫu hộp thư đi</td>
+<td><em>outbox pattern</em></td>
+<td>Ghi thông điệp vào một bảng trong cùng giao dịch với dữ liệu; tiến trình riêng gửi đi sau</td>
+<td><a href="../cap-5-sieu-nang-cao/45-distributed-transaction/">Bài 45</a></td>
 </tr>
 <tr>
 <td>Truy vấn ngoài</td>
@@ -3748,6 +4170,12 @@
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>Định lý PACELC</td>
+<td><em>PACELC theorem</em></td>
+<td>Có chia cắt mạng: chọn sẵn sàng hay nhất quán; không có: chọn độ trễ thấp hay nhất quán</td>
+<td><a href="../cap-5-sieu-nang-cao/44-cap-va-base/">Bài 44</a></td>
+</tr>
 <tr>
 <td>Trang</td>
 <td><em>page</em></td>
@@ -3791,6 +4219,12 @@
 <td><a href="../cap-1-mo-hinh-er/13-mo-hinh-eer/">Bài 13</a></td>
 </tr>
 <tr>
+<td>Bên tham gia</td>
+<td><em>participant</em></td>
+<td>Một database làm phần việc của mình trong 2PC</td>
+<td><a href="../cap-5-sieu-nang-cao/45-distributed-transaction/">Bài 45</a></td>
+</tr>
+<tr>
 <td>Ràng buộc tham gia</td>
 <td><em>participation constraint</em></td>
 <td>Quy định một thực thể phía này có bắt buộc tham gia mối quan hệ hay không</td>
@@ -3801,6 +4235,42 @@
 <td><em>partition</em></td>
 <td>Nhóm dòng do <code>PARTITION BY</code> chia ra; cửa sổ của một dòng không bao giờ vượt ra khỏi phân vùng của nó</td>
 <td><a href="../cap-3-sql/29-window-function/">Bài 29</a></td>
+</tr>
+<tr>
+<td>Phân vùng (bảng)</td>
+<td><em>partition</em> (table partitioning)</td>
+<td>Một bảng con thật của bảng được phân vùng — khác "phân vùng" của <code>OVER (PARTITION BY ...)</code> ở Bài 29</td>
+<td><a href="../cap-5-sieu-nang-cao/43-partitioning-va-sharding/">Bài 43</a></td>
+</tr>
+<tr>
+<td>Khoá phân vùng</td>
+<td><em>partition key</em></td>
+<td>Cột quyết định dòng vào phân vùng nào; khoá chính của bảng phân vùng phải chứa nó</td>
+<td><a href="../cap-5-sieu-nang-cao/43-partitioning-va-sharding/">Bài 43</a></td>
+</tr>
+<tr>
+<td>Cắt tỉa phân vùng</td>
+<td><em>partition pruning</em></td>
+<td>Planner bỏ qua những phân vùng chắc chắn không chứa dòng khớp <code>WHERE</code>; mất tác dụng khi khoá phân vùng bị bọc trong hàm</td>
+<td><a href="../cap-5-sieu-nang-cao/43-partitioning-va-sharding/">Bài 43</a></td>
+</tr>
+<tr>
+<td>Chịu chia cắt mạng</td>
+<td><em>partition tolerance</em></td>
+<td>Tiếp tục hoạt động khi mạng giữa các máy bị đứt — chữ <strong>P</strong> của CAP; với hệ nhiều máy không phải thứ để chọn</td>
+<td><a href="../cap-5-sieu-nang-cao/44-cap-va-base/">Bài 44</a></td>
+</tr>
+<tr>
+<td>Bảng được phân vùng</td>
+<td><em>partitioned table</em></td>
+<td>Bảng "vỏ" người dùng thấy; không chứa dòng nào, chỉ chứa luật chia</td>
+<td><a href="../cap-5-sieu-nang-cao/43-partitioning-va-sharding/">Bài 43</a></td>
+</tr>
+<tr>
+<td>Thuật toán Paxos</td>
+<td><em>Paxos</em></td>
+<td>Thuật toán đồng thuận kinh điển của Leslie Lamport; đúng nhưng nổi tiếng khó hiểu</td>
+<td><a href="../cap-5-sieu-nang-cao/46-consensus-va-raft/">Bài 46</a></td>
 </tr>
 <tr>
 <td>Dòng đồng hạng</td>
@@ -3819,6 +4289,12 @@
 <td><em>physical data independence</em></td>
 <td>Đổi mức trong mà mức khái niệm không phải đổi theo</td>
 <td><a href="../cap-0-nhap-mon/03-dbms-la-gi/">Bài 3</a></td>
+</tr>
+<tr>
+<td>Nhân bản vật lý</td>
+<td><em>physical replication</em></td>
+<td>Gửi nguyên văn bản ghi WAL; bản sao giống máy chính từng byte, cả máy chủ, chỉ đọc, cùng phiên bản</td>
+<td><a href="../cap-5-sieu-nang-cao/42-replication/">Bài 42</a></td>
 </tr>
 <tr>
 <td>Nút kế hoạch</td>
@@ -3855,6 +4331,24 @@
 <td><em>predicate</em></td>
 <td>Biểu thức trong <code>WHERE</code> trả về <code>TRUE</code>, <code>FALSE</code> hoặc <code>UNKNOWN</code></td>
 <td><a href="../cap-3-sql/24-select-where-order-by/">Bài 24</a></td>
+</tr>
+<tr>
+<td>Pha chuẩn bị</td>
+<td><em>prepare phase</em></td>
+<td>Pha đầu của 2PC: mỗi bên làm xong, ghi xuống đĩa, giữ khoá, trả lời có hoặc không</td>
+<td><a href="../cap-5-sieu-nang-cao/45-distributed-transaction/">Bài 45</a></td>
+</tr>
+<tr>
+<td>Giao dịch đã chuẩn bị</td>
+<td><em>prepared transaction</em></td>
+<td>Giao dịch PostgreSQL sau <code>PREPARE TRANSACTION</code>: đã ghi đĩa, giữ khoá kể cả qua khởi động lại, chờ <code>COMMIT PREPARED</code> hoặc <code>ROLLBACK PREPARED</code></td>
+<td><a href="../cap-5-sieu-nang-cao/45-distributed-transaction/">Bài 45</a></td>
+</tr>
+<tr>
+<td>Máy chính</td>
+<td><em>primary</em></td>
+<td>Máy duy nhất nhận lệnh ghi trong một cụm nhân bản; nguồn của mọi thay đổi</td>
+<td><a href="../cap-5-sieu-nang-cao/42-replication/">Bài 42</a></td>
 </tr>
 <tr>
 <td>Khoá chính</td>
@@ -3899,10 +4393,22 @@
 <td><a href="../cap-3-sql/21-dai-so-quan-he/">Bài 21</a></td>
 </tr>
 <tr>
+<td>Nâng lên làm máy chính</td>
+<td><em>promote</em></td>
+<td>Máy bản sao ngừng làm lại WAL và bắt đầu nhận ghi — <code>pg_promote()</code></td>
+<td><a href="../cap-5-sieu-nang-cao/42-replication/">Bài 42</a></td>
+</tr>
+<tr>
 <td>Luật giả bắc cầu</td>
 <td><em>pseudotransitivity</em></td>
 <td>Luật suy diễn: <code>X → Y</code> và <code>WY → Z</code> thì <code>WX → Z</code></td>
 <td><a href="../cap-2-chuan-hoa/16-phu-thuoc-ham/">Bài 16</a></td>
+</tr>
+<tr>
+<td>Bản phát hành</td>
+<td><em>publication</em></td>
+<td>Danh sách bảng bên gửi chia sẻ trong nhân bản logic — <code>CREATE PUBLICATION</code></td>
+<td><a href="../cap-5-sieu-nang-cao/42-replication/">Bài 42</a></td>
 </tr>
 </tbody>
 </table>
@@ -3929,6 +4435,18 @@
 <td>Bộ phận của DBMS tự chọn cách chạy nhanh nhất cho một câu truy vấn</td>
 <td><a href="../cap-0-nhap-mon/04-cac-mo-hinh-du-lieu/">Bài 4</a></td>
 </tr>
+<tr>
+<td>Bộ định tuyến truy vấn</td>
+<td><em>query router</em></td>
+<td>Tầng biết luật chia, gửi mỗi truy vấn tới đúng mảnh</td>
+<td><a href="../cap-5-sieu-nang-cao/43-partitioning-va-sharding/">Bài 43</a></td>
+</tr>
+<tr>
+<td>Túc số</td>
+<td><em>quorum</em></td>
+<td>Số máy tối thiểu phải đồng ý; quá bán là <code>n / 2 + 1</code>, và hai túc số quá bán luôn giao nhau</td>
+<td><a href="../cap-5-sieu-nang-cao/46-consensus-va-raft/">Bài 46</a></td>
+</tr>
 </tbody>
 </table>
 <h2 id="r">R<a class="headerlink" href="#r" title="Permanent link">&para;</a></h2>
@@ -3943,10 +4461,22 @@
 </thead>
 <tbody>
 <tr>
+<td>Thuật toán Raft</td>
+<td><em>Raft</em></td>
+<td>Thuật toán đồng thuận của Ongaro và Ousterhout (2014), thiết kế để dễ hiểu; chạy trong etcd, Consul, CockroachDB, TiDB</td>
+<td><a href="../cap-5-sieu-nang-cao/46-consensus-va-raft/">Bài 46</a></td>
+</tr>
+<tr>
 <td>Chi phí trang ngẫu nhiên</td>
 <td><em>random_page_cost</em></td>
 <td>Chi phí đọc một trang nhảy cóc, mặc định 4; ổ SSD thường chỉnh xuống khoảng 1.1</td>
 <td><a href="../cap-4-ben-trong-dong-co/36-explain-va-query-planner/">Bài 36</a></td>
+</tr>
+<tr>
+<td>Phân vùng theo khoảng</td>
+<td><em>range partitioning</em></td>
+<td>Mỗi phân vùng giữ một khoảng giá trị liên tục, <code>FROM</code> tính, <code>TO</code> không tính</td>
+<td><a href="../cap-5-sieu-nang-cao/43-partitioning-va-sharding/">Bài 43</a></td>
 </tr>
 <tr>
 <td>Hệ quản trị cơ sở dữ liệu quan hệ</td>
@@ -3961,10 +4491,28 @@
 <td><a href="../cap-4-ben-trong-dong-co/38-isolation-level-va-anomaly/">Bài 38</a></td>
 </tr>
 <tr>
+<td>Bản sao chỉ đọc</td>
+<td><em>read replica</em></td>
+<td>Máy bản sao nhận truy vấn đọc để chia tải với máy chính</td>
+<td><a href="../cap-5-sieu-nang-cao/42-replication/">Bài 42</a></td>
+</tr>
+<tr>
 <td>Đọc chưa xác nhận</td>
 <td><em>Read Uncommitted</em></td>
 <td>Mức thấp nhất của chuẩn SQL, cho phép đọc bẩn; trong PostgreSQL hành xử y hệt Read Committed</td>
 <td><a href="../cap-4-ben-trong-dong-co/38-isolation-level-va-anomaly/">Bài 38</a></td>
+</tr>
+<tr>
+<td>Đọc được điều mình vừa ghi</td>
+<td><em>read-your-writes</em></td>
+<td>Bảo đảm người dùng luôn đọc thấy những gì chính mình vừa ghi; nhân bản bất đồng bộ không tự cho điều này</td>
+<td><a href="../cap-5-sieu-nang-cao/42-replication/">Bài 42</a></td>
+</tr>
+<tr>
+<td>Cân bằng lại</td>
+<td><em>rebalancing</em></td>
+<td>Chuyển dữ liệu giữa các mảnh để chúng đều trở lại, khi thêm máy hoặc có mảnh nóng</td>
+<td><a href="../cap-5-sieu-nang-cao/43-partitioning-va-sharding/">Bài 43</a></td>
 </tr>
 <tr>
 <td>Bản ghi</td>
@@ -4087,6 +4635,42 @@
 <td><a href="../cap-2-chuan-hoa/17-dang-chuan-1nf-2nf/">Bài 17</a></td>
 </tr>
 <tr>
+<td>Máy bản sao</td>
+<td><em>replica</em></td>
+<td>Máy nhận thay đổi từ máy chính và làm lại theo; PostgreSQL gọi là <em>standby</em></td>
+<td><a href="../cap-5-sieu-nang-cao/42-replication/">Bài 42</a></td>
+</tr>
+<tr>
+<td>Máy trạng thái nhân bản</td>
+<td><em>replicated state machine</em></td>
+<td>Mỗi máy thực hiện cùng một dãy lệnh theo cùng thứ tự nên có cùng trạng thái</td>
+<td><a href="../cap-5-sieu-nang-cao/46-consensus-va-raft/">Bài 46</a></td>
+</tr>
+<tr>
+<td>Nhân bản</td>
+<td><em>replication</em></td>
+<td>Giữ cùng một dữ liệu trên nhiều máy, liên tục chuyển thay đổi từ máy chính sang các máy bản sao</td>
+<td><a href="../cap-5-sieu-nang-cao/42-replication/">Bài 42</a></td>
+</tr>
+<tr>
+<td>Độ trễ nhân bản</td>
+<td><em>replication lag</em></td>
+<td>Khoảng máy bản sao chậm hơn máy chính, tính bằng byte WAL hoặc thời gian</td>
+<td><a href="../cap-5-sieu-nang-cao/42-replication/">Bài 42</a></td>
+</tr>
+<tr>
+<td>Khe nhân bản</td>
+<td><em>replication slot</em></td>
+<td>Ghi nhớ ở máy chính vị trí WAL một máy bản sao đã nhận, để giữ lại WAL nó chưa nhận; khe mồ côi làm đầy đĩa</td>
+<td><a href="../cap-5-sieu-nang-cao/42-replication/">Bài 42</a></td>
+</tr>
+<tr>
+<td>Yêu cầu bỏ phiếu</td>
+<td><em>RequestVote</em></td>
+<td>Tin nhắn ứng viên Raft gửi để xin phiếu, kèm vị trí và nhiệm kỳ mục cuối nhật ký</td>
+<td><a href="../cap-5-sieu-nang-cao/46-consensus-va-raft/">Bài 46</a></td>
+</tr>
+<tr>
 <td>Trả về sau khi ghi</td>
 <td><em>RETURNING</em></td>
 <td>Mệnh đề của PostgreSQL cho <code>INSERT</code>/<code>UPDATE</code>/<code>DELETE</code> trả về chính các dòng vừa bị tác động</td>
@@ -4154,6 +4738,18 @@
 </thead>
 <tbody>
 <tr>
+<td>Tính an toàn</td>
+<td><em>safety</em></td>
+<td>Mục đã xác nhận không bao giờ mất; Raft giữ bằng luật chỉ bầu ứng viên có nhật ký không cũ hơn</td>
+<td><a href="../cap-5-sieu-nang-cao/46-consensus-va-raft/">Bài 46</a></td>
+</tr>
+<tr>
+<td>Saga</td>
+<td><em>Saga</em></td>
+<td>Chuỗi giao dịch cục bộ <code>COMMIT</code> ngay, mỗi bước có một giao dịch bù trừ chạy ngược khi bước sau thất bại; không có tính cô lập</td>
+<td><a href="../cap-5-sieu-nang-cao/45-distributed-transaction/">Bài 45</a></td>
+</tr>
+<tr>
 <td>Điểm lưu</td>
 <td><em>SAVEPOINT</em></td>
 <td>Mốc giữa giao dịch; <code>ROLLBACK TO SAVEPOINT</code> huỷ phần sau mốc mà giữ phần trước</td>
@@ -4164,6 +4760,12 @@
 <td><em>scalar subquery</em></td>
 <td>Truy vấn con trả về đúng 1 dòng 1 cột, dùng được ở mọi chỗ chờ một giá trị; trả về 0 dòng thì cho <code>NULL</code></td>
 <td><a href="../cap-3-sql/27-subquery-va-exists/">Bài 27</a></td>
+</tr>
+<tr>
+<td>Rải rồi gom</td>
+<td><em>scatter-gather</em></td>
+<td>Gửi truy vấn không có khoá phân mảnh tới mọi mảnh, đợi tất cả rồi gộp kết quả</td>
+<td><a href="../cap-5-sieu-nang-cao/43-partitioning-va-sharding/">Bài 43</a></td>
 </tr>
 <tr>
 <td>Lược đồ</td>
@@ -4262,6 +4864,24 @@
 <td><a href="../cap-0-nhap-mon/05-cai-dat-postgresql/">Bài 5</a></td>
 </tr>
 <tr>
+<td>Mảnh</td>
+<td><em>shard</em></td>
+<td>Một phần dữ liệu cùng máy chứa nó trong hệ phân mảnh</td>
+<td><a href="../cap-5-sieu-nang-cao/43-partitioning-va-sharding/">Bài 43</a></td>
+</tr>
+<tr>
+<td>Khoá phân mảnh</td>
+<td><em>shard key</em></td>
+<td>Cột quyết định dòng nằm ở mảnh nào; phải rải đều và đi cùng truy vấn phổ biến; rất khó đổi</td>
+<td><a href="../cap-5-sieu-nang-cao/43-partitioning-va-sharding/">Bài 43</a></td>
+</tr>
+<tr>
+<td>Phân mảnh</td>
+<td><em>sharding</em></td>
+<td>Chia các dòng của một bảng ra nhiều máy database độc lập</td>
+<td><a href="../cap-5-sieu-nang-cao/43-partitioning-va-sharding/">Bài 43</a></td>
+</tr>
+<tr>
 <td>Bộ đệm dùng chung</td>
 <td><em>shared buffers</em></td>
 <td>Vùng nhớ PostgreSQL giữ các trang vừa dùng; <code>shared hit</code> là trang lấy được từ đây</td>
@@ -4334,6 +4954,18 @@
 <td><a href="../cap-1-mo-hinh-er/13-mo-hinh-eer/">Bài 13</a></td>
 </tr>
 <tr>
+<td>Phiếu chia đều</td>
+<td><em>split vote</em></td>
+<td>Nhiều ứng viên cùng lúc, không ai đủ túc số; bầu lại ở nhiệm kỳ sau</td>
+<td><a href="../cap-5-sieu-nang-cao/46-consensus-va-raft/">Bài 46</a></td>
+</tr>
+<tr>
+<td>Não chia đôi</td>
+<td><em>split-brain</em></td>
+<td>Hai máy cùng tưởng mình là máy chính, cùng nhận ghi, dữ liệu rẽ nhánh không tự khớp lại được</td>
+<td><a href="../cap-5-sieu-nang-cao/42-replication/">Bài 42</a></td>
+</tr>
+<tr>
 <td>Dòng ma</td>
 <td><em>spurious tuple</em></td>
 <td>Dòng do phép nối sinh ra nhưng chưa từng có trong bảng gốc</td>
@@ -4394,6 +5026,18 @@
 <td><a href="../cap-1-mo-hinh-er/07-thuc-the-va-thuoc-tinh/">Bài 7</a></td>
 </tr>
 <tr>
+<td>Nhân bản theo luồng</td>
+<td><em>streaming replication</em></td>
+<td>Máy bản sao giữ một kết nối thường trực, nhận từng bản ghi WAL ngay khi nó được ghi</td>
+<td><a href="../cap-5-sieu-nang-cao/42-replication/">Bài 42</a></td>
+</tr>
+<tr>
+<td>Nhất quán mạnh</td>
+<td><em>strong consistency</em></td>
+<td>Mọi lần đọc thấy lần ghi mới nhất, như thể chỉ có một bản dữ liệu — chữ <strong>C</strong> của CAP, khác chữ C của ACID</td>
+<td><a href="../cap-5-sieu-nang-cao/44-cap-va-base/">Bài 44</a></td>
+</tr>
+<tr>
 <td>Thực thể mạnh</td>
 <td><em>strong entity</em></td>
 <td>Thực thể có thuộc tính khoá tự nhiên, tự đứng được</td>
@@ -4416,6 +5060,12 @@
 <td><em>subquery</em></td>
 <td>Một câu <code>SELECT</code> lồng bên trong câu lệnh khác, đặt trong ngoặc đơn</td>
 <td><a href="../cap-3-sql/27-subquery-va-exists/">Bài 27</a></td>
+</tr>
+<tr>
+<td>Đăng ký nhận</td>
+<td><em>subscription</em></td>
+<td>Khai báo ở bên nhận của nhân bản logic, trỏ tới một bản phát hành — <code>CREATE SUBSCRIPTION</code></td>
+<td><a href="../cap-5-sieu-nang-cao/42-replication/">Bài 42</a></td>
 </tr>
 <tr>
 <td>Bảng tổng hợp</td>
@@ -4447,6 +5097,12 @@
 <td><code>COMMIT</code> chờ WAL xuống đĩa mới báo xong; tắt đi thì có thể mất giao dịch cuối nhưng không hỏng dữ liệu</td>
 <td><a href="../cap-4-ben-trong-dong-co/40-wal-va-recovery/">Bài 40</a></td>
 </tr>
+<tr>
+<td>Nhân bản đồng bộ</td>
+<td><em>synchronous replication</em></td>
+<td><code>COMMIT</code> chờ ít nhất một máy bản sao xác nhận; không mất giao dịch, nhưng chậm hơn và treo khi bản sao đồng bộ chết</td>
+<td><a href="../cap-5-sieu-nang-cao/42-replication/">Bài 42</a></td>
+</tr>
 </tbody>
 </table>
 <h2 id="t">T<a class="headerlink" href="#t" title="Permanent link">&para;</a></h2>
@@ -4473,6 +5129,12 @@
 <td><a href="../cap-2-chuan-hoa/20-denormalization/">Bài 20</a></td>
 </tr>
 <tr>
+<td>Phân vùng bảng</td>
+<td><em>table partitioning</em></td>
+<td>Chia một bảng thành nhiều bảng nhỏ trên cùng một máy theo luật dựa trên giá trị cột — <code>PARTITION BY</code></td>
+<td><a href="../cap-5-sieu-nang-cao/43-partitioning-va-sharding/">Bài 43</a></td>
+</tr>
+<tr>
 <td>Bảng cho mỗi lớp con cụ thể</td>
 <td><em>table per concrete class</em></td>
 <td>Cách hiện thực kế thừa: không có bảng cha, mỗi lớp con một bảng đầy đủ tự lặp lại các cột chung</td>
@@ -4495,6 +5157,12 @@
 <td><em>temporal data</em></td>
 <td>Dữ liệu ghi kèm khoảng thời gian mà giá trị đó có hiệu lực</td>
 <td><a href="../cap-2-chuan-hoa/19-dang-chuan-4nf-5nf-6nf/">Bài 19</a></td>
+</tr>
+<tr>
+<td>Nhiệm kỳ</td>
+<td><em>term</em></td>
+<td>Số tăng dần đánh dấu mỗi lần bầu trong Raft; thấy nhiệm kỳ lớn hơn thì lùi về làm nút theo sau</td>
+<td><a href="../cap-5-sieu-nang-cao/46-consensus-va-raft/">Bài 46</a></td>
 </tr>
 <tr>
 <td>Mối quan hệ bậc ba</td>
@@ -4525,6 +5193,12 @@
 <td><em>Third Normal Form — 3NF</em></td>
 <td>Bảng đã ở 2NF và không thuộc tính không khoá nào phụ thuộc bắc cầu vào một khoá dự tuyển</td>
 <td><a href="../cap-2-chuan-hoa/18-dang-chuan-3nf-bcnf/">Bài 18</a></td>
+</tr>
+<tr>
+<td>Xác nhận ba pha</td>
+<td><em>three-phase commit</em> (3PC)</td>
+<td>Thêm pha "sắp xác nhận" để khỏi bị chặn, nhưng có thể sai khi mạng bị chia cắt; hầu như không dùng</td>
+<td><a href="../cap-5-sieu-nang-cao/45-distributed-transaction/">Bài 45</a></td>
 </tr>
 <tr>
 <td>Logic ba giá trị</td>
@@ -4639,6 +5313,12 @@
 <td><em>tuple header</em></td>
 <td>Phần 23 byte trước dữ liệu của mỗi tuple, chứa <code>xmin</code>, <code>xmax</code>, <code>t_ctid</code>…</td>
 <td><a href="../cap-4-ben-trong-dong-co/33-page-heap-tuple/">Bài 33</a></td>
+</tr>
+<tr>
+<td>Xác nhận hai pha</td>
+<td><em>two-phase commit</em> (2PC)</td>
+<td>Điều phối viên hỏi mọi bên chuẩn bị, rồi mới ra lệnh xác nhận hoặc huỷ cho tất cả</td>
+<td><a href="../cap-5-sieu-nang-cao/45-distributed-transaction/">Bài 45</a></td>
 </tr>
 <tr>
 <td>Khoá hai pha</td>
@@ -4775,6 +5455,12 @@
 <td><a href="../cap-0-nhap-mon/03-dbms-la-gi/">Bài 3</a></td>
 </tr>
 <tr>
+<td>Nút ảo</td>
+<td><em>virtual node</em></td>
+<td>Một trong nhiều vị trí của cùng một máy thật trên vòng băm, giúp chia dữ liệu đều hơn</td>
+<td><a href="../cap-5-sieu-nang-cao/43-partitioning-va-sharding/">Bài 43</a></td>
+</tr>
+<tr>
 <td>Bản đồ hiển thị</td>
 <td><em>visibility map</em></td>
 <td>Tệp phụ đánh dấu những trang mà mọi tuple đều sống và ai cũng thấy; điều kiện của <code>Index Only Scan</code></td>
@@ -4846,6 +5532,12 @@
 <td><em>WITH CHECK OPTION</em></td>
 <td>Bắt mọi dòng ghi qua view phải thoả điều kiện <code>WHERE</code> của view, thay vì lặng lẽ lọt ra ngoài tầm nhìn của nó</td>
 <td><a href="../cap-3-sql/30-view-va-materialized-view/">Bài 30</a></td>
+</tr>
+<tr>
+<td>Xung đột ghi</td>
+<td><em>write conflict</em></td>
+<td>Hai bên sửa cùng một dữ liệu theo hai cách khác nhau trong lúc không liên lạc được</td>
+<td><a href="../cap-5-sieu-nang-cao/44-cap-va-base/">Bài 44</a></td>
 </tr>
 <tr>
 <td>Lệch ghi</td>

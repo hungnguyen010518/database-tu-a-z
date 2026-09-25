@@ -176,4 +176,24 @@
          <loc>https://hungnguyen010518.github.io/database-tu-a-z/cap-4-ben-trong-dong-co/41-lock-va-deadlock/</loc>
          <lastmod>2026-09-25</lastmod>
     </url>
+    <url>
+         <loc>https://hungnguyen010518.github.io/database-tu-a-z/cap-5-sieu-nang-cao/42-replication/</loc>
+         <lastmod>2026-09-25</lastmod>
+    </url>
+    <url>
+         <loc>https://hungnguyen010518.github.io/database-tu-a-z/cap-5-sieu-nang-cao/43-partitioning-va-sharding/</loc>
+         <lastmod>2026-09-25</lastmod>
+    </url>
+    <url>
+         <loc>https://hungnguyen010518.github.io/database-tu-a-z/cap-5-sieu-nang-cao/44-cap-va-base/</loc>
+         <lastmod>2026-09-25</lastmod>
+    </url>
+    <url>
+         <loc>https://hungnguyen010518.github.io/database-tu-a-z/cap-5-sieu-nang-cao/45-distributed-transaction/</loc>
+         <lastmod>2026-09-25</lastmod>
+    </url>
+    <url>
+         <loc>https://hungnguyen010518.github.io/database-tu-a-z/cap-5-sieu-nang-cao/46-consensus-va-raft/</loc>
+         <lastmod>2026-09-25</lastmod>
+    </url>
 </urlset>

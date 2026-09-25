@@ -1,0 +1,2996 @@
+
+<!doctype html>
+<html lang="vi" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Khóa học cơ sở dữ liệu tiếng Việt, từ con số 0 tới mức siêu nâng cao — giải thích để học sinh cấp 2 cũng hiểu được.">
+      
+      
+      
+        <link rel="canonical" href="https://hungnguyen010518.github.io/database-tu-a-z/cap-5-sieu-nang-cao/42-replication/">
+      
+      
+        <link rel="prev" href="../../cap-4-ben-trong-dong-co/41-lock-va-deadlock/">
+      
+      
+        <link rel="next" href="../43-partitioning-va-sharding/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.39">
+    
+    
+      
+        <title>Bài 42 — Replication: nhân bản dữ liệu ra nhiều máy - Database từ A-Z</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.8c3ca2c6.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#bai-42-replication-nhan-ban-du-lieu-ra-nhieu-may" class="md-skip">
+          Bỏ qua
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Đầu trang">
+    <a href="../.." title="Database từ A-Z" class="md-header__button md-logo" aria-label="Database từ A-Z" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3C7.58 3 4 4.79 4 7s3.58 4 8 4 8-1.79 8-4-3.58-4-8-4M4 9v3c0 2.21 3.58 4 8 4s8-1.79 8-4V9c0 2.21-3.58 4-8 4s-8-1.79-8-4m0 5v3c0 2.21 3.58 4 8 4s8-1.79 8-4v-3c0 2.21-3.58 4-8 4s-8-1.79-8-4"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Database từ A-Z
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Bài 42 — Replication: nhân bản dữ liệu ra nhiều máy
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Chuyển sang chế độ tối"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Chuyển sang chế độ tối" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Chuyển sang chế độ sáng"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Chuyển sang chế độ sáng" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Tìm kiếm" placeholder="Tìm kiếm" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Tìm kiếm">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Xoá" aria-label="Xoá" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/hungnguyen010518/database-tu-a-z" title="Xem mã nguồn" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    database-tu-a-z
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Thanh điều hướng" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Database từ A-Z" class="md-nav__button md-logo" aria-label="Database từ A-Z" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3C7.58 3 4 4.79 4 7s3.58 4 8 4 8-1.79 8-4-3.58-4-8-4M4 9v3c0 2.21 3.58 4 8 4s8-1.79 8-4V9c0 2.21-3.58 4-8 4s-8-1.79-8-4m0 5v3c0 2.21 3.58 4 8 4s8-1.79 8-4v-3c0 2.21-3.58 4-8 4s-8-1.79-8-4"/></svg>
+
+    </a>
+    Database từ A-Z
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/hungnguyen010518/database-tu-a-z" title="Xem mã nguồn" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    database-tu-a-z
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Trang chủ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Cấp 0 — Nhập môn
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Cấp 0 — Nhập môn
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-0-nhap-mon/01-du-lieu-va-thong-tin/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 1 — Dữ liệu, thông tin và tại sao phải lưu trữ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-0-nhap-mon/02-tu-so-giay-den-excel/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 2 — Từ sổ giấy đến Excel
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-0-nhap-mon/03-dbms-la-gi/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 3 — DBMS là gì
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-0-nhap-mon/04-cac-mo-hinh-du-lieu/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 4 — Các mô hình dữ liệu
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-0-nhap-mon/05-cai-dat-postgresql/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 5 — Cài đặt PostgreSQL
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Cấp 1 — Mô hình quan hệ & Biểu đồ ER
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Cấp 1 — Mô hình quan hệ & Biểu đồ ER
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/06-mo-hinh-quan-he/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 6 — Mô hình quan hệ: bảng, dòng, cột, miền giá trị, lược đồ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/07-thuc-the-va-thuoc-tinh/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 7 — Thực thể và các loại thuộc tính
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/08-moi-quan-he-va-cardinality/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 8 — Mối quan hệ, bậc và bản số (Cardinality)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/09-participation-va-thuc-the-yeu/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 9 — Ràng buộc tham gia và Thực thể yếu
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/10-bieu-do-er-ky-hieu-chen/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 10 — Biểu đồ ER — ký hiệu Chen
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/11-bieu-do-er-crows-foot/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 11 — Biểu đồ ER — ký hiệu Crow's Foot và vẽ bằng Mermaid
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/12-bay-loai-khoa/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 12 — Bảy loại khoá trong cơ sở dữ liệu
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/13-mo-hinh-eer/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 13 — Mô hình EER: Generalization, Specialization, Aggregation
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/14-chuyen-er-sang-bang/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 14 — Chuyển biểu đồ ER thành lược đồ quan hệ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/15-rang-buoc-toan-ven/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 15 — Ràng buộc toàn vẹn (Integrity Constraints)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Cấp 2 — Chuẩn hoá
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Cấp 2 — Chuẩn hoá
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-2-chuan-hoa/16-phu-thuoc-ham/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 16 — Phụ thuộc hàm và bao đóng
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-2-chuan-hoa/17-dang-chuan-1nf-2nf/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 17 — Dạng chuẩn 1 (1NF) và Dạng chuẩn 2 (2NF)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-2-chuan-hoa/18-dang-chuan-3nf-bcnf/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 18 — Dạng chuẩn 3 (3NF) và BCNF
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-2-chuan-hoa/19-dang-chuan-4nf-5nf-6nf/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 19 — 4NF, 5NF và 6NF
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-2-chuan-hoa/20-denormalization/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 20 — Phi chuẩn hoá — khi nào nên phá luật
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Cấp 3 — SQL từ 0 tới cao thủ
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Cấp 3 — SQL từ 0 tới cao thủ
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-3-sql/21-dai-so-quan-he/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 21 — Đại số quan hệ: nền toán học phía sau SQL
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-3-sql/22-ddl-va-kieu-du-lieu/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 22 — DDL: CREATE, ALTER, DROP và các kiểu dữ liệu
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-3-sql/23-dml-insert-update-delete/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 23 — DML: INSERT, UPDATE, DELETE
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-3-sql/24-select-where-order-by/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 24 — SELECT, WHERE, ORDER BY, LIMIT
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-3-sql/25-join/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 25 — JOIN: sáu cách ghép bảng
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-3-sql/26-group-by-having/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 26 — GROUP BY, HAVING và các hàm tổng hợp
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-3-sql/27-subquery-va-exists/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 27 — Truy vấn con (Subquery) và EXISTS
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-3-sql/28-cte-va-recursive-cte/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 28 — CTE và CTE đệ quy
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-3-sql/29-window-function/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 29 — Window Function: tính toán theo cửa sổ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-3-sql/30-view-va-materialized-view/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 30 — View và Materialized View
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-3-sql/31-trigger-procedure-function/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 31 — Trigger, Stored Procedure và Function
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-3-sql/32-jsonb-va-full-text-search/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 32 — JSONB và Full-Text Search
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Cấp 4 — Bên trong động cơ
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            Cấp 4 — Bên trong động cơ
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-4-ben-trong-dong-co/33-page-heap-tuple/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 33 — Trang, heap và tuple: PostgreSQL lưu dữ liệu thế nào
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-4-ben-trong-dong-co/34-index-va-b-tree/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 34 — Index và B+Tree
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-4-ben-trong-dong-co/35-cac-loai-index-khac/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 35 — Các loại index khác: Hash, GiST, GIN, BRIN
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-4-ben-trong-dong-co/36-explain-va-query-planner/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 36 — EXPLAIN và bộ tối ưu truy vấn
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-4-ben-trong-dong-co/37-transaction-va-acid/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 37 — Transaction và ACID
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-4-ben-trong-dong-co/38-isolation-level-va-anomaly/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 38 — Mức cô lập và các hiện tượng bất thường
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-4-ben-trong-dong-co/39-mvcc/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 39 — MVCC: nhiều phiên bản cho một dòng
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-4-ben-trong-dong-co/40-wal-va-recovery/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 40 — WAL, checkpoint và phục hồi sau sự cố
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-4-ben-trong-dong-co/41-lock-va-deadlock/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 41 — Khoá và bế tắc
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Cấp 5 — Siêu nâng cao
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            Cấp 5 — Siêu nâng cao
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Bài 42 — Replication: nhân bản dữ liệu ra nhiều máy
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Bài 42 — Replication: nhân bản dữ liệu ra nhiều máy
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Mục lục">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Mục lục
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#cau-chuyen-mo-au" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧠 Câu chuyện mở đầu
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#khai-niem-thuat-ngu" class="md-nav__link">
+    <span class="md-ellipsis">
+      📖 Khái niệm &amp; thuật ngữ
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📖 Khái niệm & thuật ngữ">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#nhan-ban-la-gi-e-lam-gi" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nhân bản là gì, để làm gì
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nhan-ban-vat-ly-va-nhan-ban-logic" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nhân bản vật lý và nhân bản logic
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nhan-ban-theo-luong-va-khe-nhan-ban" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nhân bản theo luồng và khe nhân bản
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ong-bo-hay-bat-ong-bo" class="md-nav__link">
+    <span class="md-ellipsis">
+      Đồng bộ hay bất đồng bộ
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ban-sao-chi-oc-va-o-tre-nhan-ban" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bản sao chỉ đọc và độ trễ nhân bản
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#chuyen-oi-du-phong-va-nao-chia-oi" class="md-nav__link">
+    <span class="md-ellipsis">
+      Chuyển đổi dự phòng và não chia đôi
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bang-thuat-ngu" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bảng thuật ngữ
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#so-o" class="md-nav__link">
+    <span class="md-ellipsis">
+      🖼️ Sơ đồ
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#thuc-hanh" class="md-nav__link">
+    <span class="md-ellipsis">
+      💻 Thực hành
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="💻 Thực hành">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#may-nay-ang-ong-vai-gi" class="md-nav__link">
+    <span class="md-ellipsis">
+      Máy này đang đóng vai gì?
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bang-trang-thai-nhan-ban" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bảng trạng thái nhân bản
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#khe-nhan-ban-giu-wal-lai" class="md-nav__link">
+    <span class="md-ellipsis">
+      Khe nhân bản giữ WAL lại
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nhan-ban-logic-tao-mot-ban-phat-hanh" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nhân bản logic: tạo một bản phát hành
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#thi-nghiem-nhan-ban-that-tren-may-thu-cua-khoa-hoc" class="md-nav__link">
+    <span class="md-ellipsis">
+      Thí nghiệm nhân bản thật — trên máy thử của khoá học
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#loi-thuong-gap" class="md-nav__link">
+    <span class="md-ellipsis">
+      ⚠️ Lỗi thường gặp
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bai-tap" class="md-nav__link">
+    <span class="md-ellipsis">
+      ✍️ Bài tập
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="✍️ Bài tập">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#don-dep-cuoi-bai" class="md-nav__link">
+    <span class="md-ellipsis">
+      Dọn dẹp cuối bài
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tom-tat" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔑 Tóm tắt
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../43-partitioning-va-sharding/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 43 — Partitioning và Sharding: chia nhỏ một bảng khổng lồ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../44-cap-va-base/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 44 — CAP và BASE: khi mạng đứt thì chọn gì
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../45-distributed-transaction/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 45 — Giao dịch phân tán: 2PC và Saga
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../46-consensus-va-raft/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 46 — Consensus và Raft: nhiều máy cùng đồng ý một điều
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../dataset/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Database mẫu
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../glossary/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bảng thuật ngữ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Mục lục">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Mục lục
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#cau-chuyen-mo-au" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧠 Câu chuyện mở đầu
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#khai-niem-thuat-ngu" class="md-nav__link">
+    <span class="md-ellipsis">
+      📖 Khái niệm &amp; thuật ngữ
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📖 Khái niệm & thuật ngữ">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#nhan-ban-la-gi-e-lam-gi" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nhân bản là gì, để làm gì
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nhan-ban-vat-ly-va-nhan-ban-logic" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nhân bản vật lý và nhân bản logic
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nhan-ban-theo-luong-va-khe-nhan-ban" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nhân bản theo luồng và khe nhân bản
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ong-bo-hay-bat-ong-bo" class="md-nav__link">
+    <span class="md-ellipsis">
+      Đồng bộ hay bất đồng bộ
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ban-sao-chi-oc-va-o-tre-nhan-ban" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bản sao chỉ đọc và độ trễ nhân bản
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#chuyen-oi-du-phong-va-nao-chia-oi" class="md-nav__link">
+    <span class="md-ellipsis">
+      Chuyển đổi dự phòng và não chia đôi
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bang-thuat-ngu" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bảng thuật ngữ
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#so-o" class="md-nav__link">
+    <span class="md-ellipsis">
+      🖼️ Sơ đồ
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#thuc-hanh" class="md-nav__link">
+    <span class="md-ellipsis">
+      💻 Thực hành
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="💻 Thực hành">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#may-nay-ang-ong-vai-gi" class="md-nav__link">
+    <span class="md-ellipsis">
+      Máy này đang đóng vai gì?
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bang-trang-thai-nhan-ban" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bảng trạng thái nhân bản
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#khe-nhan-ban-giu-wal-lai" class="md-nav__link">
+    <span class="md-ellipsis">
+      Khe nhân bản giữ WAL lại
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nhan-ban-logic-tao-mot-ban-phat-hanh" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nhân bản logic: tạo một bản phát hành
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#thi-nghiem-nhan-ban-that-tren-may-thu-cua-khoa-hoc" class="md-nav__link">
+    <span class="md-ellipsis">
+      Thí nghiệm nhân bản thật — trên máy thử của khoá học
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#loi-thuong-gap" class="md-nav__link">
+    <span class="md-ellipsis">
+      ⚠️ Lỗi thường gặp
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bai-tap" class="md-nav__link">
+    <span class="md-ellipsis">
+      ✍️ Bài tập
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="✍️ Bài tập">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#don-dep-cuoi-bai" class="md-nav__link">
+    <span class="md-ellipsis">
+      Dọn dẹp cuối bài
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tom-tat" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔑 Tóm tắt
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="bai-42-replication-nhan-ban-du-lieu-ra-nhieu-may">Bài 42 — Replication: nhân bản dữ liệu ra nhiều máy<a class="headerlink" href="#bai-42-replication-nhan-ban-du-lieu-ra-nhieu-may" title="Permanent link">&para;</a></h1>
+<div class="admonition abstract">
+<p class="admonition-title">🎯 Học xong bài này, bạn sẽ</p>
+<ul>
+<li>Giải thích được <strong>nhân bản</strong> bằng cuốn sổ điểm được photo ra nhiều bản, và vì sao bản photo <strong>luôn</strong> chậm hơn bản gốc một chút</li>
+<li>Phân biệt <strong>nhân bản vật lý</strong> với <strong>nhân bản logic</strong>, <strong>đồng bộ</strong> với <strong>bất đồng bộ</strong> — và biết mỗi lựa chọn đánh đổi cái gì lấy cái gì</li>
+<li>Dùng được <strong>bản sao chỉ đọc</strong> để chia tải, và tránh được cái bẫy <em>"vừa sửa xong mà đọc lại không thấy"</em> do <strong>độ trễ nhân bản</strong></li>
+<li>Mô tả được <strong>chuyển đổi dự phòng</strong> khi máy chính sập, và vì sao làm ẩu thì sinh ra <strong>não chia đôi</strong> — hai máy cùng tưởng mình là máy chính</li>
+<li>Đọc được trạng thái nhân bản trong <code>pg_stat_replication</code>, tạo và xoá một <strong>khe nhân bản</strong>, tạo một <strong>bản phát hành</strong> cho nhân bản logic</li>
+</ul>
+</div>
+<h2 id="cau-chuyen-mo-au">🧠 Câu chuyện mở đầu<a class="headerlink" href="#cau-chuyen-mo-au" title="Permanent link">&para;</a></h2>
+<p>Cô Hạnh chủ nhiệm lớp 9A1 giữ <strong>sổ điểm gốc</strong> của lớp. Ba thầy cô bộ môn — Toán, Văn, Anh — ngày nào cũng cần tra điểm, và cứ phải chạy sang bàn cô Hạnh xin xem sổ. Bàn cô lúc nào cũng có người đứng chờ.</p>
+<p>Cô nghĩ ra cách: <strong>photo</strong> sổ điểm thành ba bản, mỗi thầy cô giữ một bản. Từ đó ai cần tra điểm thì mở bản của mình, bàn cô Hạnh hết cảnh xếp hàng.</p>
+<p>Nhưng sổ điểm không đứng yên. Mỗi lần cô Hạnh sửa một con điểm ở sổ gốc, cô viết thêm một <strong>phiếu sửa</strong> — <em>"trang 3, dòng HS001, cột Toán: 6,5 → 8,0"</em> — rồi nhờ bạn lớp trưởng mang phiếu đi cho ba thầy cô để họ chép vào bản photo của mình. Ngay lập tức có ba câu hỏi khó:</p>
+<ol>
+<li><strong>Có chờ không?</strong> Cô Hạnh sửa xong có đợi lớp trưởng đi hết ba bàn, chép xong xuôi rồi mới báo <em>"đã sửa"</em> cho học sinh? Nếu chờ thì mỗi lần sửa mất cả phút. Nếu không chờ thì báo nhanh, nhưng...</li>
+<li><strong>Đọc lệch.</strong> Bạn An vừa được cô Hạnh báo điểm phúc khảo đã lên 8,0. An chạy ngay sang phòng thầy Toán hỏi lại. Thầy mở <strong>bản photo</strong>: vẫn 6,5 — lớp trưởng chưa tới bàn thầy. An hoang mang: <em>"Rõ ràng cô vừa sửa mà!"</em></li>
+<li><strong>Cô Hạnh ốm.</strong> Một tuần cô nghỉ, không ai được sửa điểm. Nhà trường quyết định: thầy Toán cầm bản photo của mình lên làm <strong>sổ gốc tạm</strong>. Hợp lý. Nhưng hôm sau cô Hạnh khỏi ốm, đi làm lại, không ai báo gì — và cô tiếp tục sửa vào cuốn sổ gốc cũ của mình. Giờ trường có <strong>hai cuốn sổ gốc</strong>, mỗi cuốn một kiểu, và không ai biết cuốn nào đúng.</li>
+</ol>
+<p>Cả ba câu hỏi đều có tên gọi chính thức, và mọi hệ quản trị cơ sở dữ liệu chạy trên nhiều máy đều phải trả lời chúng. Cái phiếu sửa thì bạn đã biết từ <a href="../../cap-4-ben-trong-dong-co/40-wal-va-recovery/">Bài 40</a>: đó chính là WAL.</p>
+<h2 id="khai-niem-thuat-ngu">📖 Khái niệm &amp; thuật ngữ<a class="headerlink" href="#khai-niem-thuat-ngu" title="Permanent link">&para;</a></h2>
+<h3 id="nhan-ban-la-gi-e-lam-gi">Nhân bản là gì, để làm gì<a class="headerlink" href="#nhan-ban-la-gi-e-lam-gi" title="Permanent link">&para;</a></h3>
+<p><strong>Nhân bản</strong> (<em>replication</em>) là giữ <strong>cùng một dữ liệu</strong> trên nhiều máy chủ, và liên tục chuyển các thay đổi từ máy này sang máy kia để các bản luôn bám sát nhau. Trong cách bố trí phổ biến nhất, chỉ <strong>một</strong> máy nhận lệnh ghi — gọi là <strong>máy chính</strong> (<em>primary</em>) — còn các máy khác chỉ nhận thay đổi từ máy chính và làm lại theo — gọi là <strong>máy bản sao</strong> (<em>replica</em>). Tài liệu cũ hơn gọi hai vai này là <em>master</em> và <em>slave</em>; tài liệu PostgreSQL gọi máy bản sao là <em>standby</em>.</p>
+<p>Người ta nhân bản vì bốn lý do:</p>
+<table>
+<thead>
+<tr>
+<th>Lý do</th>
+<th>Trong câu chuyện</th>
+<th>Ý nghĩa với database</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Chịu được máy hỏng</td>
+<td>Cô Hạnh ốm, thầy Toán lên thay</td>
+<td>Máy chính sập thì đưa một máy bản sao lên thay, dịch vụ không phải dừng lâu</td>
+</tr>
+<tr>
+<td>Chia tải đọc</td>
+<td>Thầy cô tra bản photo, không xếp hàng ở bàn cô Hạnh</td>
+<td>Truy vấn đọc được gửi sang máy bản sao, máy chính dành sức cho việc ghi</td>
+</tr>
+<tr>
+<td>Đặt dữ liệu gần người dùng</td>
+<td>Mỗi tổ bộ môn một bản ngay tại phòng mình</td>
+<td>Máy bản sao đặt ở một trung tâm dữ liệu khác, gần người dùng ở vùng đó</td>
+</tr>
+<tr>
+<td>Có thêm một bản dữ liệu</td>
+<td>Mất sổ gốc vẫn còn bản photo</td>
+<td>Một máy hỏng ổ đĩa không làm mất dữ liệu — nhưng xem Lỗi 1: nhân bản <strong>không</strong> thay được sao lưu</td>
+</tr>
+</tbody>
+</table>
+<h3 id="nhan-ban-vat-ly-va-nhan-ban-logic">Nhân bản vật lý và nhân bản logic<a class="headerlink" href="#nhan-ban-vat-ly-va-nhan-ban-logic" title="Permanent link">&para;</a></h3>
+<p>Hai cách chuyển "phiếu sửa" sang máy bản sao:</p>
+<p><strong>Nhân bản vật lý</strong> (<em>physical replication</em>) gửi nguyên văn các <strong>bản ghi WAL</strong> — mô tả thay đổi ở mức <strong>trang và byte</strong>: <em>"trang 17 của tệp dữ liệu bảng <code>diem</code>: thêm tuple này vào ô số 5"</em>. Máy bản sao làm lại y hệt những gì phục hồi sau sự cố của Bài 40 làm, chỉ khác là làm <strong>liên tục, không bao giờ dừng</strong>. Kết quả: máy bản sao là bản chép <strong>từng byte</strong> của máy chính — mọi database, mọi bảng, mọi index.</p>
+<p><strong>Nhân bản logic</strong> (<em>logical replication</em>) giải mã WAL thành các <strong>thay đổi ở mức dòng</strong> — <em>"bảng <code>diem</code>: dòng có <code>ma_diem = 57</code> đổi <code>diem_so</code> từ 6,5 thành 8,0"</em> — rồi gửi các thay đổi đó đi. Bên nhận áp chúng vào bảng của mình bằng <code>INSERT</code>, <code>UPDATE</code>, <code>DELETE</code> bình thường. Vì là thay đổi ở mức dòng, nên có thể chọn <strong>chỉ một vài bảng</strong>, và bên nhận là một database <strong>độc lập</strong>, có bảng riêng, ghi được.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Nhân bản vật lý</th>
+<th>Nhân bản logic</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Gửi gì</td>
+<td>Bản ghi WAL: thay đổi trên trang, theo byte</td>
+<td>Thay đổi trên dòng: bảng nào, dòng nào, giá trị nào</td>
+</tr>
+<tr>
+<td>Phạm vi</td>
+<td><strong>Cả máy chủ</strong>: mọi database, bảng, index</td>
+<td>Chọn <strong>từng bảng</strong></td>
+</tr>
+<tr>
+<td>Bên nhận</td>
+<td>Bản chép y hệt, <strong>chỉ đọc</strong></td>
+<td>Database độc lập, <strong>ghi được</strong>, có thể có thêm bảng và index riêng</td>
+</tr>
+<tr>
+<td>Phiên bản PostgreSQL</td>
+<td>Hai bên phải <strong>cùng</strong> phiên bản chính (16 với 16)</td>
+<td>Được <strong>khác</strong> phiên bản — hay dùng để nâng cấp PostgreSQL gần như không dừng máy</td>
+</tr>
+<tr>
+<td>Lệnh <code>CREATE TABLE</code>, <code>ALTER TABLE</code></td>
+<td>Tự sang theo, vì chúng cũng là thay đổi trên trang</td>
+<td><strong>Không</strong> tự sang — phải chạy tay ở bên nhận</td>
+</tr>
+<tr>
+<td>Cấu hình <code>wal_level</code></td>
+<td><code>replica</code> (mặc định) là đủ</td>
+<td>Phải là <code>logical</code></td>
+</tr>
+</tbody>
+</table>
+<p>Nhân bản logic của PostgreSQL chia thành hai vế: bên gửi khai báo một <strong>bản phát hành</strong> (<em>publication</em>) — danh sách các bảng muốn chia sẻ — còn bên nhận tạo một <strong>đăng ký nhận</strong> (<em>subscription</em>) trỏ tới bản phát hành đó. Phần thực hành sẽ tạo một bản phát hành thật.</p>
+<h3 id="nhan-ban-theo-luong-va-khe-nhan-ban">Nhân bản theo luồng và khe nhân bản<a class="headerlink" href="#nhan-ban-theo-luong-va-khe-nhan-ban" title="Permanent link">&para;</a></h3>
+<p>Cách nhân bản vật lý thông dụng nhất là <strong>nhân bản theo luồng</strong> (<em>streaming replication</em>): máy bản sao mở <strong>một kết nối</strong> thường trực tới máy chính. Ở máy chính, một tiến trình tên <code>walsender</code> gửi từng bản ghi WAL ngay khi nó vừa được ghi; ở máy bản sao, tiến trình <code>walreceiver</code> nhận, ghi xuống đĩa, và tiến trình phục hồi làm lại. Không phải đợi đầy một tệp WAL 16MB như cách chép tệp của lưu trữ WAL ở Bài 40 — độ trễ thường chỉ vài mili giây.</p>
+<p>Có một chuyện nhỏ nhưng nguy hiểm: nếu máy bản sao mất kết nối một lúc, lúc quay lại nó cần những bản ghi WAL nó chưa nhận. Nhưng máy chính vẫn tái sử dụng WAL cũ sau mỗi checkpoint! Để máy chính <strong>giữ lại</strong> WAL cho tới khi máy bản sao nhận xong, ta tạo một <strong>khe nhân bản</strong> (<em>replication slot</em>) — một cái "ngăn ghi nhớ" ở máy chính, lưu vị trí WAL mà máy bản sao đó đã nhận tới.</p>
+<p>Cái giá: máy bản sao <strong>chết hẳn</strong> mà không ai xoá khe, máy chính sẽ <strong>giữ WAL mãi mãi</strong> chờ nó, cho tới khi đầy đĩa. Đây đúng là nguyên nhân thứ hai trong Lỗi 2 của Bài 40.</p>
+<h3 id="ong-bo-hay-bat-ong-bo">Đồng bộ hay bất đồng bộ<a class="headerlink" href="#ong-bo-hay-bat-ong-bo" title="Permanent link">&para;</a></h3>
+<p>Câu hỏi thứ nhất của cô Hạnh: báo <em>"đã sửa"</em> trước hay sau khi các bản photo chép xong?</p>
+<ul>
+<li><strong>Nhân bản bất đồng bộ</strong> (<em>asynchronous replication</em>): máy chính <code>COMMIT</code> và báo thành công <strong>ngay</strong> khi WAL đã xuống đĩa <strong>của chính nó</strong>, rồi gửi WAL sang máy bản sao sau. Đây là <strong>mặc định</strong> của PostgreSQL.</li>
+<li><strong>Nhân bản đồng bộ</strong> (<em>synchronous replication</em>): máy chính chỉ báo <code>COMMIT</code> thành công khi <strong>ít nhất một</strong> máy bản sao xác nhận đã nhận bản ghi <code>COMMIT</code>.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Bất đồng bộ</th>
+<th>Đồng bộ</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>COMMIT</code> chờ gì</td>
+<td>Chỉ chờ đĩa của máy chính</td>
+<td>Chờ thêm một vòng qua mạng tới máy bản sao và ngược lại</td>
+</tr>
+<tr>
+<td>Máy chính sập ngay sau <code>COMMIT</code></td>
+<td>Có thể <strong>mất</strong> các giao dịch cuối cùng chưa kịp sang máy bản sao</td>
+<td><strong>Không mất</strong> giao dịch nào đã báo thành công</td>
+</tr>
+<tr>
+<td>Máy bản sao sập</td>
+<td>Máy chính <strong>không hề hấn</strong> gì</td>
+<td><code>COMMIT</code> trên máy chính <strong>treo</strong> cho tới khi có máy bản sao đồng bộ khác</td>
+</tr>
+<tr>
+<td>Hợp với</td>
+<td>Hầu hết hệ thống; máy bản sao ở xa</td>
+<td>Dữ liệu tuyệt đối không được mất, như sổ điểm thi; máy bản sao ở gần</td>
+</tr>
+</tbody>
+</table>
+<p>Bật nhân bản đồng bộ bằng tham số <code>synchronous_standby_names</code> ở máy chính, liệt kê <strong>tên</strong> các máy bản sao được coi là đồng bộ. Mặc định tham số này <strong>rỗng</strong>, tức mọi máy bản sao đều bất đồng bộ. Tham số <code>synchronous_commit</code> — đã gặp ở Bài 40 — khi có máy bản sao đồng bộ thì quyết định <strong>chờ tới mức nào</strong>:</p>
+<table>
+<thead>
+<tr>
+<th><code>synchronous_commit</code></th>
+<th><code>COMMIT</code> báo thành công khi</th>
+<th>Máy chính sập thì</th>
+<th>Máy bản sao đã <strong>đọc thấy</strong> chưa</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>off</code></td>
+<td>Chưa cần WAL xuống đĩa nào cả</td>
+<td>Có thể mất vài giao dịch cuối</td>
+<td>Chưa chắc</td>
+</tr>
+<tr>
+<td><code>local</code></td>
+<td>WAL xuống đĩa máy chính</td>
+<td>Có thể mất giao dịch chưa sang máy bản sao</td>
+<td>Chưa chắc</td>
+</tr>
+<tr>
+<td><code>remote_write</code></td>
+<td>Máy bản sao đã <strong>nhận</strong> và giao cho hệ điều hành ghi</td>
+<td>Không mất, trừ khi <strong>cả hai</strong> máy cùng mất điện</td>
+<td>Chưa chắc</td>
+</tr>
+<tr>
+<td><code>on</code> (mặc định)</td>
+<td>Máy bản sao đã <strong>ghi xuống đĩa</strong> (<code>fsync</code>)</td>
+<td>Không mất</td>
+<td>Chưa chắc — đã lưu nhưng có thể chưa làm lại</td>
+</tr>
+<tr>
+<td><code>remote_apply</code></td>
+<td>Máy bản sao đã <strong>làm lại</strong> xong</td>
+<td>Không mất</td>
+<td><strong>Có</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Để ý cột cuối: kể cả ở mức <code>on</code>, dữ liệu <strong>đã an toàn</strong> trên đĩa máy bản sao nhưng <strong>chưa chắc đã đọc được</strong> ở đó. Chỉ <code>remote_apply</code> hứa điều này, và nó chậm nhất.</p>
+<h3 id="ban-sao-chi-oc-va-o-tre-nhan-ban">Bản sao chỉ đọc và độ trễ nhân bản<a class="headerlink" href="#ban-sao-chi-oc-va-o-tre-nhan-ban" title="Permanent link">&para;</a></h3>
+<p>Khi tham số <code>hot_standby</code> bật — mặc định là bật — máy bản sao nhận truy vấn <strong>đọc</strong> ngay trong lúc đang làm lại WAL. Một máy bản sao dùng để gánh bớt việc đọc như vậy gọi là <strong>bản sao chỉ đọc</strong> (<em>read replica</em>). Mọi lệnh ghi ở đó đều bị từ chối: máy bản sao chỉ được thay đổi bằng cách làm lại WAL của máy chính.</p>
+<p>Nhưng bản sao <strong>luôn</strong> chậm hơn máy chính một chút. Khoảng chậm đó gọi là <strong>độ trễ nhân bản</strong> (<em>replication lag</em>), đo bằng số byte WAL chưa làm lại hoặc bằng thời gian. Bình thường chỉ vài mili giây. Khi máy chính ghi dồn dập, mạng chậm, hoặc máy bản sao bận chạy một truy vấn báo cáo nặng, nó có thể lên tới hàng giây, hàng phút.</p>
+<p>Hệ quả là chuyện của bạn An: ghi ở máy chính, đọc ngay ở máy bản sao, <strong>không thấy</strong> cái mình vừa ghi. Bảo đảm ngược lại — người dùng <strong>luôn</strong> thấy những gì chính mình vừa ghi — gọi là <strong>đọc được điều mình vừa ghi</strong> (<em>read-your-writes</em>). Nhân bản bất đồng bộ <strong>không</strong> tự cho bảo đảm này. Ba cách thường dùng để có nó:</p>
+<table>
+<thead>
+<tr>
+<th>Cách</th>
+<th>Làm thế nào</th>
+<th>Cái giá</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Đọc từ máy chính sau khi ghi</td>
+<td>Người dùng vừa ghi thì trong vài giây sau, mọi lần đọc <strong>của người đó</strong> gửi về máy chính</td>
+<td>Máy chính gánh thêm một phần việc đọc</td>
+</tr>
+<tr>
+<td>Chờ theo vị trí WAL</td>
+<td>Sau <code>COMMIT</code>, ứng dụng nhớ <code>pg_current_wal_lsn()</code> của máy chính; trước khi đọc ở máy bản sao thì chờ tới khi <code>pg_last_wal_replay_lsn()</code> của nó vượt qua con số đó</td>
+<td>Ứng dụng phải tự mang theo một con số, và đôi khi phải chờ</td>
+</tr>
+<tr>
+<td><code>synchronous_commit = remote_apply</code></td>
+<td><code>COMMIT</code> chỉ xong khi máy bản sao đồng bộ đã làm lại</td>
+<td>Mọi <code>COMMIT</code> chậm đi; chỉ bảo đảm cho máy bản sao <strong>đồng bộ</strong></td>
+</tr>
+</tbody>
+</table>
+<h3 id="chuyen-oi-du-phong-va-nao-chia-oi">Chuyển đổi dự phòng và não chia đôi<a class="headerlink" href="#chuyen-oi-du-phong-va-nao-chia-oi" title="Permanent link">&para;</a></h3>
+<p>Khi máy chính sập, phải đưa một máy bản sao lên thay. Việc này gọi là <strong>chuyển đổi dự phòng</strong> (<em>failover</em>), gồm bốn bước:</p>
+<ol>
+<li><strong>Phát hiện</strong> máy chính đã chết thật, không phải chỉ mạng chập chờn.</li>
+<li><strong>Chọn</strong> máy bản sao bám sát nhất — máy có vị trí WAL lớn nhất — để mất ít dữ liệu nhất.</li>
+<li><strong>Nâng lên làm máy chính</strong> (<em>promote</em>): máy bản sao ngừng làm lại WAL và bắt đầu nhận lệnh ghi. Trong PostgreSQL là hàm <code>pg_promote()</code> hoặc lệnh <code>pg_ctl promote</code>.</li>
+<li><strong>Chuyển hướng</strong> ứng dụng sang máy chính mới, và cho các máy bản sao còn lại bám theo nó.</li>
+</ol>
+<p>PostgreSQL <strong>tự nó không làm</strong> failover tự động: nó cung cấp lệnh nâng cấp, còn việc phát hiện, chọn và chuyển hướng là của các công cụ bên ngoài như Patroni, repmgr hay pg_auto_failover. Với nhân bản bất đồng bộ, failover có thể <strong>mất</strong> những giao dịch cuối cùng máy chính đã báo thành công mà chưa kịp gửi đi.</p>
+<p>Cái bẫy lớn nhất là bước 1. Máy chính chỉ <strong>mất liên lạc</strong> chứ không chết — rồi sau đó quay lại, vẫn tưởng mình là máy chính, vẫn nhận lệnh ghi. Giờ có <strong>hai</strong> máy chính, mỗi máy nhận một phần lệnh ghi, dữ liệu hai bên <strong>rẽ nhánh</strong> và không bao giờ tự khớp lại được. Tình trạng này gọi là <strong>não chia đôi</strong> (<em>split-brain</em>) — chuyện hai cuốn sổ gốc của cô Hạnh.</p>
+<p>Cách phòng là bảo đảm máy chính cũ <strong>không thể</strong> nhận ghi nữa trước khi nâng máy mới lên: tắt nguồn nó qua bộ điều khiển điện, chặn nó ở tầng mạng, hoặc thu hồi quyền ghi vào ổ lưu trữ chung. Biện pháp "cô lập máy cũ" này gọi là <strong>rào chắn</strong> (<em>fencing</em>). Cách thứ hai là chỉ cho phép failover khi <strong>quá nửa</strong> số máy đồng ý — ý tưởng mà <a href="../46-consensus-va-raft/">Bài 46</a> sẽ mổ xẻ; Patroni chính là dựa trên nó.</p>
+<h3 id="bang-thuat-ngu">Bảng thuật ngữ<a class="headerlink" href="#bang-thuat-ngu" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Tiếng Việt</th>
+<th>English</th>
+<th>Nghĩa dễ hiểu</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Nhân bản</td>
+<td><em>replication</em></td>
+<td>Giữ cùng một dữ liệu trên nhiều máy, liên tục chuyển thay đổi từ máy này sang máy kia</td>
+</tr>
+<tr>
+<td>Máy chính</td>
+<td><em>primary</em></td>
+<td>Máy duy nhất nhận lệnh ghi; nguồn của mọi thay đổi</td>
+</tr>
+<tr>
+<td>Máy bản sao</td>
+<td><em>replica</em></td>
+<td>Máy nhận thay đổi từ máy chính và làm lại theo; PostgreSQL gọi là <em>standby</em></td>
+</tr>
+<tr>
+<td>Nhân bản vật lý</td>
+<td><em>physical replication</em></td>
+<td>Gửi nguyên văn bản ghi WAL; bản sao giống máy chính từng byte, cả máy chủ, chỉ đọc</td>
+</tr>
+<tr>
+<td>Nhân bản logic</td>
+<td><em>logical replication</em></td>
+<td>Gửi thay đổi ở mức dòng; chọn từng bảng, bên nhận ghi được, khác phiên bản được</td>
+</tr>
+<tr>
+<td>Bản phát hành</td>
+<td><em>publication</em></td>
+<td>Danh sách bảng mà bên gửi chia sẻ trong nhân bản logic</td>
+</tr>
+<tr>
+<td>Đăng ký nhận</td>
+<td><em>subscription</em></td>
+<td>Khai báo ở bên nhận, trỏ tới một bản phát hành để nhận thay đổi</td>
+</tr>
+<tr>
+<td>Nhân bản theo luồng</td>
+<td><em>streaming replication</em></td>
+<td>Máy bản sao giữ một kết nối thường trực, nhận từng bản ghi WAL ngay khi nó được ghi</td>
+</tr>
+<tr>
+<td>Khe nhân bản</td>
+<td><em>replication slot</em></td>
+<td>Ghi nhớ ở máy chính vị trí WAL một máy bản sao đã nhận, để giữ lại WAL nó chưa nhận</td>
+</tr>
+<tr>
+<td>Nhân bản bất đồng bộ</td>
+<td><em>asynchronous replication</em></td>
+<td><code>COMMIT</code> không chờ máy bản sao; nhanh, nhưng máy chính sập có thể mất giao dịch cuối</td>
+</tr>
+<tr>
+<td>Nhân bản đồng bộ</td>
+<td><em>synchronous replication</em></td>
+<td><code>COMMIT</code> chờ ít nhất một máy bản sao xác nhận; không mất giao dịch, nhưng chậm hơn và treo khi bản sao chết</td>
+</tr>
+<tr>
+<td>Bản sao chỉ đọc</td>
+<td><em>read replica</em></td>
+<td>Máy bản sao nhận truy vấn đọc để chia tải với máy chính</td>
+</tr>
+<tr>
+<td>Độ trễ nhân bản</td>
+<td><em>replication lag</em></td>
+<td>Khoảng máy bản sao chậm hơn máy chính, tính bằng byte WAL hoặc thời gian</td>
+</tr>
+<tr>
+<td>Đọc được điều mình vừa ghi</td>
+<td><em>read-your-writes</em></td>
+<td>Bảo đảm người dùng luôn đọc thấy những gì chính mình vừa ghi</td>
+</tr>
+<tr>
+<td>Chuyển đổi dự phòng</td>
+<td><em>failover</em></td>
+<td>Đưa một máy bản sao lên thay máy chính đã sập</td>
+</tr>
+<tr>
+<td>Nâng lên làm máy chính</td>
+<td><em>promote</em></td>
+<td>Máy bản sao ngừng làm lại WAL và bắt đầu nhận ghi: <code>pg_promote()</code></td>
+</tr>
+<tr>
+<td>Não chia đôi</td>
+<td><em>split-brain</em></td>
+<td>Hai máy cùng tưởng mình là máy chính, cùng nhận ghi, dữ liệu rẽ nhánh</td>
+</tr>
+<tr>
+<td>Rào chắn</td>
+<td><em>fencing</em></td>
+<td>Biện pháp bảo đảm máy chính cũ không thể ghi nữa trước khi nâng máy mới lên</td>
+</tr>
+</tbody>
+</table>
+<h2 id="so-o">🖼️ Sơ đồ<a class="headerlink" href="#so-o" title="Permanent link">&para;</a></h2>
+<p>Một máy chính, hai máy bản sao theo luồng. Ứng dụng ghi vào máy chính, đọc ở cả ba:</p>
+<pre class="mermaid"><code>flowchart LR
+    APP["&lt;b&gt;Ứng dụng&lt;/b&gt;"]
+    subgraph MC["Máy chính"]
+        P["PostgreSQL&lt;br/&gt;nhận ghi và đọc"]
+        W["WAL trên đĩa"]
+        S1["walsender 1"]
+        S2["walsender 2"]
+        P --&gt; W
+        W --&gt; S1
+        W --&gt; S2
+    end
+    subgraph B1["Máy bản sao B — đồng bộ"]
+        R1["walreceiver"] --&gt; A1["làm lại WAL"] --&gt; D1["chỉ đọc"]
+    end
+    subgraph B2["Máy bản sao C — bất đồng bộ"]
+        R2["walreceiver"] --&gt; A2["làm lại WAL"] --&gt; D2["chỉ đọc"]
+    end
+    APP --&gt;|"INSERT · UPDATE · DELETE"| P
+    S1 --&gt;|"luồng WAL"| R1
+    S2 --&gt;|"luồng WAL"| R2
+    R1 -.-&gt;|"đã nhận tới LSN ..."| S1
+    APP -.-&gt;|"SELECT"| D1
+    APP -.-&gt;|"SELECT"| D2
+
+    style MC fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
+    style B1 fill:#e8f5e9,stroke:#2e7d32
+    style B2 fill:#fff8e1,stroke:#f9a825</code></pre>
+<p>Mũi tên nét đứt từ B về máy chính là lời xác nhận mà <code>COMMIT</code> phải chờ khi B là máy bản sao đồng bộ. C không có mũi tên đó trên đường đi của <code>COMMIT</code>: nó bám theo khi nào kịp thì bám.</p>
+<p>Chuyện của bạn An, trên dòng thời gian — nhân bản bất đồng bộ, đọc ở máy bản sao:</p>
+<pre class="mermaid"><code>sequenceDiagram
+    participant An as Ứng dụng của An
+    participant P as Máy chính
+    participant R as Máy bản sao
+    An-&gt;&gt;P: UPDATE điểm An = 8.0
+    An-&gt;&gt;P: COMMIT
+    P--&gt;&gt;An: COMMIT thành công
+    P-&gt;&gt;R: gửi bản ghi WAL
+    An-&gt;&gt;R: SELECT điểm của An
+    R--&gt;&gt;An: 6.5 — chưa làm lại tới bản ghi đó
+    Note over R: vài mili giây sau...
+    R-&gt;&gt;R: làm lại bản ghi WAL
+    An-&gt;&gt;R: SELECT điểm của An
+    R--&gt;&gt;An: 8.0</code></pre>
+<p>Lần đọc thứ nhất rơi đúng vào khoảng <strong>độ trễ nhân bản</strong>.</p>
+<h2 id="thuc-hanh">💻 Thực hành<a class="headerlink" href="#thuc-hanh" title="Permanent link">&para;</a></h2>
+<p>Máy chủ PostgreSQL của khoá học chỉ có <strong>một</strong> máy, nên không có máy bản sao nào để nhân bản thật. Phần này làm hai việc: chạy mọi thứ <strong>chạy được trên một máy</strong> — cấu hình, bảng trạng thái, khe nhân bản, bản phát hành — rồi kể lại một thí nghiệm nhân bản thật mà khoá học đã chạy trên máy thử nghiệm, kèm nhật ký nguyên văn.</p>
+<h3 id="may-nay-ang-ong-vai-gi">Máy này đang đóng vai gì?<a class="headerlink" href="#may-nay-ang-ong-vai-gi" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1">-- KỲ VỌNG: dang_lam_lai_wal = false</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c1">-- KỲ VỌNG: wal_level = replica</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1">-- KỲ VỌNG: max_wal_senders = 10</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1">-- KỲ VỌNG: max_replication_slots = 10</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1">-- KỲ VỌNG: hot_standby = on</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1">-- KỲ VỌNG: khong_co_ban_sao_dong_bo = true</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">pg_is_in_recovery</span><span class="p">()</span><span class="w">                          </span><span class="k">AS</span><span class="w"> </span><span class="n">dang_lam_lai_wal</span><span class="p">,</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">       </span><span class="n">current_setting</span><span class="p">(</span><span class="s1">'wal_level'</span><span class="p">)</span><span class="w">                 </span><span class="k">AS</span><span class="w"> </span><span class="n">wal_level</span><span class="p">,</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">       </span><span class="n">current_setting</span><span class="p">(</span><span class="s1">'max_wal_senders'</span><span class="p">)</span><span class="w">           </span><span class="k">AS</span><span class="w"> </span><span class="n">max_wal_senders</span><span class="p">,</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">       </span><span class="n">current_setting</span><span class="p">(</span><span class="s1">'max_replication_slots'</span><span class="p">)</span><span class="w">     </span><span class="k">AS</span><span class="w"> </span><span class="n">max_replication_slots</span><span class="p">,</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">       </span><span class="n">current_setting</span><span class="p">(</span><span class="s1">'hot_standby'</span><span class="p">)</span><span class="w">               </span><span class="k">AS</span><span class="w"> </span><span class="n">hot_standby</span><span class="p">,</span>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">       </span><span class="n">current_setting</span><span class="p">(</span><span class="s1">'synchronous_standby_names'</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">''</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">khong_co_ban_sao_dong_bo</span><span class="p">;</span>
+</span></code></pre></div>
+<ul>
+<li><code>pg_is_in_recovery()</code> trả <code>false</code>: máy này <strong>không</strong> đang làm lại WAL của ai, tức nó là một máy chính. Trên máy bản sao hàm này trả <code>true</code>.</li>
+<li><code>wal_level = replica</code>: WAL ghi đủ thông tin cho nhân bản vật lý, nhưng <strong>chưa</strong> đủ cho nhân bản logic.</li>
+<li>Máy chính cho tối đa 10 kết nối <code>walsender</code> và 10 khe nhân bản.</li>
+<li><code>synchronous_standby_names</code> rỗng: nếu có máy bản sao, chúng đều <strong>bất đồng bộ</strong>.</li>
+</ul>
+<p>Hai hàm dưới đây là hai đầu của cách <strong>chờ theo vị trí WAL</strong> ở phần khái niệm. <code>pg_current_wal_lsn()</code> hỏi máy chính: <em>"WAL đã ghi tới đâu?"</em>. <code>pg_last_wal_replay_lsn()</code> hỏi máy bản sao: <em>"WAL đã làm lại tới đâu?"</em>.</p>
+<div class="highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1">-- KỲ VỌNG: vi_tri_da_ghi_co_gia_tri = true</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">pg_current_wal_lsn</span><span class="p">()</span><span class="w"> </span><span class="k">IS</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">vi_tri_da_ghi_co_gia_tri</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Trên máy chính, <code>pg_last_wal_replay_lsn()</code> không có nhiều ý nghĩa: nó trả <code>NULL</code> nếu máy chủ khởi động bình thường, còn nếu lần khởi động gần nhất phải chạy phục hồi sau sự cố thì nó giữ nguyên vị trí cuối cùng đã làm lại lúc đó. Tự xem trên máy mình:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">pg_last_wal_replay_lsn</span><span class="p">()</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">vi_tri_da_lam_lai</span><span class="p">;</span>
+</span></code></pre></div>
+<h3 id="bang-trang-thai-nhan-ban">Bảng trạng thái nhân bản<a class="headerlink" href="#bang-trang-thai-nhan-ban" title="Permanent link">&para;</a></h3>
+<p>Mỗi máy bản sao đang kết nối là <strong>một dòng</strong> trong <code>pg_stat_replication</code> ở máy chính. Truy vấn dưới đây là thứ người quản trị chạy hằng ngày để xem độ trễ. Máy của khoá học không có máy bản sao nào, nên nó trả <strong>0</strong> dòng:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1">-- KỲ VỌNG: 0 dòng</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">application_name</span><span class="w">                         </span><span class="k">AS</span><span class="w"> </span><span class="n">may_ban_sao</span><span class="p">,</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">       </span><span class="k">state</span><span class="w">                                    </span><span class="k">AS</span><span class="w"> </span><span class="n">trang_thai</span><span class="p">,</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">       </span><span class="n">sync_state</span><span class="w">                               </span><span class="k">AS</span><span class="w"> </span><span class="n">dong_bo</span><span class="p">,</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">       </span><span class="n">pg_wal_lsn_diff</span><span class="p">(</span><span class="n">sent_lsn</span><span class="p">,</span><span class="w"> </span><span class="n">replay_lsn</span><span class="p">)</span><span class="w">    </span><span class="k">AS</span><span class="w"> </span><span class="n">tre_theo_byte</span><span class="p">,</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">       </span><span class="n">replay_lag</span><span class="w">                               </span><span class="k">AS</span><span class="w"> </span><span class="n">tre_theo_thoi_gian</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="k">FROM</span><span class="w"> </span><span class="n">pg_stat_replication</span>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">application_name</span><span class="p">;</span>
+</span></code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Cột</th>
+<th>Ý nghĩa</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>sent_lsn</code></td>
+<td>Máy chính đã <strong>gửi</strong> tới đâu</td>
+</tr>
+<tr>
+<td><code>write_lsn</code>, <code>flush_lsn</code></td>
+<td>Máy bản sao đã <strong>nhận và ghi</strong>, đã <strong><code>fsync</code></strong> tới đâu</td>
+</tr>
+<tr>
+<td><code>replay_lsn</code></td>
+<td>Máy bản sao đã <strong>làm lại</strong> tới đâu — tức đọc thấy tới đâu</td>
+</tr>
+<tr>
+<td><code>write_lag</code>, <code>flush_lag</code>, <code>replay_lag</code></td>
+<td>Ba độ trễ tương ứng, tính bằng thời gian</td>
+</tr>
+<tr>
+<td><code>sync_state</code></td>
+<td><code>async</code>, <code>sync</code>, hoặc <code>potential</code> (đứng chờ thay khi máy đồng bộ hỏng)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="khe-nhan-ban-giu-wal-lai">Khe nhân bản giữ WAL lại<a class="headerlink" href="#khe-nhan-ban-giu-wal-lai" title="Permanent link">&para;</a></h3>
+<p>Tạo một khe nhân bản cho một máy bản sao <strong>tưởng tượng</strong> tên <code>may_b</code>. Tham số thứ hai <code>true</code> bảo máy chính giữ WAL <strong>ngay từ bây giờ</strong>, chứ không đợi máy bản sao kết nối lần đầu. Hàm này cần quyền quản trị hoặc quyền <code>REPLICATION</code>; người dùng <code>postgres</code> trong Docker của Bài 5 có đủ.</p>
+<div class="highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">pg_drop_replication_slot</span><span class="p">(</span><span class="n">slot_name</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">pg_replication_slots</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">slot_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'b42_khe_may_b'</span><span class="p">;</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">pg_create_physical_replication_slot</span><span class="p">(</span><span class="s1">'b42_khe_may_b'</span><span class="p">,</span><span class="w"> </span><span class="k">true</span><span class="p">);</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1">-- KỲ VỌNG: 1 dòng</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1">-- KỲ VỌNG: slot_name = b42_khe_may_b</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1">-- KỲ VỌNG: slot_type = physical</span>
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1">-- KỲ VỌNG: active = false</span>
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1">-- KỲ VỌNG: dang_giu_wal = true</span>
+</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">slot_name</span><span class="p">,</span><span class="w"> </span><span class="n">slot_type</span><span class="p">,</span><span class="w"> </span><span class="n">active</span><span class="p">,</span><span class="w"> </span><span class="n">restart_lsn</span><span class="w"> </span><span class="k">IS</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">dang_giu_wal</span>
+</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="k">FROM</span><span class="w"> </span><span class="n">pg_replication_slots</span>
+</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">slot_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'b42_khe_may_b'</span><span class="p">;</span>
+</span></code></pre></div>
+<p><code>active = false</code>: không có máy bản sao nào đang dùng khe này — y như một máy bản sao đã chết. <code>restart_lsn</code> là vị trí từ đó trở đi máy chính <strong>không được</strong> xoá WAL. Giờ ghi thêm một ít dữ liệu, và đo xem khe đang bắt máy chính giữ bao nhiêu WAL:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">b42_ghi_them</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">;</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">b42_ghi_them</span><span class="w"> </span><span class="k">AS</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">g</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so</span><span class="p">,</span><span class="w"> </span><span class="n">repeat</span><span class="p">(</span><span class="s1">'x'</span><span class="p">,</span><span class="w"> </span><span class="mi">100</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">noi_dung</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">generate_series</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">20000</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="k">g</span><span class="p">;</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1">-- KỲ VỌNG: wal_bi_giu_lon_hon_1mb = true</span>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">pg_wal_lsn_diff</span><span class="p">(</span><span class="n">pg_current_wal_lsn</span><span class="p">(),</span><span class="w"> </span><span class="n">restart_lsn</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">1024</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">1024</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">wal_bi_giu_lon_hon_1mb</span>
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="k">FROM</span><span class="w"> </span><span class="n">pg_replication_slots</span>
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">slot_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'b42_khe_may_b'</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Con số này chỉ <strong>tăng</strong> chừng nào khe còn đó mà không ai dùng: mỗi byte WAL mới sinh ra đều bị giữ lại. Xem trên máy mình:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">slot_name</span><span class="p">,</span><span class="w"> </span><span class="n">pg_size_pretty</span><span class="p">(</span><span class="n">pg_wal_lsn_diff</span><span class="p">(</span><span class="n">pg_current_wal_lsn</span><span class="p">(),</span><span class="w"> </span><span class="n">restart_lsn</span><span class="p">))</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">wal_dang_bi_giu</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="k">FROM</span><span class="w"> </span><span class="n">pg_replication_slots</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Xoá khe ngay — trên máy thật, khe mồ côi là cách làm đầy đĩa âm thầm nhất:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">pg_drop_replication_slot</span><span class="p">(</span><span class="s1">'b42_khe_may_b'</span><span class="p">);</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="c1">-- KỲ VỌNG: khe_con_lai = 0</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">khe_con_lai</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">pg_replication_slots</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">slot_name</span><span class="w"> </span><span class="k">LIKE</span><span class="w"> </span><span class="s1">'b42\_%'</span><span class="p">;</span>
+</span></code></pre></div>
+<h3 id="nhan-ban-logic-tao-mot-ban-phat-hanh">Nhân bản logic: tạo một bản phát hành<a class="headerlink" href="#nhan-ban-logic-tao-mot-ban-phat-hanh" title="Permanent link">&para;</a></h3>
+<p>Bên gửi chỉ chia sẻ bảng điểm tổng kết, không chia sẻ gì khác:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="k">DROP</span><span class="w"> </span><span class="n">PUBLICATION</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">b42_cong_bo_diem</span><span class="p">;</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">b42_diem_tong_ket</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">;</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">b42_diem_tong_ket</span><span class="w"> </span><span class="p">(</span>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">    </span><span class="n">ma_hs</span><span class="w">    </span><span class="nb">CHAR</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span><span class="w">      </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">    </span><span class="n">diem_tb</span><span class="w">  </span><span class="nb">NUMERIC</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span>
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="p">);</span>
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">b42_diem_tong_ket</span>
+</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">ma_hs</span><span class="p">,</span><span class="w"> </span><span class="n">round</span><span class="p">(</span><span class="k">avg</span><span class="p">(</span><span class="n">diem_so</span><span class="p">),</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">diem</span><span class="w"> </span><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">ma_hs</span><span class="p">;</span>
+</span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
+</span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="k">CREATE</span><span class="w"> </span><span class="n">PUBLICATION</span><span class="w"> </span><span class="n">b42_cong_bo_diem</span><span class="w"> </span><span class="k">FOR</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">b42_diem_tong_ket</span><span class="p">;</span>
+</span><span id="__span-8-11"><a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>
+</span><span id="__span-8-12"><a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="c1">-- KỲ VỌNG: 1 dòng</span>
+</span><span id="__span-8-13"><a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="c1">-- KỲ VỌNG: pubname = b42_cong_bo_diem</span>
+</span><span id="__span-8-14"><a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="c1">-- KỲ VỌNG: tablename = b42_diem_tong_ket</span>
+</span><span id="__span-8-15"><a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">pubname</span><span class="p">,</span><span class="w"> </span><span class="n">tablename</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">pg_publication_tables</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">pubname</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'b42_cong_bo_diem'</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Lệnh <code>CREATE PUBLICATION</code> chạy được, nhưng PostgreSQL kèm một lời cảnh báo — bắt được nguyên văn trên máy thử:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>WARNING:  wal_level is insufficient to publish logical changes
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>HINT:  Set wal_level to "logical" before creating subscriptions.
+</span></code></pre></div>
+<p>Đúng như bảng so sánh: nhân bản logic cần <code>wal_level = logical</code>, còn máy này đang <code>replica</code>. Đổi tham số đó phải sửa <code>postgresql.conf</code> và khởi động lại máy chủ.</p>
+<p>Ở bên nhận — một máy chủ <strong>khác</strong>, đã tự tạo sẵn bảng <code>b42_diem_tong_ket</code> cùng cấu trúc, vì nhân bản logic không chuyển lệnh <code>CREATE TABLE</code> — người quản trị chạy lệnh dưới đây. Nó cần một máy chủ thứ hai nên khoá học không chạy tự động:</p>
+<!-- sql:khong-chay -->
+<div class="highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="k">CREATE</span><span class="w"> </span><span class="n">SUBSCRIPTION</span><span class="w"> </span><span class="n">nhan_diem_tong_ket</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="w">    </span><span class="k">CONNECTION</span><span class="w"> </span><span class="s1">'host=may-chinh.truong.edu.vn dbname=truong_hoc user=nhan_ban password=...'</span>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">    </span><span class="n">PUBLICATION</span><span class="w"> </span><span class="n">b42_cong_bo_diem</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Bên nhận sẽ chép toàn bộ dữ liệu hiện có của bảng một lần, rồi nhận tiếp từng thay đổi.</p>
+<h3 id="thi-nghiem-nhan-ban-that-tren-may-thu-cua-khoa-hoc">Thí nghiệm nhân bản thật — trên máy thử của khoá học<a class="headerlink" href="#thi-nghiem-nhan-ban-that-tren-may-thu-cua-khoa-hoc" title="Permanent link">&para;</a></h3>
+<p>Phần này cần <strong>hai</strong> máy chủ PostgreSQL, nên không chạy tự động được. Khoá học đã làm trên một máy thử: máy chính ở cổng <code>55438</code>, máy bản sao dựng bằng <code>pg_basebackup</code> và chạy ở cổng <code>55439</code>. Nếu bạn muốn làm lại, đây là lệnh dựng máy bản sao; số hiệu LSN và thời gian trên máy bạn sẽ khác mọi con số dưới đây:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>pg_basebackup<span class="w"> </span>-h<span class="w"> </span>localhost<span class="w"> </span>-p<span class="w"> </span><span class="m">55438</span><span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-D<span class="w"> </span>/du_lieu/may_b<span class="w"> </span>-R<span class="w"> </span>-X<span class="w"> </span>stream<span class="w"> </span>-c<span class="w"> </span>fast
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="c1"># sửa port trong /du_lieu/may_b/postgresql.conf thành 55439 rồi</span>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>pg_ctl<span class="w"> </span>-D<span class="w"> </span>/du_lieu/may_b<span class="w"> </span>start
+</span></code></pre></div>
+<p>Tuỳ chọn <code>-R</code> tự tạo tệp <code>standby.signal</code> — báo cho PostgreSQL "khởi động ở vai máy bản sao" — và ghi thông tin kết nối về máy chính vào <code>postgresql.auto.conf</code>. Nhật ký của máy bản sao lúc khởi động:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>LOG:  entering standby mode
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>LOG:  redo starts at 0/11000028
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>LOG:  consistent recovery state reached at 0/11000100
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>LOG:  database system is ready to accept read-only connections
+</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>LOG:  started streaming WAL from primary at 0/12000000 on timeline 1
+</span></code></pre></div>
+<p>Nó làm lại WAL y như phục hồi sau sự cố ở Bài 40, nhưng không dừng lại: dòng cuối là luồng WAL bắt đầu chảy. Máy chính giờ có một dòng trong <code>pg_stat_replication</code>:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>application_name | walreceiver
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>state            | streaming
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>sent_lsn         | 0/12000060
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>write_lsn        | 0/12000060
+</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>flush_lsn        | 0/12000060
+</span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>replay_lsn       | 0/12000060
+</span><span id="__span-13-7"><a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>replay_lag       | 00:00:00.034174
+</span><span id="__span-13-8"><a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>sync_state       | async
+</span></code></pre></div>
+<p>Bốn LSN bằng nhau: máy bản sao đã bám kịp. Độ trễ khoảng <strong>34 mili giây</strong>, và nó là <code>async</code> — mặc định.</p>
+<p><strong>Ghi vào máy bản sao</strong> thì bị từ chối:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>ERROR:  cannot execute INSERT in a read-only transaction
+</span></code></pre></div>
+<p><strong>Chuyện của bạn An.</strong> Để thấy rõ độ trễ, khoá học <strong>tạm dừng</strong> việc làm lại WAL trên máy bản sao bằng <code>SELECT pg_wal_replay_pause();</code>, rồi sửa điểm ở máy chính từ 6,5 lên 8,0:</p>
+<table>
+<thead>
+<tr>
+<th>Bước</th>
+<th>Máy chính</th>
+<th>Máy bản sao</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><code>UPDATE b42_thu SET diem = 8.0 WHERE ma_hs = 'HS001';</code> → <code>UPDATE 1</code></td>
+<td></td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>SELECT diem FROM b42_thu;</code> → <strong>8.00</strong></td>
+<td><code>SELECT diem FROM b42_thu;</code> → <strong>6.50</strong></td>
+</tr>
+<tr>
+<td>3</td>
+<td></td>
+<td><code>SELECT pg_wal_replay_resume();</code></td>
+</tr>
+<tr>
+<td>4</td>
+<td></td>
+<td><code>SELECT diem FROM b42_thu;</code> → <strong>8.00</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Ở bước 2, <code>pg_stat_replication</code> báo máy bản sao đã <strong>nhận</strong> WAL (<code>flush_lsn</code> bằng <code>sent_lsn</code>) nhưng <strong>chưa làm lại</strong> (<code>replay_lsn</code> nhỏ hơn). Đó đúng là cột cuối của bảng <code>synchronous_commit</code>: đã lưu an toàn, nhưng chưa đọc thấy.</p>
+<p><strong>Nhân bản đồng bộ, rồi tắt máy bản sao.</strong> Đặt <code>synchronous_standby_names = 'may_b'</code> trên máy chính, <code>sync_state</code> chuyển thành <code>sync</code>. Rồi tắt máy bản sao và thử ghi ở máy chính: câu <code>INSERT</code> <strong>đứng im</strong>. Nhìn từ một phiên khác:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a> wait_event_type | wait_event | state  |                    q
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>-----------------+------------+--------+-----------------------------------------
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a> IPC             | SyncRep    | active | INSERT INTO b42_thu VALUES ('HS002', 7)
+</span></code></pre></div>
+<p><code>SyncRep</code>: đang chờ máy bản sao đồng bộ xác nhận — và sẽ chờ mãi. Huỷ câu lệnh đang chờ bằng <code>pg_cancel_backend</code>, người dùng nhận được:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>WARNING:  canceling wait for synchronous replication due to user request
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>DETAIL:  The transaction has already committed locally, but might not have been replicated to the standby.
+</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>INSERT 0 1
+</span></code></pre></div>
+<p>Đọc kỹ dòng <code>DETAIL</code>: giao dịch <strong>đã được xác nhận ở máy chính</strong> rồi — huỷ chỉ là thôi <strong>chờ</strong>, không phải huỷ giao dịch. Lỗi 3 bàn tiếp chuyện này.</p>
+<p><strong>Failover và não chia đôi.</strong> Trả về bất đồng bộ, bật lại máy bản sao, rồi gọi <code>SELECT pg_promote();</code> trên nó. Nhật ký máy bản sao:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>LOG:  received promote request
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>FATAL:  terminating walreceiver process due to administrator command
+</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>LOG:  redo done at 0/1203A230
+</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>LOG:  selected new timeline ID: 2
+</span><span id="__span-17-5"><a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>LOG:  archive recovery complete
+</span><span id="__span-17-6"><a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>LOG:  database system is ready to accept connections
+</span></code></pre></div>
+<p>Máy bản sao cũ giờ nhận ghi, và bắt đầu một <strong>dòng thời gian</strong> mới số 2 — PostgreSQL đánh số để phân biệt lịch sử WAL trước và sau lần nâng cấp. Nhưng máy chính cũ <strong>không hề biết</strong> chuyện gì đã xảy ra và vẫn đang chạy. Cùng một câu sửa điểm được gửi tới hai máy:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Máy chính cũ (cổng 55438)</th>
+<th>Máy mới được nâng lên (cổng 55439)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Lệnh</td>
+<td><code>UPDATE b42_thu SET diem = 5 WHERE ma_hs = 'HS001';</code></td>
+<td><code>UPDATE b42_thu SET diem = 10 WHERE ma_hs = 'HS001';</code></td>
+</tr>
+<tr>
+<td>Kết quả</td>
+<td><code>UPDATE 1</code></td>
+<td><code>UPDATE 1</code></td>
+</tr>
+<tr>
+<td>Điểm HS001 đọc lại</td>
+<td><strong>5.00</strong></td>
+<td><strong>10.00</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Cả hai đều báo thành công. Đây là não chia đôi: hai cuốn sổ gốc. Cuối cùng, thử cho máy chính cũ quay lại làm máy bản sao của máy mới, <strong>không</strong> dọn dẹp gì — nó từ chối:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>LOG:  new timeline 2 forked off current database system timeline 1 before current recovery point 0/1203A378
+</span></code></pre></div>
+<p>Lịch sử của nó đã <strong>rẽ nhánh</strong> khỏi máy mới. Muốn nó làm máy bản sao trở lại, phải tua WAL của nó về điểm rẽ nhánh bằng công cụ <code>pg_rewind</code> — tức <strong>vứt bỏ</strong> mọi thay đổi nó nhận sau lúc đó, kể cả điểm 5,0 kia — hoặc dựng lại nó từ đầu bằng <code>pg_basebackup</code>.</p>
+<h2 id="loi-thuong-gap">⚠️ Lỗi thường gặp<a class="headerlink" href="#loi-thuong-gap" title="Permanent link">&para;</a></h2>
+<div class="admonition danger">
+<p class="admonition-title">Lỗi 1: Coi máy bản sao là bản sao lưu</p>
+<p><em>"Có hai máy bản sao rồi, cần gì sao lưu nữa."</em> Một câu <code>DELETE FROM diem WHERE hoc_ky = 1;</code> chạy nhầm trên máy chính là một giao dịch <strong>hợp lệ</strong>. Nó được ghi vào WAL, và vài mili giây sau đã được làm lại trên <strong>mọi</strong> máy bản sao. Ba máy, ba bản dữ liệu đã mất điểm học kỳ 1.</p>
+<p>Nhân bản chống được <strong>máy hỏng</strong>, không chống được <strong>người sai</strong>. Sửa: vẫn phải có bản sao lưu nền và lưu trữ WAL để làm PITR, như Bài 40.</p>
+</div>
+<div class="admonition danger">
+<p class="admonition-title">Lỗi 2: Ghi ở máy chính rồi đọc ngay ở máy bản sao</p>
+<p>Trang web của trường cho giáo viên sửa điểm, rồi chuyển ngay sang trang <em>"Bảng điểm lớp"</em> — trang này đọc ở bản sao chỉ đọc cho nhẹ máy chính. Giáo viên thấy điểm cũ, tưởng lưu lỗi, sửa lại lần nữa. Lúc máy chính đang bận, chuyện này xảy ra hàng loạt.</p>
+<p>Sửa: chọn một trong ba cách giữ <strong>đọc được điều mình vừa ghi</strong> ở phần khái niệm. Cách thực tế nhất: sau khi một người ghi, gửi mọi lần đọc <strong>của người đó</strong> về máy chính trong vài giây. Các trang chỉ-xem của người khác vẫn đọc ở máy bản sao.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Lỗi 3: Nhân bản đồng bộ với đúng một máy bản sao</p>
+<p><code>synchronous_standby_names = 'may_b'</code>, và chỉ có mỗi <code>may_b</code>. Máy chính giờ <strong>phụ thuộc</strong> vào <code>may_b</code>: nó chết là mọi <code>COMMIT</code> trên máy chính đứng chờ, như thí nghiệm <code>SyncRep</code> ở trên. Hệ thống <strong>kém</strong> sẵn sàng hơn cả khi chỉ có một máy.</p>
+<p>Còn một cái bẫy trong cái bẫy: người dùng hết kiên nhẫn, bấm huỷ. Như dòng <code>DETAIL</code> đã nói, giao dịch <strong>đã xác nhận ở máy chính</strong>. Trên máy thử, khi khoá học chỉ ngắt kết nối của người đang chờ rồi bật lại máy bản sao, dòng <code>HS002</code> vẫn hiện ra trong bảng — người dùng tưởng đã huỷ mà dữ liệu vẫn vào.</p>
+<p>Sửa: có ít nhất <strong>hai</strong> máy bản sao và chỉ cần <strong>một</strong> trong số đó xác nhận: <code>synchronous_standby_names = 'ANY 1 (may_b, may_c)'</code>. Một máy chết, máy kia vẫn xác nhận được.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Lỗi 4: Để lại khe nhân bản của máy đã bỏ</p>
+<p>Nhà trường tắt hẳn một máy bản sao cũ nhưng quên xoá khe nhân bản của nó. Máy chính ngoan ngoãn giữ WAL chờ — phần thực hành đo được con số này chỉ tăng — cho tới một đêm ổ đĩa đầy và máy chính <strong>dừng hẳn</strong>.</p>
+<p>Sửa: xoá khe cùng lúc với máy bản sao. Định kỳ kiểm các khe <code>active = false</code>. Từ PostgreSQL 13 có thể giới hạn lượng WAL một khe được giữ bằng tham số <code>max_slot_wal_keep_size</code>: vượt ngưỡng thì khe bị vô hiệu hoá, máy bản sao đó phải dựng lại, nhưng máy chính sống.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Lỗi 5: Failover tự động mà không có rào chắn</p>
+<p>Một đoạn script đơn giản: <em>"gọi máy chính 3 lần không trả lời thì <code>pg_promote()</code> máy bản sao"</em>. Một hôm mạng giữa hai máy chập chờn 20 giây. Script nâng máy bản sao lên — trong khi máy chính vẫn sống khoẻ và vẫn nhận ghi từ nửa số ứng dụng. Não chia đôi, như thí nghiệm ở trên, và phải ngồi so từng dòng hai bên.</p>
+<p>Sửa: không tự viết failover. Dùng công cụ đã được kiểm chứng như Patroni, cấu hình <strong>rào chắn</strong> để máy cũ chắc chắn không ghi được nữa, và dựa vào sự đồng thuận của <strong>quá nửa</strong> số máy — Bài 46.</p>
+</div>
+<h2 id="bai-tap">✍️ Bài tập<a class="headerlink" href="#bai-tap" title="Permanent link">&para;</a></h2>
+<ol>
+<li>
+<p>Với mỗi yêu cầu sau, chọn <strong>nhân bản vật lý</strong> hay <strong>nhân bản logic</strong>, và giải thích: (a) có một máy dự phòng giống hệt để thay ngay khi máy chính hỏng; (b) chép riêng bảng <code>diem</code> sang database của Sở Giáo dục, nơi họ còn có bảng riêng của mình; (c) nâng cấp từ PostgreSQL 15 lên 16 mà chỉ dừng máy vài giây.</p>
+</li>
+<li>
+<p>Nhà trường có một máy chính và <strong>một</strong> máy bản sao ở cùng phòng máy. Hiệu trưởng yêu cầu: <em>"Điểm thi đã báo lưu thành công thì không bao giờ được mất, kể cả khi máy chính cháy ổ."</em> Bạn cấu hình thế nào? Cấu hình đó có rủi ro gì, và bạn đề xuất thêm gì để giảm rủi ro ấy?</p>
+</li>
+<li>
+<p>Tại một thời điểm, <code>pg_stat_replication</code> trên máy chính cho thấy máy bản sao <code>may_c</code> có <code>sent_lsn = 0/5000A000</code>, <code>flush_lsn = 0/5000A000</code>, <code>replay_lsn = 0/50001000</code>. (a) Máy bản sao này đã <strong>lưu an toàn</strong> thay đổi mới nhất chưa? (b) Người đọc ở đó đã <strong>thấy</strong> thay đổi mới nhất chưa? (c) Nó chậm bao nhiêu byte? Tính bằng <code>pg_wal_lsn_diff</code>.</p>
+</li>
+<li>
+<p>Máy chính <strong>A</strong> chạy nhân bản bất đồng bộ sang <strong>B</strong>. A mất điện; người quản trị nâng B lên làm máy chính. Hai giờ sau A có điện, khởi động lại. (a) Giao dịch nào có thể đã mất? (b) Nếu A khởi động lên và các ứng dụng cũ vẫn trỏ vào A thì chuyện gì xảy ra? (c) Làm thế nào để A trở thành máy bản sao của B?</p>
+</li>
+<li>
+<p>Viết truy vấn liệt kê các khe nhân bản <strong>không có ai dùng</strong> cùng lượng WAL mỗi khe đang giữ, sắp theo lượng WAL giảm dần. Tạo thử một khe tên <code>b42_khe_bt5</code> để kiểm truy vấn của bạn trả đúng một dòng, rồi xoá khe.</p>
+</li>
+</ol>
+<details class="success">
+<summary>Đáp án</summary>
+<p><strong>Câu 1.</strong></p>
+<ul>
+<li>(a) <strong>Vật lý</strong>: bản sao giống máy chính <strong>từng byte</strong>, gồm mọi database, index, cấu hình người dùng, nên nâng lên là dùng được ngay.</li>
+<li>(b) <strong>Logic</strong>: chỉ chọn <strong>một</strong> bảng, và bên nhận là database độc lập, ghi được, có bảng riêng. Nhân bản vật lý không làm được cả hai điều này.</li>
+<li>(c) <strong>Logic</strong>: nhân bản vật lý đòi hai bên <strong>cùng</strong> phiên bản chính. Nhân bản logic cho bên nhận chạy phiên bản 16 trong khi bên gửi chạy 15. Đợi bên nhận bám kịp, rồi chuyển ứng dụng sang — chỉ dừng trong lúc chuyển. Nhớ chạy tay các lệnh <code>CREATE TABLE</code> trước, và chỉnh lại các sequence, vì nhân bản logic không chuyển chúng.</li>
+</ul>
+<p><strong>Câu 2.</strong></p>
+<p>Nhân bản <strong>đồng bộ</strong>: <code>synchronous_standby_names = 'may_b'</code> với <code>synchronous_commit = on</code>. <code>COMMIT</code> chỉ báo thành công khi máy bản sao đã <code>fsync</code> bản ghi <code>COMMIT</code>, nên máy chính cháy ổ vẫn còn một bản trên máy bản sao.</p>
+<p>Rủi ro: đây đúng là <strong>Lỗi 3</strong>. Máy bản sao chết hoặc mạng giữa hai máy đứt là mọi <code>COMMIT</code> trên máy chính treo. Hai máy ở <strong>cùng phòng</strong> còn thêm một rủi ro chung: cháy phòng, mất điện cả phòng thì mất cả hai.</p>
+<p>Đề xuất: thêm một máy bản sao thứ hai và dùng <code>ANY 1 (may_b, may_c)</code>, tốt nhất đặt ở một toà nhà khác. Và vẫn giữ sao lưu nền + lưu trữ WAL, vì nhân bản không chống được <strong>Lỗi 1</strong>.</p>
+<p><strong>Câu 3.</strong></p>
+<ul>
+<li>(a) <strong>Đã</strong>: <code>flush_lsn</code> bằng <code>sent_lsn</code>, tức máy bản sao đã <code>fsync</code> mọi thứ máy chính gửi.</li>
+<li>(b) <strong>Chưa</strong>: <code>replay_lsn</code> nhỏ hơn — những gì nằm giữa hai vị trí đã lưu nhưng chưa được làm lại.</li>
+<li>(c) Tính trực tiếp:</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1">-- KỲ VỌNG: tre_theo_byte = 36864</span>
+</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">pg_wal_lsn_diff</span><span class="p">(</span><span class="s1">'0/5000A000'</span><span class="p">,</span><span class="w"> </span><span class="s1">'0/50001000'</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">tre_theo_byte</span><span class="p">;</span>
+</span></code></pre></div>
+<p><code>0xA000 - 0x1000 = 0x9000</code> = <strong>36.864</strong> byte, tức 36KB WAL chưa làm lại.</p>
+<p><strong>Câu 4.</strong></p>
+<ul>
+<li>(a) Những giao dịch A đã báo <code>COMMIT</code> thành công nhưng <strong>chưa kịp</strong> gửi sang B trước lúc mất điện. Với nhân bản bất đồng bộ, đó thường là vài mili giây cuối — nhưng lúc A đang ghi dồn dập thì có thể nhiều hơn. Chúng vẫn còn trong WAL của A, nhưng B không có.</li>
+<li>(b) <strong>Não chia đôi</strong>: A không biết mình đã bị thay, vẫn nhận ghi. Hai máy cùng nhận ghi, dữ liệu rẽ nhánh — như thí nghiệm trong phần thực hành. Vì vậy trước khi nâng B phải bảo đảm A <strong>không thể</strong> nhận ghi khi quay lại: rào chắn.</li>
+<li>(c) Không thể cứ thế tạo <code>standby.signal</code> rồi trỏ A sang B: lịch sử WAL của A đã rẽ nhánh khỏi B, và A sẽ báo <code>new timeline 2 forked off current database system timeline 1 ...</code>. Phải dùng <code>pg_rewind</code> để tua A về điểm rẽ nhánh — vứt bỏ phần WAL A có mà B không có, tức chính các giao dịch ở câu (a) — rồi mới cho A bám theo B. Hoặc xoá A và dựng lại bằng <code>pg_basebackup</code> từ B.</li>
+</ul>
+<p><strong>Câu 5.</strong></p>
+<div class="highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">pg_drop_replication_slot</span><span class="p">(</span><span class="n">slot_name</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">pg_replication_slots</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">slot_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'b42_khe_bt5'</span><span class="p">;</span>
+</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">pg_create_physical_replication_slot</span><span class="p">(</span><span class="s1">'b42_khe_bt5'</span><span class="p">,</span><span class="w"> </span><span class="k">true</span><span class="p">);</span>
+</span><span id="__span-20-3"><a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>
+</span><span id="__span-20-4"><a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="c1">-- KỲ VỌNG: 1 dòng</span>
+</span><span id="__span-20-5"><a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a><span class="c1">-- KỲ VỌNG: slot_name = b42_khe_bt5</span>
+</span><span id="__span-20-6"><a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">slot_name</span><span class="p">,</span>
+</span><span id="__span-20-7"><a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a><span class="w">       </span><span class="n">pg_size_pretty</span><span class="p">(</span><span class="n">pg_wal_lsn_diff</span><span class="p">(</span><span class="n">pg_current_wal_lsn</span><span class="p">(),</span><span class="w"> </span><span class="n">restart_lsn</span><span class="p">))</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">wal_dang_giu</span>
+</span><span id="__span-20-8"><a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a><span class="k">FROM</span><span class="w"> </span><span class="n">pg_replication_slots</span>
+</span><span id="__span-20-9"><a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a><span class="k">WHERE</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="n">active</span>
+</span><span id="__span-20-10"><a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">pg_wal_lsn_diff</span><span class="p">(</span><span class="n">pg_current_wal_lsn</span><span class="p">(),</span><span class="w"> </span><span class="n">restart_lsn</span><span class="p">)</span><span class="w"> </span><span class="k">DESC</span><span class="w"> </span><span class="n">NULLS</span><span class="w"> </span><span class="k">LAST</span><span class="p">;</span>
+</span></code></pre></div>
+<p><code>NULLS LAST</code> vì một khe tạo ra mà chưa giữ WAL có <code>restart_lsn</code> rỗng. Trên máy thật, bất kỳ dòng nào ở đầu danh sách mà bạn không nhận ra là một ứng viên để xoá — sau khi đã hỏi người dựng nó.</p>
+<div class="highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">pg_drop_replication_slot</span><span class="p">(</span><span class="s1">'b42_khe_bt5'</span><span class="p">);</span>
+</span></code></pre></div>
+</details>
+<h3 id="don-dep-cuoi-bai">Dọn dẹp cuối bài<a class="headerlink" href="#don-dep-cuoi-bai" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="k">DROP</span><span class="w"> </span><span class="n">PUBLICATION</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">b42_cong_bo_diem</span><span class="p">;</span>
+</span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">b42_ghi_them</span><span class="p">,</span><span class="w"> </span><span class="n">b42_diem_tong_ket</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">;</span>
+</span><span id="__span-22-3"><a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">pg_drop_replication_slot</span><span class="p">(</span><span class="n">slot_name</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">pg_replication_slots</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">slot_name</span><span class="w"> </span><span class="k">LIKE</span><span class="w"> </span><span class="s1">'b42\_%'</span><span class="p">;</span>
+</span><span id="__span-22-4"><a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a>
+</span><span id="__span-22-5"><a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a><span class="c1">-- KỲ VỌNG: bang_con_lai = 0</span>
+</span><span id="__span-22-6"><a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a><span class="c1">-- KỲ VỌNG: khe_con_lai = 0</span>
+</span><span id="__span-22-7"><a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a><span class="c1">-- KỲ VỌNG: ban_phat_hanh_con_lai = 0</span>
+</span><span id="__span-22-8"><a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a><span class="k">SELECT</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">information_schema</span><span class="p">.</span><span class="n">tables</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="k">table_name</span><span class="w"> </span><span class="k">LIKE</span><span class="w"> </span><span class="s1">'b42\_%'</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">bang_con_lai</span><span class="p">,</span>
+</span><span id="__span-22-9"><a id="__codelineno-22-9" name="__codelineno-22-9" href="#__codelineno-22-9"></a><span class="w">       </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">pg_replication_slots</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">slot_name</span><span class="w"> </span><span class="k">LIKE</span><span class="w"> </span><span class="s1">'b42\_%'</span><span class="p">)</span><span class="w">      </span><span class="k">AS</span><span class="w"> </span><span class="n">khe_con_lai</span><span class="p">,</span>
+</span><span id="__span-22-10"><a id="__codelineno-22-10" name="__codelineno-22-10" href="#__codelineno-22-10"></a><span class="w">       </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">pg_publication</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">pubname</span><span class="w"> </span><span class="k">LIKE</span><span class="w"> </span><span class="s1">'b42\_%'</span><span class="p">)</span><span class="w">              </span><span class="k">AS</span><span class="w"> </span><span class="n">ban_phat_hanh_con_lai</span><span class="p">;</span>
+</span></code></pre></div>
+<h2 id="tom-tat">🔑 Tóm tắt<a class="headerlink" href="#tom-tat" title="Permanent link">&para;</a></h2>
+<ol>
+<li><strong>Nhân bản</strong> giữ cùng dữ liệu trên nhiều máy: một <strong>máy chính</strong> nhận ghi, các <strong>máy bản sao</strong> làm lại thay đổi theo. Nó giúp chịu được máy hỏng, chia tải đọc, đặt dữ liệu gần người dùng — nhưng <strong>không</strong> thay được sao lưu, vì một lệnh xoá nhầm cũng được nhân bản ngay.</li>
+<li><strong>Nhân bản vật lý</strong> gửi nguyên văn WAL của Bài 40 qua <strong>nhân bản theo luồng</strong>: bản sao giống từng byte, cả máy chủ, chỉ đọc, cùng phiên bản. <strong>Nhân bản logic</strong> gửi thay đổi ở mức dòng qua <strong>bản phát hành</strong> và <strong>đăng ký nhận</strong>: chọn từng bảng, bên nhận ghi được, cần <code>wal_level = logical</code>. <strong>Khe nhân bản</strong> giữ WAL cho bản sao — khe mồ côi làm đầy đĩa.</li>
+<li><strong>Bất đồng bộ</strong> (mặc định) nhanh nhưng máy chính sập có thể mất giao dịch cuối; <strong>đồng bộ</strong> không mất nhưng mỗi <code>COMMIT</code> chờ thêm một vòng mạng, và treo nếu máy bản sao đồng bộ duy nhất chết — dùng <code>ANY 1 (...)</code> với ít nhất hai máy.</li>
+<li><strong>Bản sao chỉ đọc</strong> luôn có <strong>độ trễ nhân bản</strong>: máy thử của khoá học đọc ra 6,50 ở bản sao trong khi máy chính đã là 8,00. Muốn <strong>đọc được điều mình vừa ghi</strong> thì đọc từ máy chính sau khi ghi, chờ theo vị trí WAL, hoặc dùng <code>remote_apply</code>.</li>
+<li><strong>Chuyển đổi dự phòng</strong> = phát hiện, chọn bản sao bám sát nhất, <code>pg_promote()</code>, chuyển hướng. Làm thiếu <strong>rào chắn</strong> thì sinh <strong>não chia đôi</strong>: máy thử có hai máy cùng nhận <code>UPDATE</code>, một bên 5,00 một bên 10,00, và máy cũ không bám lại được nếu không <code>pg_rewind</code>.</li>
+</ol>
+<hr />
+<p>⬅️ <a href="../../cap-4-ben-trong-dong-co/41-lock-va-deadlock/">Bài 41 — Khoá và bế tắc</a> · ➡️ <a href="../43-partitioning-va-sharding/">Bài 43 — Partitioning và Sharding</a></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Trở lại mục lục
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Chân trang" >
+        
+          
+          <a href="../../cap-4-ben-trong-dong-co/41-lock-va-deadlock/" class="md-footer__link md-footer__link--prev" aria-label="Trước: Bài 41 — Khoá và bế tắc">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Trước
+              </span>
+              <div class="md-ellipsis">
+                Bài 41 — Khoá và bế tắc
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../43-partitioning-va-sharding/" class="md-footer__link md-footer__link--next" aria-label="Sau: Bài 43 — Partitioning và Sharding: chia nhỏ một bảng khổng lồ">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Sau
+              </span>
+              <div class="md-ellipsis">
+                Bài 43 — Partitioning và Sharding: chia nhỏ một bảng khổng lồ
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Nội dung theo giấy phép CC BY 4.0
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/hungnguyen010518/database-tu-a-z" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.sections", "navigation.top", "navigation.footer", "navigation.indexes", "navigation.tracking", "toc.follow", "content.code.copy", "content.code.annotate", "search.highlight", "search.suggest"], "search": "../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "\u0110\u00e3 sao ch\u00e9p", "clipboard.copy": "Sao ch\u00e9p v\u00e0o b\u1ed9 nh\u1edb t\u1ea1m", "search.result.more.one": "1 t\u1eeb kh\u00e1c trong trang", "search.result.more.other": "# t\u1eeb kh\u00e1c trong trang", "search.result.none": "Kh\u00f4ng t\u00ecm th\u1ea5y t\u00e0i li\u1ec7u li\u00ean quan", "search.result.one": "1 t\u00e0i li\u1ec7u li\u00ean quan", "search.result.other": "# t\u00e0i li\u1ec7u li\u00ean quan", "search.result.placeholder": "Nh\u1eadp \u0111\u1ec3 b\u1eaft \u0111\u1ea7u t\u00ecm ki\u1ebfm", "search.result.term.missing": "Kh\u00f4ng", "select.version": "Ch\u1ecdn phi\u00ean b\u1ea3n"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.525ec568.min.js"></script>
+      
+    
+  </body>
+</html>

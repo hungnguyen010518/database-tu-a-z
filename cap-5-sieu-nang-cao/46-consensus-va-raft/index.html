@@ -1,0 +1,2769 @@
+
+<!doctype html>
+<html lang="vi" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Khóa học cơ sở dữ liệu tiếng Việt, từ con số 0 tới mức siêu nâng cao — giải thích để học sinh cấp 2 cũng hiểu được.">
+      
+      
+      
+        <link rel="canonical" href="https://hungnguyen010518.github.io/database-tu-a-z/cap-5-sieu-nang-cao/46-consensus-va-raft/">
+      
+      
+        <link rel="prev" href="../45-distributed-transaction/">
+      
+      
+        <link rel="next" href="../../dataset/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.39">
+    
+    
+      
+        <title>Bài 46 — Consensus và Raft: nhiều máy cùng đồng ý một điều - Database từ A-Z</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.8c3ca2c6.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#bai-46-consensus-va-raft-nhieu-may-cung-ong-y-mot-ieu" class="md-skip">
+          Bỏ qua
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Đầu trang">
+    <a href="../.." title="Database từ A-Z" class="md-header__button md-logo" aria-label="Database từ A-Z" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3C7.58 3 4 4.79 4 7s3.58 4 8 4 8-1.79 8-4-3.58-4-8-4M4 9v3c0 2.21 3.58 4 8 4s8-1.79 8-4V9c0 2.21-3.58 4-8 4s-8-1.79-8-4m0 5v3c0 2.21 3.58 4 8 4s8-1.79 8-4v-3c0 2.21-3.58 4-8 4s-8-1.79-8-4"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Database từ A-Z
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Bài 46 — Consensus và Raft: nhiều máy cùng đồng ý một điều
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Chuyển sang chế độ tối"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Chuyển sang chế độ tối" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Chuyển sang chế độ sáng"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Chuyển sang chế độ sáng" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Tìm kiếm" placeholder="Tìm kiếm" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Tìm kiếm">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Xoá" aria-label="Xoá" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/hungnguyen010518/database-tu-a-z" title="Xem mã nguồn" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    database-tu-a-z
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Thanh điều hướng" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Database từ A-Z" class="md-nav__button md-logo" aria-label="Database từ A-Z" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3C7.58 3 4 4.79 4 7s3.58 4 8 4 8-1.79 8-4-3.58-4-8-4M4 9v3c0 2.21 3.58 4 8 4s8-1.79 8-4V9c0 2.21-3.58 4-8 4s-8-1.79-8-4m0 5v3c0 2.21 3.58 4 8 4s8-1.79 8-4v-3c0 2.21-3.58 4-8 4s-8-1.79-8-4"/></svg>
+
+    </a>
+    Database từ A-Z
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/hungnguyen010518/database-tu-a-z" title="Xem mã nguồn" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    database-tu-a-z
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Trang chủ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Cấp 0 — Nhập môn
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Cấp 0 — Nhập môn
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-0-nhap-mon/01-du-lieu-va-thong-tin/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 1 — Dữ liệu, thông tin và tại sao phải lưu trữ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-0-nhap-mon/02-tu-so-giay-den-excel/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 2 — Từ sổ giấy đến Excel
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-0-nhap-mon/03-dbms-la-gi/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 3 — DBMS là gì
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-0-nhap-mon/04-cac-mo-hinh-du-lieu/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 4 — Các mô hình dữ liệu
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-0-nhap-mon/05-cai-dat-postgresql/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 5 — Cài đặt PostgreSQL
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Cấp 1 — Mô hình quan hệ & Biểu đồ ER
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Cấp 1 — Mô hình quan hệ & Biểu đồ ER
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/06-mo-hinh-quan-he/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 6 — Mô hình quan hệ: bảng, dòng, cột, miền giá trị, lược đồ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/07-thuc-the-va-thuoc-tinh/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 7 — Thực thể và các loại thuộc tính
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/08-moi-quan-he-va-cardinality/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 8 — Mối quan hệ, bậc và bản số (Cardinality)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/09-participation-va-thuc-the-yeu/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 9 — Ràng buộc tham gia và Thực thể yếu
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/10-bieu-do-er-ky-hieu-chen/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 10 — Biểu đồ ER — ký hiệu Chen
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/11-bieu-do-er-crows-foot/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 11 — Biểu đồ ER — ký hiệu Crow's Foot và vẽ bằng Mermaid
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/12-bay-loai-khoa/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 12 — Bảy loại khoá trong cơ sở dữ liệu
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/13-mo-hinh-eer/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 13 — Mô hình EER: Generalization, Specialization, Aggregation
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/14-chuyen-er-sang-bang/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 14 — Chuyển biểu đồ ER thành lược đồ quan hệ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-1-mo-hinh-er/15-rang-buoc-toan-ven/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 15 — Ràng buộc toàn vẹn (Integrity Constraints)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Cấp 2 — Chuẩn hoá
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Cấp 2 — Chuẩn hoá
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-2-chuan-hoa/16-phu-thuoc-ham/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 16 — Phụ thuộc hàm và bao đóng
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-2-chuan-hoa/17-dang-chuan-1nf-2nf/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 17 — Dạng chuẩn 1 (1NF) và Dạng chuẩn 2 (2NF)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-2-chuan-hoa/18-dang-chuan-3nf-bcnf/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 18 — Dạng chuẩn 3 (3NF) và BCNF
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-2-chuan-hoa/19-dang-chuan-4nf-5nf-6nf/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 19 — 4NF, 5NF và 6NF
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-2-chuan-hoa/20-denormalization/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 20 — Phi chuẩn hoá — khi nào nên phá luật
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Cấp 3 — SQL từ 0 tới cao thủ
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Cấp 3 — SQL từ 0 tới cao thủ
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-3-sql/21-dai-so-quan-he/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 21 — Đại số quan hệ: nền toán học phía sau SQL
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-3-sql/22-ddl-va-kieu-du-lieu/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 22 — DDL: CREATE, ALTER, DROP và các kiểu dữ liệu
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-3-sql/23-dml-insert-update-delete/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 23 — DML: INSERT, UPDATE, DELETE
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-3-sql/24-select-where-order-by/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 24 — SELECT, WHERE, ORDER BY, LIMIT
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-3-sql/25-join/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 25 — JOIN: sáu cách ghép bảng
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-3-sql/26-group-by-having/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 26 — GROUP BY, HAVING và các hàm tổng hợp
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-3-sql/27-subquery-va-exists/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 27 — Truy vấn con (Subquery) và EXISTS
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-3-sql/28-cte-va-recursive-cte/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 28 — CTE và CTE đệ quy
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-3-sql/29-window-function/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 29 — Window Function: tính toán theo cửa sổ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-3-sql/30-view-va-materialized-view/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 30 — View và Materialized View
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-3-sql/31-trigger-procedure-function/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 31 — Trigger, Stored Procedure và Function
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-3-sql/32-jsonb-va-full-text-search/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 32 — JSONB và Full-Text Search
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Cấp 4 — Bên trong động cơ
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            Cấp 4 — Bên trong động cơ
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-4-ben-trong-dong-co/33-page-heap-tuple/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 33 — Trang, heap và tuple: PostgreSQL lưu dữ liệu thế nào
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-4-ben-trong-dong-co/34-index-va-b-tree/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 34 — Index và B+Tree
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-4-ben-trong-dong-co/35-cac-loai-index-khac/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 35 — Các loại index khác: Hash, GiST, GIN, BRIN
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-4-ben-trong-dong-co/36-explain-va-query-planner/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 36 — EXPLAIN và bộ tối ưu truy vấn
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-4-ben-trong-dong-co/37-transaction-va-acid/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 37 — Transaction và ACID
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-4-ben-trong-dong-co/38-isolation-level-va-anomaly/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 38 — Mức cô lập và các hiện tượng bất thường
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-4-ben-trong-dong-co/39-mvcc/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 39 — MVCC: nhiều phiên bản cho một dòng
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-4-ben-trong-dong-co/40-wal-va-recovery/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 40 — WAL, checkpoint và phục hồi sau sự cố
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cap-4-ben-trong-dong-co/41-lock-va-deadlock/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 41 — Khoá và bế tắc
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Cấp 5 — Siêu nâng cao
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            Cấp 5 — Siêu nâng cao
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../42-replication/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 42 — Replication: nhân bản dữ liệu ra nhiều máy
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../43-partitioning-va-sharding/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 43 — Partitioning và Sharding: chia nhỏ một bảng khổng lồ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../44-cap-va-base/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 44 — CAP và BASE: khi mạng đứt thì chọn gì
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../45-distributed-transaction/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bài 45 — Giao dịch phân tán: 2PC và Saga
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Bài 46 — Consensus và Raft: nhiều máy cùng đồng ý một điều
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Bài 46 — Consensus và Raft: nhiều máy cùng đồng ý một điều
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Mục lục">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Mục lục
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#cau-chuyen-mo-au" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧠 Câu chuyện mở đầu
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#khai-niem-thuat-ngu" class="md-nav__link">
+    <span class="md-ellipsis">
+      📖 Khái niệm &amp; thuật ngữ
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📖 Khái niệm & thuật ngữ">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bai-toan-ong-thuan" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bài toán đồng thuận
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tuc-so" class="md-nav__link">
+    <span class="md-ellipsis">
+      Túc số
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#raft-va-paxos" class="md-nav__link">
+    <span class="md-ellipsis">
+      Raft và Paxos
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ba-vai-va-nhiem-ky" class="md-nav__link">
+    <span class="md-ellipsis">
+      Ba vai và nhiệm kỳ
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bau-lanh-ao" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bầu lãnh đạo
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nhan-ban-nhat-ky" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nhân bản nhật ký
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tinh-an-toan" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tính an toàn
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ai-dung-raft" class="md-nav__link">
+    <span class="md-ellipsis">
+      Ai dùng Raft
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bang-thuat-ngu" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bảng thuật ngữ
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#so-o" class="md-nav__link">
+    <span class="md-ellipsis">
+      🖼️ Sơ đồ
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#thuc-hanh" class="md-nav__link">
+    <span class="md-ellipsis">
+      💻 Thực hành
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="💻 Thực hành">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tuc-so-theo-so-may" class="md-nav__link">
+    <span class="md-ellipsis">
+      Túc số theo số máy
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hai-tuc-so-luon-giao-nhau-kiem-bang-cach-liet-ke-het" class="md-nav__link">
+    <span class="md-ellipsis">
+      Hai túc số luôn giao nhau — kiểm bằng cách liệt kê hết
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#chi-so-a-xac-nhan-tu-nhat-ky-cua-nam-may" class="md-nav__link">
+    <span class="md-ellipsis">
+      Chỉ số đã xác nhận từ nhật ký của năm máy
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ung-vien-thieu-muc-a-xac-nhan-khong-the-thang" class="md-nav__link">
+    <span class="md-ellipsis">
+      Ứng viên thiếu mục đã xác nhận không thể thắng
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#loi-thuong-gap" class="md-nav__link">
+    <span class="md-ellipsis">
+      ⚠️ Lỗi thường gặp
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bai-tap" class="md-nav__link">
+    <span class="md-ellipsis">
+      ✍️ Bài tập
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="✍️ Bài tập">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#don-dep-cuoi-bai" class="md-nav__link">
+    <span class="md-ellipsis">
+      Dọn dẹp cuối bài
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tom-tat" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔑 Tóm tắt
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../dataset/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Database mẫu
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../glossary/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bảng thuật ngữ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Mục lục">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Mục lục
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#cau-chuyen-mo-au" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧠 Câu chuyện mở đầu
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#khai-niem-thuat-ngu" class="md-nav__link">
+    <span class="md-ellipsis">
+      📖 Khái niệm &amp; thuật ngữ
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📖 Khái niệm & thuật ngữ">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bai-toan-ong-thuan" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bài toán đồng thuận
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tuc-so" class="md-nav__link">
+    <span class="md-ellipsis">
+      Túc số
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#raft-va-paxos" class="md-nav__link">
+    <span class="md-ellipsis">
+      Raft và Paxos
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ba-vai-va-nhiem-ky" class="md-nav__link">
+    <span class="md-ellipsis">
+      Ba vai và nhiệm kỳ
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bau-lanh-ao" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bầu lãnh đạo
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nhan-ban-nhat-ky" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nhân bản nhật ký
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tinh-an-toan" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tính an toàn
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ai-dung-raft" class="md-nav__link">
+    <span class="md-ellipsis">
+      Ai dùng Raft
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bang-thuat-ngu" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bảng thuật ngữ
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#so-o" class="md-nav__link">
+    <span class="md-ellipsis">
+      🖼️ Sơ đồ
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#thuc-hanh" class="md-nav__link">
+    <span class="md-ellipsis">
+      💻 Thực hành
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="💻 Thực hành">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tuc-so-theo-so-may" class="md-nav__link">
+    <span class="md-ellipsis">
+      Túc số theo số máy
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hai-tuc-so-luon-giao-nhau-kiem-bang-cach-liet-ke-het" class="md-nav__link">
+    <span class="md-ellipsis">
+      Hai túc số luôn giao nhau — kiểm bằng cách liệt kê hết
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#chi-so-a-xac-nhan-tu-nhat-ky-cua-nam-may" class="md-nav__link">
+    <span class="md-ellipsis">
+      Chỉ số đã xác nhận từ nhật ký của năm máy
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ung-vien-thieu-muc-a-xac-nhan-khong-the-thang" class="md-nav__link">
+    <span class="md-ellipsis">
+      Ứng viên thiếu mục đã xác nhận không thể thắng
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#loi-thuong-gap" class="md-nav__link">
+    <span class="md-ellipsis">
+      ⚠️ Lỗi thường gặp
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bai-tap" class="md-nav__link">
+    <span class="md-ellipsis">
+      ✍️ Bài tập
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="✍️ Bài tập">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#don-dep-cuoi-bai" class="md-nav__link">
+    <span class="md-ellipsis">
+      Dọn dẹp cuối bài
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tom-tat" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔑 Tóm tắt
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="bai-46-consensus-va-raft-nhieu-may-cung-ong-y-mot-ieu">Bài 46 — Consensus và Raft: nhiều máy cùng đồng ý một điều<a class="headerlink" href="#bai-46-consensus-va-raft-nhieu-may-cung-ong-y-mot-ieu" title="Permanent link">&para;</a></h1>
+<div class="admonition abstract">
+<p class="admonition-title">🎯 Học xong bài này, bạn sẽ</p>
+<ul>
+<li>Phát biểu được bài toán <strong>đồng thuận</strong>: nhiều máy phải đồng ý <strong>cùng một thứ tự</strong> sự kiện, kể cả khi có máy sập và tin nhắn bị trễ</li>
+<li>Giải thích <strong>túc số</strong> bằng chuyện bầu lớp trưởng: vì sao <strong>quá bán</strong> thì không bao giờ có hai người cùng thắng — và tự kiểm bằng SQL rằng mọi cặp nhóm quá bán đều <strong>giao nhau</strong>, còn nhóm "đúng một nửa" thì không</li>
+<li>Mô tả ba phần của <strong>Raft</strong>: <strong>bầu lãnh đạo</strong> (nhiệm kỳ, thời gian chờ ngẫu nhiên, phiếu chia đều), <strong>nhân bản nhật ký</strong> (lệnh nối thêm, chỉ số đã xác nhận), và <strong>tính an toàn</strong></li>
+<li>Tính được <strong>chỉ số đã xác nhận</strong> từ nhật ký của năm máy, và chứng minh bằng SQL rằng một ứng viên thiếu mục đã xác nhận <strong>không thể</strong> gom đủ phiếu</li>
+<li>Biết Raft ra đời để <strong>dễ hiểu hơn</strong> Paxos, và nó đang chạy bên dưới những hệ nào: etcd, Consul, CockroachDB, TiDB</li>
+</ul>
+</div>
+<h2 id="cau-chuyen-mo-au">🧠 Câu chuyện mở đầu<a class="headerlink" href="#cau-chuyen-mo-au" title="Permanent link">&para;</a></h2>
+<p>Lớp 9A1 có một <strong>sổ đầu bài</strong> chung, ghi theo thứ tự mọi việc của lớp: <em>"1. Đổi chỗ An và Bình. 2. Trực nhật tuần 5: tổ 3. 3. Nộp quỹ lớp 20.000 đồng..."</em>. Cô chủ nhiệm muốn sổ này <strong>không bao giờ mất</strong>, nên có <strong>năm</strong> bản — mỗi tổ trưởng giữ một bản. Luật đặt ra rất đơn giản: năm bản phải ghi <strong>cùng những việc, theo cùng thứ tự</strong>.</p>
+<p>Rắc rối bắt đầu ngay tuần đầu:</p>
+<ul>
+<li>Tổ trưởng tổ 2 ốm nghỉ ba hôm. Việc số 4, 5, 6 ghi lúc bạn ấy vắng — lúc đi học lại, bản của bạn ấy thiếu ba dòng.</li>
+<li>Hai bạn cùng lúc muốn ghi một việc: bạn Hà muốn ghi <em>"4. Lớp đi tham quan thứ Bảy"</em>, bạn Tùng muốn ghi <em>"4. Lớp đi tham quan Chủ nhật"</em>. Tổ 1, tổ 3 nghe Hà trước; tổ 4, tổ 5 nghe Tùng trước. Giờ dòng số 4 ở các bản không giống nhau.</li>
+</ul>
+<p>Lớp quyết định: phải có <strong>một người</strong> được quyền đọc việc cần ghi cho cả năm tổ — gọi là <strong>lớp trưởng</strong>. Và việc chỉ được coi là <strong>đã chốt</strong> khi <strong>ít nhất ba</strong> trong năm tổ trưởng đã chép vào sổ của mình. Ba là <strong>quá bán</strong> của năm.</p>
+<p>Nhưng lớp trưởng cũng có thể ốm. Khi đó phải <strong>bầu lại</strong>. Và phải bầu sao cho không bao giờ có <strong>hai</strong> lớp trưởng cùng lúc đọc hai thứ khác nhau — chính là não chia đôi của Bài 42. Làm thế nào? Cô chủ nhiệm nói: <em>"Mỗi bạn chỉ được bỏ </em><em>một</em><em> phiếu mỗi lần bầu. Ai được </em><em>quá nửa</em><em> số phiếu thì làm lớp trưởng."</em> Với 5 tổ trưởng, muốn thắng phải có 3 phiếu. Hai người khác nhau cùng có 3 phiếu thì cần 6 phiếu — trong khi chỉ có 5 người bỏ phiếu. Không thể xảy ra.</p>
+<p>Đó là toàn bộ ý tưởng cốt lõi của bài này. Phần còn lại là làm cho nó đúng khi mọi thứ cùng lúc trục trặc.</p>
+<h2 id="khai-niem-thuat-ngu">📖 Khái niệm &amp; thuật ngữ<a class="headerlink" href="#khai-niem-thuat-ngu" title="Permanent link">&para;</a></h2>
+<h3 id="bai-toan-ong-thuan">Bài toán đồng thuận<a class="headerlink" href="#bai-toan-ong-thuan" title="Permanent link">&para;</a></h3>
+<p><strong>Đồng thuận</strong> (<em>consensus</em>) là bài toán làm cho một nhóm máy <strong>cùng đồng ý</strong> một giá trị — hoặc, thực tế hơn, một <strong>dãy</strong> giá trị theo đúng thứ tự — sao cho:</p>
+<ul>
+<li><strong>Chỉ một</strong> giá trị được chọn cho mỗi vị trí, và mọi máy còn sống đều biết đúng giá trị đó.</li>
+<li>Giá trị được chọn phải là giá trị <strong>có người đề xuất</strong>, không phải thứ tự bịa ra.</li>
+<li>Nếu <strong>đa số</strong> máy còn sống và liên lạc được với nhau, cuối cùng việc chọn sẽ <strong>xong</strong>.</li>
+</ul>
+<p>Cách dùng đồng thuận phổ biến nhất gọi là <strong>máy trạng thái nhân bản</strong> (<em>replicated state machine</em>): mỗi máy giữ một <strong>nhật ký lệnh</strong>, các máy đồng thuận về thứ tự các lệnh trong nhật ký, rồi mỗi máy tự <strong>thực hiện</strong> các lệnh đó theo đúng thứ tự. Cùng trạng thái ban đầu + cùng dãy lệnh + mỗi lệnh luôn cho cùng kết quả = cùng trạng thái cuối. Bạn đã thấy ý tưởng này: máy bản sao của Bài 42 làm lại WAL của máy chính theo đúng thứ tự. Khác biệt là ở Bài 42, <strong>thứ tự do một máy chính duy nhất quyết định</strong> — và khi máy chính đó sập, không ai chắc ai được lên thay. Đồng thuận giải quyết chính chỗ đó.</p>
+<p>Bài toán này <strong>khó</strong>, vì trên mạng không thể phân biệt <em>"máy kia đã sập"</em> với <em>"máy kia chậm"</em> với <em>"mạng tới máy kia đứt"</em> — cả ba đều trông như <em>"không có trả lời"</em>. Các thuật toán đồng thuận của bài này giả định máy chỉ có thể <strong>sập</strong> hoặc <strong>chậm</strong>, không <strong>nói dối</strong>. Máy cố ý gửi thông tin sai — <strong>lỗi Byzantine</strong> (<em>Byzantine fault</em>) — cần những thuật toán khác, đắt hơn nhiều, thường gặp trong tiền mã hoá hơn là trong database.</p>
+<h3 id="tuc-so">Túc số<a class="headerlink" href="#tuc-so" title="Permanent link">&para;</a></h3>
+<p><strong>Túc số</strong> (<em>quorum</em>) là số máy tối thiểu phải đồng ý thì một quyết định mới có hiệu lực. Raft và hầu hết thuật toán đồng thuận dùng túc số <strong>quá bán</strong>:</p>
+<blockquote>
+<p>Với <code>n</code> máy, túc số = <code>n / 2 + 1</code> (phép chia lấy phần nguyên). Cụm chịu được <code>n − túc số</code> máy hỏng mà vẫn hoạt động.</p>
+</blockquote>
+<p>Vì sao <strong>quá bán</strong> chứ không phải <strong>một nửa</strong>? Vì hai nhóm quá bán bất kỳ luôn có <strong>ít nhất một máy chung</strong>. Tổng kích thước hai nhóm vượt quá <code>n</code>, nên chúng không thể rời nhau. Máy chung đó là "nhân chứng": nó đã bỏ phiếu cho người thứ nhất nên không bỏ cho người thứ hai; nó đã chép mục thứ nhất nên người thứ hai biết mục đó tồn tại. Hai nhóm "đúng một nửa" — 2 trên 4 máy — thì <strong>có thể</strong> rời nhau hoàn toàn, và mỗi nhóm tự bầu một lớp trưởng. Phần thực hành kiểm cả hai điều này bằng cách liệt kê mọi nhóm có thể.</p>
+<p>Hệ quả thực tế: cụm <strong>4</strong> máy chịu hỏng được <strong>1</strong> máy — y như cụm 3 máy — vì túc số của 4 là 3. Máy thứ tư chỉ thêm việc. Vì vậy cụm đồng thuận gần như luôn có số máy <strong>lẻ</strong>: 3, 5, đôi khi 7.</p>
+<h3 id="raft-va-paxos">Raft và Paxos<a class="headerlink" href="#raft-va-paxos" title="Permanent link">&para;</a></h3>
+<p>Thuật toán đồng thuận kinh điển là <strong>Paxos</strong> (<em>Paxos</em>), do Leslie Lamport công bố — bài báo gốc viết năm 1989, in năm 1998, rồi một bản viết lại cho dễ đọc năm 2001 tên <em>"Paxos Made Simple"</em>. Paxos đúng và đã được dùng rộng rãi, ví dụ trong Google Spanner. Nhưng nó nổi tiếng <strong>khó hiểu</strong>, và bản gốc chỉ mô tả việc đồng ý <strong>một</strong> giá trị; biến nó thành một nhật ký lệnh chạy được trong thực tế cần thêm nhiều phần mà bài báo để ngỏ.</p>
+<p><strong>Raft</strong> (<em>Raft</em>) do Diego Ongaro và John Ousterhout công bố năm 2014, trong bài báo có tên <em>"In Search of an Understandable Consensus Algorithm"</em> — <em>"Đi tìm một thuật toán đồng thuận dễ hiểu"</em>. Mục tiêu thiết kế số một của Raft là <strong>dễ hiểu</strong>, và nó đạt được điều đó bằng cách chia bài toán thành ba phần gần như độc lập: bầu lãnh đạo, nhân bản nhật ký, và an toàn. Nó cho cùng mức bảo đảm như Paxos.</p>
+<h3 id="ba-vai-va-nhiem-ky">Ba vai và nhiệm kỳ<a class="headerlink" href="#ba-vai-va-nhiem-ky" title="Permanent link">&para;</a></h3>
+<p>Mỗi máy trong cụm Raft luôn ở một trong ba vai:</p>
+<table>
+<thead>
+<tr>
+<th>Vai</th>
+<th>Làm gì</th>
+<th>Trong lớp</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Nút lãnh đạo</strong> (<em>leader</em>)</td>
+<td>Duy nhất nhận yêu cầu ghi, thêm vào nhật ký, gửi cho mọi máy khác</td>
+<td>Lớp trưởng</td>
+</tr>
+<tr>
+<td><strong>Nút theo sau</strong> (<em>follower</em>)</td>
+<td>Không tự làm gì; trả lời lãnh đạo và ứng viên</td>
+<td>Tổ trưởng bình thường</td>
+</tr>
+<tr>
+<td><strong>Ứng viên</strong> (<em>candidate</em>)</td>
+<td>Đang tự ứng cử, xin phiếu</td>
+<td>Tổ trưởng đang vận động</td>
+</tr>
+</tbody>
+</table>
+<p>Thời gian được chia thành các <strong>nhiệm kỳ</strong> (<em>term</em>), đánh số 1, 2, 3... tăng dần. Mỗi nhiệm kỳ bắt đầu bằng một cuộc bầu cử; nếu có người thắng, người đó lãnh đạo tới hết nhiệm kỳ. Số nhiệm kỳ là <strong>đồng hồ logic</strong> của Raft: mọi tin nhắn đều mang số nhiệm kỳ của người gửi, và một máy thấy số nhiệm kỳ <strong>lớn hơn</strong> của mình thì lập tức cập nhật theo và lùi về làm nút theo sau — kể cả khi nó đang là lãnh đạo. Nhờ vậy một lãnh đạo cũ vừa tỉnh dậy sau khi bị cắt mạng sẽ tự nhận ra mình đã lỗi thời ngay ở tin nhắn đầu tiên nó nhận.</p>
+<h3 id="bau-lanh-ao">Bầu lãnh đạo<a class="headerlink" href="#bau-lanh-ao" title="Permanent link">&para;</a></h3>
+<p><strong>Bầu lãnh đạo</strong> (<em>leader election</em>) diễn ra như sau:</p>
+<ol>
+<li>Lãnh đạo gửi <strong>nhịp tim</strong> (<em>heartbeat</em>) đều đặn cho mọi nút theo sau — một tin nhắn rỗng nghĩa là <em>"tôi còn sống"</em>.</li>
+<li>Mỗi nút theo sau có một <strong>thời gian chờ bầu cử</strong> (<em>election timeout</em>). Hết thời gian đó mà không nghe thấy lãnh đạo, nó cho rằng lãnh đạo đã chết: nó <strong>tăng</strong> số nhiệm kỳ, chuyển thành ứng viên, <strong>bỏ phiếu cho chính mình</strong>, và gửi <strong>yêu cầu bỏ phiếu</strong> (<em>RequestVote</em>) cho mọi máy khác.</li>
+<li>Mỗi máy chỉ bỏ <strong>một</strong> phiếu trong mỗi nhiệm kỳ, cho ứng viên <strong>hỏi trước</strong> — với một điều kiện ở mục An toàn bên dưới.</li>
+<li>Ứng viên gom đủ <strong>túc số</strong> phiếu thì thành lãnh đạo, gửi nhịp tim ngay để các máy khác biết. Nhận được nhịp tim của một lãnh đạo có nhiệm kỳ không nhỏ hơn mình thì ứng viên thôi ứng cử.</li>
+</ol>
+<p>Nếu hai máy hết thời gian chờ <strong>gần như cùng lúc</strong> và cùng ứng cử, phiếu có thể chia đôi: mỗi người 2 phiếu trong cụm 5 máy, máy thứ năm đã bầu cho một trong hai, không ai đủ 3. Tình huống này gọi là <strong>phiếu chia đều</strong> (<em>split vote</em>). Không ai thắng; hết thời gian chờ, cả hai tăng nhiệm kỳ và bầu lại. Để điều này không lặp mãi, thời gian chờ bầu cử của mỗi máy được chọn <strong>ngẫu nhiên</strong> trong một khoảng — bài báo gốc dùng ví dụ 150–300 mili giây. Gần như luôn có một máy hết thời gian chờ <strong>trước hẳn</strong> các máy khác, kịp gom phiếu trước khi ai kịp ứng cử.</p>
+<h3 id="nhan-ban-nhat-ky">Nhân bản nhật ký<a class="headerlink" href="#nhan-ban-nhat-ky" title="Permanent link">&para;</a></h3>
+<p><strong>Nhân bản nhật ký</strong> (<em>log replication</em>): mỗi mục trong nhật ký gồm <strong>một lệnh</strong> và <strong>số nhiệm kỳ</strong> lúc lãnh đạo nhận lệnh đó.</p>
+<ol>
+<li>Khách gửi lệnh ghi cho lãnh đạo. Lãnh đạo thêm lệnh vào cuối nhật ký <strong>của mình</strong>.</li>
+<li>Lãnh đạo gửi <strong>lệnh nối thêm</strong> (<em>AppendEntries</em>) cho mọi nút theo sau — nhịp tim chính là lệnh nối thêm không có mục nào. Tin nhắn kèm vị trí và nhiệm kỳ của mục <strong>ngay trước</strong> các mục mới. Nút theo sau chỉ chấp nhận nếu nhật ký của nó có đúng mục đó ở đúng vị trí; nếu không, nó từ chối, và lãnh đạo lùi dần về trước cho tới khi tìm được điểm hai bên khớp, rồi <strong>ghi đè</strong> phần lệch của nút theo sau bằng nhật ký của mình. Nhờ phép kiểm này, hai nhật ký có cùng một mục ở cùng một vị trí thì <strong>mọi mục trước đó</strong> cũng giống nhau.</li>
+<li>Khi mục đã được lưu trên <strong>túc số</strong> máy — tính cả lãnh đạo — nó được coi là <strong>đã xác nhận</strong>. Lãnh đạo tăng <strong>chỉ số đã xác nhận</strong> (<em>commit index</em>) — vị trí của mục cuối cùng đã xác nhận —, thực hiện lệnh, trả lời khách, và báo chỉ số mới cho các nút theo sau trong lần gửi kế tiếp để chúng cũng thực hiện.</li>
+</ol>
+<p>Một mục đã xác nhận thì <strong>không bao giờ</strong> bị mất hay bị ghi đè — đó là lời hứa của Raft. Bạn sẽ thấy nó quen: với cụm 5 máy, xác nhận khi 3 máy đã lưu — lãnh đạo cộng 2 máy khác — giống nhân bản đồng bộ với <code>synchronous_standby_names = 'ANY 2 (...)'</code> trên bốn máy bản sao ở Bài 42. Chỉ khác là ở đây, việc <strong>ai làm lãnh đạo</strong> cũng được quyết định bằng túc số.</p>
+<h3 id="tinh-an-toan">Tính an toàn<a class="headerlink" href="#tinh-an-toan" title="Permanent link">&para;</a></h3>
+<p>Bầu cử và nhân bản chưa đủ. Giả sử một máy vắng mặt lâu, nhật ký thiếu mấy mục đã xác nhận, rồi quay lại và <strong>được bầu</strong> làm lãnh đạo — nó sẽ ghi đè mất các mục đã xác nhận trên máy khác. <strong>Tính an toàn</strong> (<em>safety</em>) của Raft cấm điều đó bằng một luật khi bỏ phiếu:</p>
+<blockquote>
+<p>Một máy chỉ bỏ phiếu cho ứng viên có nhật ký <strong>ít nhất mới bằng</strong> nhật ký của mình: nhiệm kỳ của mục cuối <strong>lớn hơn</strong>, hoặc cùng nhiệm kỳ mà nhật ký <strong>dài bằng hoặc dài hơn</strong>.</p>
+</blockquote>
+<p>Vì sao đủ? Một mục đã xác nhận nằm trên một túc số máy. Người thắng cử cần phiếu của một túc số máy. Hai túc số luôn <strong>giao nhau</strong>, nên trong số người bỏ phiếu cho ứng viên có ít nhất một máy <strong>đang giữ</strong> mục đó — và máy đó chỉ bỏ phiếu nếu nhật ký của ứng viên không cũ hơn nhật ký của nó. Phần thực hành tính tận nơi: ứng viên thiếu mục đã xác nhận gom được tối đa 2 phiếu trên 5.</p>
+<p>Raft còn một luật tinh tế nữa: lãnh đạo chỉ tính túc số để xác nhận những mục thuộc <strong>nhiệm kỳ của chính mình</strong>. Các mục cũ hơn được xác nhận "ké" khi một mục mới hơn của nhiệm kỳ hiện tại được xác nhận. Bài báo gốc có một ví dụ cụ thể cho thấy thiếu luật này thì một mục đã nằm trên túc số máy vẫn có thể bị ghi đè.</p>
+<h3 id="ai-dung-raft">Ai dùng Raft<a class="headerlink" href="#ai-dung-raft" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Hệ thống</th>
+<th>Dùng Raft để</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>etcd</td>
+<td>Giữ dữ liệu cấu hình khoá–giá trị cho cả cụm; Kubernetes lưu trạng thái của cả cụm trong etcd</td>
+</tr>
+<tr>
+<td>Consul</td>
+<td>Giữ danh bạ dịch vụ và dữ liệu cấu hình</td>
+</tr>
+<tr>
+<td>CockroachDB</td>
+<td>Mỗi khoảng dữ liệu nhỏ là một nhóm Raft riêng</td>
+</tr>
+<tr>
+<td>TiDB</td>
+<td>Tầng lưu trữ TiKV nhân bản mỗi vùng dữ liệu bằng một nhóm Raft</td>
+</tr>
+</tbody>
+</table>
+<p>Và với PostgreSQL: công cụ failover Patroni của Bài 42 <strong>không</strong> tự chạy đồng thuận, mà gửi việc "ai là máy chính" cho một kho như etcd hoặc Consul. Máy chính chỉ giữ vai khi nó còn giữ được một <strong>khoá có thời hạn</strong> trong kho đó, và kho đó chỉ cấp khoá khi quá bán số máy của nó đồng ý — cách tránh não chia đôi mà Bài 42 đã hứa.</p>
+<h3 id="bang-thuat-ngu">Bảng thuật ngữ<a class="headerlink" href="#bang-thuat-ngu" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Tiếng Việt</th>
+<th>English</th>
+<th>Nghĩa dễ hiểu</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Đồng thuận</td>
+<td><em>consensus</em></td>
+<td>Nhiều máy cùng đồng ý một giá trị hoặc một thứ tự lệnh, dù có máy sập</td>
+</tr>
+<tr>
+<td>Máy trạng thái nhân bản</td>
+<td><em>replicated state machine</em></td>
+<td>Mỗi máy thực hiện cùng một dãy lệnh theo cùng thứ tự nên có cùng trạng thái</td>
+</tr>
+<tr>
+<td>Lỗi Byzantine</td>
+<td><em>Byzantine fault</em></td>
+<td>Máy gửi thông tin sai hoặc cố ý lừa; Raft và Paxos không chống được</td>
+</tr>
+<tr>
+<td>Túc số</td>
+<td><em>quorum</em></td>
+<td>Số máy tối thiểu phải đồng ý; quá bán là <code>n / 2 + 1</code>, hai túc số quá bán luôn giao nhau</td>
+</tr>
+<tr>
+<td>Thuật toán Paxos</td>
+<td><em>Paxos</em></td>
+<td>Thuật toán đồng thuận kinh điển của Leslie Lamport; đúng nhưng nổi tiếng khó hiểu</td>
+</tr>
+<tr>
+<td>Thuật toán Raft</td>
+<td><em>Raft</em></td>
+<td>Thuật toán đồng thuận của Ongaro và Ousterhout (2014), thiết kế để dễ hiểu</td>
+</tr>
+<tr>
+<td>Nút lãnh đạo</td>
+<td><em>leader</em></td>
+<td>Máy duy nhất nhận yêu cầu ghi và gửi nhật ký cho các máy khác</td>
+</tr>
+<tr>
+<td>Nút theo sau</td>
+<td><em>follower</em></td>
+<td>Máy thụ động, trả lời lãnh đạo và ứng viên</td>
+</tr>
+<tr>
+<td>Ứng viên</td>
+<td><em>candidate</em></td>
+<td>Máy đang xin phiếu để làm lãnh đạo</td>
+</tr>
+<tr>
+<td>Nhiệm kỳ</td>
+<td><em>term</em></td>
+<td>Số tăng dần đánh dấu mỗi lần bầu; thấy nhiệm kỳ lớn hơn thì lùi về làm nút theo sau</td>
+</tr>
+<tr>
+<td>Bầu lãnh đạo</td>
+<td><em>leader election</em></td>
+<td>Nút theo sau hết thời gian chờ thì ứng cử, gom túc số phiếu thì làm lãnh đạo</td>
+</tr>
+<tr>
+<td>Nhịp tim</td>
+<td><em>heartbeat</em></td>
+<td>Tin nhắn đều đặn của lãnh đạo báo "tôi còn sống"</td>
+</tr>
+<tr>
+<td>Thời gian chờ bầu cử</td>
+<td><em>election timeout</em></td>
+<td>Không nghe lãnh đạo quá thời gian này thì ứng cử; chọn ngẫu nhiên để tránh phiếu chia đều</td>
+</tr>
+<tr>
+<td>Yêu cầu bỏ phiếu</td>
+<td><em>RequestVote</em></td>
+<td>Tin nhắn ứng viên gửi để xin phiếu, kèm vị trí và nhiệm kỳ mục cuối nhật ký</td>
+</tr>
+<tr>
+<td>Phiếu chia đều</td>
+<td><em>split vote</em></td>
+<td>Nhiều ứng viên cùng lúc, không ai đủ túc số; bầu lại ở nhiệm kỳ sau</td>
+</tr>
+<tr>
+<td>Nhân bản nhật ký</td>
+<td><em>log replication</em></td>
+<td>Lãnh đạo gửi các mục nhật ký mới cho nút theo sau và xác nhận khi túc số đã lưu</td>
+</tr>
+<tr>
+<td>Lệnh nối thêm</td>
+<td><em>AppendEntries</em></td>
+<td>Tin nhắn lãnh đạo gửi mục nhật ký mới, kèm mục ngay trước để kiểm khớp; rỗng thì là nhịp tim</td>
+</tr>
+<tr>
+<td>Chỉ số đã xác nhận</td>
+<td><em>commit index</em></td>
+<td>Vị trí của mục cuối cùng đã được lưu trên túc số máy</td>
+</tr>
+<tr>
+<td>Tính an toàn</td>
+<td><em>safety</em></td>
+<td>Mục đã xác nhận không bao giờ mất; giữ bằng luật chỉ bầu ứng viên có nhật ký không cũ hơn</td>
+</tr>
+</tbody>
+</table>
+<h2 id="so-o">🖼️ Sơ đồ<a class="headerlink" href="#so-o" title="Permanent link">&para;</a></h2>
+<p>Ba vai của một máy Raft và những gì làm nó đổi vai:</p>
+<pre class="mermaid"><code>stateDiagram-v2
+    [*] --&gt; Follower : khởi động
+    Follower --&gt; Candidate : hết thời gian chờ bầu cử, không nghe nhịp tim
+    Candidate --&gt; Candidate : phiếu chia đều, hết thời gian chờ, tăng nhiệm kỳ, bầu lại
+    Candidate --&gt; Leader : nhận phiếu của túc số máy
+    Candidate --&gt; Follower : gặp lãnh đạo hợp lệ hoặc nhiệm kỳ lớn hơn
+    Leader --&gt; Follower : thấy nhiệm kỳ lớn hơn</code></pre>
+<p>Tên trạng thái giữ tiếng Anh vì đó là tên bạn sẽ gặp trong mọi tài liệu: <code>Follower</code> là nút theo sau, <code>Candidate</code> là ứng viên, <code>Leader</code> là nút lãnh đạo.</p>
+<p>Một lệnh ghi đi qua cụm 5 máy — xác nhận ngay khi đủ 3 máy, không chờ hai máy chậm:</p>
+<pre class="mermaid"><code>sequenceDiagram
+    participant K as Khách
+    participant L as S1 — lãnh đạo
+    participant F2 as S2
+    participant F3 as S3
+    participant F4 as S4 — chậm
+    participant F5 as S5 — đã sập
+    K-&gt;&gt;L: ghi "nộp quỹ lớp 20.000"
+    L-&gt;&gt;L: thêm vào nhật ký ở vị trí 6, nhiệm kỳ 3
+    L-&gt;&gt;F2: lệnh nối thêm, mục 6
+    L-&gt;&gt;F3: lệnh nối thêm, mục 6
+    L-&gt;&gt;F4: lệnh nối thêm, mục 6
+    L-xF5: lệnh nối thêm, mục 6
+    F2--&gt;&gt;L: đã lưu
+    F3--&gt;&gt;L: đã lưu
+    Note over L: 3 trên 5 máy đã lưu — đủ túc số, chỉ số đã xác nhận = 6
+    L--&gt;&gt;K: thành công
+    F4--&gt;&gt;L: đã lưu (muộn)
+    Note over F5: sống lại thì lãnh đạo gửi bù các mục còn thiếu</code></pre>
+<h2 id="thuc-hanh">💻 Thực hành<a class="headerlink" href="#thuc-hanh" title="Permanent link">&para;</a></h2>
+<p>Không có cụm Raft nào để chạy trong PostgreSQL của khoá học. Nhưng mọi quyết định của Raft đều là <strong>đếm</strong>: đếm máy, đếm phiếu, đếm bản sao của một mục nhật ký. Phần này dùng SQL để kiểm tận nơi các con số đó.</p>
+<h3 id="tuc-so-theo-so-may">Túc số theo số máy<a class="headerlink" href="#tuc-so-theo-so-may" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">b46_tuc_so</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">;</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">b46_tuc_so</span><span class="w"> </span><span class="k">AS</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_may</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">tuc_so</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="p">(</span><span class="n">n</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">chiu_hong_duoc</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="k">FROM</span><span class="w"> </span><span class="n">generate_series</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">7</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">n</span><span class="p">;</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1">-- KỲ VỌNG: 7 dòng</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1">-- KỲ VỌNG: so_may = 1</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1">-- KỲ VỌNG: tuc_so = 1</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1">-- KỲ VỌNG: chiu_hong_duoc = 0</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">so_may</span><span class="p">,</span><span class="w"> </span><span class="n">tuc_so</span><span class="p">,</span><span class="w"> </span><span class="n">chiu_hong_duoc</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">b46_tuc_so</span><span class="w"> </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">so_may</span><span class="p">;</span>
+</span></code></pre></div>
+<div class="highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1">-- KỲ VỌNG: ba_may_chiu = 1</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1">-- KỲ VỌNG: bon_may_chiu = 1</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1">-- KỲ VỌNG: nam_may_tuc_so = 3</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1">-- KỲ VỌNG: nam_may_chiu = 2</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="k">SELECT</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">chiu_hong_duoc</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">b46_tuc_so</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">so_may</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">ba_may_chiu</span><span class="p">,</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">       </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">chiu_hong_duoc</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">b46_tuc_so</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">so_may</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">bon_may_chiu</span><span class="p">,</span>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">       </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">tuc_so</span><span class="w">         </span><span class="k">FROM</span><span class="w"> </span><span class="n">b46_tuc_so</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">so_may</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">nam_may_tuc_so</span><span class="p">,</span>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">       </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">chiu_hong_duoc</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">b46_tuc_so</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">so_may</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">nam_may_chiu</span><span class="p">;</span>
+</span></code></pre></div>
+<p>3 máy và 4 máy <strong>cùng</strong> chịu được đúng 1 máy hỏng. Muốn chịu 2 máy hỏng thì cần 5.</p>
+<h3 id="hai-tuc-so-luon-giao-nhau-kiem-bang-cach-liet-ke-het">Hai túc số luôn giao nhau — kiểm bằng cách liệt kê hết<a class="headerlink" href="#hai-tuc-so-luon-giao-nhau-kiem-bang-cach-liet-ke-het" title="Permanent link">&para;</a></h3>
+<p>Mỗi nhóm máy trong cụm <code>n</code> máy được biểu diễn bằng một số nguyên từ 0 tới <code>2^n − 1</code>: bit thứ <code>i</code> bằng 1 nghĩa là máy <code>i</code> có trong nhóm. Với 5 máy, đó là 32 nhóm. Phép <code>&amp;</code> trên hai số cho ra các máy <strong>chung</strong> của hai nhóm; bằng 0 nghĩa là hai nhóm <strong>rời nhau</strong>. Đếm số bit 1 bằng cách đổi sang chuỗi bit rồi đếm chữ <code>1</code>:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">b46_nhom</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">;</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">b46_nhom</span><span class="w"> </span><span class="k">AS</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_may</span><span class="p">,</span><span class="w"> </span><span class="n">nhom</span><span class="p">,</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">       </span><span class="k">length</span><span class="p">(</span><span class="k">replace</span><span class="p">(</span><span class="n">nhom</span><span class="p">::</span><span class="nb">bit</span><span class="p">(</span><span class="mi">8</span><span class="p">)::</span><span class="nb">text</span><span class="p">,</span><span class="w"> </span><span class="s1">'0'</span><span class="p">,</span><span class="w"> </span><span class="s1">''</span><span class="p">))</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_thanh_vien</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="k">FROM</span><span class="w"> </span><span class="n">generate_series</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="n">generate_series</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">31</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">nhom</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">nhom</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">n</span><span class="p">);</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1">-- KỲ VỌNG: nam_may_nhom_qua_ban = 16</span>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1">-- KỲ VỌNG: cap_qua_ban_roi_nhau_5_may = 0</span>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1">-- KỲ VỌNG: cap_mot_nua_roi_nhau_4_may = 6</span>
+</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="k">SELECT</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">b46_nhom</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">so_may</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">so_thanh_vien</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">nam_may_nhom_qua_ban</span><span class="p">,</span>
+</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">       </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">b46_nhom</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">b46_nhom</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">so_may</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">b</span><span class="p">.</span><span class="n">so_may</span>
+</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">        </span><span class="k">WHERE</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">so_may</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">so_thanh_vien</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">b</span><span class="p">.</span><span class="n">so_thanh_vien</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">3</span>
+</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">          </span><span class="k">AND</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">nhom</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">b</span><span class="p">.</span><span class="n">nhom</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w">                                             </span><span class="k">AS</span><span class="w"> </span><span class="n">cap_qua_ban_roi_nhau_5_may</span><span class="p">,</span>
+</span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">       </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">b46_nhom</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">b46_nhom</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">so_may</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">b</span><span class="p">.</span><span class="n">so_may</span>
+</span><span id="__span-2-16"><a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="w">        </span><span class="k">WHERE</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">so_may</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">so_thanh_vien</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">b</span><span class="p">.</span><span class="n">so_thanh_vien</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span>
+</span><span id="__span-2-17"><a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="w">          </span><span class="k">AND</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">nhom</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">b</span><span class="p">.</span><span class="n">nhom</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w">                                             </span><span class="k">AS</span><span class="w"> </span><span class="n">cap_mot_nua_roi_nhau_4_may</span><span class="p">;</span>
+</span></code></pre></div>
+<ul>
+<li>Cụm 5 máy có <strong>16</strong> nhóm quá bán (từ 3 máy trở lên). Thử <strong>mọi</strong> cặp: <strong>0</strong> cặp rời nhau. Không có cách nào chia 5 máy thành hai nhóm mà nhóm nào cũng đủ túc số — nên không bao giờ có hai lãnh đạo cùng nhiệm kỳ.</li>
+<li>Cụm 4 máy nếu chỉ đòi "đúng một nửa" — 2 máy: có <strong>6</strong> cặp nhóm rời nhau — mỗi cặp được đếm theo cả hai thứ tự, tức 3 cách chia 4 máy thành hai đôi. Mạng đứt đúng giữa hai đôi là có hai lãnh đạo — não chia đôi.</li>
+</ul>
+<h3 id="chi-so-a-xac-nhan-tu-nhat-ky-cua-nam-may">Chỉ số đã xác nhận từ nhật ký của năm máy<a class="headerlink" href="#chi-so-a-xac-nhan-tu-nhat-ky-cua-nam-may" title="Permanent link">&para;</a></h3>
+<p>Cụm 5 máy <code>S1</code>–<code>S5</code>, lãnh đạo là <code>S1</code> ở nhiệm kỳ 3. Mỗi dòng là một mục nhật ký: máy nào, ở vị trí nào, nhiệm kỳ nào, lệnh gì. <code>S4</code> vắng mặt một thời gian, <code>S5</code> mới sống lại:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">b46_nhat_ky</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">;</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">b46_nhat_ky</span><span class="w"> </span><span class="p">(</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span><span class="n">may</span><span class="w">      </span><span class="nb">CHAR</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="w">  </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">    </span><span class="n">vi_tri</span><span class="w">   </span><span class="nb">INTEGER</span><span class="w">  </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">    </span><span class="n">nhiem_ky</span><span class="w"> </span><span class="nb">INTEGER</span><span class="w">  </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">    </span><span class="n">lenh</span><span class="w">     </span><span class="nb">TEXT</span><span class="w">     </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">    </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="w"> </span><span class="p">(</span><span class="n">may</span><span class="p">,</span><span class="w"> </span><span class="n">vi_tri</span><span class="p">)</span>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="p">);</span>
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="k">WITH</span><span class="w"> </span><span class="n">nhat_ky_lanh_dao</span><span class="w"> </span><span class="p">(</span><span class="n">vi_tri</span><span class="p">,</span><span class="w"> </span><span class="n">nhiem_ky</span><span class="p">,</span><span class="w"> </span><span class="n">lenh</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="p">(</span>
+</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">    </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="s1">'Đổi chỗ An và Bình'</span><span class="p">),</span>
+</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">           </span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="s1">'Trực nhật tuần 5: tổ 3'</span><span class="p">),</span>
+</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">           </span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="s1">'Nộp quỹ lớp 20.000'</span><span class="p">),</span>
+</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="w">           </span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="s1">'Tham quan thứ Bảy'</span><span class="p">),</span>
+</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="w">           </span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="s1">'Họp phụ huynh 19/10'</span><span class="p">),</span>
+</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="w">           </span><span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="s1">'Thi vở sạch chữ đẹp'</span><span class="p">)</span>
+</span><span id="__span-3-17"><a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="p">),</span><span class="w"> </span><span class="n">do_dai</span><span class="w"> </span><span class="p">(</span><span class="n">may</span><span class="p">,</span><span class="w"> </span><span class="n">so_muc</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="p">(</span>
+</span><span id="__span-3-18"><a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="w">    </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="s1">'S1'</span><span class="p">,</span><span class="w"> </span><span class="mi">6</span><span class="p">),</span><span class="w"> </span><span class="p">(</span><span class="s1">'S2'</span><span class="p">,</span><span class="w"> </span><span class="mi">6</span><span class="p">),</span><span class="w"> </span><span class="p">(</span><span class="s1">'S3'</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="p">),</span><span class="w"> </span><span class="p">(</span><span class="s1">'S4'</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">),</span><span class="w"> </span><span class="p">(</span><span class="s1">'S5'</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span>
+</span><span id="__span-3-19"><a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="p">)</span>
+</span><span id="__span-3-20"><a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">b46_nhat_ky</span>
+</span><span id="__span-3-21"><a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">d</span><span class="p">.</span><span class="n">may</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="p">.</span><span class="n">vi_tri</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="p">.</span><span class="n">nhiem_ky</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="p">.</span><span class="n">lenh</span>
+</span><span id="__span-3-22"><a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a><span class="k">FROM</span><span class="w"> </span><span class="n">do_dai</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">d</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">nhat_ky_lanh_dao</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">n</span><span class="p">.</span><span class="n">vi_tri</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">d</span><span class="p">.</span><span class="n">so_muc</span><span class="p">;</span>
+</span><span id="__span-3-23"><a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>
+</span><span id="__span-3-24"><a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a><span class="c1">-- KỲ VỌNG: 5 dòng</span>
+</span><span id="__span-3-25"><a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a><span class="c1">-- KỲ VỌNG: may = S1</span>
+</span><span id="__span-3-26"><a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a><span class="c1">-- KỲ VỌNG: so_muc = 6</span>
+</span><span id="__span-3-27"><a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">may</span><span class="p">,</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_muc</span><span class="p">,</span><span class="w"> </span><span class="k">max</span><span class="p">(</span><span class="n">vi_tri</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">vi_tri_cuoi</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">b46_nhat_ky</span><span class="w"> </span><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">may</span><span class="w"> </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">may</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Chỉ số đã xác nhận là vị trí <strong>lớn nhất</strong> mà mục ở đó — cùng nhiệm kỳ với nhật ký lãnh đạo — nằm trên <strong>ít nhất túc số</strong> máy, và thuộc <strong>nhiệm kỳ hiện tại</strong> 3 theo luật ở mục An toàn:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1">-- KỲ VỌNG: 6 dòng</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1">-- KỲ VỌNG: vi_tri = 1</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1">-- KỲ VỌNG: so_may_da_luu = 5</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">vi_tri</span><span class="p">,</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">nhiem_ky</span><span class="p">,</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">       </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">b46_nhat_ky</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">m</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">        </span><span class="k">WHERE</span><span class="w"> </span><span class="n">m</span><span class="p">.</span><span class="n">vi_tri</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">vi_tri</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">m</span><span class="p">.</span><span class="n">nhiem_ky</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">nhiem_ky</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_may_da_luu</span>
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="k">FROM</span><span class="w"> </span><span class="n">b46_nhat_ky</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">l</span>
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">may</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'S1'</span>
+</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">vi_tri</span><span class="p">;</span>
+</span></code></pre></div>
+<div class="highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1">-- KỲ VỌNG: chi_so_da_xac_nhan = 5</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1">-- KỲ VỌNG: muc_6_da_xac_nhan = false</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">max</span><span class="p">(</span><span class="n">l</span><span class="p">.</span><span class="n">vi_tri</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">chi_so_da_xac_nhan</span><span class="p">,</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">       </span><span class="n">bool_or</span><span class="p">(</span><span class="n">l</span><span class="p">.</span><span class="n">vi_tri</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">6</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">muc_6_da_xac_nhan</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="k">FROM</span><span class="w"> </span><span class="n">b46_nhat_ky</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">l</span>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">may</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'S1'</span>
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">  </span><span class="k">AND</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">nhiem_ky</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span>
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">  </span><span class="k">AND</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">b46_nhat_ky</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">m</span>
+</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">       </span><span class="k">WHERE</span><span class="w"> </span><span class="n">m</span><span class="p">.</span><span class="n">vi_tri</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">vi_tri</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">m</span><span class="p">.</span><span class="n">nhiem_ky</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">nhiem_ky</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">5</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Mục 5 nằm trên <code>S1</code>, <code>S2</code>, <code>S3</code> — đủ 3 — nên <strong>đã xác nhận</strong>, kéo theo mọi mục trước nó. Mục 6 mới có trên <code>S1</code>, <code>S2</code> — thiếu một máy — nên <strong>chưa</strong>: lãnh đạo chưa được báo thành công cho khách.</p>
+<h3 id="ung-vien-thieu-muc-a-xac-nhan-khong-the-thang">Ứng viên thiếu mục đã xác nhận không thể thắng<a class="headerlink" href="#ung-vien-thieu-muc-a-xac-nhan-khong-the-thang" title="Permanent link">&para;</a></h3>
+<p>Giả sử <code>S1</code> sập ngay bây giờ. Máy nào có thể thắng cuộc bầu tiếp theo? Mỗi máy chỉ bỏ phiếu cho ứng viên có mục cuối <strong>không cũ hơn</strong> mục cuối của mình — so nhiệm kỳ trước, rồi mới so vị trí. Phép so sánh hai bộ <code>(nhiem_ky, vi_tri)</code> của PostgreSQL làm đúng thứ tự đó:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">b46_bau_cu</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">;</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">b46_bau_cu</span><span class="w"> </span><span class="k">AS</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="k">WITH</span><span class="w"> </span><span class="n">muc_cuoi</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="p">(</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">    </span><span class="k">SELECT</span><span class="w"> </span><span class="k">DISTINCT</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="p">(</span><span class="n">may</span><span class="p">)</span><span class="w"> </span><span class="n">may</span><span class="p">,</span><span class="w"> </span><span class="n">nhiem_ky</span><span class="p">,</span><span class="w"> </span><span class="n">vi_tri</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">    </span><span class="k">FROM</span><span class="w"> </span><span class="n">b46_nhat_ky</span><span class="w"> </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">may</span><span class="p">,</span><span class="w"> </span><span class="n">vi_tri</span><span class="w"> </span><span class="k">DESC</span>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="p">),</span><span class="w"> </span><span class="n">con_song</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="p">(</span>
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">    </span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">muc_cuoi</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">may</span><span class="w"> </span><span class="o">&lt;&gt;</span><span class="w"> </span><span class="s1">'S1'</span>
+</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="p">)</span>
+</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">u</span><span class="p">.</span><span class="n">may</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">ung_vien</span><span class="p">,</span><span class="w"> </span><span class="n">u</span><span class="p">.</span><span class="n">nhiem_ky</span><span class="p">,</span><span class="w"> </span><span class="n">u</span><span class="p">.</span><span class="n">vi_tri</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">vi_tri_cuoi</span><span class="p">,</span>
+</span><span id="__span-6-10"><a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="w">       </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">con_song</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="k">c</span>
+</span><span id="__span-6-11"><a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">        </span><span class="k">WHERE</span><span class="w"> </span><span class="p">(</span><span class="n">u</span><span class="p">.</span><span class="n">nhiem_ky</span><span class="p">,</span><span class="w"> </span><span class="n">u</span><span class="p">.</span><span class="n">vi_tri</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="p">(</span><span class="k">c</span><span class="p">.</span><span class="n">nhiem_ky</span><span class="p">,</span><span class="w"> </span><span class="k">c</span><span class="p">.</span><span class="n">vi_tri</span><span class="p">))</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">so_phieu_toi_da</span>
+</span><span id="__span-6-12"><a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="k">FROM</span><span class="w"> </span><span class="n">con_song</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">u</span><span class="p">;</span>
+</span><span id="__span-6-13"><a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>
+</span><span id="__span-6-14"><a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="c1">-- KỲ VỌNG: 4 dòng</span>
+</span><span id="__span-6-15"><a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="c1">-- KỲ VỌNG: ung_vien = S2</span>
+</span><span id="__span-6-16"><a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="c1">-- KỲ VỌNG: so_phieu_toi_da = 4</span>
+</span><span id="__span-6-17"><a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">ung_vien</span><span class="p">,</span><span class="w"> </span><span class="n">nhiem_ky</span><span class="p">,</span><span class="w"> </span><span class="n">vi_tri_cuoi</span><span class="p">,</span><span class="w"> </span><span class="n">so_phieu_toi_da</span><span class="p">,</span><span class="w"> </span><span class="n">so_phieu_toi_da</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">co_the_thang</span>
+</span><span id="__span-6-18"><a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a><span class="k">FROM</span><span class="w"> </span><span class="n">b46_bau_cu</span><span class="w"> </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">ung_vien</span><span class="p">;</span>
+</span></code></pre></div>
+<p><code>so_phieu_toi_da</code> đếm cả phiếu ứng viên tự bỏ cho mình. <code>S2</code> có thể nhận phiếu của cả bốn máy còn sống, <code>S3</code> được ba, còn <code>S4</code> và <code>S5</code> không bao giờ đủ ba phiếu. Kiểm điều quan trọng nhất:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1">-- KỲ VỌNG: moi_nguoi_co_the_thang_deu_du_muc_da_xac_nhan = true</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c1">-- KỲ VỌNG: s4_co_the_thang = false</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="c1">-- KỲ VỌNG: s3_co_the_thang = true</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">bool_and</span><span class="p">(</span><span class="n">vi_tri_cuoi</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">5</span><span class="p">)</span><span class="w"> </span><span class="n">FILTER</span><span class="w"> </span><span class="p">(</span><span class="k">WHERE</span><span class="w"> </span><span class="n">so_phieu_toi_da</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">moi_nguoi_co_the_thang_deu_du_muc_da_xac_nhan</span><span class="p">,</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">       </span><span class="n">bool_or</span><span class="p">(</span><span class="n">so_phieu_toi_da</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="n">FILTER</span><span class="w"> </span><span class="p">(</span><span class="k">WHERE</span><span class="w"> </span><span class="n">ung_vien</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'S4'</span><span class="p">)</span><span class="w">    </span><span class="k">AS</span><span class="w"> </span><span class="n">s4_co_the_thang</span><span class="p">,</span>
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">       </span><span class="n">bool_or</span><span class="p">(</span><span class="n">so_phieu_toi_da</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="n">FILTER</span><span class="w"> </span><span class="p">(</span><span class="k">WHERE</span><span class="w"> </span><span class="n">ung_vien</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'S3'</span><span class="p">)</span><span class="w">    </span><span class="k">AS</span><span class="w"> </span><span class="n">s3_co_the_thang</span>
+</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="k">FROM</span><span class="w"> </span><span class="n">b46_bau_cu</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Mọi ứng viên có thể thắng đều giữ đủ 5 mục đã xác nhận. <code>S4</code> — chỉ có 3 mục — <strong>không thể</strong> thắng: <code>S2</code> và <code>S3</code> từ chối nó vì nhật ký của nó cũ hơn. Mục 6 thì khác: nó chưa xác nhận, và nếu <code>S3</code> thắng, <code>S3</code> sẽ ghi đè mục 6 trên <code>S2</code>. Điều đó <strong>hợp lệ</strong> — chưa ai được báo mục 6 thành công.</p>
+<h2 id="loi-thuong-gap">⚠️ Lỗi thường gặp<a class="headerlink" href="#loi-thuong-gap" title="Permanent link">&para;</a></h2>
+<div class="admonition danger">
+<p class="admonition-title">Lỗi 1: Cụm đồng thuận với số máy chẵn</p>
+<p><em>"Ba máy chịu 1 máy hỏng, vậy bốn máy cho chắc."</em> Phần thực hành đã đo: 4 máy vẫn chỉ chịu được <strong>1</strong> máy hỏng, vì túc số của 4 là 3. Máy thứ tư còn làm cụm <strong>kém</strong> hơn: thêm một máy có thể hỏng, và mỗi lần ghi phải chờ 3 máy thay vì 2.</p>
+<p>Sửa: dùng 3 máy — chịu 1 hỏng — hoặc 5 máy — chịu 2 hỏng. Hiếm khi cần hơn 7.</p>
+</div>
+<div class="admonition danger">
+<p class="admonition-title">Lỗi 2: Đặt cả cụm đồng thuận ở một nơi — hoặc chia đều ra hai nơi</p>
+<p>Năm máy etcd nằm cùng một tủ máy: mất điện tủ là mất cả cụm, túc số chẳng giúp gì. Chia ra hai trung tâm dữ liệu, 3 máy bên này 2 máy bên kia: đứt đường nối, bên 3 máy vẫn chạy — tốt. Nhưng <strong>mất hẳn</strong> trung tâm có 3 máy thì bên còn lại chỉ có 2, không đủ túc số, cụm đứng.</p>
+<p>Sửa: đặt máy ở <strong>ba</strong> nơi độc lập, ví dụ 2 + 2 + 1. Mất trọn một nơi bất kỳ vẫn còn ít nhất 3 máy.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Lỗi 3: Thời gian chờ bầu cử ngắn hơn độ trễ mạng</p>
+<p>Mạng giữa các máy đôi lúc trễ 500 mili giây, còn thời gian chờ bầu cử là 200 mili giây. Nút theo sau liên tục tưởng lãnh đạo đã chết, liên tục ứng cử; mỗi lần bầu, mọi yêu cầu ghi phải chờ. Cụm "chạy" nhưng gần như không làm được gì.</p>
+<p>Sửa: thời gian chờ bầu cử phải lớn hơn <strong>nhiều lần</strong> thời gian đi-về của một tin nhắn, và nhịp tim phải gửi dày hơn thời gian chờ nhiều lần. etcd có sẵn hai tham số cho việc này.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Lỗi 4: Nghĩ đồng thuận làm hệ thống nhanh hơn</p>
+<p>Mỗi lần ghi phải đi qua lãnh đạo và chờ túc số máy lưu xong — một vòng mạng, cộng thời gian ghi đĩa của máy <strong>chậm thứ ba</strong> trong năm. Đồng thuận mua <strong>đúng</strong> và <strong>sẵn sàng</strong>, trả bằng <strong>độ trễ</strong>. Nó hợp với dữ liệu nhỏ, quan trọng: ai là máy chính, cấu hình, khoá phân tán — không hợp để chứa hàng tỷ dòng điểm thi qua <strong>một</strong> nhóm duy nhất.</p>
+<p>Sửa: dùng đồng thuận cho phần <strong>điều khiển</strong>, như Patroni dùng etcd. Hệ lớn như CockroachDB, TiDB chạy <strong>hàng nghìn</strong> nhóm Raft nhỏ, mỗi nhóm lo một khoảng dữ liệu, để việc ghi không dồn về một lãnh đạo.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Lỗi 5: Đọc từ nút theo sau rồi tin là mới nhất</p>
+<p>Một ứng dụng đọc cấu hình từ một máy etcd bất kỳ cho nhanh. Máy đó là nút theo sau vừa bị cắt mạng khỏi lãnh đạo mười giây — nó trả lời bằng dữ liệu cũ mười giây. Hoặc tệ hơn: nó là một <strong>lãnh đạo cũ</strong> chưa biết mình đã bị thay.</p>
+<p>Sửa: khi cần nhất quán mạnh, đọc cũng phải qua túc số — lãnh đạo xác nhận với túc số máy rằng nó vẫn còn là lãnh đạo trước khi trả lời. etcd làm việc này mặc định; tuỳ chọn đọc nhanh "không qua túc số" chỉ dùng khi chấp nhận dữ liệu cũ — đúng lựa chọn EL/EC của PACELC ở Bài 44.</p>
+</div>
+<h2 id="bai-tap">✍️ Bài tập<a class="headerlink" href="#bai-tap" title="Permanent link">&para;</a></h2>
+<ol>
+<li>
+<p>Một cụm Raft có 7 máy. (a) Túc số là bao nhiêu? (b) Chịu được mấy máy hỏng cùng lúc? (c) Mạng bị chia cắt thành hai nhóm 4 máy và 3 máy, lãnh đạo cũ nằm ở nhóm 3 máy. Mô tả điều xảy ra ở từng nhóm, và điều xảy ra khi mạng nối lại.</p>
+</li>
+<li>
+<p>Cụm 5 máy, nhiệm kỳ hiện tại là 7. <code>S2</code> và <code>S4</code> cùng hết thời gian chờ bầu cử gần như một lúc. <code>S1</code> bầu cho <code>S2</code>, <code>S5</code> bầu cho <code>S4</code>, <code>S3</code> đang bị cắt mạng. (a) Ai thắng? (b) Chuyện gì xảy ra tiếp theo? (c) Vì sao nếu thời gian chờ <strong>không</strong> ngẫu nhiên thì tình huống này có thể lặp lại mãi?</p>
+</li>
+<li>
+<p>Dùng bảng <code>b46_nhat_ky</code> của phần thực hành. Lãnh đạo <code>S1</code> vừa gửi thành công mục 6 cho <code>S3</code>. Viết câu lệnh thêm mục đó vào nhật ký của <code>S3</code> rồi tính lại chỉ số đã xác nhận. Nó bằng bao nhiêu? Giờ <code>S4</code> còn có thể thắng cử không?</p>
+</li>
+<li>
+<p>Giải thích vì sao luật <em>"chỉ bỏ phiếu cho ứng viên có nhật ký không cũ hơn của mình"</em> sẽ <strong>vô dụng</strong> nếu túc số chỉ là "một nửa" thay vì "quá bán".</p>
+</li>
+<li>
+<p>Patroni dùng etcd để quyết định máy PostgreSQL nào là máy chính. Cụm etcd có 3 máy, đặt trên chính 3 máy PostgreSQL. Máy PostgreSQL chính bị cắt mạng khỏi hai máy còn lại. (a) Máy etcd nằm cùng máy chính có còn cấp cho nó quyền làm máy chính không? (b) Điều gì ngăn não chia đôi của Bài 42 ở đây? (c) Vì sao PostgreSQL chính phải tự <strong>ngừng nhận ghi</strong> khi không gia hạn được khoá, thay vì chờ ai đó tắt nó?</p>
+</li>
+</ol>
+<details class="success">
+<summary>Đáp án</summary>
+<p><strong>Câu 1.</strong></p>
+<ul>
+<li>(a) 7 / 2 + 1 = <strong>4</strong>.</li>
+<li>(b) 7 − 4 = <strong>3</strong> máy.</li>
+<li>(c) Nhóm <strong>3 máy</strong> có lãnh đạo cũ, nhưng lãnh đạo chỉ gom được 3 bản lưu cho mỗi mục mới — thiếu túc số 4 — nên <strong>không</strong> xác nhận được mục nào; mọi yêu cầu ghi ở đây treo. Nhóm <strong>4 máy</strong> không nghe nhịp tim, hết thời gian chờ, bầu một lãnh đạo mới ở nhiệm kỳ lớn hơn — đủ 4 phiếu — và tiếp tục nhận ghi. Khi mạng nối lại, lãnh đạo cũ nhận tin nhắn mang nhiệm kỳ lớn hơn, lập tức lùi về làm nút theo sau. Các mục chưa xác nhận của nó bị lãnh đạo mới ghi đè — hợp lệ, vì chưa ai được báo thành công cho những mục đó. Đây là một hệ <strong>CP</strong> đúng nghĩa Bài 44: phía thiểu số từ chối.</li>
+</ul>
+<p><strong>Câu 2.</strong></p>
+<ul>
+<li>(a) <strong>Không ai</strong>: <code>S2</code> có 2 phiếu — của mình và <code>S1</code> —, <code>S4</code> có 2 phiếu — của mình và <code>S5</code>. <code>S3</code> không liên lạc được. Túc số là 3. Phiếu chia đều.</li>
+<li>(b) Cả hai ứng viên hết thời gian chờ, tăng nhiệm kỳ lên 8 — hoặc cao hơn nếu lặp lại —, và bầu lại. Thời gian chờ ngẫu nhiên nên lần này một bên gần như chắc chắn ứng cử trước và gom được 3 phiếu — kể cả khi <code>S3</code> vẫn bị cắt, vì 4 máy còn lại đủ túc số.</li>
+<li>(c) Nếu mọi máy có <strong>cùng</strong> thời gian chờ, hai ứng viên đã hết giờ cùng lúc sẽ lại hết giờ cùng lúc ở vòng sau, lại chia phiếu — mãi mãi. Ngẫu nhiên phá thế cân bằng đó.</li>
+</ul>
+<p><strong>Câu 3.</strong></p>
+<div class="highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">b46_nhat_ky</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="s1">'S3'</span><span class="p">,</span><span class="w"> </span><span class="n">vi_tri</span><span class="p">,</span><span class="w"> </span><span class="n">nhiem_ky</span><span class="p">,</span><span class="w"> </span><span class="n">lenh</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">b46_nhat_ky</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">may</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'S1'</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">vi_tri</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">6</span><span class="p">;</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1">-- KỲ VỌNG: chi_so_da_xac_nhan = 6</span>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">max</span><span class="p">(</span><span class="n">l</span><span class="p">.</span><span class="n">vi_tri</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">chi_so_da_xac_nhan</span>
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="k">FROM</span><span class="w"> </span><span class="n">b46_nhat_ky</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">l</span>
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">may</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'S1'</span>
+</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">  </span><span class="k">AND</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">nhiem_ky</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span>
+</span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">  </span><span class="k">AND</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">b46_nhat_ky</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">m</span>
+</span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="w">       </span><span class="k">WHERE</span><span class="w"> </span><span class="n">m</span><span class="p">.</span><span class="n">vi_tri</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">vi_tri</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">m</span><span class="p">.</span><span class="n">nhiem_ky</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">nhiem_ky</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">5</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Mục 6 giờ nằm trên <code>S1</code>, <code>S2</code>, <code>S3</code> — đủ 3 —, chỉ số đã xác nhận lên <strong>6</strong>. <code>S4</code> vẫn <strong>không</strong> thể thắng: nó chỉ có 3 mục, <code>S2</code> và <code>S3</code> đều từ chối nó. Kết quả phần thực hành không đổi, chỉ khác là giờ mọi ứng viên có thể thắng phải có đủ <strong>6</strong> mục.</p>
+<p><strong>Câu 4.</strong></p>
+<p>Luật bỏ phiếu chỉ an toàn nhờ lập luận <em>"nhóm bỏ phiếu cho người thắng và nhóm đã lưu mục đã xác nhận luôn có một máy chung"</em>. Với túc số "một nửa" — 2 trên 4 máy —, phần thực hành đã đếm được các cặp nhóm <strong>rời nhau</strong>. Một mục có thể được "xác nhận" trên <code>{S1, S2}</code>, rồi <code>S3</code> — thiếu mục đó — ứng cử và nhận đủ phiếu từ <code>{S3, S4}</code>, không ai trong đó có mục kia để từ chối. <code>S3</code> thắng và ghi đè mất một mục đã xác nhận. Luật so sánh nhật ký vẫn chạy đúng — nhưng không có ai đứng đó để áp dụng nó.</p>
+<p><strong>Câu 5.</strong></p>
+<ul>
+<li>(a) <strong>Không</strong>. Máy etcd nằm cùng máy chính cũng bị cắt khỏi hai máy etcd kia, nên nó chỉ có 1 trên 3 — không đủ túc số 2 — và không thể xác nhận bất kỳ việc ghi nào, kể cả việc gia hạn khoá "tôi là máy chính". Phía bên kia có 2 máy etcd — đủ túc số — nên khoá hết hạn ở đó, và Patroni ở bên đó có thể nâng một máy bản sao lên.</li>
+<li>(b) Khoá "ai là máy chính" chỉ tồn tại <strong>một</strong> bản đúng — bản được túc số etcd xác nhận. Hai phía không thể cùng giữ khoá, vì hai túc số luôn giao nhau.</li>
+<li>(c) Vì không ai <strong>tắt</strong> được một máy đã bị cắt mạng — chính vì nó bị cắt mạng. Nếu máy chính cũ cứ tiếp tục nhận ghi từ những ứng dụng vẫn còn nối được với nó, ta quay lại đúng não chia đôi của Bài 42. Patroni trên máy chính cũ tự hạ PostgreSQL xuống chế độ không nhận ghi ngay khi không gia hạn được khoá trước lúc nó hết hạn: đó là một dạng <strong>rào chắn</strong> tự nguyện.</li>
+</ul>
+</details>
+<h3 id="don-dep-cuoi-bai">Dọn dẹp cuối bài<a class="headerlink" href="#don-dep-cuoi-bai" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">b46_tuc_so</span><span class="p">,</span><span class="w"> </span><span class="n">b46_nhom</span><span class="p">,</span><span class="w"> </span><span class="n">b46_nhat_ky</span><span class="p">,</span><span class="w"> </span><span class="n">b46_bau_cu</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">;</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="c1">-- KỲ VỌNG: bang_con_lai = 0</span>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">bang_con_lai</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">information_schema</span><span class="p">.</span><span class="n">tables</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="k">table_name</span><span class="w"> </span><span class="k">LIKE</span><span class="w"> </span><span class="s1">'b46\_%'</span><span class="p">;</span>
+</span></code></pre></div>
+<h2 id="tom-tat">🔑 Tóm tắt<a class="headerlink" href="#tom-tat" title="Permanent link">&para;</a></h2>
+<ol>
+<li><strong>Đồng thuận</strong> làm nhiều máy đồng ý <strong>một thứ tự</strong> lệnh dù có máy sập hay chậm; dùng nó cho <strong>máy trạng thái nhân bản</strong> — mọi máy thực hiện cùng dãy lệnh nên có cùng trạng thái. Raft và Paxos giả định máy chỉ sập hoặc chậm, không nói dối (<strong>lỗi Byzantine</strong>).</li>
+<li><strong>Túc số</strong> quá bán <code>n / 2 + 1</code>: hai túc số luôn giao nhau — bài liệt kê hết và đếm được <strong>0</strong> cặp nhóm quá bán rời nhau trong cụm 5 máy, nhưng <strong>6</strong> cặp "một nửa" rời nhau trong cụm 4 máy. 4 máy chịu hỏng bằng 3 máy, nên cụm luôn có số máy lẻ.</li>
+<li><strong>Bầu lãnh đạo</strong>: hết <strong>thời gian chờ bầu cử</strong> không nghe <strong>nhịp tim</strong> thì tăng <strong>nhiệm kỳ</strong>, ứng cử, gom túc số phiếu; mỗi máy một phiếu mỗi nhiệm kỳ; thời gian chờ <strong>ngẫu nhiên</strong> để tránh <strong>phiếu chia đều</strong>; thấy nhiệm kỳ lớn hơn thì lùi về nút theo sau.</li>
+<li><strong>Nhân bản nhật ký</strong>: lãnh đạo gửi <strong>lệnh nối thêm</strong> kèm mục ngay trước để kiểm khớp; mục lưu trên túc số máy thì <strong>đã xác nhận</strong> — bài tính được <strong>chỉ số đã xác nhận</strong> = 5, mục 6 mới trên 2 máy thì chưa. <strong>Tính an toàn</strong>: chỉ bầu ứng viên có nhật ký không cũ hơn — ứng viên thiếu mục đã xác nhận không bao giờ đủ phiếu.</li>
+<li>Raft (2014) ra đời để <strong>dễ hiểu</strong> hơn Paxos (Lamport) với cùng bảo đảm; nó chạy trong etcd, Consul, CockroachDB, TiDB, và là cách Patroni tránh não chia đôi cho PostgreSQL. Đồng thuận mua đúng và sẵn sàng bằng <strong>độ trễ</strong> — dùng cho phần điều khiển, đặt máy ở ít nhất ba nơi.</li>
+</ol>
+<hr />
+<p>⬅️ <a href="../45-distributed-transaction/">Bài 45 — Giao dịch phân tán: 2PC và Saga</a> · ➡️ <strong>Bài 47</strong> <em>(sắp có)</em></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Trở lại mục lục
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Chân trang" >
+        
+          
+          <a href="../45-distributed-transaction/" class="md-footer__link md-footer__link--prev" aria-label="Trước: Bài 45 — Giao dịch phân tán: 2PC và Saga">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Trước
+              </span>
+              <div class="md-ellipsis">
+                Bài 45 — Giao dịch phân tán: 2PC và Saga
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../../dataset/" class="md-footer__link md-footer__link--next" aria-label="Sau: Database mẫu">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Sau
+              </span>
+              <div class="md-ellipsis">
+                Database mẫu
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Nội dung theo giấy phép CC BY 4.0
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/hungnguyen010518/database-tu-a-z" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.sections", "navigation.top", "navigation.footer", "navigation.indexes", "navigation.tracking", "toc.follow", "content.code.copy", "content.code.annotate", "search.highlight", "search.suggest"], "search": "../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "\u0110\u00e3 sao ch\u00e9p", "clipboard.copy": "Sao ch\u00e9p v\u00e0o b\u1ed9 nh\u1edb t\u1ea1m", "search.result.more.one": "1 t\u1eeb kh\u00e1c trong trang", "search.result.more.other": "# t\u1eeb kh\u00e1c trong trang", "search.result.none": "Kh\u00f4ng t\u00ecm th\u1ea5y t\u00e0i li\u1ec7u li\u00ean quan", "search.result.one": "1 t\u00e0i li\u1ec7u li\u00ean quan", "search.result.other": "# t\u00e0i li\u1ec7u li\u00ean quan", "search.result.placeholder": "Nh\u1eadp \u0111\u1ec3 b\u1eaft \u0111\u1ea7u t\u00ecm ki\u1ebfm", "search.result.term.missing": "Kh\u00f4ng", "select.version": "Ch\u1ecdn phi\u00ean b\u1ea3n"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.525ec568.min.js"></script>
+      
+    
+  </body>
+</html>
