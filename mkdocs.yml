@@ -134,5 +134,6 @@ nav:
       - "Bài 44 — CAP và BASE: khi mạng đứt thì chọn gì": cap-5-sieu-nang-cao/44-cap-va-base.md
       - "Bài 45 — Giao dịch phân tán: 2PC và Saga": cap-5-sieu-nang-cao/45-distributed-transaction.md
       - "Bài 46 — Consensus và Raft: nhiều máy cùng đồng ý một điều": cap-5-sieu-nang-cao/46-consensus-va-raft.md
+      - "Bài 47 — NoSQL: bốn họ và cách chọn": cap-5-sieu-nang-cao/47-nosql-bon-ho.md
   - "Database mẫu": dataset.md
   - "Bảng thuật ngữ": glossary.md
