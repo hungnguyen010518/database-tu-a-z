@@ -428,4 +428,4 @@ SELECT count(*) AS bang_con_lai FROM information_schema.tables WHERE table_name 
 
 ---
 
-⬅️ [Bài 45 — Giao dịch phân tán: 2PC và Saga](45-distributed-transaction.md) · ➡️ **Bài 47** *(sắp có)*
+⬅️ [Bài 45 — Giao dịch phân tán: 2PC và Saga](45-distributed-transaction.md) · ➡️ [Bài 47 — NoSQL: bốn họ và cách chọn](47-nosql-bon-ho.md)
