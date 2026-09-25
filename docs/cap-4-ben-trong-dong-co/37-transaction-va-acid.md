@@ -479,7 +479,7 @@ Tắt một trong hai thì `COMMIT` nhanh hơn — và chữ **D** không còn �
 
     ```sql
     UPDATE b37_thi_dua
-    SET diem_thi_dua = diem_thi_dua - 30
+    SET diem_thi_dua = diem_thi_dua - 35
     WHERE ma_lop = 'L01' AND diem_thi_dua >= 35 + 10;   -- phải còn ít nhất 10 sau khi trừ
 
     -- KỲ VỌNG: diem_8a1 = 40

@@ -193,10 +193,10 @@ Chọn loại index nào — bắt đầu từ **toán tử** trong câu `WHERE`
 ```mermaid
 flowchart LR
     Q["<b>Toán tử trong WHERE</b>"]
-    E["= · #lt; · #gt; · BETWEEN<br/>ORDER BY · LIKE 'abc%'"]
+    E["= · &lt; · &gt; · BETWEEN<br/>ORDER BY · LIKE 'abc%'"]
     H["Chỉ =<br/>khoá rất dài"]
-    G["#amp;#amp; · #lt;@ · @#gt;<br/>#lt;-#gt; gần nhất"]
-    N["@#gt; trên mảng/JSONB<br/>@@ · LIKE '%x%'"]
+    G["&amp;&amp; · &lt;@ · @&gt;<br/>&lt;-&gt; gần nhất"]
+    N["@&gt; trên mảng/JSONB<br/>@@ · LIKE '%x%'"]
     B["Khoảng thời gian<br/>trên bảng khổng lồ<br/>ghi theo thứ tự"]
 
     Q --> E --> E2["<b>B-Tree</b>"]
