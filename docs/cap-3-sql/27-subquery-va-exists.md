@@ -81,7 +81,7 @@ Hai khuôn này có tên riêng trong lý thuyết cơ sở dữ liệu:
 
 **Bán kết nối** (*semi join*) là phép ghép chỉ để **kiểm tra sự tồn tại**: mỗi dòng của bảng trái xuất hiện **tối đa một lần** trong kết quả, và **không** cột nào của bảng phải được lấy ra. `IN` và `EXISTS` đều là bán kết nối.
 
-**Kết nối chống** (*anti join*) — có tài liệu tiếng Việt gọi là *phản kết nối* — là phép ghép chỉ giữ những dòng bảng trái **không** có bạn khớp. `NOT IN` và `NOT EXISTS` là kết nối chống. [Bài 25](25-join.md) đã giới thiệu khuôn `LEFT JOIN ... WHERE cột_phải IS NULL`; đó là cách thứ ba viết cùng phép này.
+**Kết nối chống** — thuật ngữ đã học ở [Bài 25](25-join.md), có tài liệu tiếng Việt gọi là *phản kết nối* — là phép ghép chỉ giữ những dòng bảng trái **không** có bạn khớp. `NOT IN` và `NOT EXISTS` là kết nối chống. [Bài 25](25-join.md) đã giới thiệu khuôn `LEFT JOIN ... WHERE cột_phải IS NULL`; đó là cách thứ ba viết cùng phép này.
 
 Đây là điểm mấu chốt để hiểu vì sao `JOIN` thường **không** thay được `IN`: một `JOIN` thường là phép ghép **đầy đủ**, nên nếu bảng phải có 2 dòng khớp thì dòng bảng trái bị **nhân lên thành 2**. Bán kết nối thì không bao giờ nhân dòng.
 
@@ -139,6 +139,17 @@ Ngoài vai trò "bộ khung của `IN`", hai từ khoá này còn dùng trực t
 
 Cách nhớ: **`ANY` là phép `OR` trải dài, `ALL` là phép `AND` trải dài.** Và vì `ALL` là `AND`, nó thừa hưởng đúng cái bẫy `NULL` nói trên.
 
+Cùng cách nhớ đó trả lời luôn một câu hỏi mà ít tài liệu nêu: **nếu tập bên trong rỗng thì sao?**
+
+| Biểu thức | Kết quả khi tập rỗng | Vì sao |
+|---|---|---|
+| `x = ANY (tập rỗng)` — tức `x IN (rỗng)` | **`FALSE`** | Một phép `OR` không có vế nào thì không có vế nào đúng |
+| `x <> ALL (tập rỗng)` — tức `x NOT IN (rỗng)` | **`TRUE`** | Một phép `AND` không có vế nào thì không có vế nào sai |
+
+Hệ quả rất cụ thể và rất dễ bị bất ngờ: **`NOT IN` trên một truy vấn con không trả về dòng nào sẽ giữ lại MỌI dòng.** Tức là một câu lệnh kiểu *"lấy những học sinh không nằm trong danh sách bị đình chỉ"* sẽ trả về **toàn bộ** học sinh khi danh sách đình chỉ đang rỗng — đúng như nghiệp vụ muốn, nhưng chỉ khi bạn đã nghĩ tới trường hợp đó. Ngược lại, `IN` trên tập rỗng cho **0 dòng**.
+
+Ghép hai bảng lại thì ra bức tranh đầy đủ về `NOT IN`: tập rỗng cho **mọi dòng**, tập có `NULL` cho **không dòng nào**, và chỉ tập "sạch" mới cho kết quả bạn mong đợi.
+
 ### Bảng thuật ngữ
 
 | Tiếng Việt | English | Nghĩa dễ hiểu |
@@ -150,6 +161,7 @@ Cách nhớ: **`ANY` là phép `OR` trải dài, `ALL` là phép `AND` trải d�
 | Truy vấn con không tương quan | *uncorrelated subquery* | Truy vấn con không tham chiếu truy vấn ngoài, nên chỉ cần chạy một lần duy nhất |
 | Truy vấn ngoài | *outer query* | Câu lệnh bao quanh truy vấn con |
 | Bán kết nối | *semi join* | Phép ghép chỉ để kiểm tra tồn tại — mỗi dòng bảng trái ra tối đa một lần, không lấy cột nào của bảng phải; `IN` và `EXISTS` đều là bán kết nối |
+| Kết nối chống | *anti join* — đã học ở [Bài 25](25-join.md) | Phép ghép chỉ giữ những dòng bảng trái **không** có bạn khớp; `NOT EXISTS`, `LEFT JOIN … IS NULL` và `NOT IN` đều là kết nối chống |
 
 ## 🖼️ Sơ đồ
 

@@ -27,7 +27,7 @@ Có cách nào bắt chính **database** ghi nhật ký, bất kể dữ liệu 
 
 Ba khái niệm của bài này hay bị gọi lẫn nhau, nên hãy phân biệt ngay từ đầu.
 
-| | **Function** (*hàm*) | **Procedure** (*thủ tục*) | **Trigger** (*bẫy sự kiện*) |
+| | **Hàm** (*function*) | **Thủ tục** (*procedure*) | **Bẫy sự kiện** (*trigger*) |
 |---|---|---|---|
 | Gọi bằng gì | `SELECT ham(...)` | `CALL thu_tuc(...)` | **Không ai gọi** — nó tự chạy |
 | Trả về gì | **Bắt buộc** có `RETURNS` | Không trả giá trị | Không áp dụng |
@@ -47,7 +47,7 @@ Cách nhớ gọn: **function là một biểu thức, procedure là một việ
 
     Khác biệt thật sự không nằm ở giá trị trả về mà ở **giao dịch**: một function luôn chạy **bên trong** giao dịch của câu lệnh gọi nó, nên nó không `COMMIT` được. Một procedure gọi bằng `CALL` — và **không** nằm trong một khối `BEGIN ... COMMIT` tường minh — thì `COMMIT` và `ROLLBACK` được ở giữa công việc.
 
-    Đó là lý do procedure hợp cho những việc dài: xử lý 10 triệu dòng theo từng lô một nghìn dòng, commit sau mỗi lô. Function thì không làm nổi việc đó.
+    Đó là lý do procedure hợp cho những việc dài: xử lý 10 triệu dòng theo từng lô một nghìn dòng, commit sau mỗi lô. Function thì không làm nổi việc đó. Phần thực hành có **mã đầy đủ** cho đúng khuôn đó, ở mục *"`COMMIT` bên trong procedure"*.
 
 ### `PL/pgSQL`
 
@@ -425,6 +425,65 @@ CALL b31_ghi_nhat_ky('Sai tham so', 0);
 
 Hàm trên báo lỗi *"So lan phai >= 1, nhan duoc: 0"* và **không dòng nào** được ghi. Đó là điểm khác biệt với `RAISE NOTICE`: `EXCEPTION` huỷ mọi thay đổi mà thủ tục đã làm, kể cả những `INSERT` đã chạy xong trước đó.
 
+### `COMMIT` bên trong procedure — điều function không làm được
+
+Hai thủ tục ở trên chưa dùng tới **năng lực riêng** của procedure: chúng hành xử y hệt một `FUNCTION ... RETURNS void`. Năng lực riêng đó là **quản lý giao dịch**, và đây là bài toán mà nó sinh ra để giải: *"cập nhật mười triệu dòng, nhưng đừng giữ một giao dịch khổng lồ suốt nửa tiếng."*
+
+Khối dưới đây thao tác trên bảng `diem_lon` 500.000 dòng của Cấp 4 và chạy khá lâu, nên khóa học **không** chạy nó tự động — bạn hãy tự chạy trên máy mình sau khi đã nạp `dataset/03-du-lieu-lon.sql`:
+
+<!-- sql:khong-chay -->
+```sql
+DROP PROCEDURE IF EXISTS b31_lam_tron_theo_lo(INTEGER);
+
+CREATE PROCEDURE b31_lam_tron_theo_lo(p_kich_thuoc_lo INTEGER)
+LANGUAGE plpgsql
+AS $$
+DECLARE
+    v_da_sua   BIGINT := 0;
+    v_lan_nay  BIGINT;
+BEGIN
+    LOOP
+        -- Mỗi vòng chỉ chạm p_kich_thuoc_lo dòng
+        UPDATE diem_lon
+        SET    diem_so = round(diem_so, 1)
+        WHERE  ma_diem IN (
+                   SELECT ma_diem FROM diem_lon
+                   WHERE  diem_so <> round(diem_so, 1)
+                   LIMIT  p_kich_thuoc_lo
+               );
+
+        -- GET DIAGNOSTICS đọc số dòng mà câu lệnh vừa rồi đã chạm
+        GET DIAGNOSTICS v_lan_nay = ROW_COUNT;
+        v_da_sua := v_da_sua + v_lan_nay;
+
+        -- ĐÂY là thứ function không làm được: chốt lô này lại rồi mở giao dịch mới
+        COMMIT;
+
+        RAISE NOTICE 'Da sua % dong', v_da_sua;
+
+        EXIT WHEN v_lan_nay = 0;    -- hết dòng cần sửa thì dừng
+    END LOOP;
+END;
+$$;
+
+CALL b31_lam_tron_theo_lo(10000);
+```
+
+Ba thứ mới trong đoạn mã đó:
+
+- **`GET DIAGNOSTICS v_lan_nay = ROW_COUNT;`** đọc số dòng mà câu lệnh **vừa rồi** đã chạm. Đây là cách duy nhất để `PL/pgSQL` biết một `UPDATE` đã làm được bao nhiêu việc.
+- **`EXIT WHEN v_lan_nay = 0;`** là điều kiện dừng của `LOOP`. Một `LOOP` trần không có điều kiện dừng thì lặp mãi — cùng loại lỗi với đệ quy vô hạn của [Bài 28](28-cte-va-recursive-cte.md).
+- **`COMMIT;`** chốt lô vừa xong rồi mở một giao dịch mới. Nhờ nó, nếu công việc bị ngắt giữa đường thì phần đã làm **vẫn còn**, và PostgreSQL không phải giữ khoá lẫn bản cũ của 500.000 dòng cùng lúc.
+
+!!! danger "`COMMIT` trong procedure chỉ hợp lệ khi `CALL` nằm NGOÀI khối giao dịch tường minh"
+    Đây là điều kiện mà tài liệu hay bỏ qua, và nó làm người ta mất cả buổi để hiểu.
+
+    Nếu bạn viết `BEGIN; CALL b31_lam_tron_theo_lo(10000); COMMIT;` thì lệnh `COMMIT` **bên trong** thủ tục sẽ báo lỗi, đại ý *"không thực hiện được lệnh điều khiển giao dịch trong ngữ cảnh này"*. Lý do: `CALL` lúc đó đang chạy **bên trong** một giao dịch mà bạn mở, và một thủ tục không được phép chốt giao dịch của người gọi nó.
+
+    Cách gọi đúng là `CALL` **trần**, không bọc `BEGIN`/`COMMIT` — tức đúng chế độ tự chốt mà `psql` dùng theo mặc định. Và hệ quả kéo theo: những công cụ tự bọc mọi câu lệnh vào một giao dịch, hoặc một số thư viện kết nối, sẽ làm thủ tục này vỡ.
+
+    Còn một `FUNCTION` thì **không có cách nào** làm được việc này, dù gọi thế nào: nó luôn chạy bên trong giao dịch của câu lệnh gọi nó. Đó là toàn bộ nội dung của dòng "quản lý giao dịch được" trong bảng so sánh ở đầu bài.
+
 ### Function khác procedure — thử gọi sai cách
 
 Gọi một procedure trong `SELECT`:
@@ -625,7 +684,7 @@ Báo lỗi *"Diem 11.00 khong hop le: phai trong khoang 0 den 10"* — **thông 
 
     - `CHECK` là **khai báo** — nó nằm trong lược đồ, ai đọc lược đồ cũng thấy luật. Trigger là **mã**, phải mở ra đọc mới biết nó làm gì.
     - `CHECK` được bộ tối ưu dùng để suy luận. Trigger thì không.
-    - Trigger có thể bị `ALTER TABLE ... DISABLE TRIGGER` tắt đi, và `COPY` với tuỳ chọn phù hợp có thể bỏ qua nó. `CHECK` thì không tắt được ngoài việc xoá hẳn.
+    - Trigger có thể bị `ALTER TABLE ... DISABLE TRIGGER` **tắt đi**, và `TRUNCATE` thì **không** kích hoạt trigger mức dòng — đúng như [Bài 22](22-ddl-va-kieu-du-lieu.md) đã nêu. `CHECK` thì không tắt được ngoài việc xoá hẳn ràng buộc.
 
     Cách dùng đúng là **cả hai**: `CHECK` giữ luật, trigger thêm thông báo dễ hiểu và phần chuẩn hoá dữ liệu. Bảng `b31_diem` ở đây có đủ cả hai, và đó là lý do nó vẫn an toàn nếu ai đó tắt trigger đi.
 
@@ -1138,9 +1197,9 @@ Trong `psql`, lệnh `\d+ b31_diem` in ra danh sách trigger của bảng — v�
 
     **Lý do 1 — mỗi lần nhập điểm sẽ chậm hơn, và cái chậm đó lan ra.** Trigger biến một lệnh ghi thành hai: ghi `diem` rồi `UPDATE hoc_sinh`. Với lệnh nhập điểm hàng loạt đầu năm — hàng nghìn dòng trong một `INSERT ... SELECT` — trigger mức dòng chạy hàng nghìn lần, và mỗi lần lại `UPDATE` một dòng của `hoc_sinh`.
 
-    Tệ hơn: nhiều con điểm của **cùng một** học sinh sẽ cùng ghi vào **một** dòng `hoc_sinh`, nên chúng phải xếp hàng chờ nhau lấy khoá dòng. Đây là công thức của **tranh chấp khoá** (*lock contention*), và trong trường hợp xấu là **bế tắc** (*deadlock*) khi hai giao dịch lấy khoá theo hai thứ tự khác nhau.
+    Tệ hơn: nhiều con điểm của **cùng một** học sinh sẽ cùng ghi vào **một** dòng `hoc_sinh`, nên chúng phải xếp hàng chờ nhau lấy khoá dòng. Càng nhiều người nhập điểm cùng lúc thì hàng chờ càng dài, và trong trường hợp xấu hai giao dịch có thể chờ khoá của nhau đến mức không ai đi tiếp được. **Bài 41 sẽ dạy kỹ** cả hai hiện tượng này cùng với cách PostgreSQL phát hiện và xử lý chúng; ở đây chỉ cần nhớ rằng một trigger ghi vào bảng khác là một nguồn tranh chấp mới mà trước đó không có.
 
-    **Lý do 2 — cột `diem_tb` là một bản sao, và bản sao thì lệch được.** Đúng như [Bài 20](../cap-2-chuan-hoa/20-denormalization.md) đã cảnh báo: chỉ cần một đường ghi dữ liệu bỏ qua trigger — một lệnh `COPY` nhập liệu, một lần `ALTER TABLE ... DISABLE TRIGGER` để nhập nhanh rồi quên bật lại, một lần `TRUNCATE` (mà [Bài 22](22-ddl-va-kieu-du-lieu.md) đã nêu là **không** kích hoạt trigger mức dòng) — là `diem_tb` lệch khỏi sự thật. Và nó lệch **im lặng**, mãi mãi, cho tới khi có người đi đối chiếu.
+    **Lý do 2 — cột `diem_tb` là một bản sao, và bản sao thì lệch được.** Đúng như [Bài 20](../cap-2-chuan-hoa/20-denormalization.md) đã cảnh báo: chỉ cần một đường ghi dữ liệu bỏ qua trigger — một lần `ALTER TABLE ... DISABLE TRIGGER` để nhập liệu cho nhanh rồi quên bật lại, hoặc một lần `TRUNCATE` (mà [Bài 22](22-ddl-va-kieu-du-lieu.md) đã nêu là **không** kích hoạt trigger mức dòng) — là `diem_tb` lệch khỏi sự thật. Và nó lệch **im lặng**, mãi mãi, cho tới khi có người đi đối chiếu.
 
     **Giải pháp thay thế: một materialized view.**
 
@@ -1200,6 +1259,7 @@ DROP FUNCTION IF EXISTS b31_sua_qua_view() CASCADE;
 
 DROP PROCEDURE IF EXISTS b31_ghi_nhat_ky(TEXT, INTEGER);
 DROP PROCEDURE IF EXISTS b31_ghi_bang_for(TEXT, INTEGER);
+DROP PROCEDURE IF EXISTS b31_lam_tron_theo_lo(INTEGER);
 
 -- KỲ VỌNG: ham_va_thu_tuc_con_lai = 0
 -- KỲ VỌNG: bang_va_view_con_lai = 0
