@@ -2242,7 +2242,7 @@
 <td>Bế tắc</td>
 <td><em>deadlock</em></td>
 <td>Hai giao dịch chờ khoá của nhau nên không ai đi tiếp được; hay xảy ra khi chúng lấy khoá theo hai thứ tự khác nhau</td>
-<td><a href="../cap-3-sql/31-trigger-procedure-function/">Bài 31</a></td>
+<td><strong>Bài 41</strong> <em>(sắp có)</em></td>
 </tr>
 <tr>
 <td>Khai báo</td>
@@ -2628,6 +2628,12 @@
 </thead>
 <tbody>
 <tr>
+<td>Luỹ đẳng</td>
+<td><em>idempotent</em></td>
+<td>Thao tác chạy lại lần thứ hai cho cùng kết quả và không báo lỗi, ví dụ <code>CREATE EXTENSION IF NOT EXISTS</code></td>
+<td><a href="../cap-3-sql/32-jsonb-va-full-text-search/">Bài 32</a></td>
+</tr>
+<tr>
 <td>Định danh</td>
 <td><em>identifier</em></td>
 <td>Giá trị dùng để phân biệt bản ghi này với bản ghi khác</td>
@@ -2793,6 +2799,12 @@
 </thead>
 <tbody>
 <tr>
+<td>Kết nối ngang</td>
+<td><em>lateral join</em></td>
+<td>Phép ghép cho bảng bên phải <strong>đọc được cột của dòng bên trái</strong> đang xét; cơ chế duy nhất để một hàm trả bảng nhận tham số từ bảng đang quét</td>
+<td><a href="../cap-3-sql/32-jsonb-va-full-text-search/">Bài 32</a></td>
+</tr>
+<tr>
 <td>Kết nối ngoài bên trái</td>
 <td><em>LEFT OUTER JOIN</em></td>
 <td>Giữ mọi dòng bảng trái; các cột bên phải được điền <code>NULL</code> khi không tìm được dòng khớp</td>
@@ -2808,7 +2820,7 @@
 <td>Tranh chấp khoá</td>
 <td><em>lock contention</em></td>
 <td>Nhiều giao dịch phải xếp hàng chờ khoá cùng một dòng, làm thông lượng ghi sụt hẳn</td>
-<td><a href="../cap-3-sql/31-trigger-procedure-function/">Bài 31</a></td>
+<td><strong>Bài 41</strong> <em>(sắp có)</em></td>
 </tr>
 <tr>
 <td>Độc lập dữ liệu logic</td>
@@ -3687,6 +3699,12 @@
 <td><em>trivial functional dependency</em></td>
 <td><code>X → Y</code> với <code>Y ⊆ X</code> — luôn đúng nên chẳng nói lên điều gì</td>
 <td><a href="../cap-2-chuan-hoa/16-phu-thuoc-ham/">Bài 16</a></td>
+</tr>
+<tr>
+<td>Extension đáng tin</td>
+<td><em>trusted extension</em></td>
+<td>Extension mà từ PostgreSQL 13 một vai trò thường cũng cài được, chỉ cần quyền <code>CREATE</code> trên database — <code>unaccent</code> là một trong số đó</td>
+<td><a href="../cap-3-sql/32-jsonb-va-full-text-search/">Bài 32</a></td>
 </tr>
 <tr>
 <td>Câu hỏi tìm kiếm</td>

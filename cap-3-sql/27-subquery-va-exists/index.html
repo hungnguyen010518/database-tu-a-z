@@ -1882,7 +1882,7 @@
 </ul>
 <p>Hai khuôn này có tên riêng trong lý thuyết cơ sở dữ liệu:</p>
 <p><strong>Bán kết nối</strong> (<em>semi join</em>) là phép ghép chỉ để <strong>kiểm tra sự tồn tại</strong>: mỗi dòng của bảng trái xuất hiện <strong>tối đa một lần</strong> trong kết quả, và <strong>không</strong> cột nào của bảng phải được lấy ra. <code>IN</code> và <code>EXISTS</code> đều là bán kết nối.</p>
-<p><strong>Kết nối chống</strong> (<em>anti join</em>) — có tài liệu tiếng Việt gọi là <em>phản kết nối</em> — là phép ghép chỉ giữ những dòng bảng trái <strong>không</strong> có bạn khớp. <code>NOT IN</code> và <code>NOT EXISTS</code> là kết nối chống. <a href="../25-join/">Bài 25</a> đã giới thiệu khuôn <code>LEFT JOIN ... WHERE cột_phải IS NULL</code>; đó là cách thứ ba viết cùng phép này.</p>
+<p><strong>Kết nối chống</strong> — thuật ngữ đã học ở <a href="../25-join/">Bài 25</a>, có tài liệu tiếng Việt gọi là <em>phản kết nối</em> — là phép ghép chỉ giữ những dòng bảng trái <strong>không</strong> có bạn khớp. <code>NOT IN</code> và <code>NOT EXISTS</code> là kết nối chống. <a href="../25-join/">Bài 25</a> đã giới thiệu khuôn <code>LEFT JOIN ... WHERE cột_phải IS NULL</code>; đó là cách thứ ba viết cùng phép này.</p>
 <p>Đây là điểm mấu chốt để hiểu vì sao <code>JOIN</code> thường <strong>không</strong> thay được <code>IN</code>: một <code>JOIN</code> thường là phép ghép <strong>đầy đủ</strong>, nên nếu bảng phải có 2 dòng khớp thì dòng bảng trái bị <strong>nhân lên thành 2</strong>. Bán kết nối thì không bao giờ nhân dòng.</p>
 <h3 id="bay-not-in-voi-null-tra-loi-cau-chuyen-mo-au">Bẫy <code>NOT IN</code> với <code>NULL</code> — trả lời câu chuyện mở đầu<a class="headerlink" href="#bay-not-in-voi-null-tra-loi-cau-chuyen-mo-au" title="Permanent link">&para;</a></h3>
 <p>Đây là phần quan trọng nhất của bài, và nó là <strong>hệ quả trực tiếp</strong> của logic ba giá trị ở <a href="../24-select-where-order-by/">Bài 24</a>.</p>
@@ -1976,6 +1976,30 @@
 </table>
 <p><code>SOME</code> là từ đồng nghĩa hoàn toàn của <code>ANY</code>; chuẩn SQL cho cả hai, PostgreSQL nhận cả hai.</p>
 <p>Cách nhớ: <strong><code>ANY</code> là phép <code>OR</code> trải dài, <code>ALL</code> là phép <code>AND</code> trải dài.</strong> Và vì <code>ALL</code> là <code>AND</code>, nó thừa hưởng đúng cái bẫy <code>NULL</code> nói trên.</p>
+<p>Cùng cách nhớ đó trả lời luôn một câu hỏi mà ít tài liệu nêu: <strong>nếu tập bên trong rỗng thì sao?</strong></p>
+<table>
+<thead>
+<tr>
+<th>Biểu thức</th>
+<th>Kết quả khi tập rỗng</th>
+<th>Vì sao</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>x = ANY (tập rỗng)</code> — tức <code>x IN (rỗng)</code></td>
+<td><strong><code>FALSE</code></strong></td>
+<td>Một phép <code>OR</code> không có vế nào thì không có vế nào đúng</td>
+</tr>
+<tr>
+<td><code>x &lt;&gt; ALL (tập rỗng)</code> — tức <code>x NOT IN (rỗng)</code></td>
+<td><strong><code>TRUE</code></strong></td>
+<td>Một phép <code>AND</code> không có vế nào thì không có vế nào sai</td>
+</tr>
+</tbody>
+</table>
+<p>Hệ quả rất cụ thể và rất dễ bị bất ngờ: <strong><code>NOT IN</code> trên một truy vấn con không trả về dòng nào sẽ giữ lại MỌI dòng.</strong> Tức là một câu lệnh kiểu <em>"lấy những học sinh không nằm trong danh sách bị đình chỉ"</em> sẽ trả về <strong>toàn bộ</strong> học sinh khi danh sách đình chỉ đang rỗng — đúng như nghiệp vụ muốn, nhưng chỉ khi bạn đã nghĩ tới trường hợp đó. Ngược lại, <code>IN</code> trên tập rỗng cho <strong>0 dòng</strong>.</p>
+<p>Ghép hai bảng lại thì ra bức tranh đầy đủ về <code>NOT IN</code>: tập rỗng cho <strong>mọi dòng</strong>, tập có <code>NULL</code> cho <strong>không dòng nào</strong>, và chỉ tập "sạch" mới cho kết quả bạn mong đợi.</p>
 <h3 id="bang-thuat-ngu">Bảng thuật ngữ<a class="headerlink" href="#bang-thuat-ngu" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -2020,6 +2044,11 @@
 <td>Bán kết nối</td>
 <td><em>semi join</em></td>
 <td>Phép ghép chỉ để kiểm tra tồn tại — mỗi dòng bảng trái ra tối đa một lần, không lấy cột nào của bảng phải; <code>IN</code> và <code>EXISTS</code> đều là bán kết nối</td>
+</tr>
+<tr>
+<td>Kết nối chống</td>
+<td><em>anti join</em> — đã học ở <a href="../25-join/">Bài 25</a></td>
+<td>Phép ghép chỉ giữ những dòng bảng trái <strong>không</strong> có bạn khớp; <code>NOT EXISTS</code>, <code>LEFT JOIN … IS NULL</code> và <code>NOT IN</code> đều là kết nối chống</td>
 </tr>
 </tbody>
 </table>

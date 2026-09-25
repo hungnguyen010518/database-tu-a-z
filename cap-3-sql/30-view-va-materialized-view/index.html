@@ -1889,7 +1889,7 @@
 <p>Hai ý tưởng, hai công cụ, hai cái giá. Chọn cái nào và dựa vào đâu để chọn?</p>
 <h2 id="khai-niem-thuat-ngu">📖 Khái niệm &amp; thuật ngữ<a class="headerlink" href="#khai-niem-thuat-ngu" title="Permanent link">&para;</a></h2>
 <h3 id="view">View<a class="headerlink" href="#view" title="Permanent link">&para;</a></h3>
-<p><strong>View</strong> (<em>khung nhìn</em>) là một <strong>truy vấn được đặt tên</strong>, lưu trong lược đồ của database. Nó <strong>không lưu dữ liệu</strong>. Mỗi lần bạn đọc view, PostgreSQL chạy lại câu truy vấn gốc.</p>
+<p><strong>Khung nhìn</strong> (<em>view</em>) là một <strong>truy vấn được đặt tên</strong>, lưu trong lược đồ của database. Nó <strong>không lưu dữ liệu</strong>. Mỗi lần bạn đọc view, PostgreSQL chạy lại câu truy vấn gốc.</p>
 <div class="highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>CREATE VIEW ten_view AS
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>SELECT ...;
 </span></code></pre></div>
@@ -1928,7 +1928,7 @@
 <p>Muốn nhanh hơn thì phải <strong>lưu kết quả lại</strong> — và đó là materialized view.</p>
 </div>
 <h3 id="materialized-view">Materialized view<a class="headerlink" href="#materialized-view" title="Permanent link">&para;</a></h3>
-<p><strong>Materialized view</strong> (<em>khung nhìn vật chất hoá</em>) là một view <strong>có lưu kết quả lên đĩa</strong>. Đọc nó là đọc dữ liệu đã tính sẵn, nhanh như đọc một bảng thường.</p>
+<p><strong>Khung nhìn vật chất hoá</strong> (<em>materialized view</em>) là một view <strong>có lưu kết quả lên đĩa</strong>. Đọc nó là đọc dữ liệu đã tính sẵn, nhanh như đọc một bảng thường.</p>
 <div class="highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>CREATE MATERIALIZED VIEW ten_mv AS
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>SELECT ...;
 </span></code></pre></div>
@@ -2494,7 +2494,12 @@
 <div class="highlight"><pre><span></span><code><span id="__span-32-1"><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a><span class="k">DROP</span><span class="w"> </span><span class="k">VIEW</span><span class="w"> </span><span class="n">b30_v_lop_l01</span><span class="p">;</span>
 </span></code></pre></div>
 <p>PostgreSQL từ chối, và thông báo lỗi nói rõ có view <code>b30_v_lop_l01_nu</code> đang phụ thuộc vào nó. Đây là hành vi <code>RESTRICT</code> — mặc định, và là mặc định đúng.</p>
-<p>Xem danh sách phụ thuộc trước khi quyết định:</p>
+<p>Xem danh sách phụ thuộc trước khi quyết định. Câu lệnh dưới đây đọc hai <strong>bảng hệ thống</strong> của PostgreSQL, thứ mà <a href="../../cap-0-nhap-mon/03-dbms-la-gi/">Bài 3</a> gọi là <strong>từ điển dữ liệu</strong>:</p>
+<ul>
+<li><strong><code>pg_rewrite</code></strong> giữ định nghĩa của mọi view — với PostgreSQL, một view thực chất là một <strong>quy tắc viết lại</strong> câu truy vấn.</li>
+<li><strong><code>pg_depend</code></strong> giữ mọi quan hệ "cái này phụ thuộc cái kia" trong database, và chính nó là thứ làm <code>DROP ... RESTRICT</code> biết phải từ chối.</li>
+</ul>
+<p>Bạn <strong>không cần đọc hiểu</strong> bốn phép <code>JOIN</code> dưới đây, và Cấp 4 sẽ dạy các bảng hệ thống một cách có hệ thống. Ở đây hãy coi nó là một <strong>công cụ chép vào sổ tay</strong> — thay tên view ở dòng <code>source.relname</code> là dùng được cho mọi trường hợp:</p>
 <div class="highlight"><pre><span></span><code><span id="__span-33-1"><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a><span class="c1">-- KỲ VỌNG: 1 dòng</span>
 </span><span id="__span-33-2"><a id="__codelineno-33-2" name="__codelineno-33-2" href="#__codelineno-33-2"></a><span class="c1">-- KỲ VỌNG: view_phu_thuoc = b30_v_lop_l01_nu</span>
 </span><span id="__span-33-3"><a id="__codelineno-33-3" name="__codelineno-33-3" href="#__codelineno-33-3"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">DISTINCT</span><span class="w"> </span><span class="n">dependent</span><span class="p">.</span><span class="n">relname</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">view_phu_thuoc</span>
@@ -2568,7 +2573,7 @@
 <p>Dòng cuối là toàn bộ lý do materialized view được gọi là cách phi chuẩn hoá <strong>an toàn nhất</strong>: nguy cơ lệch thu gọn lại thành đúng một biến số mà bạn <strong>điều khiển được</strong> — tần suất <code>REFRESH</code>.</p>
 <div class="admonition warning">
 <p class="admonition-title">PostgreSQL <strong>không</strong> ghi lại thời điểm <code>REFRESH</code> gần nhất</p>
-<p>Không có cột hệ thống nào cho bạn biết một materialized view được làm mới lần cuối lúc nào. Câu lệnh trên chỉ minh hoạ cách truy vấn <code>pg_class</code>; nó không đo được độ cũ thật.</p>
+<p>Nếu bạn định đi tìm một cột hệ thống cho biết materialized view được làm mới lần cuối lúc nào — <strong>không có cột nào như vậy</strong>. <code>pg_class</code> có <code>relispopulated</code> để nói "đã nạp dữ liệu hay chưa", nhưng không có gì nói "nạp lúc nào". Đây là một thiếu sót thật của PostgreSQL và bạn phải tự bù.</p>
 <p>Cách làm trong thực tế: <strong>tự thêm một cột thời gian vào chính materialized view</strong>.</p>
 <div class="highlight"><pre><span></span><code><span id="__span-36-1"><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a><span class="c1">-- KỲ VỌNG: 1 dòng</span>
 </span><span id="__span-36-2"><a id="__codelineno-36-2" name="__codelineno-36-2" href="#__codelineno-36-2"></a><span class="c1">-- KỲ VỌNG: si_so = 40</span>
