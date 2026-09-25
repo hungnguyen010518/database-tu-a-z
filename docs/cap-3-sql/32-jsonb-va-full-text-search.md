@@ -315,9 +315,14 @@ INSERT INTO b32_ho_so (ma_hs, du_lieu) VALUES
             "di_ung": ["hai san", "dau phong"]}'),
 ('HS004', '{"so_thich": [],
             "suc_khoe": {"chieu_cao": 145, "can_nang": 38},
-            "clb": "Toan hoc"}');
+            "clb": "Toan hoc"}'),
+-- Phiếu của HS005 có MỘT ô nhập sai: phụ huynh điền nhầm đơn vị chiều cao.
+-- Dữ liệu bẩn kiểu này là chuyện bình thường, và phần sau sẽ cho thấy nó phá báo cáo thế nào.
+('HS005', '{"so_thich": [],
+            "suc_khoe": {"chieu_cao": 98, "can_nang": 30},
+            "ghi_chu": "phu huynh dien nham don vi chieu cao"}');
 
--- KỲ VỌNG: so_ho_so = 4
+-- KỲ VỌNG: so_ho_so = 5
 -- KỲ VỌNG: so_khoa_khac_nhau = 5
 SELECT count(*)                                            AS so_ho_so,
        (SELECT count(DISTINCT k)
@@ -325,14 +330,14 @@ SELECT count(*)                                            AS so_ho_so,
 FROM b32_ho_so;
 ```
 
-Bốn hồ sơ dùng **năm** khoá khác nhau: `so_thich`, `suc_khoe`, `di_ung`, `clb`, `ghi_chu`. Không hồ sơ nào có đủ cả năm — `HS002` có `ghi_chu` mà không có `di_ung`, `HS003` có `di_ung` mà không có `clb`.
+Năm hồ sơ dùng **năm** khoá khác nhau: `so_thich`, `suc_khoe`, `di_ung`, `clb`, `ghi_chu`. Không hồ sơ nào có đủ cả năm — `HS002` có `ghi_chu` mà không có `di_ung`, `HS003` có `di_ung` mà không có `clb`, `HS005` không có cả `di_ung` lẫn `clb`.
 
 Hãy để ý chính câu truy vấn này: để biết bên trong cột JSONB có những khoá gì, ta phải **đi đếm** bằng `jsonb_object_keys`. Với cột thật thì chỉ cần `\d b32_ho_so`. Đó là cái giá đầu tiên của JSONB, và bạn trả nó ngay từ dòng đầu.
 
 ### `->` và `->>`, `#>` và `#>>`
 
 ```sql
--- KỲ VỌNG: 4 dòng
+-- KỲ VỌNG: 5 dòng
 -- KỲ VỌNG: ma_hs = HS001
 -- KỲ VỌNG: clb_jsonb = "Toan hoc"
 -- KỲ VỌNG: clb_text = Toan hoc
@@ -351,10 +356,12 @@ ORDER BY ma_hs;
 
 Hai cột sau cho thấy `#>` đi được **nhiều tầng**: `'{suc_khoe,chieu_cao}'` là một mảng text hai phần tử, nghĩa là *"vào trong `suc_khoe`, rồi lấy `chieu_cao`"*. Với `->` bạn phải viết `du_lieu -> 'suc_khoe' -> 'chieu_cao'` — nối chuỗi mũi tên.
 
+Và hãy để ý một điều dễ gây ngộ nhận: hai cột sau in ra **giống nhau** — cùng là `152`. Không phải vì `#>` và `#>>` giống nhau, mà vì trong JSON một **số** không có dấu ngoặc kép, nên bản `jsonb` và bản `text` của nó trông y như nhau trên màn hình. Khác biệt vẫn còn nguyên nhưng nó nằm ở **kiểu dữ liệu**, không nằm ở chỗ nhìn thấy được — và đó chính là lý do mục ngay dưới đây tồn tại.
+
 Khoá **không tồn tại** thì cho `NULL`, không báo lỗi:
 
 ```sql
--- KỲ VỌNG: 4 dòng
+-- KỲ VỌNG: 5 dòng
 -- KỲ VỌNG: ma_hs = HS001
 -- KỲ VỌNG: khoa_khong_co = NULL
 -- KỲ VỌNG: duong_dan_sai = NULL
@@ -369,30 +376,43 @@ Cả hai cột đều `NULL`. Đây là hành vi tiện nhưng nguy hiểm: **g�
 
 ### So sánh cho đúng — và bẫy so chuỗi
 
-Chiều cao của bốn bạn là 152, 148, 155, 145 — nên số bạn cao hơn **149** cm phải là **3**.
+Chiều cao trong năm hồ sơ là 152, 148, 155, 145 và **98**. Con số cuối là ô nhập sai của `HS005`. Vậy số bạn cao hơn **149** cm là **2**: `HS001` và `HS003`.
+
+Đếm bằng hai cách — một cách để nguyên `text`, một cách ép về số:
 
 ```sql
--- KỲ VỌNG: so_chuoi = 2
--- KỲ VỌNG: ep_kieu_dung = 3
+-- KỲ VỌNG: so_chuoi = 3
+-- KỲ VỌNG: ep_kieu_dung = 2
 SELECT count(*) FILTER (WHERE du_lieu #>> '{suc_khoe,chieu_cao}' > '149')            AS so_chuoi,
        count(*) FILTER (WHERE (du_lieu #>> '{suc_khoe,chieu_cao}')::INTEGER > 149)   AS ep_kieu_dung
 FROM b32_ho_so;
 ```
 
-Cột thứ hai cho **3** — đúng. Cột thứ nhất cho **2** — sai, và sai một cách rất kín.
+Cột thứ hai cho **2** — đúng. Cột thứ nhất cho **3** — sai, và nó đếm thêm đúng bạn `HS005` cao 98 cm.
 
-Vì `#>>` trả về `text`, phép `>` ở cột đầu là phép so **chuỗi**. Nó so từng ký tự: `'152'` với `'149'` thì `'1'='1'`, `'5'>'4'` → `TRUE`; `'155'` cũng `TRUE`; `'148'` thì `'4'='4'`, `'8'<'9'` → `FALSE`; `'145'` → `FALSE`. Vậy so chuỗi ra **2**, thiếu mất bạn cao 148 cm.
-
-Và đây là phần đáng sợ: với dữ liệu mà mọi số **cùng số chữ số**, thứ tự chuỗi trùng thứ tự số, nên lỗi này **ẩn hoàn toàn**. Chỉ cần một bạn khai chiều cao `98` là `'98' > '150'` thành `TRUE` và báo cáo lộn xộn — sau nhiều tháng chạy đúng.
+Vì `#>>` trả về `text`, phép `>` ở cột đầu là phép so **chuỗi**: nó so từng ký tự từ trái sang và **dừng ngay** khi hai ký tự khác nhau. Với `'98'` và `'149'`, ký tự đầu là `'9'` và `'1'`; `'9' > '1'` nên nó kết luận `TRUE` mà không cần xem tiếp. Chuỗi `'98'` "lớn hơn" chuỗi `'149'` chỉ vì nó **bắt đầu** bằng một chữ số lớn hơn.
 
 ```sql
 -- KỲ VỌNG: so_sanh_chuoi_sai = true
 -- KỲ VỌNG: so_sanh_so_dung = false
-SELECT ('98' > '150') AS so_sanh_chuoi_sai,
-       (98 > 150)     AS so_sanh_so_dung;
+SELECT ('98' > '149') AS so_sanh_chuoi_sai,
+       (98 > 149)     AS so_sanh_so_dung;
 ```
 
-**Quy tắc: mọi giá trị số lấy ra từ JSONB đều phải ép kiểu trước khi so sánh.** Một cột `INTEGER` thật thì không bao giờ có lỗi này — đây là điều bạn trả giá khi chọn JSONB.
+Và đây là phần đáng sợ nhất: **bốn hồ sơ đầu không làm lộ được lỗi này.** Chiều cao của họ đều có **ba** chữ số, mà với các số cùng số chữ số thì thứ tự chuỗi trùng khít thứ tự số — cả hai cách đều tính đúng cho cả bốn. Bỏ `HS005` ra là hai con số bằng nhau ngay:
+
+```sql
+-- KỲ VỌNG: so_chuoi = 2
+-- KỲ VỌNG: ep_kieu_dung = 2
+SELECT count(*) FILTER (WHERE du_lieu #>> '{suc_khoe,chieu_cao}' > '149')            AS so_chuoi,
+       count(*) FILTER (WHERE (du_lieu #>> '{suc_khoe,chieu_cao}')::INTEGER > 149)   AS ep_kieu_dung
+FROM b32_ho_so
+WHERE ma_hs <> 'HS005';
+```
+
+Hai con số **bằng nhau**, và đó chính là định nghĩa của một cái bẫy tồi tệ: nó im lặng suốt thời gian dữ liệu còn "đẹp". Bạn viết câu lệnh, thử trên dữ liệu thật, thấy đúng, đưa vào sản phẩm. Rồi **một** ô nhập sai hai chữ số xuất hiện, và báo cáo lệch mà không ai hiểu vì sao.
+
+**Quy tắc: mọi giá trị số lấy ra từ JSONB đều phải ép kiểu trước khi so sánh.** Một cột `INTEGER` thật thì không bao giờ có lỗi này — nó còn **từ chối** nhận giá trị `"152cm"` ngay từ đầu. Đây là điều bạn trả giá khi chọn JSONB.
 
 ### `@>` — toán tử "có chứa"
 
@@ -451,7 +471,7 @@ Hai bạn **có khai** mục dị ứng: `HS001` và `HS003`.
 ### `jsonb_array_length` và `jsonb_array_elements_text`
 
 ```sql
--- KỲ VỌNG: 4 dòng
+-- KỲ VỌNG: 5 dòng
 -- KỲ VỌNG: ma_hs = HS001
 -- KỲ VỌNG: so_so_thich = 2
 SELECT ma_hs,
@@ -460,7 +480,7 @@ FROM b32_ho_so
 ORDER BY ma_hs;
 ```
 
-Bốn hồ sơ: `HS001` 2 sở thích, `HS002` 1, `HS003` 2, `HS004` mảng rỗng nên 0.
+Năm hồ sơ: `HS001` 2 sở thích, `HS002` 1, `HS003` 2, còn `HS004` và `HS005` có mảng rỗng nên 0.
 
 Bung mảng ra thành dòng — đây là cách bạn đưa dữ liệu JSONB trở lại mô hình quan hệ để `GROUP BY`:
 
@@ -472,7 +492,7 @@ CROSS JOIN LATERAL jsonb_array_elements_text(h.du_lieu -> 'so_thich') AS st(so_t
 ORDER BY h.ma_hs, st.so_thich;
 ```
 
-**Năm dòng**: `2 + 1 + 2 + 0`. Bạn `HS004` có mảng rỗng nên nó **biến mất hoàn toàn** — `CROSS JOIN LATERAL` với một hàm trả 0 dòng thì dòng bên ngoài bị loại, đúng như tích Descartes của [Bài 21](21-dai-so-quan-he.md). Muốn giữ bạn ấy thì phải dùng `LEFT JOIN LATERAL ... ON TRUE`.
+**Năm dòng**: `2 + 1 + 2 + 0 + 0`. Hai bạn `HS004` và `HS005` có mảng rỗng nên họ **biến mất hoàn toàn** — `CROSS JOIN LATERAL` với một hàm trả 0 dòng thì dòng bên ngoài bị loại, đúng như tích Descartes của [Bài 21](21-dai-so-quan-he.md). Muốn giữ họ thì phải dùng `LEFT JOIN LATERAL ... ON TRUE`.
 
 Bây giờ đếm sở thích phổ biến — một phép `GROUP BY` bình thường trên dữ liệu vừa bung ra:
 
@@ -588,7 +608,7 @@ SELECT (SELECT count(*) FROM b32_ho_so WHERE du_lieu @> '{"clb": "Toan hoc"}')  
        (SELECT count(*) FROM b32_ho_so WHERE du_lieu ->> 'clb' = 'Toan hoc')        AS qua_toan_tu_mui_kep;
 ```
 
-Cả hai cho **2**. Trên bốn dòng thì không đo được gì; trên một triệu dòng, câu thứ hai sẽ **quét toàn bảng** nếu bạn chưa tạo index biểu thức. Cấp 4 sẽ cho bạn thấy điều đó bằng `EXPLAIN`.
+Cả hai cho **2**. Trên năm dòng thì không đo được gì; trên một triệu dòng, câu thứ hai sẽ **quét toàn bảng** nếu bạn chưa tạo index biểu thức. Cấp 4 sẽ cho bạn thấy điều đó bằng `EXPLAIN`.
 
 ### Khi nào JSONB là dấu hiệu thiết kế sai — bằng một phép đối chiếu
 
@@ -958,14 +978,14 @@ Bốn điều bắt buộc phải làm đúng, nếu không cấu hình sẽ im 
 
 !!! danger "Lỗi 1: So sánh giá trị số lấy từ JSONB mà không ép kiểu"
     ```sql
-    -- KỲ VỌNG: so_chuoi_sai = 2
-    -- KỲ VỌNG: ep_kieu_dung = 3
+    -- KỲ VỌNG: so_chuoi_sai = 3
+    -- KỲ VỌNG: ep_kieu_dung = 2
     SELECT count(*) FILTER (WHERE du_lieu #>> '{suc_khoe,chieu_cao}' > '149')          AS so_chuoi_sai,
            count(*) FILTER (WHERE (du_lieu #>> '{suc_khoe,chieu_cao}')::INTEGER > 149) AS ep_kieu_dung
     FROM b32_ho_so;
     ```
 
-    `#>>` trả về `text`, nên phép `>` so **chuỗi**, không so số. Ở bộ dữ liệu nhỏ này chênh lệch là 2 so với 3; với dữ liệu có cả `9` và `150` thì `'9' > '150'` là `TRUE` và kết quả hoàn toàn vô nghĩa.
+    `#>>` trả về `text`, nên phép `>` so **chuỗi**, không so số. Đáp án đúng là **2** bạn cao trên 149 cm, nhưng phép so chuỗi đếm ra **3** — nó nhận thêm bạn `HS005` cao 98 cm, chỉ vì chuỗi `'98'` bắt đầu bằng `'9'` mà `'149'` bắt đầu bằng `'1'`.
 
     Đây là lỗi mà một cột `INTEGER` thật **không thể** mắc — kiểu dữ liệu đã chặn từ đầu. Mỗi lần bạn viết `::INTEGER` sau một `->>`, hãy coi đó là một lời nhắc rằng bạn đang tự làm công việc mà lược đồ đáng lẽ phải làm cho bạn.
 
@@ -1022,21 +1042,29 @@ Bốn điều bắt buộc phải làm đúng, nếu không cấu hình sẽ im 
 
     Hai index `GIN` và một index biểu thức. Hai index `GIN` **không** phục vụ được câu `WHERE du_lieu ->> 'clb' = 'Toan hoc'` — chỉ index thứ ba làm được.
 
-    Đây là lỗi đắt vì nó không lộ ra trên dữ liệu nhỏ: bạn tạo index `GIN`, câu lệnh chạy nhanh, và bạn kết luận là index có tác dụng — trong khi thật ra nó nhanh vì bảng chỉ có bốn dòng.
+    Đây là lỗi đắt vì nó không lộ ra trên dữ liệu nhỏ: bạn tạo index `GIN`, câu lệnh chạy nhanh, và bạn kết luận là index có tác dụng — trong khi thật ra nó nhanh vì bảng chỉ có năm dòng.
 
     Hai cách sửa: viết lại bằng **`@>`** để dùng được `GIN`, hoặc tạo một **index biểu thức** cho đúng khoá đó. Cấp 4 sẽ dạy bạn dùng `EXPLAIN` để biết chắc index nào đang được dùng, thay vì đoán.
 
 !!! warning "Lỗi 5: Dùng JSONB cho dữ liệu có cấu trúc biết trước"
     ```sql
-    -- KỲ VỌNG: trong_jsonb = 4
-    -- KỲ VỌNG: trong_bang_quan_he = 5
-    SELECT (SELECT count(*) FROM b32_ho_so)                 AS trong_jsonb,
-           (SELECT count(*) FROM b32_so_thich_quan_he)      AS trong_bang_quan_he;
+    -- KỲ VỌNG: so_ho_so_jsonb = 5
+    -- KỲ VỌNG: so_dong_quan_he = 5
+    -- KỲ VỌNG: mang_jsonb_nhan_ca_ba = 3
+    -- KỲ VỌNG: bang_quan_he_chi_nhan = 2
+    SELECT (SELECT count(*) FROM b32_ho_so)                                AS so_ho_so_jsonb,
+           (SELECT count(*) FROM b32_so_thich_quan_he)                     AS so_dong_quan_he,
+           jsonb_array_length('["bong ro", "bong ro", "doc sach"]'::jsonb) AS mang_jsonb_nhan_ca_ba,
+           (SELECT count(DISTINCT e)
+            FROM jsonb_array_elements_text('["bong ro", "bong ro", "doc sach"]'::jsonb) AS e)
+                                                                           AS bang_quan_he_chi_nhan;
     ```
 
-    Cùng một thông tin "sở thích của học sinh", hai cách lưu. Cách JSONB gói 5 sở thích vào 4 dòng; cách quan hệ trải thành 5 dòng.
+    Cùng một thông tin "sở thích của học sinh", hai cách lưu. Hai con số **đầu** đều là 5 và đó là chuyện tình cờ — chúng chỉ nói rằng hai cách chứa cùng lượng thông tin.
 
-    Với cách quan hệ, bạn có khoá chính `(ma_hs, ten)` chặn trùng lặp, có khoá ngoại về `hoc_sinh`, có kiểu `VARCHAR(30)`, và ai đọc lược đồ cũng thấy. Với cách JSONB, bạn **không có gì trong số đó**, và mọi phép thống kê phải qua `CROSS JOIN LATERAL`.
+    Điều đáng chú ý là hai con số **sau**. Cùng một danh sách ba phần tử trong đó có hai phần tử trùng nhau: mảng JSONB nhận **cả ba**, còn bảng quan hệ với `PRIMARY KEY (ma_hs, ten)` chỉ nhận được **hai** — phần tử thứ ba bị từ chối ngay khi `INSERT`. Ba so với hai là toàn bộ khác biệt, và nó **không** phải chuyện thẩm mỹ: một học sinh khai trùng sở thích sẽ được đếm hai lần trong mọi báo cáo.
+
+    Với cách quan hệ, bạn còn có khoá ngoại về `hoc_sinh`, có kiểu `VARCHAR(30)`, và ai đọc lược đồ cũng thấy. Với cách JSONB, bạn **không có gì trong số đó**, và mọi phép thống kê phải qua `CROSS JOIN LATERAL`.
 
     Ba câu hỏi để tự kiểm mỗi lần định thêm một cột JSONB: **tập khoá có ổn định không? có cần ràng buộc không? có thường xuyên lọc theo nó không?** Một câu "có" là đủ để nên chọn cột thật.
 
@@ -1080,15 +1108,13 @@ Bốn điều bắt buộc phải làm đúng, nếu không cấu hình sẽ im 
 
     ```sql
     -- KỲ VỌNG: ep_kieu = 2
-    -- KỲ VỌNG: khong_ep_kieu = 2
+    -- KỲ VỌNG: khong_ep_kieu = 3
     SELECT count(*) FILTER (WHERE (du_lieu #>> '{suc_khoe,chieu_cao}')::INTEGER > 150) AS ep_kieu,
            count(*) FILTER (WHERE du_lieu #>> '{suc_khoe,chieu_cao}' > '150')          AS khong_ep_kieu
     FROM b32_ho_so;
     ```
 
-    Ở đúng bộ dữ liệu này, hai con số **tình cờ bằng nhau** — cả bốn chiều cao đều có ba chữ số, nên thứ tự chuỗi trùng thứ tự số.
-
-    Và đó chính là điều đáng sợ: **lỗi này ẩn hoàn toàn khi mọi số có cùng số chữ số.** Chỉ cần một bạn khai chiều cao `98` là `'98' > '150'` thành `TRUE` theo thứ tự chuỗi, và báo cáo sai — sau nhiều tháng chạy đúng.
+    **2** so với **3**. Phép so chuỗi nhận thêm bạn `HS005` cao 98 cm, vì `'98' > '150'` là `TRUE` theo thứ tự chuỗi — ký tự đầu `'9'` lớn hơn `'1'` là nó dừng luôn.
 
     ```sql
     -- KỲ VỌNG: so_sanh_chuoi = true
@@ -1096,6 +1122,8 @@ Bốn điều bắt buộc phải làm đúng, nếu không cấu hình sẽ im 
     SELECT ('98' > '150')             AS so_sanh_chuoi,
            (98 > 150)                 AS so_sanh_so;
     ```
+
+    Và hãy chú ý: nếu bỏ `HS005` ra thì hai con số **bằng nhau**, vì bốn chiều cao còn lại đều có ba chữ số. Nghĩa là **lỗi này ẩn hoàn toàn khi mọi số cùng số chữ số** — nó chỉ chờ một ô nhập sai để lộ ra.
 
     **Câu 2.**
 
@@ -1111,19 +1139,18 @@ Bốn điều bắt buộc phải làm đúng, nếu không cấu hình sẽ im 
 
     **Ba loại dị ứng**, mỗi loại đúng **1** học sinh: `tom` của `HS001`, `hai san` và `dau phong` của `HS003`.
 
-    `HS002` và `HS004` không xuất hiện vì cả hai **không có khoá `di_ung`**, nên `du_lieu -> 'di_ung'` cho `NULL`, và `jsonb_array_elements_text(NULL)` trả về **0 dòng** — dòng bên ngoài bị `CROSS JOIN` loại bỏ.
+    `HS002`, `HS004` và `HS005` không xuất hiện vì cả ba **không có khoá `di_ung`**, nên `du_lieu -> 'di_ung'` cho `NULL`, và `jsonb_array_elements_text(NULL)` trả về **0 dòng** — dòng bên ngoài bị `CROSS JOIN` loại bỏ.
 
-    Nhưng hai bạn ấy **khác nhau** về mặt nghiệp vụ, và JSONB không phân biệt giúp bạn:
+    Nhưng "không có khoá" và "khoá rỗng" **khác nhau** về mặt nghiệp vụ, và JSONB không phân biệt giúp bạn:
 
     | Bạn | Trạng thái trong JSONB | Nghĩa nghiệp vụ |
     |---|---|---|
-    | `HS002` | Không có khoá `di_ung` | Phiếu **không khai** mục này |
-    | `HS004` | Không có khoá `di_ung` | Cũng không khai |
+    | `HS002`, `HS004`, `HS005` | Không có khoá `di_ung` | Phiếu **không khai** mục này |
     | Một bạn giả định | `"di_ung": []` | Đã khai, và câu trả lời là **không dị ứng gì** |
 
     ```sql
     -- KỲ VỌNG: co_khai_di_ung = 2
-    -- KỲ VỌNG: khong_khai_di_ung = 2
+    -- KỲ VỌNG: khong_khai_di_ung = 3
     -- KỲ VỌNG: khai_rong = 0
     SELECT count(*) FILTER (WHERE du_lieu ? 'di_ung')                                   AS co_khai_di_ung,
            count(*) FILTER (WHERE NOT (du_lieu ? 'di_ung'))                             AS khong_khai_di_ung,
